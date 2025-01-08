@@ -1,0 +1,217 @@
+/* src/components/Login/Login.css */
+
+/* General Styling */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f9;
+  margin: 0;
+}
+
+/* Enable smooth scrolling for the entire page */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Main Content Container */
+.login-container {
+  background: #ffffff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 30px 20px;
+  max-width: 500px;
+  width: 90%;
+  margin: 80px auto 60px auto; /* Top margin for Navbar, bottom for Footer */
+  box-sizing: border-box;
+  text-align: center;
+}
+
+/* Login Header */
+.login-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.login-title {
+  font-size: 2rem;
+  color: #333333;
+  margin-bottom: 10px;
+}
+
+.login-description {
+  font-size: 1rem;
+  color: #555555;
+}
+
+/* Login Form */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-subtitle {
+  font-size: 1.2rem;
+  color: #333333;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.form-group {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.form-input {
+  width: 90%;
+  padding: 10px 12px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+.form-input:focus {
+  border-color: #007bff; /* Blue border on focus */
+  outline: none;
+}
+
+/* Form Links */
+.form-links {
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+.form-link {
+  color: #007bff;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+}
+
+.form-link:hover {
+  color: #0056b3;
+}
+
+/* Login Button */
+.login-button {
+  padding: 10px 15px;
+  background-color: #007bff; /* Blue background */
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: #0056b3;
+}
+
+.login-button:active {
+  background-color: #003f8f;
+}
+
+/* Credit Link */
+.credit-link {
+  margin-top: 15px;
+  font-size: 0.9rem;
+}
+
+.credit-link-anchor {
+  color: #007bff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.credit-link-anchor:hover {
+  color: #0056b3;
+}
+
+/* Error Message Styles */
+.error {
+  color: #dc3545; /* Bootstrap danger color */
+  margin-top: 10px;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Responsive Design: Adjust for smaller screens */
+@media (max-width: 768px) {
+  .login-container {
+    margin: 80px 10px 60px 10px; /* Reduce horizontal margins on small screens */
+    padding: 20px 15px;
+  }
+
+  .login-button {
+    width: 70%;
+  }
+
+  .form-input {
+    width: 100%;
+  }
+}
+
+/* Optional: Skeleton Loading Styles (if used) */
+.skeleton-container {
+  padding: 20px;
+  background: #f2f2f2;
+  border-radius: 8px;
+  animation: skeleton-loading 1.2s infinite ease-in-out;
+  text-align: center;
+}
+
+.skeleton-line {
+  height: 16px;
+  background: #e0e0e0;
+  margin-bottom: 12px;
+  border-radius: 4px;
+}
+
+.skeleton-line.title {
+  width: 60%;
+  height: 20px;
+}
+
+.skeleton-line.body {
+  width: 90%;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-color: #e0e0e0;
+  }
+  50% {
+    background-color: #d1d1d1;
+  }
+  100% {
+    background-color: #e0e0e0;
+  }
+}
+
+/* Optional: Fade-in Effect for Loaded Content */
+.fade-in {
+  display: block;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.fade-in.loaded {
+  opacity: 1;
+}
+
+/* Optional: Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 123, 255, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}

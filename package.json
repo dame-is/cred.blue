@@ -1,0 +1,54 @@
+{
+  "name": "frontend",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@atcute/client": "^2.0.6",
+    "@atcute/oauth-browser-client": "^1.0.7",
+    "@atproto/api": "^0.13.22",
+    "@atproto/oauth-client-node": "^0.2.4",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
+    "axios": "^1.7.9",
+    "cra-template": "1.2.0",
+    "express-session": "^1.18.1",
+    "jsonwebtoken": "^9.0.2",
+    "jwt-decode": "^4.0.0",
+    "prop-types": "^15.8.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^6.28.1",
+    "react-scripts": "^5.0.1",
+    "recharts": "^2.15.0",
+    "web-vitals": "^4.2.4"
+  },
+  "scripts": {
+    "start": "cross-env NODE_OPTIONS=--openssl-legacy-provider react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "proxy": "http://localhost:5001",
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "vite": "^6.0.3"
+  }
+}

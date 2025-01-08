@@ -1,0 +1,45 @@
+/* src/components/UserProfile/UserProfile.css */
+
+.user-profile {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .user-profile h2 {
+    font-size: 2em;
+    margin-bottom: 10px;
+  }
+  
+  .user-profile p {
+    font-size: 1.1em;
+    margin: 5px 0;
+  }
+  
+  .score-section {
+    margin-top: 20px;
+  }
+  
+  .score-section h3 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+  }
+  
+  .score-section ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .score-section li {
+    background: #f0f0f0;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  .error {
+    color: red;
+    font-weight: bold;
+  }
+  

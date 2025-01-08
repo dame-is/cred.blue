@@ -1,0 +1,38 @@
+@import './styles/variables.css';
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Example: Add transition to the body */
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* src/index.css */
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0; /* Light background */
+  color: #000000; /* Dark text */
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dark-mode body {
+  background-color: #121212; /* Dark background */
+  color: #ffffff; /* Light text */
+}
+
+
+/* Similarly, add transitions to other elements as needed */

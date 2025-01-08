@@ -1,0 +1,61 @@
+@import './styles/variables.css';
+
+.App {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  text-align: center;
+  background-color: #f4f4f9;
+}
+
+form {
+  margin: 20px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+input {
+  padding: 10px;
+  width: 100%;
+  max-width: 300px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  padding: 10px 20px;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0056b3;
+}
+
+.error {
+  color: red;
+}
+
+ul {
+  text-align: left;
+  display: inline-block;
+  margin: 20px auto;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0; /* Light background */
+  color: #000000; /* Dark text */
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dark-mode body {
+  background-color: #121212; /* Dark background */
+  color: #ffffff; /* Light text */
+}
