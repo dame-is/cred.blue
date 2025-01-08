@@ -10,6 +10,8 @@ const Login = () => {
   const [error, setError] = useState('');
   const { handleLoginSuccess } = useContext(AuthContext); // Function to update AuthContext
 
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
   const handleLogin = async (e) => {
     e.preventDefault(); // Prevent default form submission behavior
     setError(''); // Reset error message
@@ -24,7 +26,7 @@ const Login = () => {
       console.log('Attempting login with:', { handle, appPassword });
 
       // Send POST request to /api/login with credentials
-      const response = await fetch('http://localhost:5001/api/login', { // Using relative URL due to proxy setup
+      const response = await fetch(`${backendUrl}/api/login`, { // Using relative URL due to proxy setup
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

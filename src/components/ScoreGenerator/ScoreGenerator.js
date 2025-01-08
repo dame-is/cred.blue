@@ -3,8 +3,6 @@
 import React, { useState } from "react";
 import ScoreForm from "../ScoreForm";
 import ScoreResult from "../ScoreResult";
-import Navbar from "../Navbar/Navbar"; // Import Navbar
-import Footer from "../Footer/Footer"; // Import Footer
 import "./MainApp.css"; // Ensure you have appropriate styles
 
 const MainApp = ({ agent, onLogout }) => {
@@ -13,13 +11,15 @@ const MainApp = ({ agent, onLogout }) => {
   const [error, setError] = useState(null);
   const [comparisonMode, setComparisonMode] = useState(false);
 
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
   const fetchScores = async (identities) => {
     setLoading(true);
     setResult(null);
     setError(null);
 
     try {
-      const apiUrl = "http://localhost:5001/api/score"; // Consider using environment variables
+      const apiUrl = `${backendUrl}/api/score`; // Consider using environment variables
 
       if (comparisonMode && identities.length === 2) {
         // Fetch scores for two identities in comparison mode

@@ -13,13 +13,13 @@ const UserProfile = () => {
   const [error, setError] = useState(null);
 
   // Backend URL
-  const BACKEND_URL = 'http://localhost:5001'; // Adjust if different
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
     const fetchProfileAndScore = async () => {
       try {
         // Step 1: Fetch Score and Profile Information from Public Endpoint
-        const response = await fetch(`${BACKEND_URL}/api/public/score`, {
+        const response = await fetch(`${backendUrl}/api/public/score`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -85,7 +85,7 @@ const UserProfile = () => {
     };
 
     fetchProfileAndScore();
-  }, [username, BACKEND_URL]);
+  }, [username, backendUrl]);
 
   if (loading) {
     return <div className="user-profile">Loading...</div>; // You can replace this with a spinner or skeleton

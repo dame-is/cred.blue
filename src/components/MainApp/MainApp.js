@@ -14,7 +14,7 @@ const MainApp = () => {
   const [comparisonMode, setComparisonMode] = useState(false);
   const [scoreStoredToday, setScoreStoredToday] = useState(false);
 
-
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
   const fetchScores = async (identities) => {
     setLoadingScores(true);
@@ -22,13 +22,13 @@ const MainApp = () => {
     setError(null);
 
     try {
-      const apiUrl = "http://localhost:5001/api/score"; // Use relative path due to proxy setup
+      const apiUrl = `${backendUrl}/api/score`; // Use relative path due to proxy setup
 
       if (comparisonMode && identities.length === 2) {
         // Fetch scores for two identities in comparison mode
         const responses = await Promise.all(
           identities.map(async (identity) => {
-            const response = await fetch("http://localhost:5001/api/scorecomparison", {
+            const response = await fetch(`${backendUrl}/api/scorecomparison`, {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",

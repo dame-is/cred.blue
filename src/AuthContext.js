@@ -2,6 +2,8 @@
 
 import React, { createContext, useState, useEffect } from 'react';
 
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
 // Create the AuthContext
 export const AuthContext = createContext();
 
@@ -15,7 +17,7 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
       const checkAuth = async () => {
         try {
-          const response = await fetch('http://localhost:5001/api/authenticated', {
+          const response = await fetch(`${backendUrl}/api/authenticated`, {
             method: 'GET',
             credentials: 'include',
           });
@@ -55,7 +57,7 @@ export const AuthProvider = ({ children }) => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('http://localhost:5001/api/logout', { // Endpoint to logout
+      const response = await fetch(`${backendUrl}/api/logout`, { // Endpoint to logout
         method: 'POST',
         credentials: 'include', // Include cookies in the request
       });
