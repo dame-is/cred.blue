@@ -43,3 +43,43 @@
     font-weight: bold;
   }
   
+
+  /* src/components/HealthScoreCard/HealthScoreCard.css */
+
+.health-score-card {
+  width: 320px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+.health-score-card h2 {
+  margin-bottom: 20px;
+  font-size: 1.5em;
+  color: #333333;
+}
+
+.score-display {
+  margin-top: 20px;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #333333;
+}
+
+@media (max-width: 480px) {
+  .health-score-card {
+    width: 100%;
+    padding: 15px;
+  }
+
+  .health-score-card h2 {
+    font-size: 1.2em;
+  }
+
+  .score-display {
+    font-size: 1em;
+  }
+}
