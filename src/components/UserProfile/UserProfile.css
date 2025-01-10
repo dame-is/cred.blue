@@ -83,3 +83,68 @@
     font-size: 1em;
   }
 }
+
+
+/* src/components/ScoreCard/ScoreCard.css */
+
+.score-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  font-family: Arial, sans-serif;
+}
+
+.score-card h2 {
+  margin-bottom: 20px;
+  font-size: 1.5em;
+  color: #333333;
+  text-align: center;
+}
+
+.score-values {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.score-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.score-label {
+  font-weight: bold;
+}
+
+.score-label.bluesky {
+  color: #8884d8; /* Matches the Bluesky Score bar color */
+}
+
+.score-label.atproto {
+  color: #82ca9d; /* Matches the Atproto Score bar color */
+}
+
+.score-number {
+  font-size: 1em;
+  color: #333333;
+}
+
+@media (max-width: 480px) {
+  .score-card {
+    padding: 15px;
+  }
+
+  .score-card h2 {
+    font-size: 1.2em;
+  }
+
+  .score-number {
+    font-size: 0.9em;
+  }
+}
