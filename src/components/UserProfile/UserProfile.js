@@ -19,7 +19,7 @@ const UserProfile = () => {
     const fetchProfileAndScore = async () => {
       try {
         // Step 1: Fetch Score and Profile Information from Public Endpoint
-        const response = await fetch(`${backendUrl}/api/public/score`, {
+        const response = await fetch(`${backendUrl}/api/publicscore`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
