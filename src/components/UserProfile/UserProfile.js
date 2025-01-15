@@ -12,14 +12,14 @@ const UserProfile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Backend URL
+  // Backend URL from your environment
   const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
     const fetchProfileAndScore = async () => {
       try {
-        // Step 1: Fetch Score and Profile Information from Public Endpoint
-        const response = await fetch(`${backendUrl}/api/publicscore`, {
+        // Use the new publicdata endpoint instead of publicscore
+        const response = await fetch(`${backendUrl}/api/publicdata`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -33,47 +33,49 @@ const UserProfile = () => {
         }
 
         const data = await response.json();
-        const { handle, did, blueskyScore, atprotoScore, combinedScore, generatedAt, breakdown, serviceEndpoint, createdAt, ageInDays } = data.data;
+        // In the new response, all computed values are under data.accountData.
+        const accountData = data.accountData;
 
+        // Extract and format profile data from the accountData object
         setProfile({
-          displayName: data.data.profile?.displayName || handle,
-          username: handle,
-          description: data.data.profile?.description || "N/A",
-          createdAt: new Date(createdAt).toLocaleDateString(), // Format as per locale
-          ageInDays: Math.floor(ageInDays), // Ensure it's an integer
-          generation: data.data.generation || 'Unknown',
+          displayName: (accountData.profile && accountData.profile.displayName) || accountData.handle,
+          username: accountData.handle,
+          description: (accountData.profile && accountData.profile.description) || "N/A",
+          createdAt: new Date(accountData.createdAt).toLocaleDateString(), // Format as per locale
+          ageInDays: Math.floor(accountData.ageInDays), // Ensure it's an integer
+          generation: accountData.generation || 'Unknown',
         });
 
         setScore({
-          handle,
-          did,
-          blueskyScore,
-          atprotoScore,
-          combinedScore,
-          generatedAt,
-          breakdown,
-          serviceEndpoint, // Include serviceEndpoint
+          handle: accountData.handle,
+          did: accountData.did,
+          blueskyScore: accountData.blueskyScore,
+          atprotoScore: accountData.atprotoScore,
+          combinedScore: accountData.combinedScore,
+          generatedAt: accountData.scoreGeneratedAt,
+          breakdown: accountData.breakdown,
+          serviceEndpoint: accountData.serviceEndpoint,
         });
 
-        // Debugging: Log the fetched data
-        console.log("Fetched Profile Data:", {
+        // Debug log (optional)
+        console.log("Fetched Account Data:", {
           profile: {
-            displayName: data.data.profile?.displayName || handle,
-            username: handle,
-            description: data.data.profile?.description || "N/A",
-            createdAt: new Date(createdAt).toLocaleDateString(),
-            ageInDays: Math.floor(ageInDays),
-            generation: data.data.generation || 'Unknown',
+            displayName: (accountData.profile && accountData.profile.displayName) || accountData.handle,
+            username: accountData.handle,
+            description: (accountData.profile && accountData.profile.description) || "N/A",
+            createdAt: new Date(accountData.createdAt).toLocaleDateString(),
+            ageInDays: Math.floor(accountData.ageInDays),
+            generation: accountData.generation || 'Unknown',
           },
           score: {
-            handle,
-            did,
-            blueskyScore,
-            atprotoScore,
-            combinedScore,
-            generatedAt,
-            breakdown,
-            serviceEndpoint,
+            handle: accountData.handle,
+            did: accountData.did,
+            blueskyScore: accountData.blueskyScore,
+            atprotoScore: accountData.atprotoScore,
+            combinedScore: accountData.combinedScore,
+            generatedAt: accountData.scoreGeneratedAt,
+            breakdown: accountData.breakdown,
+            serviceEndpoint: accountData.serviceEndpoint,
           },
         });
       } catch (err) {
@@ -88,7 +90,7 @@ const UserProfile = () => {
   }, [username, backendUrl]);
 
   if (loading) {
-    return <div className="user-profile">Loading...</div>; // You can replace this with a spinner or skeleton
+    return <div className="user-profile">Loading...</div>;
   }
 
   if (error) {
@@ -103,17 +105,19 @@ const UserProfile = () => {
     <div className="user-profile">
       <h2>{profile.displayName || profile.username}</h2>
       <p><strong>Username:</strong> {profile.username}</p>
-      <p><strong>Account Created:</strong> {profile.createdAt} ({profile.ageInDays} days old)</p>
-      <p><strong>Generation</strong> {profile.generation}</p>
+      <p>
+        <strong>Account Created:</strong> {profile.createdAt} ({profile.ageInDays} days old)
+      </p>
+      <p><strong>Generation:</strong> {profile.generation}</p>
       <p><strong>DID:</strong> {score.did}</p>
       <p><strong>Service Endpoint:</strong> {score.serviceEndpoint}</p>
       <p><strong>Description:</strong> {profile.description}</p>
-      {/* Add more profile fields as needed */}
+      {/* Additional profile fields can be added here */}
 
       {score && (
         <div className="score-section">
           <h3>Score: {score.combinedScore}</h3>
-          {/* Display detailed score breakdown using ScoreResult */}
+          {/* Render detailed score breakdown using the ScoreResult component */}
           <ScoreResult result={score} loading={false} />
         </div>
       )}
