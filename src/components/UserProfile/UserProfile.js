@@ -56,7 +56,7 @@ const UserProfile = () => {
     return <div className="user-profile">No profile information available.</div>;
   }
 
-  // Destructure various sections from the accountData object.
+  // Destructure the key sections from the accountData object.
   const {
     profile,
     displayName,
@@ -64,6 +64,7 @@ const UserProfile = () => {
     did,
     createdAt,
     ageInDays,
+    agePercentage,
     blobsCount,
     followersCount,
     followsCount,
@@ -85,21 +86,36 @@ const UserProfile = () => {
     <div className="user-profile">
       <h1>{displayName}</h1>
 
-      {/* Profile Overview Section */}
+      {/* Profile Overview */}
       <section className="profile-overview">
         <h2>Profile Overview</h2>
         <p><strong>Username:</strong> {handle}</p>
         <p><strong>DID:</strong> {did}</p>
         <p>
-          <strong>Account Created:</strong>{" "}
-          {new Date(createdAt).toLocaleDateString()} ({Math.floor(ageInDays)} days old)
+          <strong>Account Created:</strong> {new Date(createdAt).toLocaleDateString()} {" "}
+          (<em>{Math.floor(ageInDays)} days old | {Math.floor(agePercentage * 100)}%</em>)
         </p>
         <p><strong>Profile Completion:</strong> {profile.profileCompletion}</p>
         <p><strong>Service Endpoint:</strong> {serviceEndpoint}</p>
         <p><strong>PDS Type:</strong> {pdsType}</p>
       </section>
 
-      {/* Activity Overview Section */}
+      {/* Blobs & Posts Data */}
+      <section className="blobs-posts">
+        <h2>Blobs & Posts Data</h2>
+        <p><strong>Blobs Count:</strong> {blobsCount}</p>
+        <p>
+          <strong>Blobs Per Day:</strong>{" "}
+          {ageInDays ? (blobsCount / ageInDays).toFixed(2) : "0"}
+        </p>
+        <p>
+          <strong>Blobs Per Post:</strong>{" "}
+          {postsCount ? (blobsCount / postsCount).toFixed(2) : "0"}
+        </p>
+        <p><strong>Posts Count:</strong> {postsCount}</p>
+      </section>
+
+      {/* Overall Activity Overview */}
       <section className="activity-overview">
         <h2>Overall Activity</h2>
         <p><strong>Total Records:</strong> {activityAll.totalRecords}</p>
@@ -108,27 +124,34 @@ const UserProfile = () => {
           <strong>Total Bluesky Records:</strong> {activityAll.totalBskyRecords} (
           {Math.floor(activityAll.totalBskyRecordsPercentage * 100)}%)
         </p>
-        <p><strong>Posts Count:</strong> {postsCount}</p>
-        <p><strong>Posting Style:</strong> {postingStyle}</p>
-        <p><strong>Social Status:</strong> {socialStatus}</p>
         <p><strong>Rotation Keys:</strong> {rotationKeys}</p>
         <p>
-          <strong>Followers:</strong> {followersCount} | <strong>Following:</strong>{" "}
-          {followsCount} (
-          <em>{followersCount ? (followsCount / followersCount).toFixed(2) : 0}</em>)
+          <strong>Followers:</strong> {followersCount} | <strong>Following:</strong> {followsCount} {" "}
+          (<em>
+            {followersCount ? (followsCount / followersCount).toFixed(2) : "0"}
+          </em>)
         </p>
+        <p><strong>Posting Style:</strong> {postingStyle}</p>
+        <p><strong>Social Status:</strong> {socialStatus}</p>
+        <p><strong>Era:</strong> {era}</p>
       </section>
 
-      {/* 30-Day Activity Section */}
+      {/* Last 30 Days Activity */}
       <section className="activity-recent">
         <h2>Last 30 Days Activity</h2>
         <p><strong>Total Records:</strong> {activityLast30Days.totalRecords}</p>
         <p><strong>Records Per Day:</strong> {activityLast30Days.totalRecordsPerDay}</p>
         <p><strong>Total Bluesky Records:</strong> {activityLast30Days.totalBskyRecords}</p>
         <p><strong>Total Non-Bluesky Records:</strong> {activityLast30Days.totalNonBskyRecords}</p>
+        { activityLast30Days.collections && (
+          <div className="collection-stats">
+            <h3>Per-Collection Stats (Last 30 Days):</h3>
+            <p>{JSON.stringify(activityLast30Days.collections, null, 2)}</p>
+          </div>
+        )}
       </section>
 
-      {/* Also Known As / Domain Details Section */}
+      {/* Alias Information */}
       <section className="aliases">
         <h2>Alias Information</h2>
         <p><strong>Total AKAs:</strong> {alsoKnownAs.totalAkas}</p>
@@ -139,13 +162,19 @@ const UserProfile = () => {
         <p><strong>Handle Type:</strong> {alsoKnownAs.handleType}</p>
       </section>
 
-      {/* Analysis Narrative Section */}
+      {/* Analysis Narrative */}
       <section className="narrative">
         <h2>Analysis Narrative</h2>
-        <pre>{analysis.narrative}</pre>
+        <p>{analysis.narrative}</p>
       </section>
 
-      {/* Footer / Generated At */}
+      {/* Additional Data Dump */}
+      <section className="data-dump">
+        <h2>Full Account Data JSON</h2>
+        <p>{JSON.stringify(accountData, null, 2)}</p>
+      </section>
+
+      {/* Generated At Footer */}
       <section className="generated-info">
         <p>
           <small>Score generated at: {new Date(scoreGeneratedAt).toLocaleString()}</small>
