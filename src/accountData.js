@@ -6,18 +6,16 @@
 async function resolveHandleToDid(inputHandle) {
     const url = `${publicServiceEndpoint}/xrpc/com.atproto.identity.resolveHandle?handle=${encodeURIComponent(inputHandle)}`;
     const data = await getJSON(url);
-    // Assume the response contains a "did" property.
     if (!data.did) {
       throw new Error("Could not resolve handle to DID.");
     }
     return data.did;
   }
   
-  // Fetch the serviceEndpoint (and other info if needed) from the PLC Directory for a given DID.
+  // Fetch the serviceEndpoint from the PLC Directory for a given DID.
   async function getServiceEndpointForDid(resolvedDid) {
     const url = `${plcDirectoryEndpoint}/${encodeURIComponent(resolvedDid)}`;
     const data = await getJSON(url);
-    // Assume the response contains a serviceEndpoint property. You can adjust this if needed.
     if (!data.serviceEndpoint) {
       throw new Error("Could not determine service endpoint for DID.");
     }
@@ -27,9 +25,9 @@ async function resolveHandleToDid(inputHandle) {
   /***********************************************************************
    * Global settings and basic caching
    ***********************************************************************/
-  let did = null;            // will be resolved from the handle
-  let handle = null;         // will be passed in from the UI (e.g. "dame.bsky.social")
-  let serviceEndpoint = null; // will be derived from the PLC Directory
+  let did = null;            // Will be resolved from the handle.
+  let handle = null;         // Will be set by the caller (from the URL/searchbar).
+  let serviceEndpoint = null; // Will be derived from the PLC Directory.
   const plcDirectoryEndpoint = "https://plc.directory";
   const publicServiceEndpoint = "https://public.api.bsky.app";
   
@@ -39,8 +37,6 @@ async function resolveHandleToDid(inputHandle) {
   /***********************************************************************
    * Helper Functions
    ***********************************************************************/
-  
-  // Standard fetch with error checking.
   async function getJSON(url) {
     try {
       const response = await fetch(url);
@@ -54,7 +50,6 @@ async function resolveHandleToDid(inputHandle) {
     }
   }
   
-  // Cached fetch: if we already have data for a URL, return it.
   async function cachedGetJSON(url) {
     if (cache[url]) return cache[url];
     const data = await getJSON(url);
@@ -138,13 +133,10 @@ async function resolveHandleToDid(inputHandle) {
   /***********************************************************************
    * Calculation Functions
    ***********************************************************************/
-  
-  // Helper function to round numbers to two decimal places
   function roundToTwo(num) {
     return Number(num.toFixed(2));
   }
   
-  // Recursive function to round all numerical values in an object
   function roundNumbers(obj) {
     if (Array.isArray(obj)) {
       return obj.map(roundNumbers);
@@ -161,7 +153,6 @@ async function resolveHandleToDid(inputHandle) {
     }
   }
   
-  // Calculate age in days and age percentage (based on reference date)
   function calculateAge(createdAt) {
     const created = new Date(createdAt);
     const today = new Date();
@@ -173,7 +164,6 @@ async function resolveHandleToDid(inputHandle) {
     return { ageInDays, agePercentage };
   }
   
-  // Helper function: extract author DIDs from a reply object.
   function getReplyAuthors(reply) {
     const authors = [];
     if (reply.parent && reply.parent.author) {
@@ -188,7 +178,6 @@ async function resolveHandleToDid(inputHandle) {
     return authors;
   }
   
-  // Calculate posting style using the provided criteria.
   function calculatePostingStyle(stats) {
     const {
       onlyPostsPerDay = 0,
@@ -238,7 +227,6 @@ async function resolveHandleToDid(inputHandle) {
     return "Unknown";
   }
   
-  // Calculate social status (one label)
   function calculateSocialStatus({ ageInDays, followersCount, followsCount }) {
     const followPercentage = followersCount > 0 ? followsCount / followersCount : 0;
     if (ageInDays < 30) return "Newbie";
@@ -250,7 +238,6 @@ async function resolveHandleToDid(inputHandle) {
     return "Community Member";
   }
   
-  // Calculate activity status given rate (records per day)
   function calculateActivityStatus(rate) {
     if (rate === 0) return "inactive";
     if (rate > 0 && rate < 1) return "eepy";
@@ -258,7 +245,6 @@ async function resolveHandleToDid(inputHandle) {
     if (rate >= 10) return "wired";
   }
   
-  // Calculate profile completion: complete/incomplete/not started.
   function calculateProfileCompletion(profile) {
     const hasDisplayName = Boolean(profile.displayName && profile.displayName.trim());
     const hasBanner = Boolean(profile.banner && profile.banner.trim());
@@ -268,7 +254,6 @@ async function resolveHandleToDid(inputHandle) {
     return "not started";
   }
   
-  // Calculate domain rarity based on handle and its length.
   function calculateDomainRarity(handle) {
     if (handle.includes("bsky.social")) {
       const len = handle.length;
@@ -305,7 +290,6 @@ async function resolveHandleToDid(inputHandle) {
     return "unknown";
   }
   
-  // Calculate era based on createdAt date.
   function calculateEra(createdAt) {
     const created = new Date(createdAt);
     if (created >= new Date("2022-11-16") && created <= new Date("2023-01-31")) {
@@ -325,7 +309,7 @@ async function resolveHandleToDid(inputHandle) {
     let totalNonBskyRecords = 0;
     const collectionStats = {};
     for (const col of collectionNames) {
-      // Treat this as one shot (no page weighting).
+      // We treat this as one step (no page weighting).
       const recs = await fetchRecordsForCollection(col, () => {});
       const count = recs.length;
       const perDay = ageInDays ? count / ageInDays : 0;
@@ -487,23 +471,23 @@ async function resolveHandleToDid(inputHandle) {
   /***********************************************************************
    * Main Function – Build accountData and final JSON object.
    ***********************************************************************/
-  export async function loadAccountData(onProgress = () => {}) {
+  export async function loadAccountData(inputHandle, onProgress = () => {}) {
     try {
-      // First, resolve the handle and determine the DID and service endpoint.
-      // (Assume that the variable "handle" is set by the caller.)
-      if (!handle) {
-        throw new Error("Handle is not defined");
+      // First, set the handle from the input and resolve it.
+      if (!inputHandle) {
+        throw new Error("Handle is not provided");
       }
+      handle = inputHandle;
+      // Resolve handle to DID.
       did = await resolveHandleToDid(handle);
+      // Get the service endpoint from PLC Directory.
       serviceEndpoint = await getServiceEndpointForDid(did);
-      // You may want to update the cache here if needed.
   
       // Set total number of steps for progress estimation.
-      // We'll treat the main process as 16 steps, with paginated functions reporting fractions.
-      const totalSteps = 10;
-      let currentProgress = 0; // a number from 0 to 1
+      // We treat the main process as 16 steps; paginated endpoints will report fractions.
+      const totalSteps = 16;
+      let currentProgress = 0; // a value between 0 and 1
       const updateProgress = (increment = 1) => {
-        // increment can be a fraction, where 1 represents a full step.
         currentProgress += increment / totalSteps;
         if (currentProgress > 1) currentProgress = 1;
         onProgress(currentProgress * 100);
@@ -511,7 +495,7 @@ async function resolveHandleToDid(inputHandle) {
   
       // 1. Get basic profile (one-shot)
       const profile = await fetchProfile();
-      updateProgress(); // one full step
+      updateProgress();
   
       // 2. Age details (one-shot)
       const { ageInDays, agePercentage } = calculateAge(profile.createdAt);
@@ -521,7 +505,7 @@ async function resolveHandleToDid(inputHandle) {
       const blobsCount = await fetchAllBlobsCount((inc) => { updateProgress(inc); }, 10);
       updateProgress();
   
-      // 4. Repo description gives collections (one-shot)
+      // 4. Repo description (one-shot)
       const repoDescription = await fetchRepoDescription();
       let collections = repoDescription.collections || [];
       const totalCollections = collections.length;
@@ -545,7 +529,7 @@ async function resolveHandleToDid(inputHandle) {
       updateProgress();
   
       // 7. For detailed post statistics.
-      // For "app.bsky.feed.post", assume about 20 pages.
+      // For "app.bsky.feed.post", we expect about 20 pages.
       const postsRecords = await fetchRecordsForCollection("app.bsky.feed.post", (inc) => { updateProgress(inc); }, 20);
       const postsCount = profile.postsCount || postsRecords.length;
       function filterRecords(records, testFunc) {
@@ -868,7 +852,6 @@ async function resolveHandleToDid(inputHandle) {
         accountData: accountDataFinal,
       };
     
-      // Round all numerical values in finalOutput and return.
       return roundNumbers(finalOutput);
     } catch (err) {
       console.error("Error loading account data:", err);

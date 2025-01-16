@@ -2,11 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { loadAccountData } from "../../accountData"; // Adjust the path as needed
+import { loadAccountData } from "../../accountData"; // Ensure the path is correct
 import "./UserProfile.css"; // Ensure this CSS file is styled appropriately
 
 const UserProfile = () => {
-  const { username } = useParams(); // Extract the username from the URL
+  const { username } = useParams(); // Extract the handle from the URL (e.g., "dame.bsky.social")
   const [accountData, setAccountData] = useState(null);
   const [progress, setProgress] = useState(0); // Track progress percentage
   const [loading, setLoading] = useState(true);
@@ -15,8 +15,8 @@ const UserProfile = () => {
   useEffect(() => {
     const fetchAccountData = async () => {
       try {
-        // Pass the onProgress callback to update the progress state.
-        const data = await loadAccountData((prog) => {
+        // Pass both the input handle and the onProgress callback.
+        const data = await loadAccountData(username, (prog) => {
           setProgress(prog);
         });
         if (data.error) {
@@ -38,10 +38,7 @@ const UserProfile = () => {
     return (
       <div className="user-profile loading-container">
         <div className="progress-bar-container">
-          <div
-            className="progress-bar"
-            style={{ width: `${progress}%` }}
-          />
+          <div className="progress-bar" style={{ width: `${progress}%` }} />
         </div>
         <p className="loading-text">Loading account data... {Math.floor(progress)}%</p>
       </div>
@@ -60,7 +57,7 @@ const UserProfile = () => {
   const {
     profile,
     displayName,
-    handle,
+    handle: resolvedHandle,
     did,
     createdAt,
     ageInDays,
@@ -89,7 +86,7 @@ const UserProfile = () => {
       {/* Profile Overview */}
       <section className="profile-overview">
         <h2>Profile Overview</h2>
-        <p><strong>Username:</strong> {handle}</p>
+        <p><strong>Username:</strong> {resolvedHandle}</p>
         <p><strong>DID:</strong> {did}</p>
         <p>
           <strong>Account Created:</strong> {new Date(createdAt).toLocaleDateString()} {" "}
@@ -127,9 +124,7 @@ const UserProfile = () => {
         <p><strong>Rotation Keys:</strong> {rotationKeys}</p>
         <p>
           <strong>Followers:</strong> {followersCount} | <strong>Following:</strong> {followsCount} {" "}
-          (<em>
-            {followersCount ? (followsCount / followersCount).toFixed(2) : "0"}
-          </em>)
+          (<em>{followersCount ? (followsCount / followersCount).toFixed(2) : "0"}</em>)
         </p>
         <p><strong>Posting Style:</strong> {postingStyle}</p>
         <p><strong>Social Status:</strong> {socialStatus}</p>
@@ -143,7 +138,7 @@ const UserProfile = () => {
         <p><strong>Records Per Day:</strong> {activityLast30Days.totalRecordsPerDay}</p>
         <p><strong>Total Bluesky Records:</strong> {activityLast30Days.totalBskyRecords}</p>
         <p><strong>Total Non-Bluesky Records:</strong> {activityLast30Days.totalNonBskyRecords}</p>
-        { activityLast30Days.collections && (
+        {activityLast30Days.collections && (
           <div className="collection-stats">
             <h3>Per-Collection Stats (Last 30 Days):</h3>
             <p>{JSON.stringify(activityLast30Days.collections, null, 2)}</p>
