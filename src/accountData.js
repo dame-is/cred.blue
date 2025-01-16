@@ -47,15 +47,17 @@ async function fetchProfile() {
 }
 
 // 2. Fetch all blobs (pagination using cursor)
-// Accept an optional onPage callback that is invoked after each page is fetched.
-async function fetchAllBlobsCount(onPage = () => {}) {
+// Accept an optional onPage callback. Here we use an expectedPages parameter
+// (defaulting to, e.g., 10 pages) to weight progress increments.
+async function fetchAllBlobsCount(onPage = (inc) => {}, expectedPages = 10) {
   let urlBase = `${serviceEndpoint}/xrpc/com.atproto.sync.listBlobs?did=${encodeURIComponent(did)}&limit=1000`;
   let count = 0, cursor = null;
   do {
     const url = urlBase + (cursor ? `&cursor=${cursor}` : "");
     const data = await cachedGetJSON(url);
     count += Array.isArray(data.cids) ? data.cids.length : 0;
-    onPage();
+    // Each page adds (1/expectedPages) increment.
+    onPage(1 / expectedPages);
     cursor = data.cursor || null;
   } while (cursor);
   return count;
@@ -68,8 +70,8 @@ async function fetchRepoDescription() {
 }
 
 // 4. Fetch records from a given collection (pagination using cursor)
-// Accept an optional onPage callback.
-async function fetchRecordsForCollection(collectionName, onPage = () => {}) {
+// Accept an optional onPage callback and expectedPages so you can adjust the weight.
+async function fetchRecordsForCollection(collectionName, onPage = (inc) => {}, expectedPages = 20) {
   let urlBase = `${serviceEndpoint}/xrpc/com.atproto.repo.listRecords?repo=${encodeURIComponent(did)}&collection=${encodeURIComponent(collectionName)}&limit=100`;
   let records = [];
   let cursor = null;
@@ -79,7 +81,8 @@ async function fetchRecordsForCollection(collectionName, onPage = () => {}) {
     if (Array.isArray(data.records)) {
       records = records.concat(data.records);
     }
-    onPage();
+    // Each page adds an increment that is weighted according to expectedPages.
+    onPage(1 / expectedPages);
     cursor = data.cursor || null;
   } while (cursor);
   return records;
@@ -92,8 +95,8 @@ async function fetchAuditLog() {
 }
 
 // 6. Fetch Author Feed (pagination using cursor)
-// Accept an optional onPage callback.
-async function fetchAuthorFeed(onPage = () => {}) {
+// Accept an optional onPage callback and expectedPages (default 15 pages).
+async function fetchAuthorFeed(onPage = (inc) => {}, expectedPages = 15) {
   let urlBase = `${publicServiceEndpoint}/xrpc/app.bsky.feed.getAuthorFeed?actor=${encodeURIComponent(did)}&limit=100`;
   let feed = [];
   let cursor = null;
@@ -103,7 +106,7 @@ async function fetchAuthorFeed(onPage = () => {}) {
     if (Array.isArray(data.feed)) {
       feed = feed.concat(data.feed);
     }
-    onPage();
+    onPage(1 / expectedPages);
     cursor = data.cursor || null;
   } while (cursor);
   return feed;
@@ -175,11 +178,9 @@ function calculatePostingStyle(stats) {
     altTextPercentage = 0,
     postsPerDay = 0,
   } = stats;
-
   if (postsPerDay < 0.1 && stats.totalBskyRecordsPerDay > 0.3) {
     return "Lurker";
   }
-
   if (onlyPostsPerDay > 0.8 && replyOtherPercentage >= 0.3) {
     if (textPercentage > linkPercentage && textPercentage > imagePercentage && textPercentage > videoPercentage) {
       return "Engaged Text Poster";
@@ -212,7 +213,6 @@ function calculatePostingStyle(stats) {
   if (replyOtherPercentage >= 0.5) return "Reply Guy";
   if (stats.quoteOtherPercentage >= 0.5) return "Quote Guy";
   if (stats.repostOtherPercentage >= 0.5) return "Repost Guy";
-
   return "Unknown";
 }
 
@@ -303,8 +303,8 @@ async function calculateRecordsAggregate(collectionNames, ageInDays) {
   let totalNonBskyRecords = 0;
   const collectionStats = {};
   for (const col of collectionNames) {
-    // For each collection, instrument the paginated call.
-    const recs = await fetchRecordsForCollection(col, () => {});
+    // Here we don't weight each page because we treat it as a single step.
+    const recs = await fetchRecordsForCollection(col, () => {}); 
     const count = recs.length;
     const perDay = ageInDays ? count / ageInDays : 0;
     collectionStats[col] = {
@@ -330,7 +330,6 @@ async function calculateRecordsAggregateForPeriod(collectionNames, periodDays) {
   const cutoffTime = Date.now() - periodDays * 24 * 60 * 60 * 1000;
   for (const col of collectionNames) {
     const recs = await fetchRecordsForCollection(col, () => {});
-    // Assume that record creation time is stored in rec.value.createdAt
     const filtered = recs.filter((rec) => {
       const recordTime = new Date(rec.value.createdAt).getTime();
       return recordTime >= cutoffTime;
@@ -353,8 +352,8 @@ async function calculateRecordsAggregateForPeriod(collectionNames, periodDays) {
 
 // Calculate engagements for the account using the author feed.
 async function calculateEngagements() {
-  // Instrument the author feed paginated call.
-  const feed = await fetchAuthorFeed(() => {});
+  // Use the paginated feed with weighting.
+  const feed = await fetchAuthorFeed(() => {}, 15);
   let likesReceived = 0;
   let repostsReceived = 0;
   let quotesReceived = 0;
@@ -469,29 +468,32 @@ function buildAnalysisNarrative(accountData) {
  ***********************************************************************/
 export async function loadAccountData(onProgress = () => {}) {
   try {
-    // Set total number of steps for progress estimation
+    // Set total number of steps for progress estimation.
+    // We'll treat the main process as 16 steps,
+    // with paginated functions reporting fractions.
     const totalSteps = 16;
-    let currentStep = 0;
-    const updateProgress = () => {
-      currentStep++;
-      onProgress((currentStep / totalSteps) * 100);
+    let currentProgress = 0; // a number from 0 to 1
+    const updateProgress = (increment = 1) => {
+      // increment can be a fraction, where 1 represents a full step.
+      currentProgress += increment / totalSteps;
+      // Ensure it doesn't exceed 1.
+      if (currentProgress > 1) currentProgress = 1;
+      onProgress(currentProgress * 100);
     };
 
-    // 1. Get basic profile (and use it for several fields)
+    // 1. Get basic profile (one-shot)
     const profile = await fetchProfile();
-    updateProgress();
+    updateProgress(); // one full step
 
-    // 2. Age details
+    // 2. Age details (one-shot)
     const { ageInDays, agePercentage } = calculateAge(profile.createdAt);
     updateProgress();
 
-    // 3. Blobs count and per-day/post calculations (instrument paginated call)
-    const blobsCount = await fetchAllBlobsCount(() => { updateProgress(); });
-    // Note: If the number of pages is large, you may want to weight these updates differently.
-    // For now, each page fetched calls updateProgress.
-    // (You might also consider averaging the onPage progress with a fixed increment.)
-  
-    // 4. Repo description gives collections.
+    // 3. Blobs count and per-day/post calculations (paginated)
+    // We assume an expected 10 pages for blobs.
+    const blobsCount = await fetchAllBlobsCount((inc) => { updateProgress(inc); }, 10);
+    // (Each page contributes 1/10th of a step.)
+    // 4. Repo description (one-shot)
     const repoDescription = await fetchRepoDescription();
     let collections = repoDescription.collections || [];
     const totalCollections = collections.length;
@@ -500,11 +502,11 @@ export async function loadAccountData(onProgress = () => {}) {
     const totalNonBskyCollections = totalCollections - totalBskyCollections;
     updateProgress();
 
-    // 5. Build targetCollections array (includes all collections)
+    // 5. Build targetCollections array (one-shot)
     const targetCollections = [...new Set(collections)];
     updateProgress();
 
-    // 6. Aggregate record counts for overall activity.
+    // 6. Aggregate record counts for overall activity (one-shot)
     const { totalRecords, totalBskyRecords, totalNonBskyRecords, collectionStats } =
       await calculateRecordsAggregate(targetCollections, ageInDays);
     const totalRecordsPerDay = ageInDays ? totalRecords / ageInDays : 0;
@@ -515,8 +517,8 @@ export async function loadAccountData(onProgress = () => {}) {
     updateProgress();
 
     // 7. For detailed post statistics.
-    // Instrument the paginated call for fetching posts from the "app.bsky.feed.post" collection.
-    const postsRecords = await fetchRecordsForCollection("app.bsky.feed.post", () => { updateProgress(); });
+    // For the "app.bsky.feed.post" collection, we expect about 20 pages.
+    const postsRecords = await fetchRecordsForCollection("app.bsky.feed.post", (inc) => { updateProgress(inc); }, 20);
     const postsCount = profile.postsCount || postsRecords.length;
     function filterRecords(records, testFunc) {
       return records.filter(testFunc).length;
@@ -556,7 +558,8 @@ export async function loadAccountData(onProgress = () => {}) {
     const onlySelfQuotesPerDay = ageInDays ? onlySelfQuotes / ageInDays : 0;
     const onlyOtherQuotes = onlyQuotes - onlySelfQuotes;
     const onlyOtherQuotesPerDay = ageInDays ? onlyOtherQuotes / ageInDays : 0;
-    const repostRecords = await fetchRecordsForCollection("app.bsky.feed.repost", () => { updateProgress(); });
+    // For "app.bsky.feed.repost", assume 10 pages.
+    const repostRecords = await fetchRecordsForCollection("app.bsky.feed.repost", (inc) => { updateProgress(inc); }, 10);
     const onlyReposts = repostRecords.length;
     const onlyRepostsPerDay = ageInDays ? onlyReposts / ageInDays : 0;
     const onlySelfReposts = filterRecords(repostRecords, (rec) => {
@@ -617,7 +620,7 @@ export async function loadAccountData(onProgress = () => {}) {
     });
     const linkPostsPerDay = ageInDays ? postsWithLinks / ageInDays : 0;
     updateProgress();
-  
+
     const postStats = {
       postsCount: roundToTwo(postsCount),
       postsPerDay: ageInDays ? roundToTwo(postsCount / ageInDays) : 0,
