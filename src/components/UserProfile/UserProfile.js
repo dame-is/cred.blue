@@ -3,19 +3,22 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { loadAccountData } from "../../accountData"; // Adjust the path as needed
-import LoadingBar from "../LoadingBar/LoadingBar"; // Import our loading bar
-import "./UserProfile.css"; // Ensure this CSS file exists and is styled appropriately
+import "./UserProfile.css"; // Ensure this CSS file is styled appropriately
 
 const UserProfile = () => {
   const { username } = useParams(); // Extract the username from the URL
   const [accountData, setAccountData] = useState(null);
+  const [progress, setProgress] = useState(0); // Track progress percentage
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchAccountData = async () => {
       try {
-        const data = await loadAccountData(username);
+        // Pass the onProgress callback to update the progress state.
+        const data = await loadAccountData((prog) => {
+          setProgress(prog);
+        });
         if (data.error) {
           throw new Error(data.error);
         }
@@ -33,9 +36,14 @@ const UserProfile = () => {
 
   if (loading) {
     return (
-      <div className="user-profile">
-        <LoadingBar />
-        <p className="loading-text">Loading account data...</p>
+      <div className="user-profile loading-container">
+        <div className="progress-bar-container">
+          <div
+            className="progress-bar"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+        <p className="loading-text">Loading account data... {Math.floor(progress)}%</p>
       </div>
     );
   }
@@ -106,7 +114,8 @@ const UserProfile = () => {
         <p><strong>Rotation Keys:</strong> {rotationKeys}</p>
         <p>
           <strong>Followers:</strong> {followersCount} | <strong>Following:</strong>{" "}
-          {followsCount} (<em>{followersCount ? (followsCount / followersCount).toFixed(2) : 0}</em>)
+          {followsCount} (
+          <em>{followersCount ? (followsCount / followersCount).toFixed(2) : 0}</em>)
         </p>
       </section>
 

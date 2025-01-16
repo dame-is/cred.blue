@@ -42,11 +42,37 @@
     font-weight: bold;
   }
 
+/* Container for the loading state */
+.user-profile.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+}
+
+/* Progress bar container (e.g., 80% wide and centered) */
+.progress-bar-container {
+  width: 80%;
+  height: 10px;
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+/* The progress bar element */
+.progress-bar {
+  height: 100%;
+  background-color: #3b82f6; /* blue color, change as needed */
+  transition: width 0.3s ease-in-out;
+}
+
+/* Loading text styling */
 .loading-text {
-  text-align: center;
   font-size: 1.1rem;
-  margin-top: 1rem;
   color: #3b82f6;
+  text-align: center;
 }
 
   
