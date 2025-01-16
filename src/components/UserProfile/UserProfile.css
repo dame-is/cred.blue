@@ -41,4 +41,12 @@
     color: red;
     font-weight: bold;
   }
+
+.loading-text {
+  text-align: center;
+  font-size: 1.1rem;
+  margin-top: 1rem;
+  color: #3b82f6;
+}
+
   

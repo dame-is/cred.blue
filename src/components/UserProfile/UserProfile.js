@@ -3,7 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { loadAccountData } from "../../accountData"; // Adjust the path as needed
-import "./UserProfile.css"; // Ensure that you write corresponding CSS to style these sections
+import LoadingBar from "../LoadingBar/LoadingBar"; // Import our loading bar
+import "./UserProfile.css"; // Ensure this CSS file exists and is styled appropriately
 
 const UserProfile = () => {
   const { username } = useParams(); // Extract the username from the URL
@@ -14,12 +15,10 @@ const UserProfile = () => {
   useEffect(() => {
     const fetchAccountData = async () => {
       try {
-        // Call the loadAccountData function from your accountData module.
         const data = await loadAccountData(username);
         if (data.error) {
           throw new Error(data.error);
         }
-        // Assume the data object has a top-level key accountData.
         setAccountData(data.accountData);
       } catch (err) {
         console.error("Error fetching account data:", err);
@@ -33,7 +32,12 @@ const UserProfile = () => {
   }, [username]);
 
   if (loading) {
-    return <div className="user-profile">Loading...</div>;
+    return (
+      <div className="user-profile">
+        <LoadingBar />
+        <p className="loading-text">Loading account data...</p>
+      </div>
+    );
   }
 
   if (error) {
@@ -78,7 +82,10 @@ const UserProfile = () => {
         <h2>Profile Overview</h2>
         <p><strong>Username:</strong> {handle}</p>
         <p><strong>DID:</strong> {did}</p>
-        <p><strong>Account Created:</strong> {new Date(createdAt).toLocaleDateString()} ({Math.floor(ageInDays)} days old)</p>
+        <p>
+          <strong>Account Created:</strong>{" "}
+          {new Date(createdAt).toLocaleDateString()} ({Math.floor(ageInDays)} days old)
+        </p>
         <p><strong>Profile Completion:</strong> {profile.profileCompletion}</p>
         <p><strong>Service Endpoint:</strong> {serviceEndpoint}</p>
         <p><strong>PDS Type:</strong> {pdsType}</p>
@@ -91,7 +98,7 @@ const UserProfile = () => {
         <p><strong>Records Per Day:</strong> {activityAll.totalRecordsPerDay}</p>
         <p>
           <strong>Total Bluesky Records:</strong> {activityAll.totalBskyRecords} (
-          {activityAll.totalBskyRecordsPercentage * 100}%)
+          {Math.floor(activityAll.totalBskyRecordsPercentage * 100)}%)
         </p>
         <p><strong>Posts Count:</strong> {postsCount}</p>
         <p><strong>Posting Style:</strong> {postingStyle}</p>
@@ -110,7 +117,6 @@ const UserProfile = () => {
         <p><strong>Records Per Day:</strong> {activityLast30Days.totalRecordsPerDay}</p>
         <p><strong>Total Bluesky Records:</strong> {activityLast30Days.totalBskyRecords}</p>
         <p><strong>Total Non-Bluesky Records:</strong> {activityLast30Days.totalNonBskyRecords}</p>
-        {/* Optionally, list more detailed per-collection stats here */}
       </section>
 
       {/* Also Known As / Domain Details Section */}
