@@ -1,6 +1,6 @@
 // src/App.jsx
 
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar/Navbar';
 import Footer from './components/Footer/Footer';
@@ -9,6 +9,7 @@ import MainApp from './components/MainApp/MainApp';
 import About from './components/About/About';
 import Home from './components/Home/Home';
 import UserProfile from './components/UserProfile/UserProfile';
+import "./App.css";
 import { AuthContext } from './AuthContext';
 
 const App = () => {
