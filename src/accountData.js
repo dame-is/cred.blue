@@ -490,7 +490,7 @@ async function resolveHandleToDid(inputHandle) {
   
       // Set total number of steps for progress estimation.
       // We treat the main process as 16 steps; paginated endpoints will report fractions.
-      const totalSteps = 4;
+      const totalSteps = 6;
       let currentProgress = 0; // a value between 0 and 1
       const updateProgress = (increment = 1) => {
         currentProgress += increment / totalSteps;
