@@ -479,18 +479,18 @@ async function resolveHandleToDid(inputHandle) {
       
       // Define weights for each phase (the sum should equal 1.0)
       const progressWeights = {
-        resolve: 0.05,         // resolving handle to DID and serviceEndpoint
-        fetchProfile: 0.05,
-        calculateAge: 0.05,
-        blobs: 0.10,
-        repoDesc: 0.05,
+        resolve: 0.001,
+        fetchProfile: 0.001,
+        calculateAge: 0.001,
+        blobs: 0.01,
+        repoDesc: 0.01,
         targetCollections: 0.05,
         aggregateRecords: 0.05,
-        listRecords: 0.30,     // detailed post statistics (listRecords calls)
-        auditLog: 0.05,
-        overallStatus: 0.05,   // posting style, social status, and narrative
-        aggregates30: 0.05,
-        final: 0.05
+        listRecords: 0.864,
+        auditLog: 0.01,
+        overallStatus: 0.001,
+        aggregates30: 0.001,
+        final: 0.001
       };
       
       // currentProgress is a fraction (0 to 1)
