@@ -2,59 +2,25 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import ScoreResult from "../ScoreResult"; // Import the ScoreResult component
 import { loadAccountData } from "../../accountData"; // Adjust the path as needed
-import "./UserProfile.css"; // Ensure this CSS file exists and is styled appropriately
+import "./UserProfile.css"; // Ensure that you write corresponding CSS to style these sections
 
 const UserProfile = () => {
   const { username } = useParams(); // Extract the username from the URL
-  const [profile, setProfile] = useState(null);
-  const [score, setScore] = useState(null);
+  const [accountData, setAccountData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchAccountData = async () => {
       try {
         // Call the loadAccountData function from your accountData module.
         const data = await loadAccountData(username);
         if (data.error) {
           throw new Error(data.error);
         }
-        
-        // For example, assume that your final accountData is stored in data.accountData.
-        // You can then set state based on that.
-        const accountData = data.accountData;
-        const {
-          profile: profileData,
-          // You might have other fields like scores, narrative, etc.
-          // In this example, we assume you want to use:
-          createdAt,
-          ageInDays,
-          displayName,
-        } = accountData;
-
-        setProfile({
-          displayName: profileData.displayName || profileData.handle,
-          username: profileData.handle,
-          description: profileData.description || "N/A",
-          createdAt: new Date(profileData.createdAt).toLocaleDateString(), // Format as needed
-          ageInDays: Math.floor(ageInDays),
-          generation: accountData.generation || "Unknown",
-        });
-
-        // You can extract scoring fields from your accountData as appropriate.
-        setScore({
-          handle: profileData.handle,
-          did: profileData.did,
-          // Adjust these properties based on your accountData structure
-          blueskyScore: accountData.blueskyScore,
-          atprotoScore: accountData.atprotoScore,
-          combinedScore: accountData.combinedScore,
-          generatedAt: accountData.scoreGeneratedAt,
-          breakdown: accountData.breakdown,
-          serviceEndpoint: accountData.serviceEndpoint,
-        });
+        // Assume the data object has a top-level key accountData.
+        setAccountData(data.accountData);
       } catch (err) {
         console.error("Error fetching account data:", err);
         setError(err.message);
@@ -63,7 +29,7 @@ const UserProfile = () => {
       }
     };
 
-    fetchData();
+    fetchAccountData();
   }, [username]);
 
   if (loading) {
@@ -74,20 +40,102 @@ const UserProfile = () => {
     return <div className="user-profile error">Error: {error}</div>;
   }
 
-  if (!profile) {
+  if (!accountData) {
     return <div className="user-profile">No profile information available.</div>;
   }
 
+  // Destructure various sections from the accountData object.
+  const {
+    profile,
+    displayName,
+    handle,
+    did,
+    createdAt,
+    ageInDays,
+    blobsCount,
+    followersCount,
+    followsCount,
+    postsCount,
+    rotationKeys,
+    era,
+    postingStyle,
+    socialStatus,
+    activityAll,
+    activityLast30Days,
+    alsoKnownAs,
+    analysis,
+    scoreGeneratedAt,
+    serviceEndpoint,
+    pdsType,
+  } = accountData;
+
   return (
     <div className="user-profile">
-      <h2>{profile.displayName}</h2>
-      <p><strong>Username:</strong> {profile.username}</p>
-      <p><strong>Account Created:</strong> {profile.createdAt} ({profile.ageInDays} days old)</p>
-      <p><strong>Generation:</strong> {profile.generation}</p>
-      <p><strong>DID:</strong> {score && score.did}</p>
-      <p><strong>Service Endpoint:</strong> {score && score.serviceEndpoint}</p>
-      <p><strong>Description:</strong> {profile.description}</p>
-      {/* Add more profile fields as needed */}
+      <h1>{displayName}</h1>
+
+      {/* Profile Overview Section */}
+      <section className="profile-overview">
+        <h2>Profile Overview</h2>
+        <p><strong>Username:</strong> {handle}</p>
+        <p><strong>DID:</strong> {did}</p>
+        <p><strong>Account Created:</strong> {new Date(createdAt).toLocaleDateString()} ({Math.floor(ageInDays)} days old)</p>
+        <p><strong>Profile Completion:</strong> {profile.profileCompletion}</p>
+        <p><strong>Service Endpoint:</strong> {serviceEndpoint}</p>
+        <p><strong>PDS Type:</strong> {pdsType}</p>
+      </section>
+
+      {/* Activity Overview Section */}
+      <section className="activity-overview">
+        <h2>Overall Activity</h2>
+        <p><strong>Total Records:</strong> {activityAll.totalRecords}</p>
+        <p><strong>Records Per Day:</strong> {activityAll.totalRecordsPerDay}</p>
+        <p>
+          <strong>Total Bluesky Records:</strong> {activityAll.totalBskyRecords} (
+          {activityAll.totalBskyRecordsPercentage * 100}%)
+        </p>
+        <p><strong>Posts Count:</strong> {postsCount}</p>
+        <p><strong>Posting Style:</strong> {postingStyle}</p>
+        <p><strong>Social Status:</strong> {socialStatus}</p>
+        <p><strong>Rotation Keys:</strong> {rotationKeys}</p>
+        <p>
+          <strong>Followers:</strong> {followersCount} | <strong>Following:</strong>{" "}
+          {followsCount} (<em>{followersCount ? (followsCount / followersCount).toFixed(2) : 0}</em>)
+        </p>
+      </section>
+
+      {/* 30-Day Activity Section */}
+      <section className="activity-recent">
+        <h2>Last 30 Days Activity</h2>
+        <p><strong>Total Records:</strong> {activityLast30Days.totalRecords}</p>
+        <p><strong>Records Per Day:</strong> {activityLast30Days.totalRecordsPerDay}</p>
+        <p><strong>Total Bluesky Records:</strong> {activityLast30Days.totalBskyRecords}</p>
+        <p><strong>Total Non-Bluesky Records:</strong> {activityLast30Days.totalNonBskyRecords}</p>
+        {/* Optionally, list more detailed per-collection stats here */}
+      </section>
+
+      {/* Also Known As / Domain Details Section */}
+      <section className="aliases">
+        <h2>Alias Information</h2>
+        <p><strong>Total AKAs:</strong> {alsoKnownAs.totalAkas}</p>
+        <p><strong>Active AKAs:</strong> {alsoKnownAs.activeAkas}</p>
+        <p><strong>Bsky AKAs:</strong> {alsoKnownAs.totalBskyAkas}</p>
+        <p><strong>Custom AKAs:</strong> {alsoKnownAs.totalCustomAkas}</p>
+        <p><strong>Domain Rarity:</strong> {alsoKnownAs.domainRarity}</p>
+        <p><strong>Handle Type:</strong> {alsoKnownAs.handleType}</p>
+      </section>
+
+      {/* Analysis Narrative Section */}
+      <section className="narrative">
+        <h2>Analysis Narrative</h2>
+        <pre>{analysis.narrative}</pre>
+      </section>
+
+      {/* Footer / Generated At */}
+      <section className="generated-info">
+        <p>
+          <small>Score generated at: {new Date(scoreGeneratedAt).toLocaleString()}</small>
+        </p>
+      </section>
     </div>
   );
 };
