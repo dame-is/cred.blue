@@ -1,11 +1,67 @@
 @import './styles/variables.css';
 
 .App {
-  font-family: Arial, sans-serif;
+  font-family: "articulat-cf", sans-serif;
+  font-weight: 500;
+  font-style: normal;
   margin: 0;
   padding: 20px;
   text-align: center;
+  color: #000000;
   background-color: #f4f4f9;
+}
+
+h1 {
+  margin-top: 1.2em;
+  margin-bottom: 1.2em;
+  font-size: 1.8em;
+  font-family: "articulat-heavy-cf", sans-serif;
+  font-weight: 900;
+  font-style: normal;
+  color: #3B9AF8;
+}
+
+h2 {
+  margin-top: 1.2em;
+  margin-bottom: 1.2em;
+  font-size: 1.5em;
+  font-family: "articulat-cf", sans-serif;
+  font-weight: 800;
+  font-style: normal;
+  color: #004F84;
+}
+
+h3 {
+  margin-top: 1.2em;
+  margin-bottom: 1.2em;
+  font-size: 1.3em;
+  font-family: "articulat-cf", sans-serif;
+  font-weight: 800;
+  font-style: normal;
+  color: #004F84;
+}
+
+p {
+  margin-top: 1.2em;
+  margin-bottom: 1.2em;
+  font-size: 1em;
+  font-family: "articulat-cf", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+  color: #000000;
+}
+
+body {
+  margin-top: 1.2em;
+  margin-bottom: 1.2em;
+  font-size: 1em;
+  margin: 0;
+  font-family: "articulat-cf", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+  background-color: #f0f0f0; /* Light background */
+  color: #000000; /* Dark text */
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 form {
@@ -45,14 +101,6 @@ ul {
   text-align: left;
   display: inline-block;
   margin: 20px auto;
-}
-
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #f0f0f0; /* Light background */
-  color: #000000; /* Dark text */
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .dark-mode body {
