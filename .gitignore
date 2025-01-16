@@ -23,3 +23,5 @@ yarn-debug.log*
 yarn-error.log*
 
 .env
+/frontend/src/components/UserProfile/AnalysisCardContent.md
+/frontend/src/components/UserProfile/ProfileCardContent.md
