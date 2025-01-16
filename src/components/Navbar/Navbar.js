@@ -65,8 +65,12 @@ const Navbar = () => {
       <div className="navbar-container">
         {/* Left Section: Logo and Links */}
         <div className="navbar-left">
-          <div className="navbar-logo">
-            <Link to="/">cred.blue</Link>
+        <div className="navbar-logo">
+            <Link to="/">
+              <span className="cred">cred</span>
+              <span className="period">.</span>
+              <span className="blue">blue</span>
+            </Link>
           </div>
 
           <nav className="navbar-links">
