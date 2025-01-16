@@ -12,15 +12,20 @@ async function resolveHandleToDid(inputHandle) {
     return data.did;
   }
   
-  // Fetch the serviceEndpoint from the PLC Directory for a given DID.
   async function getServiceEndpointForDid(resolvedDid) {
     const url = `${plcDirectoryEndpoint}/${encodeURIComponent(resolvedDid)}`;
     const data = await getJSON(url);
-    if (!data.serviceEndpoint) {
+    if (!data.service || !Array.isArray(data.service)) {
       throw new Error("Could not determine service endpoint for DID.");
     }
-    return data.serviceEndpoint;
+    // Find the service entry that has type "AtprotoPersonalDataServer"
+    const svcEntry = data.service.find(svc => svc.type === "AtprotoPersonalDataServer");
+    if (!svcEntry || !svcEntry.serviceEndpoint) {
+      throw new Error("Could not determine service endpoint for DID.");
+    }
+    return svcEntry.serviceEndpoint;
   }
+  
   
   /***********************************************************************
    * Global settings and basic caching
