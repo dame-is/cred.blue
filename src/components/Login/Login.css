@@ -1,12 +1,5 @@
 /* src/components/Login/Login.css */
 
-/* General Styling */
-body {
-  font-family: "articulat-cf", sans-serif;
-  background-color: #f4f4f9;
-  margin: 0;
-}
-
 /* Enable smooth scrolling for the entire page */
 html {
   scroll-behavior: smooth;

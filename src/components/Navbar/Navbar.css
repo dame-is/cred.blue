@@ -7,6 +7,18 @@
     border-bottom: 1px solid #eaeaea; /* Light gray border */
     transition: background-color 0.3s ease, border-color 0.3s ease; /* Smooth transitions */
   }
+
+  .cred {
+    color: #3B9AF8;
+  }
+
+  .period {
+    color: black;
+  }
+
+  .blue {
+    color: #004F84;
+  }
   
   .navbar-container {
     max-width: 1200px; /* Max width of the content */
