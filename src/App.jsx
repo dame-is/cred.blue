@@ -14,18 +14,6 @@ import { AuthContext } from './AuthContext';
 const App = () => {
   const { isAuthenticated, handleLoginSuccess, loading } = useContext(AuthContext);
 
-  // Load Adobe font stylesheet on app mount
-  useEffect(() => {
-    const loadAdobeFont = () => {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = 'https://use.typekit.net/yhs0sil.css';
-      link.type = 'text/css';
-      document.head.appendChild(link);
-    };
-    loadAdobeFont();
-  }, []);
-
   if (loading) {
     return <div>Loading...</div>;
   }
