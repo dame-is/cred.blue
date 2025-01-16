@@ -74,7 +74,7 @@ async function resolveHandleToDid(inputHandle) {
   
   // 2. Fetch all blobs (pagination using cursor)
   // Accept an optional onPage callback and expectedPages parameter.
-  async function fetchAllBlobsCount(onPage = (inc) => {}, expectedPages = 10) {
+  async function fetchAllBlobsCount(onPage = (inc) => {}, expectedPages = 2) {
     let urlBase = `${serviceEndpoint}/xrpc/com.atproto.sync.listBlobs?did=${encodeURIComponent(did)}&limit=1000`;
     let count = 0, cursor = null;
     do {
@@ -95,7 +95,7 @@ async function resolveHandleToDid(inputHandle) {
   
   // 4. Fetch records from a given collection (pagination using cursor)
   // Accept an optional onPage callback and expectedPages parameter.
-  async function fetchRecordsForCollection(collectionName, onPage = (inc) => {}, expectedPages = 20) {
+  async function fetchRecordsForCollection(collectionName, onPage = (inc) => {}, expectedPages = 50) {
     let urlBase = `${serviceEndpoint}/xrpc/com.atproto.repo.listRecords?repo=${encodeURIComponent(did)}&collection=${encodeURIComponent(collectionName)}&limit=100`;
     let records = [];
     let cursor = null;
@@ -119,7 +119,7 @@ async function resolveHandleToDid(inputHandle) {
   
   // 6. Fetch Author Feed (pagination using cursor)
   // Accept an optional onPage callback and expectedPages parameter.
-  async function fetchAuthorFeed(onPage = (inc) => {}, expectedPages = 15) {
+  async function fetchAuthorFeed(onPage = (inc) => {}, expectedPages = 10) {
     let urlBase = `${publicServiceEndpoint}/xrpc/app.bsky.feed.getAuthorFeed?actor=${encodeURIComponent(did)}&limit=100`;
     let feed = [];
     let cursor = null;
@@ -621,7 +621,6 @@ async function resolveHandleToDid(inputHandle) {
           return true;
         return false;
       });
-      updateProgress();
   
       const postStats = {
         postsCount: roundToTwo(postsCount),
@@ -705,24 +704,20 @@ async function resolveHandleToDid(inputHandle) {
       const totalCustomAkas = roundToTwo(totalAkas - totalBskyAkas);
       const rotationKeysRounded = roundToTwo(rotationKeys);
       const activeAkasRounded = roundToTwo(activeAkas);
-      updateProgress();
     
       // 9. Compute engagements from author feed.
       const engagementsReceived = await calculateEngagements();
-      updateProgress();
     
       // 10. Compute overall activity statuses.
       const overallActivityStatus = calculateActivityStatus(totalRecordsPerDay);
       const bskyActivityStatus = calculateActivityStatus(totalBskyRecordsPerDay);
       const atprotoActivityStatus = calculateActivityStatus(totalNonBskyRecordsPerDay);
-      updateProgress();
     
       // 11. Compute posting style.
       const postingStyleCalc = calculatePostingStyle({
         ...postStats,
         totalBskyRecordsPerDay,
       });
-      updateProgress();
     
       // 12. Compute social status.
       const socialStatusCalc = calculateSocialStatus({
@@ -730,7 +725,6 @@ async function resolveHandleToDid(inputHandle) {
         followersCount: profile.followersCount || 0,
         followsCount: profile.followsCount || 0,
       });
-      updateProgress();
     
       // 13. Build analysis narrative paragraphs.
       const narrative = buildAnalysisNarrative({
@@ -761,7 +755,6 @@ async function resolveHandleToDid(inputHandle) {
           totalBskyAkas,
         },
       });
-      updateProgress();
     
       // 14. Now compute activity aggregates for the last 30 days.
       const periodDays = 30;
@@ -774,7 +767,6 @@ async function resolveHandleToDid(inputHandle) {
       const totalRecordsPerDay30 = periodDays ? totalRecords30 / periodDays : 0;
       const totalBskyRecordsPerDay30 = periodDays ? totalBskyRecords30 / periodDays : 0;
       const totalNonBskyRecordsPerDay30 = periodDays ? totalNonBskyRecords30 / periodDays : 0;
-      updateProgress();
     
       // 15. Construct final accountData JSON.
       const accountDataFinal = {
@@ -849,7 +841,6 @@ async function resolveHandleToDid(inputHandle) {
           narrative: narrative,
         },
       };
-      updateProgress();
     
       // 16. Build final output JSON.
       const finalOutput = {
