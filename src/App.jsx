@@ -8,7 +8,7 @@ import Login from './components/Login/Login';
 import MainApp from './components/MainApp/MainApp';
 import About from './components/About/About';
 import Home from './components/Home/Home';
-import UserProfile from './components/UserProfile/UserProfile';
+import UserProfile from './components/UserProfile/UserProfileLegacy';
 import "./App.css";
 import { AuthContext } from './AuthContext';
 

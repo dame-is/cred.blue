@@ -1,78 +1,41 @@
-/* src/components/UserProfile/UserProfile.css */
-
 .user-profile {
-    max-width: 800px;
-    margin: 0 auto;
     padding: 20px;
   }
   
-  .user-profile h2 {
-    font-size: 2em;
-    margin-bottom: 10px;
-  }
-  
-  .user-profile p {
-    font-size: 1.1em;
-    margin: 5px 0;
-  }
-  
-  .score-section {
+  /* Style for the GridLayout container */
+  .layout {
     margin-top: 20px;
   }
   
-  .score-section h3 {
-    font-size: 1.5em;
+  /* Each grid item should have some padding */
+  .grid-item {
+    padding: 10px;
+  }
+  
+  /* Loading and error states */
+  .loading-container,
+  .error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+  }
+  
+  .progress-bar-container {
+    width: 80%;
+    background: #eee;
+    border-radius: 4px;
+    overflow: hidden;
     margin-bottom: 10px;
   }
   
-  .score-section ul {
-    list-style-type: none;
-    padding: 0;
+  .progress-bar {
+    height: 10px;
+    background: #007bff;
   }
   
-  .score-section li {
-    background: #f0f0f0;
-    margin: 5px 0;
-    padding: 10px;
-    border-radius: 5px;
+  .loading-text {
+    font-size: 1.1em;
   }
-  
-  .error {
-    color: red;
-    font-weight: bold;
-  }
-
-/* Container for the loading state */
-.user-profile.loading-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 80vh;
-}
-
-/* Progress bar container (e.g., 80% wide and centered) */
-.progress-bar-container {
-  width: 80%;
-  height: 10px;
-  background-color: #e0e0e0;
-  border-radius: 5px;
-  overflow: hidden;
-  margin-bottom: 1rem;
-}
-
-/* The progress bar element */
-.progress-bar {
-  height: 100%;
-  background-color: #3b82f6; /* blue color, change as needed */
-  transition: width 0.3s ease-in-out;
-}
-
-/* Loading text styling */
-.loading-text {
-  font-size: 1.1rem;
-  color: #3b82f6;
-  text-align: center;
-}
-
   

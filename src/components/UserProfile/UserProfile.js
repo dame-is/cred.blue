@@ -1,21 +1,21 @@
 // src/components/UserProfile/UserProfile.jsx
-
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import GridLayout from "react-grid-layout";
 import { loadAccountData } from "../../accountData"; // Ensure the path is correct
+import Card from "../Card/Card";
 import "./UserProfile.css"; // Ensure this CSS file is styled appropriately
 
 const UserProfile = () => {
-  const { username } = useParams(); // Extract the handle from the URL (e.g., "dame.bsky.social")
+  const { username } = useParams();
   const [accountData, setAccountData] = useState(null);
-  const [progress, setProgress] = useState(0); // Track progress percentage
+  const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchAccountData = async () => {
       try {
-        // Pass both the input handle and the onProgress callback.
         const data = await loadAccountData(username, (prog) => {
           setProgress(prog);
         });
@@ -53,7 +53,7 @@ const UserProfile = () => {
     return <div className="user-profile">No profile information available.</div>;
   }
 
-  // Destructure the key sections from the accountData object.
+  // Destructure the key sections from accountData
   const {
     profile,
     displayName,
@@ -62,119 +62,106 @@ const UserProfile = () => {
     createdAt,
     ageInDays,
     agePercentage,
-    blobsCount,
-    followersCount,
-    followsCount,
-    postsCount,
-    rotationKeys,
-    era,
-    postingStyle,
-    socialStatus,
-    activityAll,
-    activityLast30Days,
-    alsoKnownAs,
-    analysis,
-    scoreGeneratedAt,
     serviceEndpoint,
     pdsType,
   } = accountData;
 
+  // Define the layout for react-grid-layout
+  const layout = [
+    { i: "overview", x: 0, y: 0, w: 4, h: 4 },
+    { i: "stats", x: 4, y: 0, w: 4, h: 4 },
+    { i: "visualization1", x: 8, y: 0, w: 4, h: 4 },
+    { i: "visualization2", x: 0, y: 4, w: 4, h: 4 },
+    { i: "recentActivity", x: 4, y: 4, w: 4, h: 4 },
+    { i: "connections", x: 8, y: 4, w: 4, h: 4 },
+    { i: "settings", x: 0, y: 8, w: 4, h: 4 },
+    { i: "extra", x: 4, y: 8, w: 4, h: 4 },
+    // You can add one more card if you need a total of 9
+    { i: "additional", x: 8, y: 8, w: 4, h: 4 },
+  ];
+
   return (
     <div className="user-profile">
       <h1>{displayName}</h1>
+      <GridLayout
+        className="layout"
+        layout={layout}
+        cols={12}
+        rowHeight={30}
+        width={1200}
+        draggableHandle=".card-title"
+      >
+        <div key="overview" className="grid-item">
+          <Card title="Profile Overview">
+            <p><strong>Username:</strong> {resolvedHandle}</p>
+            <p><strong>DID:</strong> {did}</p>
+            <p>
+              <strong>Account Created:</strong>{" "}
+              {new Date(createdAt).toLocaleDateString()}{" "}
+              (<em>{Math.floor(ageInDays)} days old | {Math.floor(agePercentage * 100)}%</em>)
+            </p>
+            <p><strong>Profile Completion:</strong> {profile.profileCompletion}</p>
+            <p><strong>Service Endpoint:</strong> {serviceEndpoint}</p>
+            <p><strong>PDS Type:</strong> {pdsType}</p>
+          </Card>
+        </div>
 
-      {/* Profile Overview */}
-      <section className="profile-overview">
-        <h2>Profile Overview</h2>
-        <p><strong>Username:</strong> {resolvedHandle}</p>
-        <p><strong>DID:</strong> {did}</p>
-        <p>
-          <strong>Account Created:</strong> {new Date(createdAt).toLocaleDateString()} {" "}
-          (<em>{Math.floor(ageInDays)} days old | {Math.floor(agePercentage * 100)}%</em>)
-        </p>
-        <p><strong>Profile Completion:</strong> {profile.profileCompletion}</p>
-        <p><strong>Service Endpoint:</strong> {serviceEndpoint}</p>
-        <p><strong>PDS Type:</strong> {pdsType}</p>
-      </section>
+        <div key="stats" className="grid-item">
+          <Card title="Stats">
+            {/* Insert stats details here */}
+            <p>Stats details go here...</p>
+          </Card>
+        </div>
 
-      {/* Blobs & Posts Data */}
-      <section className="blobs-posts">
-        <h2>Blobs & Posts Data</h2>
-        <p><strong>Blobs Count:</strong> {blobsCount}</p>
-        <p>
-          <strong>Blobs Per Day:</strong>{" "}
-          {ageInDays ? (blobsCount / ageInDays).toFixed(2) : "0"}
-        </p>
-        <p>
-          <strong>Blobs Per Post:</strong>{" "}
-          {postsCount ? (blobsCount / postsCount).toFixed(2) : "0"}
-        </p>
-        <p><strong>Posts Count:</strong> {postsCount}</p>
-      </section>
+        <div key="visualization1" className="grid-item">
+          <Card title="Visualization 1">
+            {/* Insert data visualization component here */}
+            <p>Chart or graph 1...</p>
+          </Card>
+        </div>
 
-      {/* Overall Activity Overview */}
-      <section className="activity-overview">
-        <h2>Overall Activity</h2>
-        <p><strong>Total Records:</strong> {activityAll.totalRecords}</p>
-        <p><strong>Records Per Day:</strong> {activityAll.totalRecordsPerDay}</p>
-        <p>
-          <strong>Total Bluesky Records:</strong> {activityAll.totalBskyRecords} (
-          {Math.floor(activityAll.totalBskyRecordsPercentage * 100)}%)
-        </p>
-        <p><strong>Rotation Keys:</strong> {rotationKeys}</p>
-        <p>
-          <strong>Followers:</strong> {followersCount} | <strong>Following:</strong> {followsCount} {" "}
-          (<em>{followersCount ? (followsCount / followersCount).toFixed(2) : "0"}</em>)
-        </p>
-        <p><strong>Posting Style:</strong> {postingStyle}</p>
-        <p><strong>Social Status:</strong> {socialStatus}</p>
-        <p><strong>Era:</strong> {era}</p>
-      </section>
+        <div key="visualization2" className="grid-item">
+          <Card title="Visualization 2">
+            {/* Insert another data visualization component */}
+            <p>Chart or graph 2...</p>
+          </Card>
+        </div>
 
-      {/* Last 30 Days Activity */}
-      <section className="activity-recent">
-        <h2>Last 30 Days Activity</h2>
-        <p><strong>Total Records:</strong> {activityLast30Days.totalRecords}</p>
-        <p><strong>Records Per Day:</strong> {activityLast30Days.totalRecordsPerDay}</p>
-        <p><strong>Total Bluesky Records:</strong> {activityLast30Days.totalBskyRecords}</p>
-        <p><strong>Total Non-Bluesky Records:</strong> {activityLast30Days.totalNonBskyRecords}</p>
-        {activityLast30Days.collections && (
-          <div className="collection-stats">
-            <h3>Per-Collection Stats (Last 30 Days):</h3>
-            <p>{JSON.stringify(activityLast30Days.collections, null, 2)}</p>
-          </div>
-        )}
-      </section>
+        <div key="recentActivity" className="grid-item">
+          <Card title="Recent Activity">
+            {/* Insert recent activity details here */}
+            <p>Recent user activities...</p>
+          </Card>
+        </div>
 
-      {/* Alias Information */}
-      <section className="aliases">
-        <h2>Alias Information</h2>
-        <p><strong>Total AKAs:</strong> {alsoKnownAs.totalAkas}</p>
-        <p><strong>Active AKAs:</strong> {alsoKnownAs.activeAkas}</p>
-        <p><strong>Bsky AKAs:</strong> {alsoKnownAs.totalBskyAkas}</p>
-        <p><strong>Custom AKAs:</strong> {alsoKnownAs.totalCustomAkas}</p>
-        <p><strong>Domain Rarity:</strong> {alsoKnownAs.domainRarity}</p>
-        <p><strong>Handle Type:</strong> {alsoKnownAs.handleType}</p>
-      </section>
+        <div key="connections" className="grid-item">
+          <Card title="Connections">
+            {/* Insert connections/followers information */}
+            <p>Follower or connection info...</p>
+          </Card>
+        </div>
 
-      {/* Analysis Narrative */}
-      <section className="narrative">
-        <h2>Analysis Narrative</h2>
-        <p>{analysis.narrative}</p>
-      </section>
+        <div key="settings" className="grid-item">
+          <Card title="Settings">
+            {/* User settings or additional info */}
+            <p>Settings details...</p>
+          </Card>
+        </div>
 
-      {/* Additional Data Dump */}
-      <section className="data-dump">
-        <h2>Full Account Data JSON</h2>
-        <p>{JSON.stringify(accountData, null, 2)}</p>
-      </section>
+        <div key="extra" className="grid-item">
+          <Card title="Extra">
+            {/* Any extra data */}
+            <p>Extra details...</p>
+          </Card>
+        </div>
 
-      {/* Generated At Footer */}
-      <section className="generated-info">
-        <p>
-          <small>Score generated at: {new Date(scoreGeneratedAt).toLocaleString()}</small>
-        </p>
-      </section>
+        <div key="additional" className="grid-item">
+          <Card title="Additional Info">
+            {/* Additional optional card data */}
+            <p>Additional information...</p>
+          </Card>
+        </div>
+      </GridLayout>
     </div>
   );
 };
