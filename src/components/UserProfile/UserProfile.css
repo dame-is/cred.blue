@@ -1,15 +1,26 @@
+/* Container for the profile page */
 .user-profile {
     padding: 20px;
+    max-width: 100%;
+    box-sizing: border-box;
   }
   
-  /* Style for the GridLayout container */
+  /* Grid layout styling */
   .layout {
     margin-top: 20px;
   }
   
-  /* Each grid item should have some padding */
+  /* Ensure grid items don’t overflow */
   .grid-item {
-    padding: 10px;
+    background: transparent;
+    box-sizing: border-box;
+  }
+  
+  /* Media query for responsiveness */
+  @media (max-width: 1200px) {
+    .layout {
+      width: 100%;
+    }
   }
   
   /* Loading and error states */
@@ -37,5 +48,25 @@
   
   .loading-text {
     font-size: 1.1em;
+  }
+  
+  /* Draggable Handle Styles */
+  .drag-handle {
+    cursor: move;
+    display: inline-block;
+    padding: 5px;
+    background: #f0f0f0;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  
+  .drag-icon {
+    font-size: 1.2em;
+    user-select: none;
+  }
+  
+  /* Optional: Enhance hover effect for the drag handle */
+  .drag-handle:hover {
+    background: #e0e0e0;
   }
   
