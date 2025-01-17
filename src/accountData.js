@@ -493,6 +493,7 @@ async function resolveHandleToDid(inputHandle) {
         final: 0.001
       };
       
+      
       // currentProgress is a fraction (0 to 1)
       let currentProgress = 0;
       const updateProgress = (increment = 1) => {
