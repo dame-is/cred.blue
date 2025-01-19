@@ -4,9 +4,7 @@
 
 // Resolve a handle (e.g., "dame.bsky.social") into a DID using the atproto resolveHandle endpoint.
 async function resolveHandleToDid(inputHandle) {
-    const url = `${publicServiceEndpoint}/xrpc/com.atproto.identity.resolveHandle?handle=${encodeURIComponent(
-      inputHandle
-    )}`;
+    const url = `${publicServiceEndpoint}/xrpc/com.atproto.identity.resolveHandle?handle=${encodeURIComponent(inputHandle)}`;
     const data = await getJSON(url);
     if (!data.did) {
       throw new Error("Could not resolve handle to DID.");
@@ -40,6 +38,34 @@ async function resolveHandleToDid(inputHandle) {
       
   // Basic in-memory cache to avoid duplicate API calls.
   const cache = {};
+  
+  /***********************************************************************
+   * Progress Batching Helpers
+   ***********************************************************************/
+  // These functions aggregate fast progress increments
+  let _actualFetchCount = 0;
+  let _displayedFetchCount = 0;
+  let _progressUpdateTimer = null;
+  
+  function incrementProgress(count = 1, onProgress) {
+    _actualFetchCount += count;
+    if (!_progressUpdateTimer) {
+      _progressUpdateTimer = setInterval(() => {
+        if (_displayedFetchCount < _actualFetchCount) {
+          // Increase by 1 (or more if needed)
+          _displayedFetchCount += Math.min(1, _actualFetchCount - _displayedFetchCount);
+          onProgress(_displayedFetchCount);
+        }
+      }, 100); // update every 100ms
+    }
+  }
+  
+  function finalizeProgress(onProgress) {
+    clearInterval(_progressUpdateTimer);
+    _progressUpdateTimer = null;
+    _displayedFetchCount = _actualFetchCount;
+    onProgress(_displayedFetchCount);
+  }
       
   /***********************************************************************
    * Helper Functions
@@ -84,7 +110,6 @@ async function resolveHandleToDid(inputHandle) {
       const data = await cachedGetJSON(url);
       count += Array.isArray(data.cids) ? data.cids.length : 0;
       onPage(1 / expectedPages);
-      // Yield control so UI updates can occur.
       await new Promise((resolve) => setTimeout(resolve, 0));
       cursor = data.cursor || null;
     } while (cursor);
@@ -98,11 +123,9 @@ async function resolveHandleToDid(inputHandle) {
   }
       
   // 4. Fetch records from a collection (paginated)
-  // For endpoints you wish to track, each completed page calls onPage(1)
+  // For endpoints you wish to track, each page calls incrementProgress(1, onPage)
   async function fetchRecordsForCollection(collectionName, onPage = (inc) => {}, expectedPages = 50) {
-    let urlBase = `${serviceEndpoint}/xrpc/com.atproto.repo.listRecords?repo=${encodeURIComponent(
-      did
-    )}&collection=${encodeURIComponent(collectionName)}&limit=100`;
+    let urlBase = `${serviceEndpoint}/xrpc/com.atproto.repo.listRecords?repo=${encodeURIComponent(did)}&collection=${encodeURIComponent(collectionName)}&limit=100`;
     let records = [];
     let cursor = null;
     do {
@@ -111,8 +134,7 @@ async function resolveHandleToDid(inputHandle) {
       if (Array.isArray(data.records)) {
         records = records.concat(data.records);
       }
-      // Indicate one page fetched.
-      onPage(1);
+      incrementProgress(1, onPage);
       await new Promise((resolve) => setTimeout(resolve, 0));
       cursor = data.cursor || null;
     } while (cursor);
@@ -126,11 +148,9 @@ async function resolveHandleToDid(inputHandle) {
   }
       
   // 6. Fetch author feed (paginated)
-  // Similarly, each completed page calls onPage(1)
+  // Each completed page calls incrementProgress(1, onPage)
   async function fetchAuthorFeed(onPage = (inc) => {}, expectedPages = 10) {
-    let urlBase = `${publicServiceEndpoint}/xrpc/app.bsky.feed.getAuthorFeed?actor=${encodeURIComponent(
-      did
-    )}&limit=100`;
+    let urlBase = `${publicServiceEndpoint}/xrpc/app.bsky.feed.getAuthorFeed?actor=${encodeURIComponent(did)}&limit=100`;
     let feed = [];
     let cursor = null;
     do {
@@ -139,7 +159,7 @@ async function resolveHandleToDid(inputHandle) {
       if (Array.isArray(data.feed)) {
         feed = feed.concat(data.feed);
       }
-      onPage(1);
+      incrementProgress(1, onPage);
       await new Promise((resolve) => setTimeout(resolve, 0));
       cursor = data.cursor || null;
     } while (cursor);
@@ -375,7 +395,6 @@ async function resolveHandleToDid(inputHandle) {
   // Calculate engagements for the account using the author feed.
   async function calculateEngagements() {
     // Use the paginated author feed; expectedPages = 15.
-    // (Progress is tracked as above)
     const feed = await fetchAuthorFeed(() => {}, 15);
     let likesReceived = 0;
     let repostsReceived = 0;
@@ -489,10 +508,9 @@ async function resolveHandleToDid(inputHandle) {
       serviceEndpoint = await getServiceEndpointForDid(did);
   
       // ----- PROGRESS TRACKING -----
-      // For this new method we add 1 per completed paginated API call.
-      // Define a helper to update progress:
-      const updateProgress = () => {
-        onProgress(1);
+      // Use our batched progress helper.
+      const updateProgress = () => { 
+        incrementProgress(1, onProgress); 
       };
   
       // 1. Resolve handle phase.
@@ -712,7 +730,6 @@ async function resolveHandleToDid(inputHandle) {
         () => { updateProgress(); },
         15
       );
-      // (Optionally, you can process engagements here if needed)
   
       // 11. Compute overall activity statuses (one-shot)
       const overallActivityStatus = calculateActivityStatus(totalRecordsPerDay);
@@ -849,6 +866,9 @@ async function resolveHandleToDid(inputHandle) {
       };
   
       // 17. Build final output JSON.
+      // Finalize progress so the UI shows the full count.
+      finalizeProgress(onProgress);
+  
       const finalOutput = {
         message: "accountData retrieved successfully",
         accountData: accountDataFinal,
