@@ -4,14 +4,16 @@
 
 // Resolve a handle (e.g., "dame.bsky.social") into a DID using the atproto resolveHandle endpoint.
 async function resolveHandleToDid(inputHandle) {
-    const url = `${publicServiceEndpoint}/xrpc/com.atproto.identity.resolveHandle?handle=${encodeURIComponent(inputHandle)}`;
+    const url = `${publicServiceEndpoint}/xrpc/com.atproto.identity.resolveHandle?handle=${encodeURIComponent(
+      inputHandle
+    )}`;
     const data = await getJSON(url);
     if (!data.did) {
       throw new Error("Could not resolve handle to DID.");
     }
     return data.did;
   }
-  
+      
   // Get the service endpoint for the DID by querying the PLC directory.
   async function getServiceEndpointForDid(resolvedDid) {
     const url = `${plcDirectoryEndpoint}/${encodeURIComponent(resolvedDid)}`;
@@ -26,7 +28,7 @@ async function resolveHandleToDid(inputHandle) {
     }
     return svcEntry.serviceEndpoint;
   }
-  
+      
   /***********************************************************************
    * Global settings and basic caching
    ***********************************************************************/
@@ -35,10 +37,10 @@ async function resolveHandleToDid(inputHandle) {
   let serviceEndpoint = null; // Will be derived from the PLC Directory.
   const plcDirectoryEndpoint = "https://plc.directory";
   const publicServiceEndpoint = "https://public.api.bsky.app";
-  
+      
   // Basic in-memory cache to avoid duplicate API calls.
   const cache = {};
-  
+      
   /***********************************************************************
    * Helper Functions
    ***********************************************************************/
@@ -54,51 +56,53 @@ async function resolveHandleToDid(inputHandle) {
       throw err;
     }
   }
-  
+      
   async function cachedGetJSON(url) {
     if (cache[url]) return cache[url];
     const data = await getJSON(url);
     cache[url] = data;
     return data;
   }
-  
+      
   /***********************************************************************
    * Endpoint calls with pagination and caching
    ***********************************************************************/
-  
+      
   // 1. Fetch Profile data (one-shot)
   async function fetchProfile() {
     const url = `${publicServiceEndpoint}/xrpc/app.bsky.actor.getProfile?actor=${encodeURIComponent(did)}`;
     return await cachedGetJSON(url);
   }
-  
+      
   // 2. Fetch all blobs (paginated)
   // (Not tracked for progress now)
   async function fetchAllBlobsCount(onPage = (inc) => {}, expectedPages = 2) {
     let urlBase = `${serviceEndpoint}/xrpc/com.atproto.sync.listBlobs?did=${encodeURIComponent(did)}&limit=1000`;
-    let count = 0,
-      cursor = null;
+    let count = 0, cursor = null;
     do {
       const url = urlBase + (cursor ? `&cursor=${cursor}` : "");
       const data = await cachedGetJSON(url);
       count += Array.isArray(data.cids) ? data.cids.length : 0;
-      // For blobs we still call the onPage, but you could remove this if you don’t want to track it.
       onPage(1 / expectedPages);
+      // Yield control so UI updates can occur.
+      await new Promise((resolve) => setTimeout(resolve, 0));
       cursor = data.cursor || null;
     } while (cursor);
     return count;
   }
-  
+      
   // 3. Fetch repo description (one-shot)
   async function fetchRepoDescription() {
     const url = `${serviceEndpoint}/xrpc/com.atproto.repo.describeRepo?repo=${encodeURIComponent(did)}`;
     return await cachedGetJSON(url);
   }
-  
+      
   // 4. Fetch records from a collection (paginated)
-  // For endpoints you wish to track, onPage is now called with 1 per page.
+  // For endpoints you wish to track, each completed page calls onPage(1)
   async function fetchRecordsForCollection(collectionName, onPage = (inc) => {}, expectedPages = 50) {
-    let urlBase = `${serviceEndpoint}/xrpc/com.atproto.repo.listRecords?repo=${encodeURIComponent(did)}&collection=${encodeURIComponent(collectionName)}&limit=100`;
+    let urlBase = `${serviceEndpoint}/xrpc/com.atproto.repo.listRecords?repo=${encodeURIComponent(
+      did
+    )}&collection=${encodeURIComponent(collectionName)}&limit=100`;
     let records = [];
     let cursor = null;
     do {
@@ -107,23 +111,26 @@ async function resolveHandleToDid(inputHandle) {
       if (Array.isArray(data.records)) {
         records = records.concat(data.records);
       }
-      // Instead of fractional progress, each completed page call adds 1.
+      // Indicate one page fetched.
       onPage(1);
+      await new Promise((resolve) => setTimeout(resolve, 0));
       cursor = data.cursor || null;
     } while (cursor);
     return records;
   }
-  
+      
   // 5. Fetch audit log from PLC Directory (one-shot)
   async function fetchAuditLog() {
     const url = `${plcDirectoryEndpoint}/${encodeURIComponent(did)}/log/audit`;
     return await cachedGetJSON(url);
   }
-  
+      
   // 6. Fetch author feed (paginated)
-  // For the author feed too, each completed page calls onPage(1).
+  // Similarly, each completed page calls onPage(1)
   async function fetchAuthorFeed(onPage = (inc) => {}, expectedPages = 10) {
-    let urlBase = `${publicServiceEndpoint}/xrpc/app.bsky.feed.getAuthorFeed?actor=${encodeURIComponent(did)}&limit=100`;
+    let urlBase = `${publicServiceEndpoint}/xrpc/app.bsky.feed.getAuthorFeed?actor=${encodeURIComponent(
+      did
+    )}&limit=100`;
     let feed = [];
     let cursor = null;
     do {
@@ -133,18 +140,19 @@ async function resolveHandleToDid(inputHandle) {
         feed = feed.concat(data.feed);
       }
       onPage(1);
+      await new Promise((resolve) => setTimeout(resolve, 0));
       cursor = data.cursor || null;
     } while (cursor);
     return feed;
   }
-  
+      
   /***********************************************************************
    * Calculation Functions
    ***********************************************************************/
   function roundToTwo(num) {
     return Number(num.toFixed(2));
   }
-  
+      
   function roundNumbers(obj) {
     if (Array.isArray(obj)) {
       return obj.map(roundNumbers);
@@ -160,7 +168,7 @@ async function resolveHandleToDid(inputHandle) {
       return obj;
     }
   }
-  
+      
   function calculateAge(createdAt) {
     const created = new Date(createdAt);
     const today = new Date();
@@ -171,7 +179,7 @@ async function resolveHandleToDid(inputHandle) {
     const agePercentage = daysSinceRef > 0 ? ageInDays / daysSinceRef : 0;
     return { ageInDays, agePercentage };
   }
-  
+      
   function getReplyAuthors(reply) {
     const authors = [];
     if (reply.parent && reply.parent.author) {
@@ -185,7 +193,7 @@ async function resolveHandleToDid(inputHandle) {
     }
     return authors;
   }
-  
+      
   function calculatePostingStyle(stats) {
     const {
       onlyPostsPerDay = 0,
@@ -234,7 +242,7 @@ async function resolveHandleToDid(inputHandle) {
     if (stats.repostOtherPercentage >= 0.5) return "Repost Guy";
     return "Unknown";
   }
-  
+      
   function calculateSocialStatus({ ageInDays, followersCount, followsCount }) {
     const followPercentage = followersCount > 0 ? followsCount / followersCount : 0;
     if (ageInDays < 30) return "Newbie";
@@ -245,14 +253,14 @@ async function resolveHandleToDid(inputHandle) {
     }
     return "Community Member";
   }
-  
+      
   function calculateActivityStatus(rate) {
     if (rate === 0) return "inactive";
     if (rate > 0 && rate < 1) return "eepy";
     if (rate >= 1 && rate < 10) return "awake";
     if (rate >= 10) return "wired";
   }
-  
+      
   function calculateProfileCompletion(profile) {
     const hasDisplayName = Boolean(profile.displayName && profile.displayName.trim());
     const hasBanner = Boolean(profile.banner && profile.banner.trim());
@@ -261,7 +269,7 @@ async function resolveHandleToDid(inputHandle) {
     if (hasDisplayName || hasBanner || hasDescription) return "incomplete";
     return "not started";
   }
-  
+      
   function calculateDomainRarity(handle) {
     if (handle.includes("bsky.social")) {
       const len = handle.length;
@@ -297,7 +305,7 @@ async function resolveHandleToDid(inputHandle) {
     }
     return "unknown";
   }
-  
+      
   function calculateEra(createdAt) {
     const created = new Date(createdAt);
     if (created >= new Date("2022-11-16") && created <= new Date("2023-01-31")) {
@@ -309,7 +317,7 @@ async function resolveHandleToDid(inputHandle) {
     }
     return "unknown";
   }
-  
+      
   // Calculate aggregate records for the account by iterating over each collection.
   async function calculateRecordsAggregate(collectionNames, ageInDays) {
     let totalRecords = 0;
@@ -334,7 +342,7 @@ async function resolveHandleToDid(inputHandle) {
     }
     return { totalRecords, totalBskyRecords, totalNonBskyRecords, collectionStats };
   }
-  
+      
   // Calculate aggregate records for a recent period (in days) by filtering records based on createdAt.
   async function calculateRecordsAggregateForPeriod(collectionNames, periodDays) {
     let totalRecords = 0;
@@ -363,11 +371,11 @@ async function resolveHandleToDid(inputHandle) {
     }
     return { totalRecords, totalBskyRecords, totalNonBskyRecords, collectionStats };
   }
-  
+      
   // Calculate engagements for the account using the author feed.
   async function calculateEngagements() {
     // Use the paginated author feed; expectedPages = 15.
-    // (Note that progress for author feed is now tracked)
+    // (Progress is tracked as above)
     const feed = await fetchAuthorFeed(() => {}, 15);
     let likesReceived = 0;
     let repostsReceived = 0;
@@ -389,7 +397,7 @@ async function resolveHandleToDid(inputHandle) {
       repliesReceived: roundToTwo(repliesReceived),
     };
   }
-  
+      
   // Build the analysis narrative paragraphs.
   function buildAnalysisNarrative(accountData) {
     const { profile, activityAll, alsoKnownAs } = accountData;
@@ -447,14 +455,14 @@ async function resolveHandleToDid(inputHandle) {
     let pdsHostStatement = serviceEndpoint.includes("bsky.network")
       ? "their PDS is hosted by a Bluesky mushroom"
       : "their PDS is hosted by either a third-party or themselves";
-      
+        
     const narrative1 =
       `${profile.displayName} has been on the network ${accountAgeStatement} ${calculateActivityStatus(activityAll.totalRecordsPerDay)}. ` +
       `Their profile is ${calculateProfileCompletion(profile)}, and ${blueskyFeatures}. ` +
       `When it comes to the broader AT Proto ecosystem, this identity ${atprotoEngagement}. ` +
       `${domainHistoryStatement} which is ${calculateDomainRarity(profile.handle)}. ` +
       `${rotationKeyStatement}, and ${pdsHostStatement}.`;
-      
+        
     const era = calculateEra(profile.createdAt);
     const postingStyle = accountData.postingStyle;
     const socialStatus = accountData.socialStatus;
@@ -465,10 +473,10 @@ async function resolveHandleToDid(inputHandle) {
       `Their style of posting is "${postingStyle}". ` +
       `Their posts consist of ${mediaType}. ` +
       `They are ${socialStatus} as is indicated by their follower count of ${profile.followersCount} and their follower/following ratio of ${followRatio}.`;
-      
+        
     return narrative1 + "\n\n" + narrative2;
   }
-  
+      
   /***********************************************************************
    * Main Function – Build accountData and final JSON object.
    ***********************************************************************/
@@ -481,13 +489,8 @@ async function resolveHandleToDid(inputHandle) {
       serviceEndpoint = await getServiceEndpointForDid(did);
   
       // ----- PROGRESS TRACKING -----
-      // For this new method we ignore fractional progress and simply add 1 per completed paginated API call.
-      // In this implementation, the following endpoints are tracked:
-      //   - listRecords calls for posts
-      //   - listRecords calls for reposts
-      //   - author feed calls
-      //
-      // Create a helper to update progress:
+      // For this new method we add 1 per completed paginated API call.
+      // Define a helper to update progress:
       const updateProgress = () => {
         onProgress(1);
       };
