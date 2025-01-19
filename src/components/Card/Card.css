@@ -1,3 +1,5 @@
+/* src/components/Card/Card.css */
+
 .card {
     background: #fff;
     border: 1px solid #ddd;
@@ -6,15 +8,18 @@
     border-radius: 4px;
     height: 100%;
     overflow: auto;
+    display: flex;
+    flex-direction: column;
   }
   
   .card-title {
-    margin-top: 0;
-    margin-bottom: 10px;
+    margin: 0;
     font-size: 1.2em;
+    margin-bottom: 10px;
   }
   
   .card-content {
+    flex-grow: 1;
     font-size: 0.95em;
   }
   

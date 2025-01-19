@@ -1,3 +1,5 @@
+/* src/components/UserProfile/UserProfile.css */
+
 /* Container for the profile page */
 .user-profile {
     padding: 20px;
@@ -16,7 +18,7 @@
     box-sizing: border-box;
   }
   
-  /* Media query for responsiveness */
+  /* Media query for responsiveness (optional, handled by react-grid-layout) */
   @media (max-width: 1200px) {
     .layout {
       width: 100%;
@@ -53,7 +55,8 @@
   /* Draggable Handle Styles */
   .drag-handle {
     cursor: move;
-    display: inline-block;
+    display: flex;
+    align-items: center;
     padding: 5px;
     background: #f0f0f0;
     border-radius: 4px;
@@ -68,5 +71,12 @@
   /* Optional: Enhance hover effect for the drag handle */
   .drag-handle:hover {
     background: #e0e0e0;
+  }
+  
+  /* Responsive Adjustments for Cards */
+  @media (max-width: 768px) {
+    .drag-handle {
+      justify-content: center;
+    }
   }
   

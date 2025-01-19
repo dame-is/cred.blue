@@ -1,10 +1,15 @@
 // src/components/UserProfile/UserProfile.jsx
+
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import GridLayout from "react-grid-layout";
+import { Responsive, WidthProvider } from "react-grid-layout";
 import { loadAccountData } from "../../accountData"; // Ensure the path is correct
 import Card from "../Card/Card";
-import "./UserProfile.css"; // Updated CSS file
+import "./UserProfile.css";
+import "react-grid-layout/css/styles.css"; // Import default styles
+import "react-resizable/css/styles.css";
+
+const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const UserProfile = () => {
   const { username } = useParams();
@@ -12,6 +17,13 @@ const UserProfile = () => {
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Initialize layout state
+  const [layouts, setLayouts] = useState({});
+
+  // Define breakpoints and columns
+  const breakpoints = { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 };
+  const cols = { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 };
 
   useEffect(() => {
     const fetchAccountData = async () => {
@@ -33,6 +45,47 @@ const UserProfile = () => {
 
     fetchAccountData();
   }, [username]);
+
+  // Load saved layouts from localStorage
+  useEffect(() => {
+    const savedLayouts = localStorage.getItem(`layout_${username}`);
+    if (savedLayouts) {
+      setLayouts(JSON.parse(savedLayouts));
+    } else {
+      // Define default layouts if none are saved
+      setLayouts({
+        lg: [
+          { i: "overview", x: 0, y: 0, w: 6, h: 4 },
+          { i: "stats", x: 6, y: 0, w: 6, h: 4 },
+          { i: "visualization1", x: 0, y: 4, w: 4, h: 4 },
+          { i: "visualization2", x: 4, y: 4, w: 4, h: 4 },
+          { i: "recentActivity", x: 8, y: 4, w: 4, h: 4 },
+          { i: "connections", x: 0, y: 8, w: 4, h: 4 },
+          { i: "settings", x: 4, y: 8, w: 4, h: 4 },
+          { i: "extra", x: 8, y: 8, w: 4, h: 4 },
+          { i: "additional", x: 0, y: 12, w: 4, h: 4 },
+        ],
+        md: [
+          { i: "overview", x: 0, y: 0, w: 5, h: 4 },
+          { i: "stats", x: 5, y: 0, w: 5, h: 4 },
+          { i: "visualization1", x: 0, y: 4, w: 5, h: 4 },
+          { i: "visualization2", x: 5, y: 4, w: 5, h: 4 },
+          { i: "recentActivity", x: 0, y: 8, w: 10, h: 4 },
+          { i: "connections", x: 0, y: 12, w: 5, h: 4 },
+          { i: "settings", x: 5, y: 12, w: 5, h: 4 },
+          { i: "extra", x: 0, y: 16, w: 5, h: 4 },
+          { i: "additional", x: 5, y: 16, w: 5, h: 4 },
+        ],
+        // Define layouts for sm, xs, xxs as needed
+      });
+    }
+  }, [username]);
+
+  // Handle layout changes
+  const handleLayoutChange = (currentLayout, allLayouts) => {
+    setLayouts(allLayouts);
+    localStorage.setItem(`layout_${username}`, JSON.stringify(allLayouts));
+  };
 
   if (loading) {
     return (
@@ -66,31 +119,18 @@ const UserProfile = () => {
     pdsType,
   } = accountData;
 
-  // Layout configuration for react-grid-layout:
-  const layout = [
-    { i: "overview", x: 0, y: 0, w: 4, h: 4 },
-    { i: "stats", x: 4, y: 0, w: 4, h: 4 },
-    { i: "visualization1", x: 8, y: 0, w: 4, h: 4 },
-    { i: "visualization2", x: 0, y: 4, w: 4, h: 4 },
-    { i: "recentActivity", x: 4, y: 4, w: 4, h: 4 },
-    { i: "connections", x: 8, y: 4, w: 4, h: 4 },
-    { i: "settings", x: 0, y: 8, w: 4, h: 4 },
-    { i: "extra", x: 4, y: 8, w: 4, h: 4 },
-    { i: "additional", x: 8, y: 8, w: 4, h: 4 },
-  ];
-
   return (
     <div className="user-profile">
       <h1>{displayName}</h1>
-      <GridLayout
+      <ResponsiveGridLayout
         className="layout"
-        layout={layout}
-        cols={12}
+        layouts={layouts}
+        breakpoints={breakpoints}
+        cols={cols}
         rowHeight={30}
-        width={1200}
-        // We'll use a custom draggable handle that’s defined inside the Card
         draggableHandle=".drag-handle"
-        margin={[20, 20]}  // Also adds a gap between grid items (x and y gaps)
+        margin={[20, 20]}
+        onLayoutChange={handleLayoutChange}
       >
         <div key="overview" className="grid-item">
           <Card title="Profile Overview">
@@ -115,6 +155,7 @@ const UserProfile = () => {
             <div className="drag-handle">
               <span className="drag-icon">≡</span>
             </div>
+            {/* Insert stats details here */}
             <p>Stats details go here...</p>
           </Card>
         </div>
@@ -124,6 +165,7 @@ const UserProfile = () => {
             <div className="drag-handle">
               <span className="drag-icon">≡</span>
             </div>
+            {/* Insert data visualization component here */}
             <p>Chart or graph 1...</p>
           </Card>
         </div>
@@ -133,6 +175,7 @@ const UserProfile = () => {
             <div className="drag-handle">
               <span className="drag-icon">≡</span>
             </div>
+            {/* Insert another data visualization component */}
             <p>Chart or graph 2...</p>
           </Card>
         </div>
@@ -142,6 +185,7 @@ const UserProfile = () => {
             <div className="drag-handle">
               <span className="drag-icon">≡</span>
             </div>
+            {/* Insert recent activity details here */}
             <p>Recent user activities...</p>
           </Card>
         </div>
@@ -151,6 +195,7 @@ const UserProfile = () => {
             <div className="drag-handle">
               <span className="drag-icon">≡</span>
             </div>
+            {/* Insert connections/followers information */}
             <p>Follower or connection info...</p>
           </Card>
         </div>
@@ -160,6 +205,7 @@ const UserProfile = () => {
             <div className="drag-handle">
               <span className="drag-icon">≡</span>
             </div>
+            {/* User settings or additional info */}
             <p>Settings details...</p>
           </Card>
         </div>
@@ -169,6 +215,7 @@ const UserProfile = () => {
             <div className="drag-handle">
               <span className="drag-icon">≡</span>
             </div>
+            {/* Any extra data */}
             <p>Extra details...</p>
           </Card>
         </div>
@@ -178,10 +225,11 @@ const UserProfile = () => {
             <div className="drag-handle">
               <span className="drag-icon">≡</span>
             </div>
+            {/* Additional optional card data */}
             <p>Additional information...</p>
           </Card>
         </div>
-      </GridLayout>
+      </ResponsiveGridLayout>
     </div>
   );
 };
