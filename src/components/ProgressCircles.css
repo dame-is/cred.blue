@@ -1,0 +1,37 @@
+/* src/components/ProgressCircles.css */
+.circle-container {
+    position: relative;
+    width: 150px;  
+    height: 150px;
+    margin: 40px auto;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+    background: #f8f8f8;
+    overflow: hidden;
+  }
+  
+  .circle {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background-color: #4caf50;
+    border-radius: 50%;
+    opacity: 0;
+    transform: translateY(-50px);
+    animation: drop 0.6s ease-out forwards;
+  }
+  
+  @keyframes drop {
+    0% {
+      opacity: 0;
+      transform: translateY(-50px);
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
