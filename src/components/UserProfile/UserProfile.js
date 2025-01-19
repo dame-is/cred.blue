@@ -127,7 +127,7 @@ const UserProfile = () => {
         layouts={layouts}
         breakpoints={breakpoints}
         cols={cols}
-        rowHeight={30}
+        rowHeight={50}
         draggableHandle=".drag-handle"
         margin={[20, 40]}
         onLayoutChange={handleLayoutChange}
