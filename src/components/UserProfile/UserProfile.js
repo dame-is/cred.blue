@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { Responsive, WidthProvider } from "react-grid-layout";
 import { loadAccountData } from "../../accountData"; // Ensure the path is correct
 import Card from "../Card/Card";
-import ProgressCircles from "../ProgressCircles"; // Import our new progress visualization
+import ProgressCircles from "../ProgressCircles"; // Import our updated progress visualization
 import "./UserProfile.css";
 import "react-grid-layout/css/styles.css"; // Import default grid-layout styles
 import "react-resizable/css/styles.css";
@@ -14,7 +14,7 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 const UserProfile = () => {
   const { username } = useParams();
   const [accountData, setAccountData] = useState(null);
-  const [progress, setProgress] = useState(0);
+  const [circleCount, setCircleCount] = useState(0); // count of completed API pages
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [layouts, setLayouts] = useState({});
@@ -62,12 +62,13 @@ const UserProfile = () => {
     localStorage.setItem(`layout_${username}`, JSON.stringify(allLayouts));
   };
 
-  // Fetch account data using our loadAccountData function
+  // Fetch account data using our loadAccountData function.
+  // Each time an API page completes, our callback increments the circle count by 1.
   useEffect(() => {
     const fetchAccountData = async () => {
       try {
-        const data = await loadAccountData(username, (prog) => {
-          setProgress(prog);
+        const data = await loadAccountData(username, (increment) => {
+          setCircleCount((prev) => prev + increment);
         });
         if (data.error) {
           throw new Error(data.error);
@@ -84,12 +85,12 @@ const UserProfile = () => {
     fetchAccountData();
   }, [username]);
 
-  // Render loading state with the progress visualization.
+  // While loading, show our progress visualization which updates as each API call completes.
   if (loading) {
     return (
       <div className="user-profile loading-container">
-        <ProgressCircles progress={progress} totalPages={45} />
-        <p className="loading-text">Loading account data... {Math.floor(progress)}%</p>
+        <ProgressCircles circleCount={circleCount} />
+        <p className="loading-text">Loading account data... {circleCount} fetches completed</p>
       </div>
     );
   }
@@ -149,7 +150,6 @@ const UserProfile = () => {
             <div className="drag-handle">
               <span className="drag-icon">≡</span>
             </div>
-            {/* Stats details go here */}
             <p>Stats details go here...</p>
           </Card>
         </div>
@@ -159,7 +159,6 @@ const UserProfile = () => {
             <div className="drag-handle">
               <span className="drag-icon">≡</span>
             </div>
-            {/* Insert first visualization component */}
             <p>Chart or graph 1...</p>
           </Card>
         </div>
@@ -169,7 +168,6 @@ const UserProfile = () => {
             <div className="drag-handle">
               <span className="drag-icon">≡</span>
             </div>
-            {/* Insert second visualization component */}
             <p>Chart or graph 2...</p>
           </Card>
         </div>
@@ -179,7 +177,6 @@ const UserProfile = () => {
             <div className="drag-handle">
               <span className="drag-icon">≡</span>
             </div>
-            {/* Insert recent activity details */}
             <p>Recent user activities...</p>
           </Card>
         </div>
@@ -189,7 +186,6 @@ const UserProfile = () => {
             <div className="drag-handle">
               <span className="drag-icon">≡</span>
             </div>
-            {/* Insert connections/followers info */}
             <p>Follower or connection info...</p>
           </Card>
         </div>
@@ -199,7 +195,6 @@ const UserProfile = () => {
             <div className="drag-handle">
               <span className="drag-icon">≡</span>
             </div>
-            {/* Insert settings details */}
             <p>Settings details...</p>
           </Card>
         </div>
@@ -209,7 +204,6 @@ const UserProfile = () => {
             <div className="drag-handle">
               <span className="drag-icon">≡</span>
             </div>
-            {/* Insert extra data */}
             <p>Extra details...</p>
           </Card>
         </div>
@@ -219,7 +213,6 @@ const UserProfile = () => {
             <div className="drag-handle">
               <span className="drag-icon">≡</span>
             </div>
-            {/* Insert additional optional data */}
             <p>Additional information...</p>
           </Card>
         </div>

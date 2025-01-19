@@ -11,7 +11,7 @@ async function resolveHandleToDid(inputHandle) {
     }
     return data.did;
   }
-    
+  
   // Get the service endpoint for the DID by querying the PLC directory.
   async function getServiceEndpointForDid(resolvedDid) {
     const url = `${plcDirectoryEndpoint}/${encodeURIComponent(resolvedDid)}`;
@@ -20,13 +20,13 @@ async function resolveHandleToDid(inputHandle) {
       throw new Error("Could not determine service endpoint for DID.");
     }
     // Look for the service entry with type "AtprotoPersonalDataServer"
-    const svcEntry = data.service.find(svc => svc.type === "AtprotoPersonalDataServer");
+    const svcEntry = data.service.find((svc) => svc.type === "AtprotoPersonalDataServer");
     if (!svcEntry || !svcEntry.serviceEndpoint) {
       throw new Error("Could not determine service endpoint for DID.");
     }
     return svcEntry.serviceEndpoint;
   }
-    
+  
   /***********************************************************************
    * Global settings and basic caching
    ***********************************************************************/
@@ -35,10 +35,10 @@ async function resolveHandleToDid(inputHandle) {
   let serviceEndpoint = null; // Will be derived from the PLC Directory.
   const plcDirectoryEndpoint = "https://plc.directory";
   const publicServiceEndpoint = "https://public.api.bsky.app";
-    
+  
   // Basic in-memory cache to avoid duplicate API calls.
   const cache = {};
-    
+  
   /***********************************************************************
    * Helper Functions
    ***********************************************************************/
@@ -54,48 +54,49 @@ async function resolveHandleToDid(inputHandle) {
       throw err;
     }
   }
-    
+  
   async function cachedGetJSON(url) {
     if (cache[url]) return cache[url];
     const data = await getJSON(url);
     cache[url] = data;
     return data;
   }
-    
+  
   /***********************************************************************
    * Endpoint calls with pagination and caching
    ***********************************************************************/
-    
+  
   // 1. Fetch Profile data (one-shot)
   async function fetchProfile() {
     const url = `${publicServiceEndpoint}/xrpc/app.bsky.actor.getProfile?actor=${encodeURIComponent(did)}`;
     return await cachedGetJSON(url);
   }
-    
+  
   // 2. Fetch all blobs (paginated)
   // (Not tracked for progress now)
   async function fetchAllBlobsCount(onPage = (inc) => {}, expectedPages = 2) {
     let urlBase = `${serviceEndpoint}/xrpc/com.atproto.sync.listBlobs?did=${encodeURIComponent(did)}&limit=1000`;
-    let count = 0, cursor = null;
+    let count = 0,
+      cursor = null;
     do {
       const url = urlBase + (cursor ? `&cursor=${cursor}` : "");
       const data = await cachedGetJSON(url);
       count += Array.isArray(data.cids) ? data.cids.length : 0;
+      // For blobs we still call the onPage, but you could remove this if you don’t want to track it.
       onPage(1 / expectedPages);
       cursor = data.cursor || null;
     } while (cursor);
     return count;
   }
-    
+  
   // 3. Fetch repo description (one-shot)
   async function fetchRepoDescription() {
     const url = `${serviceEndpoint}/xrpc/com.atproto.repo.describeRepo?repo=${encodeURIComponent(did)}`;
     return await cachedGetJSON(url);
   }
-    
+  
   // 4. Fetch records from a collection (paginated)
-  // We leave the original onPage call in place. For endpoints you wish to track,
-  // you’ll pass in a custom onPage callback.
+  // For endpoints you wish to track, onPage is now called with 1 per page.
   async function fetchRecordsForCollection(collectionName, onPage = (inc) => {}, expectedPages = 50) {
     let urlBase = `${serviceEndpoint}/xrpc/com.atproto.repo.listRecords?repo=${encodeURIComponent(did)}&collection=${encodeURIComponent(collectionName)}&limit=100`;
     let records = [];
@@ -106,20 +107,21 @@ async function resolveHandleToDid(inputHandle) {
       if (Array.isArray(data.records)) {
         records = records.concat(data.records);
       }
-      onPage(1 / expectedPages);
+      // Instead of fractional progress, each completed page call adds 1.
+      onPage(1);
       cursor = data.cursor || null;
     } while (cursor);
     return records;
   }
-    
+  
   // 5. Fetch audit log from PLC Directory (one-shot)
   async function fetchAuditLog() {
     const url = `${plcDirectoryEndpoint}/${encodeURIComponent(did)}/log/audit`;
     return await cachedGetJSON(url);
   }
-    
+  
   // 6. Fetch author feed (paginated)
-  // As with listRecords, we let the caller provide an onPage callback.
+  // For the author feed too, each completed page calls onPage(1).
   async function fetchAuthorFeed(onPage = (inc) => {}, expectedPages = 10) {
     let urlBase = `${publicServiceEndpoint}/xrpc/app.bsky.feed.getAuthorFeed?actor=${encodeURIComponent(did)}&limit=100`;
     let feed = [];
@@ -130,19 +132,19 @@ async function resolveHandleToDid(inputHandle) {
       if (Array.isArray(data.feed)) {
         feed = feed.concat(data.feed);
       }
-      onPage(1 / expectedPages);
+      onPage(1);
       cursor = data.cursor || null;
     } while (cursor);
     return feed;
   }
-    
+  
   /***********************************************************************
    * Calculation Functions
    ***********************************************************************/
   function roundToTwo(num) {
     return Number(num.toFixed(2));
   }
-    
+  
   function roundNumbers(obj) {
     if (Array.isArray(obj)) {
       return obj.map(roundNumbers);
@@ -158,7 +160,7 @@ async function resolveHandleToDid(inputHandle) {
       return obj;
     }
   }
-    
+  
   function calculateAge(createdAt) {
     const created = new Date(createdAt);
     const today = new Date();
@@ -169,7 +171,7 @@ async function resolveHandleToDid(inputHandle) {
     const agePercentage = daysSinceRef > 0 ? ageInDays / daysSinceRef : 0;
     return { ageInDays, agePercentage };
   }
-    
+  
   function getReplyAuthors(reply) {
     const authors = [];
     if (reply.parent && reply.parent.author) {
@@ -183,7 +185,7 @@ async function resolveHandleToDid(inputHandle) {
     }
     return authors;
   }
-    
+  
   function calculatePostingStyle(stats) {
     const {
       onlyPostsPerDay = 0,
@@ -232,7 +234,7 @@ async function resolveHandleToDid(inputHandle) {
     if (stats.repostOtherPercentage >= 0.5) return "Repost Guy";
     return "Unknown";
   }
-    
+  
   function calculateSocialStatus({ ageInDays, followersCount, followsCount }) {
     const followPercentage = followersCount > 0 ? followsCount / followersCount : 0;
     if (ageInDays < 30) return "Newbie";
@@ -243,14 +245,14 @@ async function resolveHandleToDid(inputHandle) {
     }
     return "Community Member";
   }
-    
+  
   function calculateActivityStatus(rate) {
     if (rate === 0) return "inactive";
     if (rate > 0 && rate < 1) return "eepy";
     if (rate >= 1 && rate < 10) return "awake";
     if (rate >= 10) return "wired";
   }
-    
+  
   function calculateProfileCompletion(profile) {
     const hasDisplayName = Boolean(profile.displayName && profile.displayName.trim());
     const hasBanner = Boolean(profile.banner && profile.banner.trim());
@@ -259,7 +261,7 @@ async function resolveHandleToDid(inputHandle) {
     if (hasDisplayName || hasBanner || hasDescription) return "incomplete";
     return "not started";
   }
-    
+  
   function calculateDomainRarity(handle) {
     if (handle.includes("bsky.social")) {
       const len = handle.length;
@@ -295,7 +297,7 @@ async function resolveHandleToDid(inputHandle) {
     }
     return "unknown";
   }
-    
+  
   function calculateEra(createdAt) {
     const created = new Date(createdAt);
     if (created >= new Date("2022-11-16") && created <= new Date("2023-01-31")) {
@@ -307,7 +309,7 @@ async function resolveHandleToDid(inputHandle) {
     }
     return "unknown";
   }
-    
+  
   // Calculate aggregate records for the account by iterating over each collection.
   async function calculateRecordsAggregate(collectionNames, ageInDays) {
     let totalRecords = 0;
@@ -332,7 +334,7 @@ async function resolveHandleToDid(inputHandle) {
     }
     return { totalRecords, totalBskyRecords, totalNonBskyRecords, collectionStats };
   }
-    
+  
   // Calculate aggregate records for a recent period (in days) by filtering records based on createdAt.
   async function calculateRecordsAggregateForPeriod(collectionNames, periodDays) {
     let totalRecords = 0;
@@ -361,7 +363,7 @@ async function resolveHandleToDid(inputHandle) {
     }
     return { totalRecords, totalBskyRecords, totalNonBskyRecords, collectionStats };
   }
-    
+  
   // Calculate engagements for the account using the author feed.
   async function calculateEngagements() {
     // Use the paginated author feed; expectedPages = 15.
@@ -387,7 +389,7 @@ async function resolveHandleToDid(inputHandle) {
       repliesReceived: roundToTwo(repliesReceived),
     };
   }
-    
+  
   // Build the analysis narrative paragraphs.
   function buildAnalysisNarrative(accountData) {
     const { profile, activityAll, alsoKnownAs } = accountData;
@@ -466,7 +468,7 @@ async function resolveHandleToDid(inputHandle) {
       
     return narrative1 + "\n\n" + narrative2;
   }
-    
+  
   /***********************************************************************
    * Main Function – Build accountData and final JSON object.
    ***********************************************************************/
@@ -477,51 +479,31 @@ async function resolveHandleToDid(inputHandle) {
       handle = inputHandle;
       did = await resolveHandleToDid(handle);
       serviceEndpoint = await getServiceEndpointForDid(did);
-    
+  
       // ----- PROGRESS TRACKING -----
-      // We now ignore all progress except for the two endpoints:
-      //   - listRecords calls (for posts and reposts) 
-      //   - getAuthorFeed calls
+      // For this new method we ignore fractional progress and simply add 1 per completed paginated API call.
+      // In this implementation, the following endpoints are tracked:
+      //   - listRecords calls for posts
+      //   - listRecords calls for reposts
+      //   - author feed calls
       //
-      // We'll assume the following expected pages:
-      const expectedListRecordsPagesForPosts = 20;
-      const expectedListRecordsPagesForReposts = 10;
-      const expectedAuthorFeedPages = 15;
-      //
-      // In our scheme, the listRecords endpoints contribute 50% of the final progress
-      // and the author feed contributes the other 50%.
-    
-      // Hold progress counters:
-      let listRecordsProgress = 0; // ranges 0 .. 50
-      let authorFeedProgress = 0;  // ranges 0 .. 50
-    
-      // Helper functions to update the progress bar:
-      const updateListRecordsProgress = (incrementFraction) => {
-        // Each page contributes equally; so add (50 / expectedPages) percent:
-        listRecordsProgress += (50 / (expectedListRecordsPagesForPosts + expectedListRecordsPagesForReposts)) * incrementFraction;
-        onProgress(listRecordsProgress + authorFeedProgress);
+      // Create a helper to update progress:
+      const updateProgress = () => {
+        onProgress(1);
       };
-    
-      const updateAuthorFeedProgress = (incrementFraction) => {
-        authorFeedProgress += (50 / expectedAuthorFeedPages) * incrementFraction;
-        onProgress(listRecordsProgress + authorFeedProgress);
-      };
-    
-      // ----- DO NOT update progress for any other steps.
-      // Execute all other API calls without affecting the progress bar.
-    
+  
       // 1. Resolve handle phase.
       await resolveHandleToDid(handle);
-    
+  
       // 2. Fetch profile (one-shot)
       const profile = await fetchProfile();
-    
+  
       // 3. Calculate age (one-shot)
       const { ageInDays, agePercentage } = calculateAge(profile.createdAt);
-    
-      // 4. Fetch blobs (paginated) - not tracked
+  
+      // 4. Fetch blobs (paginated) - not tracked for progress
       const blobsCount = await fetchAllBlobsCount(() => {}, 10);
-    
+  
       // 5. Repo description (one-shot)
       const repoDescription = await fetchRepoDescription();
       let collections = repoDescription.collections || [];
@@ -529,23 +511,23 @@ async function resolveHandleToDid(inputHandle) {
       const bskyCollectionNames = collections.filter((col) => col.indexOf("app.bsky") !== -1);
       const totalBskyCollections = bskyCollectionNames.length;
       const totalNonBskyCollections = totalCollections - totalBskyCollections;
-    
+  
       // 6. Build targetCollections array (one-shot)
       const targetCollections = [...new Set(collections)];
-    
+  
       // 7. Aggregate record counts (one-shot)
       const { totalRecords, totalBskyRecords, totalNonBskyRecords, collectionStats } =
         await calculateRecordsAggregate(targetCollections, ageInDays);
       const totalRecordsPerDay = ageInDays ? totalRecords / ageInDays : 0;
       const totalBskyRecordsPerDay = ageInDays ? totalBskyRecords / ageInDays : 0;
       const totalNonBskyRecordsPerDay = ageInDays ? totalNonBskyRecords / ageInDays : 0;
-    
+  
       // 8. Detailed post statistics (paginated listRecords for "app.bsky.feed.post")
-      // Expected pages: expectedListRecordsPagesForPosts
+      // Expected pages: posts endpoint
       const postsRecords = await fetchRecordsForCollection(
         "app.bsky.feed.post",
-        (inc) => { updateListRecordsProgress(inc); },
-        expectedListRecordsPagesForPosts
+        () => { updateProgress(); },
+        20
       );
       const postsCount = profile.postsCount || postsRecords.length;
       function filterRecords(records, testFunc) {
@@ -579,12 +561,12 @@ async function resolveHandleToDid(inputHandle) {
         );
       });
       const onlyOtherQuotes = onlyQuotes - onlySelfQuotes;
-    
-      // Also, for reposts (paginated, expected pages: expectedListRecordsPagesForReposts)
+  
+      // Also, for reposts (paginated, expected pages for reposts)
       const repostRecords = await fetchRecordsForCollection(
         "app.bsky.feed.repost",
-        (inc) => { updateListRecordsProgress(inc); },
-        expectedListRecordsPagesForReposts
+        () => { updateProgress(); },
+        10
       );
       const onlyReposts = repostRecords.length;
       const onlySelfReposts = filterRecords(repostRecords, (rec) => {
@@ -637,7 +619,7 @@ async function resolveHandleToDid(inputHandle) {
           return true;
         return false;
       });
-    
+  
       const postStats = {
         postsCount: roundToTwo(postsCount),
         postsPerDay: ageInDays ? roundToTwo(postsCount / ageInDays) : 0,
@@ -690,7 +672,7 @@ async function resolveHandleToDid(inputHandle) {
         totalBskyRecordsPerDay: roundToTwo(totalBskyRecordsPerDay),
         totalNonBskyRecordsPerDay: roundToTwo(totalNonBskyRecordsPerDay),
       };
-    
+  
       // 9. Parse audit log (one-shot)
       const rawAuditData = await fetchAuditLog();
       let auditRecords = Array.isArray(rawAuditData) ? rawAuditData : Object.values(rawAuditData);
@@ -720,34 +702,33 @@ async function resolveHandleToDid(inputHandle) {
       const totalCustomAkas = roundToTwo(totalAkas - totalBskyAkas);
       const rotationKeysRounded = roundToTwo(rotationKeys);
       const activeAkasRounded = roundToTwo(activeAkas);
-    
+  
       // 10. Compute engagements (paginated author feed)
-      // Expected pages: expectedAuthorFeedPages
-      // Update progress for each page:
+      // Expected pages: author feed endpoint
       const engagementsReceived = await fetchAuthorFeed(
-        (inc) => { updateAuthorFeedProgress(inc); },
-        expectedAuthorFeedPages
+        () => { updateProgress(); },
+        15
       );
       // (Optionally, you can process engagements here if needed)
-    
+  
       // 11. Compute overall activity statuses (one-shot)
       const overallActivityStatus = calculateActivityStatus(totalRecordsPerDay);
       const bskyActivityStatus = calculateActivityStatus(totalBskyRecordsPerDay);
       const atprotoActivityStatus = calculateActivityStatus(totalNonBskyRecordsPerDay);
-    
+  
       // 12. Compute posting style (one-shot)
       const postingStyleCalc = calculatePostingStyle({
         ...postStats,
         totalBskyRecordsPerDay,
       });
-    
+  
       // 13. Compute social status (one-shot)
       const socialStatusCalc = calculateSocialStatus({
         ageInDays,
         followersCount: profile.followersCount || 0,
         followsCount: profile.followsCount || 0,
       });
-    
+  
       // 14. Build analysis narrative (one-shot)
       const narrative = buildAnalysisNarrative({
         profile,
@@ -777,7 +758,7 @@ async function resolveHandleToDid(inputHandle) {
           totalBskyAkas,
         },
       });
-    
+  
       // 15. Compute aggregate records for last 30 days (one-shot)
       const periodDays = 30;
       const {
@@ -789,7 +770,7 @@ async function resolveHandleToDid(inputHandle) {
       const totalRecordsPerDay30 = periodDays ? totalRecords30 / periodDays : 0;
       const totalBskyRecordsPerDay30 = periodDays ? totalBskyRecords30 / periodDays : 0;
       const totalNonBskyRecordsPerDay30 = periodDays ? totalNonBskyRecords30 / periodDays : 0;
-    
+  
       // 16. Construct final accountData JSON.
       const accountDataFinal = {
         profile: {
@@ -863,13 +844,13 @@ async function resolveHandleToDid(inputHandle) {
           narrative: narrative,
         },
       };
-    
+  
       // 17. Build final output JSON.
       const finalOutput = {
         message: "accountData retrieved successfully",
         accountData: accountDataFinal,
       };
-        
+  
       return roundNumbers(finalOutput);
     } catch (err) {
       console.error("Error loading account data:", err);

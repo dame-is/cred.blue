@@ -1,24 +1,20 @@
-// src/components/ProgressCircles.jsx (updated)
+// src/components/ProgressCircles.jsx
 import React from "react";
 import "./ProgressCircles.css";
 
-const ProgressCircles = ({ progress, totalPages = 45 }) => {
-  const pagesCompleted = Math.floor(progress / (100 / totalPages));
-  const circles = Array.from({ length: pagesCompleted }, (_, i) => i);
+const ProgressCircles = ({ circleCount }) => {
+  // Create an array for the circles based on the current count.
+  const circles = Array.from({ length: circleCount }, (_, i) => i);
 
   return (
     <div className="circle-container">
       {circles.map((i) => {
-        // Calculate vertical offset: 
-        // For example, if you want the circles to stack in rows of 5 inside the container.
-        // Adjust columnsPerRow to your preference.
+        // Position each circle in a grid for a stacking effect.
         const columnsPerRow = 5;
+        const cellSize = 30; // adjust cell size as needed
         const row = Math.floor(i / columnsPerRow);
         const col = i % columnsPerRow;
-        const cellSize = 30; // space per circle cell (adjust as necessary)
-
-        // Compute left and bottom using cell index (so that circles appear in a grid)
-        const left = col * cellSize + 10; // adjust offset as needed
+        const left = col * cellSize + 10;
         const bottom = row * cellSize + 10;
 
         return (
