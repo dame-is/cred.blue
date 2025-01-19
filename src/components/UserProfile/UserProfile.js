@@ -129,7 +129,7 @@ const UserProfile = () => {
         cols={cols}
         rowHeight={30}
         draggableHandle=".drag-handle"
-        margin={[20, 20]}
+        margin={[20, 40]}
         onLayoutChange={handleLayoutChange}
       >
         <div key="overview" className="grid-item">
