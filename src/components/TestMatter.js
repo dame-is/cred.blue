@@ -6,21 +6,21 @@ const TestMatter = () => {
   const sceneRef = useRef(null);
 
   useEffect(() => {
-    // Get dimensions to make the canvas full-page.
-    const width = window.innerWidth;
-    const height = window.innerHeight;
+    // Set the canvas dimensions, but cap them with a max of 500.
+    const canvasWidth = Math.min(window.innerWidth, 500);
+    const canvasHeight = Math.min(window.innerHeight, 500);
 
     // Create the engine and enable gravity.
     const engine = Matter.Engine.create();
-    engine.world.gravity.y = 1; // Adjust gravity as needed
+    engine.world.gravity.y = 1;
 
-    // Create the renderer using the full-page dimensions.
+    // Create the renderer with our calculated dimensions.
     const render = Matter.Render.create({
       element: sceneRef.current,
       engine: engine,
       options: {
-        width,
-        height,
+        width: canvasWidth,
+        height: canvasHeight,
         background: "#f0f0f0",
         wireframes: false,
         pixelRatio: 1,
@@ -32,43 +32,46 @@ const TestMatter = () => {
     const runner = Matter.Runner.create();
     Matter.Runner.run(runner, engine);
 
-    // Function to create and add a falling red square.
-    const createSquare = () => {
-      // Define square dimensions.
-      const squareSize = 50;
+    // For variety, set a minimum and maximum radius for the circles.
+    const minRadius = 5;
+    const maxRadius = 30;
 
-      // Random X position from squareSize/2 to (width - squareSize/2)
-      const randomX = Math.random() * (width - squareSize) + squareSize / 2;
-
-      // Create a red square starting above the view.
-      const square = Matter.Bodies.rectangle(
-        randomX,
-        -squareSize, // Start above the canvas
-        squareSize,
-        squareSize,
+    // Function to create a blue circle with a random radius.
+    const createCircle = () => {
+      // Randomize radius.
+      const radius =
+        Math.random() * (maxRadius - minRadius) + minRadius;
+      // Random X position ensuring the entire circle fits.
+      const xPos =
+        Math.random() * (canvasWidth - 2 * radius) + radius;
+      
+      // Create the circle starting above the canvas.
+      const circle = Matter.Bodies.circle(
+        xPos,
+        -2 * radius,  // start off-screen above the canvas
+        radius,
         {
-          render: { fillStyle: "#e74c3c" },
-          restitution: 0.5, // Bounce factor, adjust as needed
+          render: { fillStyle: "#3498db" },
+          restitution: 0.6,
         }
       );
-      Matter.World.add(engine.world, square);
+      Matter.World.add(engine.world, circle);
     };
 
-    // Set an interval to add one red square every second.
-    const intervalId = setInterval(createSquare, 1000);
+    // Create a new blue circle every 1000 milliseconds.
+    const intervalId = setInterval(createCircle, 1000);
 
-    // Optionally, create boundaries so objects don't fall forever.
-    // For example, a floor just below the viewport:
+    // Optional: Add a static floor below the canvas so circles don't fall forever.
     const floor = Matter.Bodies.rectangle(
-      width / 2,
-      height + 50, // 50px below the bottom edge
-      width,
+      canvasWidth / 2,
+      canvasHeight + 50, // 50px below the bottom
+      canvasWidth,
       100,
       { isStatic: true, render: { visible: false } }
     );
     Matter.World.add(engine.world, floor);
 
-    // Cleanup on component unmount.
+    // Cleanup on unmount.
     return () => {
       clearInterval(intervalId);
       Matter.Render.stop(render);
@@ -80,8 +83,32 @@ const TestMatter = () => {
     };
   }, []);
 
-  // Make the container fill the whole page.
-  return <div ref={sceneRef} style={{ width: "100vw", height: "100vh" }} />;
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh",
+      }}
+    >
+      <div
+        ref={sceneRef}
+        style={{
+          width: "100%",
+          maxWidth: "500px",
+          height: "100%",
+          maxHeight: "500px",
+          border: "2px solid #ccc",
+          boxSizing: "border-box",
+        }}
+      />
+      <p style={{ marginTop: "20px", fontSize: "1.2em" }}>
+        Loading account data...
+      </p>
+    </div>
+  );
 };
 
 export default TestMatter;
