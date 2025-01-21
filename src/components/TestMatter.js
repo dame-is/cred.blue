@@ -6,15 +6,15 @@ const TestMatter = () => {
   const sceneRef = useRef(null);
 
   useEffect(() => {
-    // Use full viewport dimensions
-    const width = window.innerWidth;
-    const height = window.innerHeight;
+    // Set the fixed dimensions for the canvas.
+    const width = 500;
+    const height = 500;
 
-    // Create engine
+    // Create engine and set gravity.
     const engine = Matter.Engine.create();
     engine.world.gravity.y = 1;
 
-    // Create renderer
+    // Create the renderer with a fixed 500x500 dimensions.
     const render = Matter.Render.create({
       element: sceneRef.current,
       engine: engine,
@@ -28,7 +28,7 @@ const TestMatter = () => {
     });
     Matter.Render.run(render);
 
-    // Create runner
+    // Create and run the runner.
     const runner = Matter.Runner.create();
     Matter.Runner.run(runner, engine);
 
@@ -37,19 +37,21 @@ const TestMatter = () => {
     const wallRenderOptions = {
       fillStyle: "#2c3e50",   // Custom fill
       strokeStyle: "#ecf0f1", // Custom border color
-      lineWidth: 1
+      lineWidth: 1,
     };
 
     // Create walls with custom styling.
+    // In this example, we'll add three walls: left, right, and bottom.
+    // (You can uncomment/add the top wall if needed.)
     const walls = [
-      // Top wall
+      // Uncomment to add a top wall:
       // Matter.Bodies.rectangle(
-      //  width / 2,
-      //  0,
-      //  width,
-      //  wallThickness,
-      //  { isStatic: true, render: wallRenderOptions }
-    //  ),
+      //   width / 2,
+      //   0,
+      //   width,
+      //   wallThickness,
+      //   { isStatic: true, render: wallRenderOptions }
+      // ),
       // Bottom wall
       Matter.Bodies.rectangle(
         width / 2,
@@ -77,7 +79,7 @@ const TestMatter = () => {
     ];
     Matter.World.add(engine.world, walls);
 
-    // Enable mouse control
+    // Enable mouse control.
     const mouse = Matter.Mouse.create(render.canvas);
     const mouseConstraint = Matter.MouseConstraint.create(engine, {
       mouse: mouse,
@@ -86,13 +88,13 @@ const TestMatter = () => {
     Matter.World.add(engine.world, mouseConstraint);
     render.mouse = mouse;
 
-    // Fit the render viewport to the scene
+    // Fit the render viewport to the scene.
     Matter.Render.lookAt(render, {
       min: { x: 0, y: 0 },
       max: { x: width, y: height },
     });
 
-    // Blue circles with random sizes settings.
+    // Blue circles with random sizes.
     const minRadius = 5;
     const maxRadius = 30;
 
@@ -123,8 +125,31 @@ const TestMatter = () => {
     };
   }, []);
 
-  // Full viewport container.
-  return <div ref={sceneRef} style={{ width: "50vw", height: "50vw" }} />;
+  // Render the fixed-size 500x500 canvas and center it with some loading text.
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh",
+      }}
+    >
+      <div
+        ref={sceneRef}
+        style={{
+          width: "500px",
+          height: "500px",
+          border: "2px solid #ccc",
+          boxSizing: "border-box",
+        }}
+      />
+      <p style={{ marginTop: "20px", fontSize: "1.2em" }}>
+        Loading account data...
+      </p>
+    </div>
+  );
 };
 
 export default TestMatter;
