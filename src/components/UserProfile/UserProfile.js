@@ -295,7 +295,10 @@ const UserProfile = () => {
 
   return (
     <div className="user-profile">
-      <h1>{displayName}</h1>
+      <div className="user-profile-header">
+        <h1>{displayName}</h1>
+        <h2>{resolvedHandle}</h2>
+      </div>
       <ResponsiveGridLayout
         className="layout"
         layouts={layouts}

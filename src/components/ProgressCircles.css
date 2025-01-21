@@ -5,15 +5,12 @@
     height: 200px;          /* Adjust container size as needed */
     margin: 40px auto;
     border: 2px solid #ccc;
-    border-radius: 50%;
     background: #f8f8f8;
-    overflow: hidden;
   }
   
   /* Style for each circle */
   .circle {
     position: absolute;
-    bottom: -20px;        /* Start off the bottom */
     width: 15px;
     height: 15px;
     background-color: #4caf50;

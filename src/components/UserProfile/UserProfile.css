@@ -7,6 +7,10 @@
     margin-top: 40px;
   }
   
+  .user-profile-header {
+    text-align: center;
+  }
+
   /* Grid layout styling */
   .layout {
     margin-top: 20px;
