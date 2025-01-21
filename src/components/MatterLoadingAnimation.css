@@ -1,11 +1,19 @@
 /* src/components/MatterLoadingAnimation.css */
 .matter-container {
-    width: 300px; /* matches CONFIG.containerWidth */
-    height: 300px; /* matches CONFIG.containerHeight */
+    width: 300px;             /* matches our CONFIG */
+    height: 300px;            /* matches our CONFIG */
     border: 2px solid #ccc;
     overflow: hidden;
     margin: 40px auto;
     background: #f0f0f0;
     position: relative;
+  }
+  
+  /* Optional: Force the canvas to fill the container */
+  .matter-container canvas {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
   }
   
