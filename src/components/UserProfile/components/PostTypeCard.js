@@ -15,10 +15,10 @@ const PostTypeCard = () => {
         <strong>Posts:</strong> {accountData.postsCount}
     </p>
     <p>
-       <strong>Replies:</strong> {(accountData.postStats.replyPercentage * 100).toFixed(2)}%
+       <strong>Replies:</strong> {(accountData.replyPercentage * 100).toFixed(2)}%
     </p>
     <p>
-       <strong>Quotes:</strong> {(accountData.postStats.quotePercentage * 100).toFixed(2)}%
+       <strong>Quotes:</strong> {(accountData.quotePercentage * 100).toFixed(2)}%
     </p>
     </>
   );
