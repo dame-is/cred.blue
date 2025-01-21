@@ -1,5 +1,5 @@
 // src/components/UserProfile/UserProfile.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, createContext } from "react";
 import { useParams } from "react-router-dom";
 import { Responsive, WidthProvider } from "react-grid-layout";
 import { loadAccountData } from "../../accountData"; // Ensure the path is correct
@@ -9,6 +9,9 @@ import ProfileCard from "./components/ProfileCard"; // Import the new ProfileCar
 import "./UserProfile.css";
 import "react-grid-layout/css/styles.css"; // Import default grid-layout styles
 import "react-resizable/css/styles.css";
+
+// Create a new context for accountData
+export const AccountDataContext = createContext(null);
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -28,206 +31,26 @@ const UserProfile = () => {
   useEffect(() => {
     setLayouts({
       lg: [
-        {
-          i: "overview",
-          x: 0,
-          y: 0,
-          w: 4,
-          h: 4,
-          minW: 3,
-          maxW: 6,
-          minH: 3,
-          maxH: 6,
-        },
-        {
-          i: "stats",
-          x: 6,
-          y: 0,
-          w: 4,
-          h: 4,
-          minW: 3,
-          maxW: 6,
-          minH: 3,
-          maxH: 6,
-        },
-        {
-          i: "visualization1",
-          x: 0,
-          y: 4,
-          w: 4,
-          h: 4,
-          minW: 3,
-          maxW: 6,
-          minH: 3,
-          maxH: 6,
-        },
-        {
-          i: "visualization2",
-          x: 4,
-          y: 4,
-          w: 4,
-          h: 4,
-          minW: 3,
-          maxW: 6,
-          minH: 3,
-          maxH: 6,
-        },
-        {
-          i: "recentActivity",
-          x: 8,
-          y: 4,
-          w: 4,
-          h: 4,
-          minW: 3,
-          maxW: 6,
-          minH: 3,
-          maxH: 6,
-        },
-        {
-          i: "connections",
-          x: 0,
-          y: 8,
-          w: 4,
-          h: 4,
-          minW: 3,
-          maxW: 6,
-          minH: 3,
-          maxH: 6,
-        },
-        {
-          i: "settings",
-          x: 4,
-          y: 8,
-          w: 4,
-          h: 4,
-          minW: 3,
-          maxW: 6,
-          minH: 3,
-          maxH: 6,
-        },
-        {
-          i: "extra",
-          x: 8,
-          y: 8,
-          w: 4,
-          h: 4,
-          minW: 3,
-          maxW: 6,
-          minH: 3,
-          maxH: 6,
-        },
-        {
-          i: "additional",
-          x: 0,
-          y: 12,
-          w: 4,
-          h: 4,
-          minW: 3,
-          maxW: 6,
-          minH: 3,
-          maxH: 6,
-        },
+        { i: "overview", x: 0, y: 0, w: 4, h: 4, minW: 3, maxW: 6, minH: 3, maxH: 6 },
+        { i: "NarrativeCard", x: 6, y: 0, w: 4, h: 4, minW: 3, maxW: 6, minH: 3, maxH: 6 },
+        { i: "visualization1", x: 0, y: 4, w: 4, h: 4, minW: 3, maxW: 6, minH: 3, maxH: 6 },
+        { i: "visualization2", x: 4, y: 4, w: 4, h: 4, minW: 3, maxW: 6, minH: 3, maxH: 6 },
+        { i: "recentActivity", x: 8, y: 4, w: 4, h: 4, minW: 3, maxW: 6, minH: 3, maxH: 6 },
+        { i: "connections", x: 0, y: 8, w: 4, h: 4, minW: 3, maxW: 6, minH: 3, maxH: 6 },
+        { i: "settings", x: 4, y: 8, w: 4, h: 4, minW: 3, maxW: 6, minH: 3, maxH: 6 },
+        { i: "extra", x: 8, y: 8, w: 4, h: 4, minW: 3, maxW: 6, minH: 3, maxH: 6 },
+        { i: "additional", x: 0, y: 12, w: 4, h: 4, minW: 3, maxW: 6, minH: 3, maxH: 6 },
       ],
       md: [
-        {
-          i: "overview",
-          x: 0,
-          y: 0,
-          w: 5,
-          h: 7,
-          minW: 4,
-          maxW: 7,
-          minH: 4,
-          maxH: 8,
-        },
-        {
-          i: "stats",
-          x: 5,
-          y: 0,
-          w: 5,
-          h: 7,
-          minW: 4,
-          maxW: 7,
-          minH: 4,
-          maxH: 8,
-        },
-        {
-          i: "visualization1",
-          x: 0,
-          y: 4,
-          w: 5,
-          h: 7,
-          minW: 4,
-          maxW: 7,
-          minH: 4,
-          maxH: 8,
-        },
-        {
-          i: "visualization2",
-          x: 5,
-          y: 4,
-          w: 5,
-          h: 7,
-          minW: 4,
-          maxW: 7,
-          minH: 4,
-          maxH: 8,
-        },
-        {
-          i: "recentActivity",
-          x: 0,
-          y: 8,
-          w: 10,
-          h: 7,
-          minW: 8,
-          maxW: 10,
-          minH: 4,
-          maxH: 8,
-        },
-        {
-          i: "connections",
-          x: 0,
-          y: 12,
-          w: 5,
-          h: 7,
-          minW: 4,
-          maxW: 7,
-          minH: 4,
-          maxH: 8,
-        },
-        {
-          i: "settings",
-          x: 5,
-          y: 12,
-          w: 5,
-          h: 7,
-          minW: 4,
-          maxW: 7,
-          minH: 4,
-          maxH: 8,
-        },
-        {
-          i: "extra",
-          x: 0,
-          y: 16,
-          w: 5,
-          h: 7,
-          minW: 4,
-          maxW: 7,
-          minH: 4,
-          maxH: 8,
-        },
-        {
-          i: "additional",
-          x: 5,
-          y: 16,
-          w: 5,
-          h: 7,
-          minW: 4,
-          maxW: 7,
-          minH: 4,
-          maxH: 8,
-        },
+        { i: "overview", x: 0, y: 0, w: 5, h: 7, minW: 4, maxW: 7, minH: 4, maxH: 8 },
+        { i: "NarrativeCard", x: 5, y: 0, w: 5, h: 7, minW: 4, maxW: 7, minH: 4, maxH: 8 },
+        { i: "visualization1", x: 0, y: 4, w: 5, h: 7, minW: 4, maxW: 7, minH: 4, maxH: 8 },
+        { i: "visualization2", x: 5, y: 4, w: 5, h: 7, minW: 4, maxW: 7, minH: 4, maxH: 8 },
+        { i: "recentActivity", x: 0, y: 8, w: 10, h: 7, minW: 8, maxW: 10, minH: 4, maxH: 8 },
+        { i: "connections", x: 0, y: 12, w: 5, h: 7, minW: 4, maxW: 7, minH: 4, maxH: 8 },
+        { i: "settings", x: 5, y: 12, w: 5, h: 7, minW: 4, maxW: 7, minH: 4, maxH: 8 },
+        { i: "extra", x: 0, y: 16, w: 5, h: 7, minW: 4, maxW: 7, minH: 4, maxH: 8 },
+        { i: "additional", x: 5, y: 16, w: 5, h: 7, minW: 4, maxW: 7, minH: 4, maxH: 8 },
       ],
       // Define layouts for sm, xs, xxs if needed
     });
@@ -238,8 +61,7 @@ const UserProfile = () => {
     setLayouts(allLayouts);
   };
 
-  // Fetch account data using our loadAccountData function.
-  // Each time an API page completes, our callback increments the circle count by 1.
+  // Fetch account data using loadAccountData.
   useEffect(() => {
     const fetchAccountData = async () => {
       try {
@@ -261,14 +83,12 @@ const UserProfile = () => {
     fetchAccountData();
   }, [username]);
 
-  // While loading, show our progress visualization which updates as each API call completes.
+  // While loading, show our progress visualization.
   if (loading) {
     return (
       <div className="user-profile loading-container">
         <ProgressCircles loading={loading} />
-        <p className="loading-text">
-          Loading account data... { /* display seconds elapsed as needed */ }
-        </p>
+        <p className="loading-text">Loading account data...</p>
       </div>
     );
   }
@@ -281,96 +101,76 @@ const UserProfile = () => {
     return <div className="user-profile">No profile information available.</div>;
   }
 
-  // Destructure some fields from accountData for display
-  const {
-    profile,
-    displayName,
-    handle: resolvedHandle,
-    did,
-    createdAt,
-    ageInDays,
-    serviceEndpoint,
-    pdsType,
-  } = accountData;
+  // You may still want to destructure some fields for your header.
+  const { displayName, handle: resolvedHandle } = accountData;
 
   return (
-    <div className="user-profile">
-      <div className="user-profile-header">
-        <h1>{displayName}</h1>
-        <h2>{resolvedHandle}</h2>
+    // Provide the accountData to any nested components via context.
+    <AccountDataContext.Provider value={accountData}>
+      <div className="user-profile">
+        <div className="user-profile-header">
+          <h1>{displayName}</h1>
+          <h2>@{resolvedHandle}</h2>
+        </div>
+        <ResponsiveGridLayout
+          className="layout"
+          layouts={layouts}
+          breakpoints={breakpoints}
+          cols={cols}
+          rowHeight={50}
+          draggableHandle=".drag-handle"
+          margin={[20, 20]}
+          onLayoutChange={handleLayoutChange}
+        >
+          <div key="overview" className="grid-item">
+            <Card title="Profile Overview">
+              {/* ProfileCard now can access the accountData via context */}
+              <ProfileCard />
+            </Card>
+          </div>
+          <div key="NarrativeCard" className="grid-item">
+            <Card title="NarrativeCard">
+              <p>NarrativeCard details go here...</p>
+            </Card>
+          </div>
+          <div key="visualization1" className="grid-item">
+            <Card title="Visualization 1">
+              <p>Chart or graph 1...</p>
+            </Card>
+          </div>
+          <div key="visualization2" className="grid-item">
+            <Card title="Visualization 2">
+              <p>Chart or graph 2...</p>
+            </Card>
+          </div>
+          <div key="recentActivity" className="grid-item">
+            <Card title="Recent Activity">
+              <p>Recent user activities...</p>
+            </Card>
+          </div>
+          <div key="connections" className="grid-item">
+            <Card title="Connections">
+              <p>Follower or connection info...</p>
+            </Card>
+          </div>
+          <div key="settings" className="grid-item">
+            <Card title="Settings">
+              <p>Settings details...</p>
+            </Card>
+          </div>
+          <div key="extra" className="grid-item">
+            <Card title="Extra">
+              <p>Extra details...</p>
+            </Card>
+          </div>
+          <div key="additional" className="grid-item">
+            <Card title="Additional Info">
+              <p>Additional information...</p>
+            </Card>
+          </div>
+        </ResponsiveGridLayout>
       </div>
-      <ResponsiveGridLayout
-        className="layout"
-        layouts={layouts}
-        breakpoints={breakpoints}
-        cols={cols}
-        rowHeight={50}
-        draggableHandle=".drag-handle"
-        margin={[20, 20]}
-        onLayoutChange={handleLayoutChange}
-      >
-        <div key="overview" className="grid-item">
-          <Card title="Profile Overview">
-            {/* Delegate rendering of the card content to ProfileCard */}
-            <ProfileCard
-              resolvedHandle={resolvedHandle}
-              did={did}
-              createdAt={createdAt}
-              ageInDays={ageInDays}
-              serviceEndpoint={serviceEndpoint}
-              pdsType={pdsType}
-            />
-          </Card>
-        </div>
-        <div key="stats" className="grid-item">
-          <Card title="Stats">
-            <p>Stats details go here...</p>
-          </Card>
-        </div>
-
-        <div key="visualization1" className="grid-item">
-          <Card title="Visualization 1">
-            <p>Chart or graph 1...</p>
-          </Card>
-        </div>
-
-        <div key="visualization2" className="grid-item">
-          <Card title="Visualization 2">
-            <p>Chart or graph 2...</p>
-          </Card>
-        </div>
-
-        <div key="recentActivity" className="grid-item">
-          <Card title="Recent Activity">
-            <p>Recent user activities...</p>
-          </Card>
-        </div>
-
-        <div key="connections" className="grid-item">
-          <Card title="Connections">
-            <p>Follower or connection info...</p>
-          </Card>
-        </div>
-
-        <div key="settings" className="grid-item">
-          <Card title="Settings">
-            <p>Settings details...</p>
-          </Card>
-        </div>
-
-        <div key="extra" className="grid-item">
-          <Card title="Extra">
-            <p>Extra details...</p>
-          </Card>
-        </div>
-
-        <div key="additional" className="grid-item">
-          <Card title="Additional Info">
-            <p>Additional information...</p>
-          </Card>
-        </div>
-      </ResponsiveGridLayout>
-    </div>
+    </AccountDataContext.Provider>
   );
 };
 
