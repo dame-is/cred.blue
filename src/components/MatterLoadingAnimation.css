@@ -1,0 +1,10 @@
+/* src/components/MatterLoadingAnimation.css */
+.matter-container {
+    width: 200px; /* Should match CONFIG.containerWidth */
+    height: 200px; /* Should match CONFIG.containerHeight */
+    border: 2px solid #ccc;
+    margin: 40px auto;   /* Center the container */
+    background: #f8f8f8;
+    position: relative;
+  }
+  

@@ -2,9 +2,9 @@
 import React, { useEffect, useState, createContext } from "react";
 import { useParams } from "react-router-dom";
 import { Responsive, WidthProvider } from "react-grid-layout";
-import { loadAccountData } from "../../accountData"; //
+import { loadAccountData } from "../../accountData";
 import Card from "../Card/Card";
-import ProgressCircles from "../ProgressCircles";
+import MatterLoadingAnimation from "../MatterLoadingAnimation"; // <-- Updated import
 
 import ProfileCard from "./components/ProfileCard";
 import NarrativeCard from "./components/NarrativeCard";
@@ -48,7 +48,7 @@ const UserProfile = () => {
       md: [
         { i: "AccountData", x: 0, y: 0, w: 5, h: 7, minW: 4, maxW: 7, minH: 4, maxH: 8 },
         { i: "NarrativeCard", x: 5, y: 0, w: 5, h: 7, minW: 4, maxW: 7, minH: 4, maxH: 8 },
-        { i: "PostTypeCard", x: 0, y: 4, w: 5, h: 7, minW: 4, maxW: 7, minH: 4, maxH: 8 },
+        { i: "PostTypeCard", x: 0, y: 4, w: 5, h: 7, minW: 4, maxW: 7, minMinH: 4, maxH: 8 },
         { i: "visualization2", x: 5, y: 4, w: 5, h: 7, minW: 4, maxW: 7, minH: 4, maxH: 8 },
         { i: "recentActivity", x: 0, y: 8, w: 10, h: 7, minW: 8, maxW: 10, minH: 4, maxH: 8 },
         { i: "connections", x: 0, y: 12, w: 5, h: 7, minW: 4, maxW: 7, minH: 4, maxH: 8 },
@@ -87,11 +87,11 @@ const UserProfile = () => {
     fetchAccountData();
   }, [username]);
 
-  // While loading, show our progress visualization.
+  // While loading, show our Matter.js visualization.
   if (loading) {
     return (
       <div className="user-profile loading-container">
-        <ProgressCircles loading={loading} />
+        <MatterLoadingAnimation />
         <p className="loading-text">Loading account data...</p>
       </div>
     );
@@ -105,7 +105,7 @@ const UserProfile = () => {
     return <div className="user-profile">No profile information available.</div>;
   }
 
-  // You may still want to destructure some fields for your header.
+  // Destructure accountData for the header.
   const { displayName, handle: resolvedHandle } = accountData;
 
   return (
@@ -133,7 +133,7 @@ const UserProfile = () => {
           </div>
           <div key="NarrativeCard" className="grid-item">
             <Card title="NarrativeCard">
-             <NarrativeCard />
+              <NarrativeCard />
             </Card>
           </div>
           <div key="PostTypeCard" className="grid-item">
