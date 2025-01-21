@@ -6,15 +6,15 @@ const TestMatter = () => {
   const sceneRef = useRef(null);
 
   useEffect(() => {
-    // Use full viewport dimensions (or adjust as needed)
+    // Use full viewport dimensions
     const width = window.innerWidth;
     const height = window.innerHeight;
 
     // Create engine
     const engine = Matter.Engine.create();
-    engine.world.gravity.y = 1; // Adjust gravity as needed
+    engine.world.gravity.y = 1;
 
-    // Create renderer with full viewport dimensions
+    // Create renderer
     const render = Matter.Render.create({
       element: sceneRef.current,
       engine: engine,
@@ -32,17 +32,48 @@ const TestMatter = () => {
     const runner = Matter.Runner.create();
     Matter.Runner.run(runner, engine);
 
-    // Walls (top, bottom, left, right) – adjust thickness as needed
+    // Walls settings
     const wallThickness = 50;
+    const wallRenderOptions = {
+      fillStyle: "#2c3e50",   // Custom fill
+      strokeStyle: "#ecf0f1", // Custom border color
+      lineWidth: 1
+    };
+
+    // Create walls with custom styling.
     const walls = [
       // Top wall
-      Matter.Bodies.rectangle(width / 2, 0, width, wallThickness, { isStatic: true }),
+      // Matter.Bodies.rectangle(
+      //  width / 2,
+      //  0,
+      //  width,
+      //  wallThickness,
+      //  { isStatic: true, render: wallRenderOptions }
+    //  ),
       // Bottom wall
-      Matter.Bodies.rectangle(width / 2, height, width, wallThickness, { isStatic: true }),
+      Matter.Bodies.rectangle(
+        width / 2,
+        height,
+        width,
+        wallThickness,
+        { isStatic: true, render: wallRenderOptions }
+      ),
       // Left wall
-      Matter.Bodies.rectangle(0, height / 2, wallThickness, height, { isStatic: true }),
+      Matter.Bodies.rectangle(
+        0,
+        height / 2,
+        wallThickness,
+        height,
+        { isStatic: true, render: wallRenderOptions }
+      ),
       // Right wall
-      Matter.Bodies.rectangle(width, height / 2, wallThickness, height, { isStatic: true }),
+      Matter.Bodies.rectangle(
+        width,
+        height / 2,
+        wallThickness,
+        height,
+        { isStatic: true, render: wallRenderOptions }
+      ),
     ];
     Matter.World.add(engine.world, walls);
 
@@ -50,10 +81,7 @@ const TestMatter = () => {
     const mouse = Matter.Mouse.create(render.canvas);
     const mouseConstraint = Matter.MouseConstraint.create(engine, {
       mouse: mouse,
-      constraint: {
-        stiffness: 0.2,
-        render: { visible: false },
-      },
+      constraint: { stiffness: 0.2, render: { visible: false } },
     });
     Matter.World.add(engine.world, mouseConstraint);
     render.mouse = mouse;
@@ -64,23 +92,18 @@ const TestMatter = () => {
       max: { x: width, y: height },
     });
 
-    // For variety, add blue circles with random sizes.
+    // Blue circles with random sizes settings.
     const minRadius = 5;
     const maxRadius = 30;
 
     const createCircle = () => {
       const radius = Math.random() * (maxRadius - minRadius) + minRadius;
-      // Random x position ensuring the circle fits fully.
       const xPos = Math.random() * (width - 2 * radius) + radius;
-      // Start well above the scene
       const circle = Matter.Bodies.circle(
         xPos,
-        -2 * radius,
+        -2 * radius, // start above the canvas
         radius,
-        {
-          render: { fillStyle: "#3498db" },
-          restitution: 0.6,
-        }
+        { render: { fillStyle: "#3498db" }, restitution: 0.6 }
       );
       Matter.World.add(engine.world, circle);
     };
@@ -88,7 +111,7 @@ const TestMatter = () => {
     // Add one blue circle per second indefinitely.
     const intervalId = setInterval(createCircle, 1000);
 
-    // Cleanup on unmount
+    // Cleanup on unmount.
     return () => {
       clearInterval(intervalId);
       Matter.Render.stop(render);
@@ -100,8 +123,8 @@ const TestMatter = () => {
     };
   }, []);
 
-  // The container fills the viewport.
-  return <div ref={sceneRef} style={{ width: "100vw", height: "100vh" }} />;
+  // Full viewport container.
+  return <div ref={sceneRef} style={{ width: "50vw", height: "50vw" }} />;
 };
 
 export default TestMatter;
