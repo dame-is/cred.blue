@@ -17,7 +17,7 @@ import ProfileCard from "./components/ProfileCard";
 import ScoreBreakdownCard from "./components/ScoreBreakdownCard";
 import ScoresCard from "./components/ScoresCard";
 
-import "./UserProfile/UserProfile.css";
+import "./UserProfile.css";
 import "react-grid-layout/css/styles.css"; // Import default grid-layout styles
 import "react-resizable/css/styles.css";
 
