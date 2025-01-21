@@ -324,6 +324,11 @@ const UserProfile = () => {
     ageInDays,
     serviceEndpoint,
     pdsType,
+    postsWithImages,
+    imagePostsAltText,
+    imagePostsNoAltText,
+    altTextPercentage,
+    imagePostsReplies,
   } = accountData;
 
   return (
@@ -360,7 +365,14 @@ const UserProfile = () => {
 
         <div key="alttextcard" className="grid-item">
           <Card title="Alt Text">
-            <AltTextCard profile={profile} />
+            <AltTextCard
+              postsWithImages={postsWithImages}
+              imagePostsPerDay={imagePostsPerDay}
+              imagePostsAltText={imagePostsAltText}
+              imagePostsNoAltText={imagePostsNoAltText}
+              altTextPercentage={altTextPercentage}
+              imagePostsReplies={imagePostsReplies}
+            />
           </Card>
         </div>
 

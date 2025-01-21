@@ -609,6 +609,16 @@ async function resolveHandleToDid(inputHandle) {
           rec.value.embed.images.some((image) => image.alt && image.alt.trim())
         );
       });
+      // Compute the count of image posts (with alt text) that are replies.
+        const imagePostsReplies = filterRecords(postsRecords, (rec) => {
+        // Check that the post has the image embed type and alt text...
+        const isImagePostWithAlt = rec.value.embed &&
+        rec.value.embed["$type"] === "app.bsky.embed.images" &&
+        rec.value.embed.images &&
+        rec.value.embed.images.some((img) => img.alt && img.alt.trim());
+        // ...and that it is a reply (i.e. the record has a reply property).
+        return isImagePostWithAlt && rec.value.reply;
+  });
       const imagePostsNoAltText = postsWithImages - imagePostsAltText;
       const altTextPercentage = postsWithImages ? imagePostsAltText / postsWithImages : 0;
       const postsWithOnlyText = filterRecords(
@@ -669,6 +679,7 @@ async function resolveHandleToDid(inputHandle) {
         imagePostsAltText: roundToTwo(imagePostsAltText),
         imagePostsNoAltText: roundToTwo(imagePostsNoAltText),
         altTextPercentage: roundToTwo(altTextPercentage),
+        imagePostsReplies: roundToTwo(imagePostsReplies.length),
         postsWithOnlyText: roundToTwo(postsWithOnlyText),
         textPostsPerDay: ageInDays ? roundToTwo(postsWithOnlyText / ageInDays) : 0,
         postsWithMentions: roundToTwo(postsWithMentions),
