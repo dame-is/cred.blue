@@ -31,8 +31,8 @@ const UserProfile = () => {
     } else {
       setLayouts({
         lg: [
-          { i: "overview", x: 0, y: 0, w: 6, h: 6 },
-          { i: "stats", x: 6, y: 0, w: 6, h: 6 },
+          { i: "overview", x: 0, y: 0, w: 4, h: 4 },
+          { i: "stats", x: 6, y: 0, w: 4, h: 4 },
           { i: "visualization1", x: 0, y: 4, w: 4, h: 4 },
           { i: "visualization2", x: 4, y: 4, w: 4, h: 4 },
           { i: "recentActivity", x: 8, y: 4, w: 4, h: 4 },
@@ -42,15 +42,15 @@ const UserProfile = () => {
           { i: "additional", x: 0, y: 12, w: 4, h: 4 },
         ],
         md: [
-          { i: "overview", x: 0, y: 0, w: 5, h: 4 },
-          { i: "stats", x: 5, y: 0, w: 5, h: 4 },
-          { i: "visualization1", x: 0, y: 4, w: 5, h: 4 },
-          { i: "visualization2", x: 5, y: 4, w: 5, h: 4 },
-          { i: "recentActivity", x: 0, y: 8, w: 10, h: 4 },
-          { i: "connections", x: 0, y: 12, w: 5, h: 4 },
-          { i: "settings", x: 5, y: 12, w: 5, h: 4 },
-          { i: "extra", x: 0, y: 16, w: 5, h: 4 },
-          { i: "additional", x: 5, y: 16, w: 5, h: 4 },
+          { i: "overview", x: 0, y: 0, w: 5, h: 5 },
+          { i: "stats", x: 5, y: 0, w: 5, h: 5 },
+          { i: "visualization1", x: 0, y: 4, w: 5, h: 5 },
+          { i: "visualization2", x: 5, y: 4, w: 5, h: 5 },
+          { i: "recentActivity", x: 0, y: 8, w: 10, h: 5 },
+          { i: "connections", x: 0, y: 12, w: 5, h: 5 },
+          { i: "settings", x: 5, y: 12, w: 5, h: 5 },
+          { i: "extra", x: 0, y: 16, w: 5, h: 5 },
+          { i: "additional", x: 5, y: 16, w: 5, h: 5 },
         ],
         // Define layouts for sm, xs, xxs if needed
       });

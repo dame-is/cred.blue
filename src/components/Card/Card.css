@@ -1,15 +1,16 @@
 /* src/components/Card/Card.css */
 
-.card {
+  .react-grid-item {
     background: #fff;
     border: 1px solid #ddd;
     padding: 15px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     border-radius: 4px;
-    height: 100%;
-    overflow: auto;
-    display: flex;
-    flex-direction: column;
+  }
+
+  .react-grid-item p {
+    margin-bottom: 0px;
+    margin-top: 10px;
   }
   
   .card-title {
@@ -21,5 +22,34 @@
   .card-content {
     flex-grow: 1;
     font-size: 0.95em;
+  }
+  
+    
+  /* Draggable Handle Styles */
+  .drag-handle {
+    align-items: center;
+    background: #f0f0f0;
+    border-radius: 4px;
+    cursor: move;
+    padding: 5px;
+    max-width: 18px;
+    text-align: center;
+  }
+  
+  .drag-icon {
+    font-size: 1.2em;
+    user-select: none;
+  }
+  
+  /* Optional: Enhance hover effect for the drag handle */
+  .drag-handle:hover {
+    background: #e0e0e0;
+  }
+  
+  /* Responsive Adjustments for Cards */
+  @media (max-width: 768px) {
+    .drag-handle {
+      justify-content: center;
+    }
   }
   
