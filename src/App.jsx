@@ -9,6 +9,7 @@ import MainApp from './components/MainApp/MainApp';
 import About from './components/About/About';
 import Home from './components/Home/Home';
 import UserProfile from './components/UserProfile/UserProfile';
+import TestMatterPage from './components/TestMatterPage';  // New import for test page
 import "./App.css";
 import { AuthContext } from './AuthContext';
 
@@ -48,6 +49,7 @@ const App = () => {
               }
             />
             <Route path="/:username" element={<UserProfile />} />
+            <Route path="/test-matter" element={<TestMatterPage />} />  {/* New route */}
             <Route path="*" element={<Navigate to={isAuthenticated ? '/app' : '/home'} replace />} />
           </Routes>
         </div>
