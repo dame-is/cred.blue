@@ -89,8 +89,10 @@ const UserProfile = () => {
   if (loading) {
     return (
       <div className="user-profile loading-container">
-        <ProgressCircles circleCount={circleCount} />
-        <p className="loading-text">Loading account data... {circleCount} fetches completed</p>
+        <ProgressCircles loading={loading} />
+        <p className="loading-text">
+          Loading account data... { /* display the seconds elapsed value as needed */ }
+        </p>
       </div>
     );
   }

@@ -1,8 +1,8 @@
 /* src/components/ProgressCircles.css */
 .circle-container {
     position: relative;
-    width: 150px;  
-    height: 150px;
+    width: 200px;           /* Adjust container size as needed */
+    height: 200px;          /* Adjust container size as needed */
     margin: 40px auto;
     border: 2px solid #ccc;
     border-radius: 50%;
@@ -10,28 +10,30 @@
     overflow: hidden;
   }
   
+  /* Style for each circle */
   .circle {
     position: absolute;
+    bottom: -20px;        /* Start off the bottom */
     width: 15px;
     height: 15px;
     background-color: #4caf50;
     border-radius: 50%;
-    opacity: 0;
-    transform: translateY(-50px);
-    animation: drop 0.6s ease-out forwards;
+    /* The drop animation: starts above and lands near the bottom */
+    animation: drop 0.8s ease-out forwards;
   }
   
+  /* Keyframes for drop animation */
   @keyframes drop {
     0% {
+      transform: translateY(-50px) scale(0.8);
       opacity: 0;
-      transform: translateY(-50px);
     }
     50% {
       opacity: 1;
     }
     100% {
+      transform: translateY(0) scale(1);
       opacity: 1;
-      transform: translateY(0);
     }
   }
   
