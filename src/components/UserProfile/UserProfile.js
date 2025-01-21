@@ -1,10 +1,22 @@
-// src/components/UserProfile/UserProfile.jsx
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Responsive, WidthProvider } from "react-grid-layout";
 import { loadAccountData } from "../../accountData"; // Ensure the path is correct
 import Card from "../Card/Card";
 import ProgressCircles from "../ProgressCircles"; // Import our updated progress visualization
+
+// Import new card content components
+import ActivityCard from "./components/ActivityCard";
+import AltTextCard from "./components/AltTextCard";
+import BadgesCard from "./components/BadgesCard";
+import NarrativeCard from "./components/NarrativeCard";
+import NeedleCard from "./components/NeedleCard";
+import PostMediaCard from "./components/PostMediaCard";
+import PostTypeCard from "./components/PostTypeCard";
+import ProfileCard from "./components/ProfileCard";
+import ScoreBreakdownCard from "./components/ScoreBreakdownCard";
+import ScoresCard from "./components/ScoresCard";
+
 import "./UserProfile.css";
 import "react-grid-layout/css/styles.css"; // Import default grid-layout styles
 import "react-resizable/css/styles.css";
@@ -27,8 +39,9 @@ const UserProfile = () => {
   useEffect(() => {
     setLayouts({
       lg: [
+        // Here you can order/position the cards as desired. The key "profilecard" corresponds to ProfileCard, etc.
         {
-          i: "overview",
+          i: "profilecard",
           x: 0,
           y: 0,
           w: 4,
@@ -39,8 +52,8 @@ const UserProfile = () => {
           maxH: 6,
         },
         {
-          i: "stats",
-          x: 6,
+          i: "activitycard",
+          x: 4,
           y: 0,
           w: 4,
           h: 4,
@@ -50,7 +63,18 @@ const UserProfile = () => {
           maxH: 6,
         },
         {
-          i: "visualization1",
+          i: "alttextcard",
+          x: 8,
+          y: 0,
+          w: 4,
+          h: 4,
+          minW: 3,
+          maxW: 4,
+          minH: 3,
+          maxH: 6,
+        },
+        {
+          i: "badgescard",
           x: 0,
           y: 4,
           w: 4,
@@ -61,7 +85,7 @@ const UserProfile = () => {
           maxH: 6,
         },
         {
-          i: "visualization2",
+          i: "narrativecard",
           x: 4,
           y: 4,
           w: 4,
@@ -72,18 +96,18 @@ const UserProfile = () => {
           maxH: 6,
         },
         {
-          i: "recentActivity",
+          i: "needlecard",
           x: 8,
           y: 4,
           w: 4,
           h: 4,
           minW: 3,
-          maxW: 6,
+          maxW: 4,
           minH: 3,
           maxH: 6,
         },
         {
-          i: "connections",
+          i: "postmediacard",
           x: 0,
           y: 8,
           w: 4,
@@ -94,7 +118,7 @@ const UserProfile = () => {
           maxH: 6,
         },
         {
-          i: "settings",
+          i: "posttypecard",
           x: 4,
           y: 8,
           w: 4,
@@ -105,31 +129,32 @@ const UserProfile = () => {
           maxH: 6,
         },
         {
-          i: "extra",
+          i: "scorebreakdowncard",
           x: 8,
           y: 8,
           w: 4,
           h: 4,
           minW: 3,
-          maxW: 6,
+          maxW: 4,
           minH: 3,
           maxH: 6,
         },
         {
-          i: "additional",
+          i: "scorescard",
           x: 0,
           y: 12,
           w: 4,
           h: 4,
           minW: 3,
-          maxW: 6,
+          maxW: 4,
           minH: 3,
           maxH: 6,
         },
       ],
       md: [
+        // You can define the md layout similarly if desired
         {
-          i: "overview",
+          i: "profilecard",
           x: 0,
           y: 0,
           w: 5,
@@ -140,7 +165,7 @@ const UserProfile = () => {
           maxH: 8,
         },
         {
-          i: "stats",
+          i: "activitycard",
           x: 5,
           y: 0,
           w: 5,
@@ -151,9 +176,9 @@ const UserProfile = () => {
           maxH: 8,
         },
         {
-          i: "visualization1",
+          i: "alttextcard",
           x: 0,
-          y: 4,
+          y: 7,
           w: 5,
           h: 7,
           minW: 4,
@@ -162,9 +187,9 @@ const UserProfile = () => {
           maxH: 8,
         },
         {
-          i: "visualization2",
+          i: "badgescard",
           x: 5,
-          y: 4,
+          y: 7,
           w: 5,
           h: 7,
           minW: 4,
@@ -173,20 +198,9 @@ const UserProfile = () => {
           maxH: 8,
         },
         {
-          i: "recentActivity",
+          i: "narrativecard",
           x: 0,
-          y: 8,
-          w: 10,
-          h: 7,
-          minW: 8,
-          maxW: 10,
-          minH: 4,
-          maxH: 8,
-        },
-        {
-          i: "connections",
-          x: 0,
-          y: 12,
+          y: 14,
           w: 5,
           h: 7,
           minW: 4,
@@ -195,9 +209,9 @@ const UserProfile = () => {
           maxH: 8,
         },
         {
-          i: "settings",
+          i: "needlecard",
           x: 5,
-          y: 12,
+          y: 14,
           w: 5,
           h: 7,
           minW: 4,
@@ -206,9 +220,9 @@ const UserProfile = () => {
           maxH: 8,
         },
         {
-          i: "extra",
+          i: "postmediacard",
           x: 0,
-          y: 16,
+          y: 21,
           w: 5,
           h: 7,
           minW: 4,
@@ -217,13 +231,35 @@ const UserProfile = () => {
           maxH: 8,
         },
         {
-          i: "additional",
+          i: "posttypecard",
           x: 5,
-          y: 16,
+          y: 21,
           w: 5,
           h: 7,
           minW: 4,
           maxW: 7,
+          minH: 4,
+          maxH: 8,
+        },
+        {
+          i: "scorebreakdowncard",
+          x: 0,
+          y: 28,
+          w: 5,
+          h: 7,
+          minW: 4,
+          maxW: 5,
+          minH: 4,
+          maxH: 8,
+        },
+        {
+          i: "scorescard",
+          x: 5,
+          y: 28,
+          w: 5,
+          h: 7,
+          minW: 4,
+          maxW: 5,
           minH: 4,
           maxH: 8,
         },
@@ -238,7 +274,6 @@ const UserProfile = () => {
   };
 
   // Fetch account data using our loadAccountData function.
-  // Each time an API page completes, our callback increments the circle count by 1.
   useEffect(() => {
     const fetchAccountData = async () => {
       try {
@@ -260,13 +295,12 @@ const UserProfile = () => {
     fetchAccountData();
   }, [username]);
 
-  // While loading, show our progress visualization which updates as each API call completes.
   if (loading) {
     return (
       <div className="user-profile loading-container">
         <ProgressCircles loading={loading} />
         <p className="loading-text">
-          Loading account data... { /* display seconds elapsed as needed */ }
+          Loading account data... {/* display seconds elapsed as needed */}
         </p>
       </div>
     );
@@ -280,7 +314,7 @@ const UserProfile = () => {
     return <div className="user-profile">No profile information available.</div>;
   }
 
-  // Destructure some fields from accountData for display
+  // Destructure any fields you wish to pass as props from accountData
   const {
     profile,
     displayName,
@@ -305,92 +339,70 @@ const UserProfile = () => {
         margin={[20, 20]}
         onLayoutChange={handleLayoutChange}
       >
-        <div key="overview" className="grid-item">
-          <Card title="Profile Overview">
-            <div className="drag-handle">
-              <span className="drag-icon">≡</span>
-            </div>
-            <p><strong>Username:</strong> {resolvedHandle}</p>
-            <p><strong>DID:</strong> {did}</p>
-            <p>
-              <strong>Account Created:</strong>{" "}
-              {new Date(createdAt).toLocaleDateString()}{" "}
-              (<em>{Math.floor(ageInDays)} days old</em>)
-            </p>
-            <p><strong>Service Endpoint:</strong> {serviceEndpoint}</p>
-            <p><strong>PDS Type:</strong> {pdsType}</p>
+        <div key="profilecard" className="grid-item">
+          <Card title="Profile">
+            <ProfileCard
+              resolvedHandle={resolvedHandle}
+              did={did}
+              createdAt={createdAt}
+              ageInDays={ageInDays}
+              serviceEndpoint={serviceEndpoint}
+              pdsType={pdsType}
+            />
           </Card>
         </div>
 
-        <div key="stats" className="grid-item">
-          <Card title="Stats">
-            <div className="drag-handle">
-              <span className="drag-icon">≡</span>
-            </div>
-            <p>Stats details go here...</p>
+        <div key="activitycard" className="grid-item">
+          <Card title="Activity">
+            <ActivityCard profile={profile} />
           </Card>
         </div>
 
-        <div key="visualization1" className="grid-item">
-          <Card title="Visualization 1">
-            <div className="drag-handle">
-              <span className="drag-icon">≡</span>
-            </div>
-            <p>Chart or graph 1...</p>
+        <div key="alttextcard" className="grid-item">
+          <Card title="Alt Text">
+            <AltTextCard profile={profile} />
           </Card>
         </div>
 
-        <div key="visualization2" className="grid-item">
-          <Card title="Visualization 2">
-            <div className="drag-handle">
-              <span className="drag-icon">≡</span>
-            </div>
-            <p>Chart or graph 2...</p>
+        <div key="badgescard" className="grid-item">
+          <Card title="Badges">
+            <BadgesCard profile={profile} />
           </Card>
         </div>
 
-        <div key="recentActivity" className="grid-item">
-          <Card title="Recent Activity">
-            <div className="drag-handle">
-              <span className="drag-icon">≡</span>
-            </div>
-            <p>Recent user activities...</p>
+        <div key="narrativecard" className="grid-item">
+          <Card title="Narrative">
+            <NarrativeCard profile={profile} />
           </Card>
         </div>
 
-        <div key="connections" className="grid-item">
-          <Card title="Connections">
-            <div className="drag-handle">
-              <span className="drag-icon">≡</span>
-            </div>
-            <p>Follower or connection info...</p>
+        <div key="needlecard" className="grid-item">
+          <Card title="Needle">
+            <NeedleCard profile={profile} />
           </Card>
         </div>
 
-        <div key="settings" className="grid-item">
-          <Card title="Settings">
-            <div className="drag-handle">
-              <span className="drag-icon">≡</span>
-            </div>
-            <p>Settings details...</p>
+        <div key="postmediacard" className="grid-item">
+          <Card title="Post Media">
+            <PostMediaCard profile={profile} />
           </Card>
         </div>
 
-        <div key="extra" className="grid-item">
-          <Card title="Extra">
-            <div className="drag-handle">
-              <span className="drag-icon">≡</span>
-            </div>
-            <p>Extra details...</p>
+        <div key="posttypecard" className="grid-item">
+          <Card title="Post Type">
+            <PostTypeCard profile={profile} />
           </Card>
         </div>
 
-        <div key="additional" className="grid-item">
-          <Card title="Additional Info">
-            <div className="drag-handle">
-              <span className="drag-icon">≡</span>
-            </div>
-            <p>Additional information...</p>
+        <div key="scorebreakdowncard" className="grid-item">
+          <Card title="Score Breakdown">
+            <ScoreBreakdownCard profile={profile} />
+          </Card>
+        </div>
+
+        <div key="scorescard" className="grid-item">
+          <Card title="Scores">
+            <ScoresCard profile={profile} />
           </Card>
         </div>
       </ResponsiveGridLayout>
