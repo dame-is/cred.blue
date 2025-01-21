@@ -6,17 +6,21 @@ const TestMatter = () => {
   const sceneRef = useRef(null);
 
   useEffect(() => {
+    // Get dimensions to make the canvas full-page.
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
     // Create the engine and enable gravity.
     const engine = Matter.Engine.create();
-    engine.world.gravity.y = 1; // Non-zero gravity so squares fall
+    engine.world.gravity.y = 1; // Adjust gravity as needed
 
-    // Create the renderer.
+    // Create the renderer using the full-page dimensions.
     const render = Matter.Render.create({
       element: sceneRef.current,
       engine: engine,
       options: {
-        width: 200,
-        height: 200,
+        width,
+        height,
         background: "#f0f0f0",
         wireframes: false,
         pixelRatio: 1,
@@ -30,15 +34,21 @@ const TestMatter = () => {
 
     // Function to create and add a falling red square.
     const createSquare = () => {
-      // Ensure the square fits inside the 200px width; here, square width is 50.
+      // Define square dimensions.
+      const squareSize = 50;
+
+      // Random X position from squareSize/2 to (width - squareSize/2)
+      const randomX = Math.random() * (width - squareSize) + squareSize / 2;
+
+      // Create a red square starting above the view.
       const square = Matter.Bodies.rectangle(
-        Math.random() * (200 - 50) + 25,  // Random x from 25 to 175.
-        -50,                            // Start above the canvas so it falls in.
-        50,                             // width
-        50,                             // height
+        randomX,
+        -squareSize, // Start above the canvas
+        squareSize,
+        squareSize,
         {
           render: { fillStyle: "#e74c3c" },
-          restitution: 0.5,  // bounce factor, adjust as needed.
+          restitution: 0.5, // Bounce factor, adjust as needed
         }
       );
       Matter.World.add(engine.world, square);
@@ -47,7 +57,18 @@ const TestMatter = () => {
     // Set an interval to add one red square every second.
     const intervalId = setInterval(createSquare, 1000);
 
-    // Cleanup on unmount.
+    // Optionally, create boundaries so objects don't fall forever.
+    // For example, a floor just below the viewport:
+    const floor = Matter.Bodies.rectangle(
+      width / 2,
+      height + 50, // 50px below the bottom edge
+      width,
+      100,
+      { isStatic: true, render: { visible: false } }
+    );
+    Matter.World.add(engine.world, floor);
+
+    // Cleanup on component unmount.
     return () => {
       clearInterval(intervalId);
       Matter.Render.stop(render);
@@ -59,8 +80,8 @@ const TestMatter = () => {
     };
   }, []);
 
-  // No additional container is needed; we simply return the canvas holder.
-  return <div ref={sceneRef} style={{ width: 200, height: 200 }} />;
+  // Make the container fill the whole page.
+  return <div ref={sceneRef} style={{ width: "100vw", height: "100vh" }} />;
 };
 
 export default TestMatter;
