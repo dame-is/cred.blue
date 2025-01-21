@@ -136,7 +136,7 @@ const UserProfile = () => {
              <NarrativeCard />
             </Card>
           </div>
-          <div key="PostTypeCards" className="grid-item">
+          <div key="PostTypeCard" className="grid-item">
             <Card title="Post Types">
               <PostTypeCard />
             </Card>

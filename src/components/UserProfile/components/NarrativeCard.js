@@ -12,7 +12,7 @@ const NarrativeCard = () => {
   return (
     <>
     <p>
-       {accountData.narrative}
+       {accountData.analysis.narrative}
     </p>
     </>
   );
