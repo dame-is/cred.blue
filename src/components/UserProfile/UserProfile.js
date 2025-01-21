@@ -242,6 +242,30 @@ const UserProfile = () => {
     localStorage.setItem(`layout_${username}`, JSON.stringify(allLayouts));
   };
 
+    // Fetch account data using our loadAccountData function.
+  // Each time an API page completes, our callback increments the circle count by 1.
+  useEffect(() => {
+    const fetchAccountData = async () => {
+      try {
+        const data = await loadAccountData(username, (increment) => {
+          setCircleCount((prev) => prev + increment);
+        });
+        if (data.error) {
+          throw new Error(data.error);
+        }
+        setAccountData(data.accountData);
+      } catch (err) {
+        console.error("Error fetching account data:", err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAccountData();
+  }, [username]);
+
+
   // While loading, show our progress visualization which updates as each API call completes.
   if (loading) {
     return (
