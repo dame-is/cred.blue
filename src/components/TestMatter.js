@@ -6,11 +6,11 @@ const TestMatter = () => {
   const sceneRef = useRef(null);
 
   useEffect(() => {
-    // Create engine and set gravity to zero for testing.
+    // Create the engine and enable gravity.
     const engine = Matter.Engine.create();
-    engine.world.gravity.y = 0; // no gravity so we can focus on visibility
+    engine.world.gravity.y = 1; // Non-zero gravity so squares fall
 
-    // Create the renderer. Force pixelRatio: 1 for simplicity.
+    // Create the renderer.
     const render = Matter.Render.create({
       element: sceneRef.current,
       engine: engine,
@@ -18,27 +18,38 @@ const TestMatter = () => {
         width: 200,
         height: 200,
         background: "#f0f0f0",
-        wireframes: false, // try false; if nothing, then test true below
+        wireframes: false,
         pixelRatio: 1,
       },
     });
     Matter.Render.run(render);
 
-    // Create a runner.
+    // Create and run the runner.
     const runner = Matter.Runner.create();
     Matter.Runner.run(runner, engine);
 
-    // Create a single rectangle so we can see it.
-    const rect = Matter.Bodies.rectangle(100, 100, 50, 50, {
-      render: { fillStyle: "#e74c3c" },
-    });
-    Matter.World.add(engine.world, rect);
+    // Function to create and add a falling red square.
+    const createSquare = () => {
+      // Ensure the square fits inside the 200px width; here, square width is 50.
+      const square = Matter.Bodies.rectangle(
+        Math.random() * (200 - 50) + 25,  // Random x from 25 to 175.
+        -50,                            // Start above the canvas so it falls in.
+        50,                             // width
+        50,                             // height
+        {
+          render: { fillStyle: "#e74c3c" },
+          restitution: 0.5,  // bounce factor, adjust as needed.
+        }
+      );
+      Matter.World.add(engine.world, square);
+    };
 
-    // Log the bodies.
-    console.log(Matter.Composite.allBodies(engine.world));
+    // Set an interval to add one red square every second.
+    const intervalId = setInterval(createSquare, 1000);
 
     // Cleanup on unmount.
     return () => {
+      clearInterval(intervalId);
       Matter.Render.stop(render);
       Matter.Runner.stop(runner);
       Matter.World.clear(engine.world);
@@ -48,6 +59,7 @@ const TestMatter = () => {
     };
   }, []);
 
+  // No additional container is needed; we simply return the canvas holder.
   return <div ref={sceneRef} style={{ width: 200, height: 200 }} />;
 };
 
