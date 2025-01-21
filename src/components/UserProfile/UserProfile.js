@@ -308,9 +308,6 @@ const UserProfile = () => {
       >
         <div key="overview" className="grid-item">
           <Card title="Profile Overview">
-            <div className="drag-handle">
-              <span className="drag-icon">≡</span>
-            </div>
             {/* Delegate rendering of the card content to ProfileCard */}
             <ProfileCard
               resolvedHandle={resolvedHandle}
@@ -324,72 +321,48 @@ const UserProfile = () => {
         </div>
         <div key="stats" className="grid-item">
           <Card title="Stats">
-            <div className="drag-handle">
-              <span className="drag-icon">≡</span>
-            </div>
             <p>Stats details go here...</p>
           </Card>
         </div>
 
         <div key="visualization1" className="grid-item">
           <Card title="Visualization 1">
-            <div className="drag-handle">
-              <span className="drag-icon">≡</span>
-            </div>
             <p>Chart or graph 1...</p>
           </Card>
         </div>
 
         <div key="visualization2" className="grid-item">
           <Card title="Visualization 2">
-            <div className="drag-handle">
-              <span className="drag-icon">≡</span>
-            </div>
             <p>Chart or graph 2...</p>
           </Card>
         </div>
 
         <div key="recentActivity" className="grid-item">
           <Card title="Recent Activity">
-            <div className="drag-handle">
-              <span className="drag-icon">≡</span>
-            </div>
             <p>Recent user activities...</p>
           </Card>
         </div>
 
         <div key="connections" className="grid-item">
           <Card title="Connections">
-            <div className="drag-handle">
-              <span className="drag-icon">≡</span>
-            </div>
             <p>Follower or connection info...</p>
           </Card>
         </div>
 
         <div key="settings" className="grid-item">
           <Card title="Settings">
-            <div className="drag-handle">
-              <span className="drag-icon">≡</span>
-            </div>
             <p>Settings details...</p>
           </Card>
         </div>
 
         <div key="extra" className="grid-item">
           <Card title="Extra">
-            <div className="drag-handle">
-              <span className="drag-icon">≡</span>
-            </div>
             <p>Extra details...</p>
           </Card>
         </div>
 
         <div key="additional" className="grid-item">
           <Card title="Additional Info">
-            <div className="drag-handle">
-              <span className="drag-icon">≡</span>
-            </div>
             <p>Additional information...</p>
           </Card>
         </div>
