@@ -22,6 +22,7 @@ const TestMatter = () => {
         width,
         height,
         background: "#f0f0f0",
+        showIds: true,
         wireframes: false,
         pixelRatio: 1,
       },
@@ -36,8 +37,6 @@ const TestMatter = () => {
     const wallThickness = 25;
     const wallRenderOptions = {
       fillStyle: "#2c3e50",   // Custom fill
-      strokeStyle: "#ecf0f1", // Custom border color
-      lineWidth: 1,
     };
 
     // Create walls with custom styling.
@@ -132,13 +131,14 @@ const TestMatter = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        minHeight: "85vh",
       }}
     >
       <div
         ref={sceneRef}
         style={{
-          width: "500px",
-          height: "500px",
+          maxWidth: "500px",
+          maxHeight: "500px",
           boxSizing: "border-box",
         }}
       />
