@@ -22,7 +22,7 @@ const App = () => {
 
   return (
     <Router>
-      <div className="app-container" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <div className="app-container" style={{ display: 'flex', flexDirection: 'column', minHeight: '85vh' }}>
         <Navbar />
         <div style={{ flex: 1 }}>
           <Routes>

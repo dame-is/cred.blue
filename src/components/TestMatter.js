@@ -33,7 +33,7 @@ const TestMatter = () => {
     Matter.Runner.run(runner, engine);
 
     // Walls settings
-    const wallThickness = 50;
+    const wallThickness = 25;
     const wallRenderOptions = {
       fillStyle: "#2c3e50",   // Custom fill
       strokeStyle: "#ecf0f1", // Custom border color
@@ -95,8 +95,8 @@ const TestMatter = () => {
     });
 
     // Blue circles with random sizes.
-    const minRadius = 5;
-    const maxRadius = 30;
+    const minRadius = 2;
+    const maxRadius = 8;
 
     const createCircle = () => {
       const radius = Math.random() * (maxRadius - minRadius) + minRadius;
@@ -132,8 +132,6 @@ const TestMatter = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
-        minHeight: "100vh",
       }}
     >
       <div
@@ -141,7 +139,6 @@ const TestMatter = () => {
         style={{
           width: "500px",
           height: "500px",
-          border: "2px solid #ccc",
           boxSizing: "border-box",
         }}
       />
