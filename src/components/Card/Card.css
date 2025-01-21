@@ -1,11 +1,11 @@
 /* src/components/Card/Card.css */
 
   .grid-item {
-    background: #fff;
+    background: #fff !important;
     border: 1px solid #ddd;
     padding: 15px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    border-radius: 8%;
+    border-radius: 8px;
   }
 
   .grid-item p {
@@ -18,6 +18,10 @@
     font-size: 1.2em;
     margin-bottom: 10px;
   }
+
+  .card {
+    overflow: clip;
+  }
   
   .card-content {
     flex-grow: 1;
@@ -25,7 +29,7 @@
   }
   
   .react-resizable-handle {
-    background-image: none;
+    background-image: none !important;
   }
 
   .react-grid-item > .react-resizable-handle::after {
