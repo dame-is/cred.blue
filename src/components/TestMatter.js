@@ -90,17 +90,17 @@ const TestMatter = () => {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        minHeight: "100vh",
       }}
     >
       <div
         ref={sceneRef}
         style={{
+          background: "white",
           width: "100%",
           maxWidth: "500px",
           height: "100%",
           maxHeight: "500px",
-          border: "2px solid #ccc",
+          border: "3px solid #ccc",
           boxSizing: "border-box",
         }}
       />
