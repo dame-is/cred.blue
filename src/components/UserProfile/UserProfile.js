@@ -5,7 +5,7 @@ import { Responsive, WidthProvider } from "react-grid-layout";
 import { loadAccountData } from "../../accountData"; // Ensure the path is correct
 import Card from "../Card/Card";
 import ProgressCircles from "../ProgressCircles"; // Import our updated progress visualization
-import ProfileCard from "./components/ProfileCard"; // Import the new component
+import ProfileCard from "./components/ProfileCard"; // Import the new ProfileCard component
 import "./UserProfile.css";
 import "react-grid-layout/css/styles.css"; // Import default grid-layout styles
 import "react-resizable/css/styles.css";
@@ -307,7 +307,7 @@ const UserProfile = () => {
         onLayoutChange={handleLayoutChange}
       >
         <ProfileCard
-          key="overview" // Notice: The key can either be here or on the wrapping element.
+          key="overview" // Key should be set on the top-level element inside the grid
           resolvedHandle={resolvedHandle}
           did={did}
           createdAt={createdAt}
@@ -315,6 +315,7 @@ const UserProfile = () => {
           serviceEndpoint={serviceEndpoint}
           pdsType={pdsType}
         />
+
         <div key="stats" className="grid-item">
           <Card title="Stats">
             <div className="drag-handle">

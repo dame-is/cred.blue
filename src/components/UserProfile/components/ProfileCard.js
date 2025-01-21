@@ -1,6 +1,6 @@
-// src/components/ProfileCard/ProfileCard.jsx
+// frontend/src/components/UserProfile/components/ProfileCard.js
 import React from "react";
-import Card from "../Card/Card"; // Update the path if needed
+import Card from "../../../Card/Card"; // Adjust the path based on your project structure
 
 const ProfileCard = ({
   resolvedHandle,
@@ -24,7 +24,8 @@ const ProfileCard = ({
         </p>
         <p>
           <strong>Account Created:</strong>{" "}
-          {new Date(createdAt).toLocaleDateString()} (<em>{Math.floor(ageInDays)} days old</em>)
+          {new Date(createdAt).toLocaleDateString()}{" "}
+          (<em>{Math.floor(ageInDays)} days old</em>)
         </p>
         <p>
           <strong>Service Endpoint:</strong> {serviceEndpoint}
