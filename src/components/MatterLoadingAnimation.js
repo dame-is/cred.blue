@@ -6,43 +6,44 @@ import "./MatterLoadingAnimation.css";
 const CONFIG = {
   containerWidth: 200,
   containerHeight: 200,
-  gravity: 0.5,
-  shapes: {
-    square: { size: 40, color: "#e74c3c", frequency: 1000 },
-    circle: { radius: 20, color: "#2ecc71", frequency: 1500 },
-    triangle: { size: 40, color: "#3498db", frequency: 2000 },
-  }  
+  gravity: 1,
+  circle: {
+    radius: 10,
+    color: "#3498db", // blue circle
+    frequency: 1000,  // one circle per second
+  },
 };
 
 const MatterLoadingAnimation = () => {
   const sceneRef = useRef(null);
 
   useEffect(() => {
-    // Create the engine and set gravity.
+    // Create the engine and set gravity
     const engine = Matter.Engine.create();
     engine.world.gravity.y = CONFIG.gravity;
 
-    // Create the renderer.
+    // Create the renderer; force pixelRatio to 1 for clarity
     const render = Matter.Render.create({
-        element: sceneRef.current,
-        engine: engine,
-        options: {
-          width: CONFIG.containerWidth,
-          height: CONFIG.containerHeight,
-          background: "#f0f0f0",
-          wireframes: true,
-          pixelRatio: 1, // Force 1 to see if that helps
-        },
-      });      
+      element: sceneRef.current,
+      engine: engine,
+      options: {
+        width: CONFIG.containerWidth,
+        height: CONFIG.containerHeight,
+        background: "#f0f0f0", // light background to contrast the circles
+        wireframes: false,
+        pixelRatio: 1,
+      },
+    });
     Matter.Render.run(render);
 
-    // Create and run the runner.
+    // Create and run the runner
     const runner = Matter.Runner.create();
     Matter.Runner.run(runner, engine);
 
-    // Create boundaries.
+    // Create static boundaries (walls) so that circles remain within the container
     const offset = 10;
     const walls = [
+      // Floor
       Matter.Bodies.rectangle(
         CONFIG.containerWidth / 2,
         CONFIG.containerHeight + offset,
@@ -50,6 +51,7 @@ const MatterLoadingAnimation = () => {
         20,
         { isStatic: true }
       ),
+      // Ceiling
       Matter.Bodies.rectangle(
         CONFIG.containerWidth / 2,
         -offset,
@@ -57,6 +59,7 @@ const MatterLoadingAnimation = () => {
         20,
         { isStatic: true }
       ),
+      // Left wall
       Matter.Bodies.rectangle(
         -offset,
         CONFIG.containerHeight / 2,
@@ -64,6 +67,7 @@ const MatterLoadingAnimation = () => {
         CONFIG.containerHeight,
         { isStatic: true }
       ),
+      // Right wall
       Matter.Bodies.rectangle(
         CONFIG.containerWidth + offset,
         CONFIG.containerHeight / 2,
@@ -74,76 +78,31 @@ const MatterLoadingAnimation = () => {
     ];
     Matter.World.add(engine.world, walls);
 
-    // Utility for random horizontal positions.
-    const randomX = (size = 0) =>
-      Math.random() * (CONFIG.containerWidth - size) + size / 2;
+    // Utility for generating a random X position ensuring the entire circle fits
+    const randomX = (diameter) =>
+      Math.random() * (CONFIG.containerWidth - diameter) + diameter / 2;
 
-    // Shape creation functions.
-    const createSquare = () => {
-      const size = CONFIG.shapes.square.size;
-      console.log("Creating square");
-      const square = Matter.Bodies.rectangle(
-        randomX(size),
-        -size, // Try -size or 0 if you want them to start closer to view
-        size,
-        size,
-        {
-          render: { fillStyle: CONFIG.shapes.square.color },
-          restitution: 0.5,
-        }
-      );
-      Matter.World.add(engine.world, square);
-    };
-
+    // Function to create a blue circle
     const createCircle = () => {
-      const radius = CONFIG.shapes.circle.radius;
-      console.log("Creating circle");
+      const diameter = CONFIG.circle.radius * 2;
       const circle = Matter.Bodies.circle(
-        randomX(radius * 2),
-        -radius * 2,
-        radius,
+        randomX(diameter),
+        -diameter, // Start offscreen above the container
+        CONFIG.circle.radius,
         {
-          render: { fillStyle: CONFIG.shapes.circle.color },
-          restitution: 0.5,
+          render: { fillStyle: CONFIG.circle.color },
+          restitution: 0.6, // Adjust bounce if desired
         }
       );
       Matter.World.add(engine.world, circle);
     };
 
-    const createTriangle = () => {
-      const size = CONFIG.shapes.triangle.size;
-      console.log("Creating triangle");
-      const halfSize = size / 2;
-      const vertices = [
-        { x: 0, y: -halfSize },
-        { x: -halfSize, y: halfSize },
-        { x: halfSize, y: halfSize },
-      ];
-      const triangle = Matter.Bodies.fromVertices(
-        randomX(size),
-        -size,
-        [vertices],
-        {
-          render: { fillStyle: CONFIG.shapes.triangle.color },
-          restitution: 0.5,
-        },
-        true
-      );
-      if (triangle) {
-        Matter.World.add(engine.world, triangle);
-      }
-    };
+    // Set an interval to drop one circle per second
+    const circleInterval = setInterval(createCircle, CONFIG.circle.frequency);
 
-    // Setup intervals to drop shapes.
-    const squareInterval = setInterval(createSquare, CONFIG.shapes.square.frequency);
-    const circleInterval = setInterval(createCircle, CONFIG.shapes.circle.frequency);
-    const triangleInterval = setInterval(createTriangle, CONFIG.shapes.triangle.frequency);
-
-    // Cleanup on component unmount.
+    // Cleanup on component unmount
     return () => {
-      clearInterval(squareInterval);
       clearInterval(circleInterval);
-      clearInterval(triangleInterval);
       Matter.Render.stop(render);
       Matter.Runner.stop(runner);
       Matter.World.clear(engine.world);
