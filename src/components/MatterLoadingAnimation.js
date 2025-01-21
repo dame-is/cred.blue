@@ -6,24 +6,12 @@ import "./MatterLoadingAnimation.css";
 const CONFIG = {
   containerWidth: 200,
   containerHeight: 200,
-  gravity: 1,
+  gravity: 0.5,
   shapes: {
-    square: {
-      size: 20,
-      color: "#e74c3c",
-      frequency: 1000,
-    },
-    circle: {
-      radius: 10,
-      color: "#2ecc71",
-      frequency: 1500,
-    },
-    triangle: {
-      size: 25,
-      color: "#3498db",
-      frequency: 2000,
-    },
-  },
+    square: { size: 40, color: "#e74c3c", frequency: 1000 },
+    circle: { radius: 20, color: "#2ecc71", frequency: 1500 },
+    triangle: { size: 40, color: "#3498db", frequency: 2000 },
+  }  
 };
 
 const MatterLoadingAnimation = () => {
@@ -41,9 +29,9 @@ const MatterLoadingAnimation = () => {
         options: {
           width: CONFIG.containerWidth,
           height: CONFIG.containerHeight,
-          background: "#f0f0f0", // temporary background for debugging
-          wireframes: false,
-          pixelRatio: window.devicePixelRatio,
+          background: "#f0f0f0",
+          wireframes: true,
+          pixelRatio: 1, // Force 1 to see if that helps
         },
       });      
     Matter.Render.run(render);
