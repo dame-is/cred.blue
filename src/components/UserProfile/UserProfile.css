@@ -2,9 +2,9 @@
 
 /* Container for the profile page */
 .user-profile {
-    padding: 20px;
-    max-width: 100%;
-    box-sizing: border-box;
+    margin: auto;
+    max-width: 1200px;
+    margin-top: 40px;
   }
   
   /* Grid layout styling */
