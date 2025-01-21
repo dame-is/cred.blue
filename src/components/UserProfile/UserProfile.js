@@ -306,16 +306,22 @@ const UserProfile = () => {
         margin={[20, 20]}
         onLayoutChange={handleLayoutChange}
       >
-        <ProfileCard
-          key="overview" // Key should be set on the top-level element inside the grid
-          resolvedHandle={resolvedHandle}
-          did={did}
-          createdAt={createdAt}
-          ageInDays={ageInDays}
-          serviceEndpoint={serviceEndpoint}
-          pdsType={pdsType}
-        />
-
+        <div key="overview" className="grid-item">
+          <Card title="Profile Overview">
+            <div className="drag-handle">
+              <span className="drag-icon">≡</span>
+            </div>
+            {/* Delegate rendering of the card content to ProfileCard */}
+            <ProfileCard
+              resolvedHandle={resolvedHandle}
+              did={did}
+              createdAt={createdAt}
+              ageInDays={ageInDays}
+              serviceEndpoint={serviceEndpoint}
+              pdsType={pdsType}
+            />
+          </Card>
+        </div>
         <div key="stats" className="grid-item">
           <Card title="Stats">
             <div className="drag-handle">
