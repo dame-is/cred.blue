@@ -1,5 +1,4 @@
 import React from "react";
-import "./AltTextCard.css"; // Optional: add specific styles for AltTextCard
 
 const AltTextCard = ({
   postsWithImages = 0,
