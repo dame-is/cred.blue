@@ -1,7 +1,6 @@
 // src/components/ScoreCard/ScoreCard.js
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import './UserProfile.css';
 
 const ScoreCard = ({ blueskyScore, atprotoScore }) => {
   // Ensure scores are within 0-100

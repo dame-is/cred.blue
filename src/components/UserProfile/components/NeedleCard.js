@@ -1,7 +1,6 @@
 // src/components/HealthScoreCard/HealthScoreCard.js
 import React from 'react';
 import { PieChart, Pie, Cell } from 'recharts';
-import './UserProfile.css';
 
 const RADIAN = Math.PI / 180;
 
