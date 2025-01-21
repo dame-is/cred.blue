@@ -1,6 +1,6 @@
 // frontend/src/components/UserProfile/components/ProfileCard.js
 import React from "react";
-import Card from "../../../Card/Card"; // Adjust the path based on your project structure
+import Card from "../../Card/Card"; // Adjust the path based on your project structure
 
 const ProfileCard = ({
   resolvedHandle,
