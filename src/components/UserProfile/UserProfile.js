@@ -31,8 +31,8 @@ const UserProfile = () => {
     } else {
       setLayouts({
         lg: [
-          { i: "overview", x: 0, y: 0, w: 6, h: 4 },
-          { i: "stats", x: 6, y: 0, w: 6, h: 4 },
+          { i: "overview", x: 0, y: 0, w: 6, h: 6 },
+          { i: "stats", x: 6, y: 0, w: 6, h: 6 },
           { i: "visualization1", x: 0, y: 4, w: 4, h: 4 },
           { i: "visualization2", x: 4, y: 4, w: 4, h: 4 },
           { i: "recentActivity", x: 8, y: 4, w: 4, h: 4 },
@@ -127,7 +127,7 @@ const UserProfile = () => {
         cols={cols}
         rowHeight={50}
         draggableHandle=".drag-handle"
-        margin={[20, 40]}
+        margin={[20, 20]}
         onLayoutChange={handleLayoutChange}
       >
         <div key="overview" className="grid-item">
