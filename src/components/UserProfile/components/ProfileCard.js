@@ -9,49 +9,35 @@ const ProfileCard = () => {
     return <div>Loading profile...</div>;
   }
 
-  const {
-    handle: resolvedHandle,
-    did,
-    createdAt,
-    ageInDays,
-    serviceEndpoint,
-    pdsType,
-    profileEditedDate,
-    profileCompletion,
-    agePercentage,
-    era,
-  } = accountData;
-
   return (
     <>
-      <p>
-        <strong>Domain:</strong> {resolvedHandle}
-      </p>
-      <p>
-        <strong>DID:</strong> {did}
-      </p>
-      <p>
-        <strong>Account Created:</strong>{" "}
-        {new Date(createdAt).toLocaleDateString()}{" "}
+    <p>
+        <strong>Domain:</strong> {accountData.handle}
+    </p>
+    <p>
+        <strong>DID:</strong> {accountData.did}
+    </p>
+    <p>
+        <strong>Account Created:</strong> {new Date(accountData.createdAt).toLocaleDateString()}{" "}
         (<em>
-          {Math.floor(ageInDays)} days old, {agePercentage} of Bluesky's history
+        {Math.floor(accountData.ageInDays)} days old, {accountData.agePercentage} of Bluesky's history
         </em>)
-      </p>
-      <p>
-        <strong>Service Endpoint:</strong> {serviceEndpoint}
-      </p>
-      <p>
-        <strong>PDS Type:</strong> {pdsType}
-      </p>
-      <p>
-        <strong>Last Edited:</strong> {profileEditedDate}
-      </p>
-      <p>
-        <strong>Profile Completion:</strong> {profileCompletion}
-      </p>
-      <p>
-        <strong>Era:</strong> {era}
-      </p>
+    </p>
+    <p>
+        <strong>Service Endpoint:</strong> {accountData.serviceEndpoint}
+    </p>
+    <p>
+        <strong>PDS Type:</strong> {accountData.pdsType}
+    </p>
+    <p>
+        <strong>Last Edited:</strong> {accountData.profileEditedDate}
+    </p>
+    <p>
+        <strong>Profile Completion:</strong> {accountData.profileCompletion}
+    </p>
+    <p>
+        <strong>Era:</strong> {accountData.era}
+    </p>
     </>
   );
 };

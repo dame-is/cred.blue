@@ -2,10 +2,14 @@
 import React, { useEffect, useState, createContext } from "react";
 import { useParams } from "react-router-dom";
 import { Responsive, WidthProvider } from "react-grid-layout";
-import { loadAccountData } from "../../accountData"; // Ensure the path is correct
+import { loadAccountData } from "../../accountData"; //
 import Card from "../Card/Card";
-import ProgressCircles from "../ProgressCircles"; // Import our updated progress visualization
-import ProfileCard from "./components/ProfileCard"; // Import the new ProfileCard component
+import ProgressCircles from "../ProgressCircles";
+
+import ProfileCard from "./components/ProfileCard";
+import NarrativeCard from "./components/NarrativeCard";
+import PostTypeCard from "./components/PostTypeCard";
+
 import "./UserProfile.css";
 import "react-grid-layout/css/styles.css"; // Import default grid-layout styles
 import "react-resizable/css/styles.css";
@@ -31,9 +35,9 @@ const UserProfile = () => {
   useEffect(() => {
     setLayouts({
       lg: [
-        { i: "overview", x: 0, y: 0, w: 4, h: 4, minW: 3, maxW: 6, minH: 3, maxH: 6 },
+        { i: "AccountData", x: 0, y: 0, w: 4, h: 4, minW: 3, maxW: 6, minH: 3, maxH: 6 },
         { i: "NarrativeCard", x: 6, y: 0, w: 4, h: 4, minW: 3, maxW: 6, minH: 3, maxH: 6 },
-        { i: "visualization1", x: 0, y: 4, w: 4, h: 4, minW: 3, maxW: 6, minH: 3, maxH: 6 },
+        { i: "PostTypeCard", x: 0, y: 4, w: 4, h: 4, minW: 3, maxW: 6, minH: 3, maxH: 6 },
         { i: "visualization2", x: 4, y: 4, w: 4, h: 4, minW: 3, maxW: 6, minH: 3, maxH: 6 },
         { i: "recentActivity", x: 8, y: 4, w: 4, h: 4, minW: 3, maxW: 6, minH: 3, maxH: 6 },
         { i: "connections", x: 0, y: 8, w: 4, h: 4, minW: 3, maxW: 6, minH: 3, maxH: 6 },
@@ -42,9 +46,9 @@ const UserProfile = () => {
         { i: "additional", x: 0, y: 12, w: 4, h: 4, minW: 3, maxW: 6, minH: 3, maxH: 6 },
       ],
       md: [
-        { i: "overview", x: 0, y: 0, w: 5, h: 7, minW: 4, maxW: 7, minH: 4, maxH: 8 },
+        { i: "AccountData", x: 0, y: 0, w: 5, h: 7, minW: 4, maxW: 7, minH: 4, maxH: 8 },
         { i: "NarrativeCard", x: 5, y: 0, w: 5, h: 7, minW: 4, maxW: 7, minH: 4, maxH: 8 },
-        { i: "visualization1", x: 0, y: 4, w: 5, h: 7, minW: 4, maxW: 7, minH: 4, maxH: 8 },
+        { i: "PostTypeCard", x: 0, y: 4, w: 5, h: 7, minW: 4, maxW: 7, minH: 4, maxH: 8 },
         { i: "visualization2", x: 5, y: 4, w: 5, h: 7, minW: 4, maxW: 7, minH: 4, maxH: 8 },
         { i: "recentActivity", x: 0, y: 8, w: 10, h: 7, minW: 8, maxW: 10, minH: 4, maxH: 8 },
         { i: "connections", x: 0, y: 12, w: 5, h: 7, minW: 4, maxW: 7, minH: 4, maxH: 8 },
@@ -122,20 +126,19 @@ const UserProfile = () => {
           margin={[20, 20]}
           onLayoutChange={handleLayoutChange}
         >
-          <div key="overview" className="grid-item">
-            <Card title="Profile Overview">
-              {/* ProfileCard now can access the accountData via context */}
+          <div key="AccountData" className="grid-item">
+            <Card title="Account Data">
               <ProfileCard />
             </Card>
           </div>
           <div key="NarrativeCard" className="grid-item">
             <Card title="NarrativeCard">
-              <p>NarrativeCard details go here...</p>
+             <NarrativeCard />
             </Card>
           </div>
-          <div key="visualization1" className="grid-item">
-            <Card title="Visualization 1">
-              <p>Chart or graph 1...</p>
+          <div key="PostTypeCards" className="grid-item">
+            <Card title="Post Types">
+              <PostTypeCard />
             </Card>
           </div>
           <div key="visualization2" className="grid-item">
