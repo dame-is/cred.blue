@@ -1,37 +1,54 @@
 /* src/components/Card/Card.css */
 
-  .grid-item {
+/* Grid item container style */
+.grid-item {
     background: #fff !important;
     border: 1px solid #ddd;
     padding: 15px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     border-radius: 8px;
   }
-
+  
+  /* Paragraph margins inside grid-item */
   .grid-item p {
     margin-bottom: 0px;
     margin-top: 10px;
   }
   
+  /* Card container to clip overflow if needed */
+  .card {
+    overflow: clip;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Header for title and drag-handle */
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Pushes title to the left and drag handle to the right */
+    margin-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+  }
+  
+  /* Card title styles */
   .card-title {
     margin: 0;
     font-size: 1.2em;
-    margin-bottom: 10px;
-  }
-
-  .card {
-    overflow: clip;
   }
   
+  /* Card content styles */
   .card-content {
     flex-grow: 1;
     font-size: 0.95em;
   }
   
+  /* Styles for the react-resizable handle (if applicable) */
   .react-resizable-handle {
     background-image: none !important;
   }
-
+  
   .react-grid-item > .react-resizable-handle::after {
     border-bottom: 3px solid #00000045;
     border-right: 3px solid #00000045;
@@ -44,7 +61,7 @@
     margin: 3px;
     border-end-end-radius: 8px;
   }
-    
+  
   /* Draggable Handle Styles */
   .drag-handle {
     align-items: center;
@@ -56,6 +73,7 @@
     text-align: center;
   }
   
+  /* Drag icon styling */
   .drag-icon {
     font-size: 1.2em;
     user-select: none;

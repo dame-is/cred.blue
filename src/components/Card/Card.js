@@ -7,10 +7,10 @@ const Card = ({ title, children }) => {
     <div className="card">
       {title && (
         <div className="card-header">
+          <h3 className="card-title">{title}</h3>
           <div className="drag-handle">
             <span className="drag-icon">≡</span>
           </div>
-          <h3 className="card-title">{title}</h3>
         </div>
       )}
       <div className="card-content">{children}</div>
