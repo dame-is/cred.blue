@@ -679,7 +679,7 @@ async function resolveHandleToDid(inputHandle) {
         imagePostsAltText: roundToTwo(imagePostsAltText),
         imagePostsNoAltText: roundToTwo(imagePostsNoAltText),
         altTextPercentage: roundToTwo(altTextPercentage),
-        imagePostsReplies: roundToTwo(imagePostsReplies.length),
+        imagePostsReplies: roundToTwo(imagePostsReplies),
         postsWithOnlyText: roundToTwo(postsWithOnlyText),
         textPostsPerDay: ageInDays ? roundToTwo(postsWithOnlyText / ageInDays) : 0,
         postsWithMentions: roundToTwo(postsWithMentions),
