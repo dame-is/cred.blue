@@ -1,10 +1,10 @@
 /* src/components/MatterLoadingAnimation.css */
 .matter-container {
-    width: 200px; /* matches CONFIG.containerWidth */
-    height: 200px; /* matches CONFIG.containerHeight */
+    width: 300px; /* matches CONFIG.containerWidth */
+    height: 300px; /* matches CONFIG.containerHeight */
     border: 2px solid #ccc;
-    overflow: hidden;  /* ensures falling circles are clipped */
-    margin: 40px auto; /* center the container */
+    overflow: hidden;
+    margin: 40px auto;
     background: #f0f0f0;
     position: relative;
   }
