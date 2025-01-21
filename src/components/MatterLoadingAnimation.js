@@ -36,16 +36,16 @@ const MatterLoadingAnimation = () => {
 
     // Create the renderer.
     const render = Matter.Render.create({
-      element: sceneRef.current,
-      engine: engine,
-      options: {
-        width: CONFIG.containerWidth,
-        height: CONFIG.containerHeight,
-        background: "#f0f0f0", // Use a temporary background for debugging.
-        wireframes: false,
-        pixelRatio: window.devicePixelRatio,
-      },
-    });
+        element: sceneRef.current,
+        engine: engine,
+        options: {
+          width: CONFIG.containerWidth,
+          height: CONFIG.containerHeight,
+          background: "#f0f0f0", // temporary background for debugging
+          wireframes: false,
+          pixelRatio: window.devicePixelRatio,
+        },
+      });      
     Matter.Render.run(render);
 
     // Create and run the runner.
