@@ -1,14 +1,14 @@
 /* src/components/Card/Card.css */
 
-  .react-grid-item {
+  .grid-item {
     background: #fff;
     border: 1px solid #ddd;
     padding: 15px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    border-radius: 4px;
+    border-radius: 8%;
   }
 
-  .react-grid-item p {
+  .grid-item p {
     margin-bottom: 0px;
     margin-top: 10px;
   }
@@ -24,6 +24,22 @@
     font-size: 0.95em;
   }
   
+  .react-resizable-handle {
+    background-image: none;
+  }
+
+  .react-grid-item > .react-resizable-handle::after {
+    border-bottom: 3px solid #00000045;
+    border-right: 3px solid #00000045;
+    bottom: 3px;
+    content: "";
+    height: 10px;
+    position: absolute;
+    right: 3px;
+    width: 10px;
+    margin: 3px;
+    border-end-end-radius: 8px;
+  }
     
   /* Draggable Handle Styles */
   .drag-handle {
