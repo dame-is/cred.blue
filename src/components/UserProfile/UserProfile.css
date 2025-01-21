@@ -17,6 +17,11 @@
     background: transparent;
     box-sizing: border-box;
   }
+
+  .user-profile h1 {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
   
   /* Media query for responsiveness (optional, handled by react-grid-layout) */
   @media (max-width: 1200px) {

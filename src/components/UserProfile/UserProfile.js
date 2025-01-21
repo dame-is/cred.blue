@@ -31,26 +31,206 @@ const UserProfile = () => {
     } else {
       setLayouts({
         lg: [
-          { i: "overview", x: 0, y: 0, w: 4, h: 4 },
-          { i: "stats", x: 6, y: 0, w: 4, h: 4 },
-          { i: "visualization1", x: 0, y: 4, w: 4, h: 4 },
-          { i: "visualization2", x: 4, y: 4, w: 4, h: 4 },
-          { i: "recentActivity", x: 8, y: 4, w: 4, h: 4 },
-          { i: "connections", x: 0, y: 8, w: 4, h: 4 },
-          { i: "settings", x: 4, y: 8, w: 4, h: 4 },
-          { i: "extra", x: 8, y: 8, w: 4, h: 4 },
-          { i: "additional", x: 0, y: 12, w: 4, h: 4 },
+          {
+            i: "overview",
+            x: 0,
+            y: 0,
+            w: 4,
+            h: 4,
+            minW: 3,
+            maxW: 6,
+            minH: 3,
+            maxH: 6,
+          },
+          {
+            i: "stats",
+            x: 6,
+            y: 0,
+            w: 4,
+            h: 4,
+            minW: 3,
+            maxW: 6,
+            minH: 3,
+            maxH: 6,
+          },
+          {
+            i: "visualization1",
+            x: 0,
+            y: 4,
+            w: 4,
+            h: 4,
+            minW: 3,
+            maxW: 6,
+            minH: 3,
+            maxH: 6,
+          },
+          {
+            i: "visualization2",
+            x: 4,
+            y: 4,
+            w: 4,
+            h: 4,
+            minW: 3,
+            maxW: 6,
+            minH: 3,
+            maxH: 6,
+          },
+          {
+            i: "recentActivity",
+            x: 8,
+            y: 4,
+            w: 4,
+            h: 4,
+            minW: 3,
+            maxW: 6,
+            minH: 3,
+            maxH: 6,
+          },
+          {
+            i: "connections",
+            x: 0,
+            y: 8,
+            w: 4,
+            h: 4,
+            minW: 3,
+            maxW: 6,
+            minH: 3,
+            maxH: 6,
+          },
+          {
+            i: "settings",
+            x: 4,
+            y: 8,
+            w: 4,
+            h: 4,
+            minW: 3,
+            maxW: 6,
+            minH: 3,
+            maxH: 6,
+          },
+          {
+            i: "extra",
+            x: 8,
+            y: 8,
+            w: 4,
+            h: 4,
+            minW: 3,
+            maxW: 6,
+            minH: 3,
+            maxH: 6,
+          },
+          {
+            i: "additional",
+            x: 0,
+            y: 12,
+            w: 4,
+            h: 4,
+            minW: 3,
+            maxW: 6,
+            minH: 3,
+            maxH: 6,
+          },
         ],
         md: [
-          { i: "overview", x: 0, y: 0, w: 5, h: 7 },
-          { i: "stats", x: 5, y: 0, w: 5, h: 7 },
-          { i: "visualization1", x: 0, y: 4, w: 5, h: 7 },
-          { i: "visualization2", x: 5, y: 4, w: 5, h: 7 },
-          { i: "recentActivity", x: 0, y: 8, w: 10, h: 7 },
-          { i: "connections", x: 0, y: 12, w: 5, h: 7 },
-          { i: "settings", x: 5, y: 12, w: 5, h: 7 },
-          { i: "extra", x: 0, y: 16, w: 5, h: 7 },
-          { i: "additional", x: 5, y: 16, w: 5, h: 7 },
+          {
+            i: "overview",
+            x: 0,
+            y: 0,
+            w: 5,
+            h: 7,
+            minW: 4,
+            maxW: 7,
+            minH: 4,
+            maxH: 8,
+          },
+          {
+            i: "stats",
+            x: 5,
+            y: 0,
+            w: 5,
+            h: 7,
+            minW: 4,
+            maxW: 7,
+            minH: 4,
+            maxH: 8,
+          },
+          {
+            i: "visualization1",
+            x: 0,
+            y: 4,
+            w: 5,
+            h: 7,
+            minW: 4,
+            maxW: 7,
+            minH: 4,
+            maxH: 8,
+          },
+          {
+            i: "visualization2",
+            x: 5,
+            y: 4,
+            w: 5,
+            h: 7,
+            minW: 4,
+            maxW: 7,
+            minH: 4,
+            maxH: 8,
+          },
+          {
+            i: "recentActivity",
+            x: 0,
+            y: 8,
+            w: 10,
+            h: 7,
+            minW: 8,
+            maxW: 10,
+            minH: 4,
+            maxH: 8,
+          },
+          {
+            i: "connections",
+            x: 0,
+            y: 12,
+            w: 5,
+            h: 7,
+            minW: 4,
+            maxW: 7,
+            minH: 4,
+            maxH: 8,
+          },
+          {
+            i: "settings",
+            x: 5,
+            y: 12,
+            w: 5,
+            h: 7,
+            minW: 4,
+            maxW: 7,
+            minH: 4,
+            maxH: 8,
+          },
+          {
+            i: "extra",
+            x: 0,
+            y: 16,
+            w: 5,
+            h: 7,
+            minW: 4,
+            maxW: 7,
+            minH: 4,
+            maxH: 8,
+          },
+          {
+            i: "additional",
+            x: 5,
+            y: 16,
+            w: 5,
+            h: 7,
+            minW: 4,
+            maxW: 7,
+            minH: 4,
+            maxH: 8,
+          },
         ],
         // Define layouts for sm, xs, xxs if needed
       });
@@ -61,29 +241,6 @@ const UserProfile = () => {
     setLayouts(allLayouts);
     localStorage.setItem(`layout_${username}`, JSON.stringify(allLayouts));
   };
-
-  // Fetch account data using our loadAccountData function.
-  // Each time an API page completes, our callback increments the circle count by 1.
-  useEffect(() => {
-    const fetchAccountData = async () => {
-      try {
-        const data = await loadAccountData(username, (increment) => {
-          setCircleCount((prev) => prev + increment);
-        });
-        if (data.error) {
-          throw new Error(data.error);
-        }
-        setAccountData(data.accountData);
-      } catch (err) {
-        console.error("Error fetching account data:", err);
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAccountData();
-  }, [username]);
 
   // While loading, show our progress visualization which updates as each API call completes.
   if (loading) {
