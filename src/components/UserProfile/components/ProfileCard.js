@@ -1,20 +1,38 @@
+// src/components/ProfileCard/ProfileCard.jsx
 import React from "react";
+import Card from "../Card/Card"; // Update the path if needed
 
-const ProfileCard = ({ resolvedHandle, did, createdAt, ageInDays, serviceEndpoint, pdsType }) => {
+const ProfileCard = ({
+  resolvedHandle,
+  did,
+  createdAt,
+  ageInDays,
+  serviceEndpoint,
+  pdsType,
+}) => {
   return (
-    <div>
-      <div className="drag-handle">
-        <span className="drag-icon">≡</span>
-      </div>
-      <p><strong>Username:</strong> {resolvedHandle}</p>
-      <p><strong>DID:</strong> {did}</p>
-      <p>
-        <strong>Account Created:</strong>{" "}
-        {new Date(createdAt).toLocaleDateString()}{" "}
-        (<em>{Math.floor(ageInDays)} days old</em>)
-      </p>
-      <p><strong>Service Endpoint:</strong> {serviceEndpoint}</p>
-      <p><strong>PDS Type:</strong> {pdsType}</p>
+    <div className="grid-item">
+      <Card title="Profile Overview">
+        <div className="drag-handle">
+          <span className="drag-icon">≡</span>
+        </div>
+        <p>
+          <strong>Username:</strong> {resolvedHandle}
+        </p>
+        <p>
+          <strong>DID:</strong> {did}
+        </p>
+        <p>
+          <strong>Account Created:</strong>{" "}
+          {new Date(createdAt).toLocaleDateString()} (<em>{Math.floor(ageInDays)} days old</em>)
+        </p>
+        <p>
+          <strong>Service Endpoint:</strong> {serviceEndpoint}
+        </p>
+        <p>
+          <strong>PDS Type:</strong> {pdsType}
+        </p>
+      </Card>
     </div>
   );
 };

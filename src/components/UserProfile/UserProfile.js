@@ -5,6 +5,7 @@ import { Responsive, WidthProvider } from "react-grid-layout";
 import { loadAccountData } from "../../accountData"; // Ensure the path is correct
 import Card from "../Card/Card";
 import ProgressCircles from "../ProgressCircles"; // Import our updated progress visualization
+import ProfileCard from "./componentsProfileCard"; // Import the new component
 import "./UserProfile.css";
 import "react-grid-layout/css/styles.css"; // Import default grid-layout styles
 import "react-resizable/css/styles.css";
@@ -305,23 +306,15 @@ const UserProfile = () => {
         margin={[20, 20]}
         onLayoutChange={handleLayoutChange}
       >
-        <div key="overview" className="grid-item">
-          <Card title="Profile Overview">
-            <div className="drag-handle">
-              <span className="drag-icon">≡</span>
-            </div>
-            <p><strong>Username:</strong> {resolvedHandle}</p>
-            <p><strong>DID:</strong> {did}</p>
-            <p>
-              <strong>Account Created:</strong>{" "}
-              {new Date(createdAt).toLocaleDateString()}{" "}
-              (<em>{Math.floor(ageInDays)} days old</em>)
-            </p>
-            <p><strong>Service Endpoint:</strong> {serviceEndpoint}</p>
-            <p><strong>PDS Type:</strong> {pdsType}</p>
-          </Card>
-        </div>
-
+        <ProfileCard
+          key="overview" // Notice: The key can either be here or on the wrapping element.
+          resolvedHandle={resolvedHandle}
+          did={did}
+          createdAt={createdAt}
+          ageInDays={ageInDays}
+          serviceEndpoint={serviceEndpoint}
+          pdsType={pdsType}
+        />
         <div key="stats" className="grid-item">
           <Card title="Stats">
             <div className="drag-handle">
