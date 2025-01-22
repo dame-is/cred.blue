@@ -80,7 +80,7 @@ const TestMatter = () => {
         background: "rgb(222, 222, 222)",
         showIds: false,
         wireframes: false,
-        pixelRatio: 1,
+        pixelRatio: 'auto',
       },
     });
     Matter.Render.run(render);
