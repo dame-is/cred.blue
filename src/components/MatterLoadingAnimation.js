@@ -221,7 +221,7 @@ const messages = useMemo(
       const yPos = Math.random() * (height - 2 * targetRadius) + targetRadius;
 
         // Determine if the circle will be special.
-        const isSpecial = Math.random() < 0.01; // 1 in 100 chance
+        const isSpecial = Math.random() < 0.2; // 1 in 100 chance
         const specialFill = "#FFD700"; // Gold color for special circles
         const specialStroke = "#FFA500"; // Orange stroke for special circles
       
