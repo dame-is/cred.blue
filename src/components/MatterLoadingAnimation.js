@@ -35,9 +35,9 @@ const TestMatter = () => {
     Matter.Runner.run(runner, engine);
 
     // Walls settings
-    const wallThickness = 1;
+    const wallThickness = 6;
     const wallRenderOptions = {
-      fillStyle: "#004f84",   // Custom fill
+      fillStyle: "#f0f0f000",   // Custom fill
     };
 
     // Create walls with custom styling.
