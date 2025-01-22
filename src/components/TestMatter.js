@@ -7,8 +7,8 @@ const TestMatter = () => {
 
   useEffect(() => {
     // Set the fixed dimensions for the canvas.
-    const width = 500;
-    const height = 500;
+    const width = 250;
+    const height = 250;
 
     // Create engine and set gravity.
     const engine = Matter.Engine.create();
@@ -61,7 +61,7 @@ const TestMatter = () => {
       ),
       // Left wall
       Matter.Bodies.rectangle(
-        0,
+        width / 2,
         height / 2,
         wallThickness,
         height,
@@ -136,8 +136,8 @@ const TestMatter = () => {
       <div
         ref={sceneRef}
         style={{
-          maxWidth: "500px",
-          maxHeight: "500px",
+          width: "250px",
+          height: "250px",
           boxSizing: "border-box",
         }}
       />
