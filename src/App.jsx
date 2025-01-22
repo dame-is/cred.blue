@@ -14,11 +14,7 @@ import "./App.css";
 import { AuthContext } from './AuthContext';
 
 const App = () => {
-  const { isAuthenticated, handleLoginSuccess, loading } = useContext(AuthContext);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  const { isAuthenticated, handleLoginSuccess } = useContext(AuthContext);
 
   return (
     <Router>

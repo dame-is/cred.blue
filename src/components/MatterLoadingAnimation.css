@@ -29,22 +29,22 @@ canvas {
   }
   
   .dots::after {
-    content: "."; /* Initial state */
+    content: ""; /* Initial state */
     animation: ellipsis-dots 1.5s steps(3, end) infinite;
   }
   
   @keyframes ellipsis-dots {
     0% {
-      content: ".";
+      content: "";
     }
     33% {
-      content: "..";
+      content: ".";
     }
     66% {
-      content: "...";
+      content: "..";
     }
     100% {
-      content: ".";
+      content: "...";
     }
   }
   
