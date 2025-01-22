@@ -40,10 +40,10 @@ const UserProfile = () => {
   useEffect(() => {
     setLayouts({
       lg: [
-        { i: "AccountData", x: 0, y: 0, w: 4, h: 4, minW, maxW, minH, maxH },
-        { i: "NarrativeCard", x: 6, y: 0, w: 4, h: 4, minW, maxW, minH, maxH },
-        { i: "PostTypeCard", x: 0, y: 4, w: 4, h: 4, minW, maxW, minH, maxH },
-        { i: "visualization2", x: 4, y: 4, w: 4, h: 4, minW, maxW, minH, maxH },
+        { i: "AccountData", x: 0, y: 0, w: 3, h: 6, minW, maxW, minH, maxH },
+        { i: "NarrativeCard", x: 4, y: 0, w: 3, h: 6, minW, maxW, minH, maxH },
+        { i: "PostTypeCard", x: 7, y: 0, w: 4, h: 6, minW, maxW, minH, maxH },
+        { i: "visualization2", x: 5, y: 5, w: 4, h: 4, minW, maxW, minH, maxH },
         { i: "recentActivity", x: 8, y: 4, w: 4, h: 4, minW, maxW, minH, maxH },
         { i: "connections", x: 0, y: 8, w: 4, h: 4, minW, maxW, minH, maxH },
         { i: "settings", x: 4, y: 8, w: 4, h: 4, minW, maxW, minH, maxH },
