@@ -283,7 +283,7 @@ const TestMatter = () => {
           boxSizing: "border-box",
         }}
       />
-    <p className={`loading-text ${fade ? "fade" : ""}`} style={{ marginTop: "20px", fontSize: "1.2em" }}>
+    <p className={`loading-text ${fade ? "fade" : ""}`} style={{ marginTop: "20px", fontSize: "1em" }}>
     {message}<span className="dots"></span>
     </p>
     </div>

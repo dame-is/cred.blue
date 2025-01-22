@@ -39,7 +39,7 @@
     max-width: 1200px;
     opacity: 0; /* Initially hidden */
     transform: translateY(20px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
+    transition: opacity 1s ease, transform 1s ease;
   }
   
   .user-profile.fade-in {
@@ -53,7 +53,7 @@
   
   .user-profile.loading-container {
     opacity: 1;
-    transition: opacity 0.5s ease;
+    transition: opacity 1s ease;
   }
   
   .user-profile.loading-container.fade-out {
