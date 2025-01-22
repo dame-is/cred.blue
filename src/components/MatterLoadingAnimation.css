@@ -1,5 +1,5 @@
-/* src/components/MatterLoadingAnimation.css */
-  canvas {
+/* Your existing canvas styles remain unchanged */
+canvas {
     border-radius: 8%;
     background: #ceebff;
     border: 6px solid #bebebe;
@@ -9,9 +9,42 @@
     margin-right: 20px;
     user-select: none;
   }
-
+  
   :root {
     --circle-fill: #004f84e6;
     --circle-stroke: #3498db;
     --circle-linewidth: 6;
   }
+  
+  /* New styles for the loading text with animated ellipsis */
+  .loading-text {
+    font-size: 1.2em;
+    margin-top: 20px;
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
+    position: relative;
+    /* Optional: for smooth text changes */
+  }
+  
+  .loading-text.fade {
+    opacity: 0;
+  }
+  
+  /* The span to show the animated ellipsis */
+  .dots::after {
+    content: '';
+    display: inline-block;
+    width: 1em;
+    text-align: left;
+    animation: ellipsis 1s steps(4, end) infinite;
+  }
+  
+  /* Keyframes for the ellipsis animation */
+  @keyframes ellipsis {
+    0% { width: 0; }
+    25% { width: 0.33em; }
+    50% { width: 0.66em; }
+    75% { width: 1em; }
+    100% { width: 1em; }
+  }
+  

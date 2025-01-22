@@ -17,22 +17,30 @@ const TestMatter = () => {
       "Prepping analysis summary...",
       "Constructing visualizations...",
       "Gathering insights...",
-      "Analyzing post types and frequencies...",
+      "Analyzing post types and frequencies..."
     ],
     []
   );
 
   // State to hold the current message.
   const [message, setMessage] = useState("Loading account data...");
+  // State to control the fade effect.
+  const [fade, setFade] = useState(false);
 
   // Update the message on a random interval between 4 and 10 seconds.
   useEffect(() => {
     const updateMessage = () => {
-      const delay = Math.random() * (10000 - 4000) + 4000; // delay between 4000ms and 10000ms
+      // Random delay between 4000ms and 10000ms.
+      const delay = Math.random() * (10000 - 4000) + 4000;
       messageTimeoutRef.current = setTimeout(() => {
-        const randomMessage =
-          messages[Math.floor(Math.random() * messages.length)];
-        setMessage(randomMessage);
+        // Trigger fade-out.
+        setFade(true);
+        // After fade-out duration (300ms), update the message and fade back in.
+        setTimeout(() => {
+          const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+          setMessage(randomMessage);
+          setFade(false);
+        }, 300);
         updateMessage();
       }, delay);
     };
@@ -247,7 +255,7 @@ const TestMatter = () => {
     };
   }, []);
 
-  // Render the fixed-size 250x250 canvas and center it with some dynamic loading text.
+  // Render the fixed-size 250x250 canvas and center it with dynamic loading text.
   return (
     <div
       style={{
@@ -262,8 +270,8 @@ const TestMatter = () => {
           boxSizing: "border-box",
         }}
       />
-      <p style={{ marginTop: "20px", fontSize: "1.2em" }}>
-        {message}
+      <p className={`loading-text ${fade ? "fade" : ""}`} style={{ marginTop: "20px", fontSize: "1.2em" }}>
+        {message}<span className="dots"></span>
       </p>
     </div>
   );
