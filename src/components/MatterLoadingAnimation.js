@@ -19,7 +19,13 @@ const TestMatter = () => {
       "Gathering insights",
       "Analyzing post types and frequencies",
       "Fetching PLC logs",
-      "Compiling engagement stats"
+      "Compiling engagement stats",
+      "Detecting quote posts",
+      "Calculating account age",
+      "Generating Bluesky Score",
+      "Creating Atproto Score",
+      "Determining posting style",
+      "Rewarding with badges"
     ],
     []
   );

@@ -17,7 +17,7 @@ canvas {
   }
   
   .loading-text {
-    font-size: 1.2em;
+    font-size: 1em;
     margin-top: 20px;
     opacity: 1;
     transition: opacity 0.5s ease-in-out;
