@@ -95,8 +95,8 @@ const TestMatter = () => {
     });
 
     // Blue circles with random sizes.
-    const minRadius = 10;
-    const maxRadius = 20;
+    const minRadius = 7;
+    const maxRadius = 16;
 
     const createCircle = () => {
       const radius = Math.random() * (maxRadius - minRadius) + minRadius;
