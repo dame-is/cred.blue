@@ -219,6 +219,11 @@ const messages = useMemo(
       // Randomly choose its starting position, ensuring it fits within the canvas.
       const xPos = Math.random() * (width - 2 * targetRadius) + targetRadius;
       const yPos = Math.random() * (height - 2 * targetRadius) + targetRadius;
+
+        // Determine if the circle will be special.
+        const isSpecial = Math.random() < 0.01; // 1 in 100 chance
+        const specialFill = "#FFD700"; // Gold color for special circles
+        const specialStroke = "#FFA500"; // Orange stroke for special circles
       
       // Create the circle at the random position, with the tiny initial radius.
       const circle = Matter.Bodies.circle(
@@ -227,8 +232,8 @@ const messages = useMemo(
         initialRadius,
         {
           render: { 
-            fillStyle: circleFill,
-            strokeStyle: circleStroke,
+            fillStyle: isSpecial ? specialFill : circleFill,
+            strokeStyle: isSpecial ? specialStroke : circleStroke,
             lineWidth: circleLineWidth
           },
           restitution: 0.6
@@ -320,7 +325,7 @@ const messages = useMemo(
     <p className={`loading-text ${fade ? "fade" : ""}`} style={{ marginTop: "20px", fontSize: "1em" }}>
     {message}<span className="dots"></span>
     </p>
-    <p style={{ fontSize: "1.2em", marginTop: "10px" }}>{circleCount}</p>
+    <p style={{ fontSize: "1.2em", marginTop: "10px", opacity: "25%" }}>{circleCount}</p>
     </div>
   );
 };
