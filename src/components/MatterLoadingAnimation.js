@@ -12,12 +12,12 @@ const TestMatter = () => {
   // Wrap messages in useMemo so they don't change on every render.
   const messages = useMemo(
     () => [
-      "Loading account data...",
-      "Searching handle history...",
-      "Prepping analysis summary...",
-      "Constructing visualizations...",
-      "Gathering insights...",
-      "Analyzing post types and frequencies..."
+      "Loading account data",
+      "Searching handle history",
+      "Prepping analysis summary",
+      "Constructing visualizations",
+      "Gathering insights",
+      "Analyzing post types and frequencies"
     ],
     []
   );
