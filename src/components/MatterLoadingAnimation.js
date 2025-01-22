@@ -1,6 +1,7 @@
 // src/components/TestMatter.jsx
 import React, { useEffect, useRef } from "react";
 import Matter from "matter-js";
+import "./MatterLoadingAnimation.css";
 
 const TestMatter = () => {
   const sceneRef = useRef(null);
