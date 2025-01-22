@@ -6,28 +6,23 @@ const TestMatter = () => {
   const sceneRef = useRef(null);
 
   useEffect(() => {
-    // Set maximum desired dimensions
-    const maxSize = 500;
+    // Set the fixed dimensions for the canvas.
+    const width = 250;
+    const height = 250;
 
-    // Calculate responsive dimensions:
-    // If the viewport is smaller than maxSize, use the viewport dimensions.
-    // Otherwise, use maxSize.
-    const width = Math.min(window.innerWidth, maxSize);
-    const height = Math.min(window.innerHeight, maxSize);
-
-    // Create the Matter.js engine and set gravity.
+    // Create engine and set gravity.
     const engine = Matter.Engine.create();
     engine.world.gravity.y = 1;
 
-    // Create the renderer using the responsive width and height.
+    // Create the renderer with a fixed 500x500 dimensions.
     const render = Matter.Render.create({
       element: sceneRef.current,
       engine: engine,
       options: {
         width,
         height,
-        background: "rgb(222, 222, 222)", // Use a light background
-        showAngleIndicator: true,
+        background: "#rgb(222, 222, 222) 0% 0% / contain",
+        showIds: true,
         wireframes: false,
         pixelRatio: 1,
       },
@@ -38,17 +33,25 @@ const TestMatter = () => {
     const runner = Matter.Runner.create();
     Matter.Runner.run(runner, engine);
 
-    // Walls settings.
+    // Walls settings
     const wallThickness = 10;
     const wallRenderOptions = {
-      fillStyle: "#004f84", // Custom wall color
+      fillStyle: "#004f84",   // Custom fill
     };
 
     // Create walls with custom styling.
     // In this example, we'll add three walls: left, right, and bottom.
-    // (The top wall is omitted so that new circles can fall in from above.)
+    // (You can uncomment/add the top wall if needed.)
     const walls = [
-      // Bottom wall.
+      // Uncomment to add a top wall:
+      // Matter.Bodies.rectangle(
+      //   width / 2,
+      //   0,
+      //   width,
+      //   wallThickness,
+      //   { isStatic: true, render: wallRenderOptions }
+      // ),
+      // Bottom wall
       Matter.Bodies.rectangle(
         width / 2,
         height,
@@ -56,7 +59,7 @@ const TestMatter = () => {
         wallThickness,
         { isStatic: true, render: wallRenderOptions }
       ),
-      // Left wall.
+      // Left wall
       Matter.Bodies.rectangle(
         0,
         height / 2,
@@ -64,7 +67,7 @@ const TestMatter = () => {
         height,
         { isStatic: true, render: wallRenderOptions }
       ),
-      // Right wall.
+      // Right wall
       Matter.Bodies.rectangle(
         width,
         height / 2,
@@ -85,7 +88,6 @@ const TestMatter = () => {
     render.mouse = mouse;
 
     // Fit the render viewport to the scene.
-    // This makes sure the scene is scaled to appear within the defined bounds.
     Matter.Render.lookAt(render, {
       min: { x: 0, y: 0 },
       max: { x: width, y: height },
@@ -107,7 +109,7 @@ const TestMatter = () => {
       Matter.World.add(engine.world, circle);
     };
 
-    // Add one blue circle every second indefinitely.
+    // Add one blue circle per second indefinitely.
     const intervalId = setInterval(createCircle, 1000);
 
     // Cleanup on unmount.
@@ -122,24 +124,20 @@ const TestMatter = () => {
     };
   }, []);
 
-  // Render a responsive container that centers the canvas and loading text.
+  // Render the fixed-size 500x500 canvas and center it with some loading text.
   return (
     <div
       style={{
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
-        minHeight: "100vh",
       }}
     >
       <div
         ref={sceneRef}
         style={{
-          width: "100%",
-          maxWidth: "500px",
-          height: "auto",
-          aspectRatio: "1 / 1",
+          width: "250px",
+          height: "250px",
           boxSizing: "border-box",
         }}
       />

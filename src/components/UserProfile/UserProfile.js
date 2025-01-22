@@ -4,8 +4,7 @@ import { useParams } from "react-router-dom";
 import { Responsive, WidthProvider } from "react-grid-layout";
 import { loadAccountData } from "../../accountData";
 import Card from "../Card/Card";
-import MatterLoadingAnimation from "../MatterLoadingAnimation"; // <-- Updated import
-import TestMatter from "../TestMatter"; // <-- Updated import
+import MatterLoadingAnimation from "../MatterLoadingAnimation";
 
 import ProfileCard from "./components/ProfileCard";
 import NarrativeCard from "./components/NarrativeCard";
@@ -92,7 +91,7 @@ const UserProfile = () => {
   if (loading) {
     return (
       <div className="user-profile loading-container">
-        <TestMatter />
+        <MatterLoadingAnimation />
         <p className="loading-text">Loading account data...</p>
       </div>
     );

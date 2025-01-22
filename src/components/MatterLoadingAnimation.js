@@ -1,94 +1,120 @@
-// src/components/MatterLoadingAnimation.jsx
+// src/components/TestMatter.jsx
 import React, { useEffect, useRef } from "react";
 import Matter from "matter-js";
-import "./MatterLoadingAnimation.css";
 
-const CONFIG = {
-  containerWidth: 300,
-  containerHeight: 300,
-  gravity: 1,
-  square: {
-    size: 50,
-    color: "#e74c3c",
-    // For this test, we won't use a repeating interval; just one square.
-  },
-};
-
-const MatterLoadingAnimation = () => {
+const TestMatter = () => {
   const sceneRef = useRef(null);
 
   useEffect(() => {
-    // Create the engine
-    const engine = Matter.Engine.create();
-    engine.world.gravity.y = CONFIG.gravity;
+    // Set the fixed dimensions for the canvas.
+    const width = 250;
+    const height = 250;
 
-    // Create the renderer
+    // Create engine and set gravity.
+    const engine = Matter.Engine.create();
+    engine.world.gravity.y = 1;
+
+    // Create the renderer with a fixed 500x500 dimensions.
     const render = Matter.Render.create({
       element: sceneRef.current,
       engine: engine,
       options: {
-        width: CONFIG.containerWidth,
-        height: CONFIG.containerHeight,
-        background: "#f0f0f0",
+        width,
+        height,
+        background: "#rgb(222, 222, 222) 0% 0% / contain",
+        showIds: true,
         wireframes: false,
         pixelRatio: 1,
       },
     });
     Matter.Render.run(render);
 
-    // Create and run the runner
+    // Create and run the runner.
     const runner = Matter.Runner.create();
     Matter.Runner.run(runner, engine);
 
-    // Create static boundaries so the square remains visible
-    const offset = 20;
+    // Walls settings
+    const wallThickness = 10;
+    const wallRenderOptions = {
+      fillStyle: "#004f84",   // Custom fill
+    };
+
+    // Create walls with custom styling.
+    // In this example, we'll add three walls: left, right, and bottom.
+    // (You can uncomment/add the top wall if needed.)
     const walls = [
+      // Uncomment to add a top wall:
+      // Matter.Bodies.rectangle(
+      //   width / 2,
+      //   0,
+      //   width,
+      //   wallThickness,
+      //   { isStatic: true, render: wallRenderOptions }
+      // ),
+      // Bottom wall
       Matter.Bodies.rectangle(
-        CONFIG.containerWidth / 2,
-        CONFIG.containerHeight + offset,
-        CONFIG.containerWidth,
-        40,
-        { isStatic: true }
+        width / 2,
+        height,
+        width,
+        wallThickness,
+        { isStatic: true, render: wallRenderOptions }
       ),
+      // Left wall
       Matter.Bodies.rectangle(
-        CONFIG.containerWidth / 2,
-        -offset,
-        CONFIG.containerWidth,
-        40,
-        { isStatic: true }
+        0,
+        height / 2,
+        wallThickness,
+        height,
+        { isStatic: true, render: wallRenderOptions }
       ),
+      // Right wall
       Matter.Bodies.rectangle(
-        -offset,
-        CONFIG.containerHeight / 2,
-        40,
-        CONFIG.containerHeight,
-        { isStatic: true }
-      ),
-      Matter.Bodies.rectangle(
-        CONFIG.containerWidth + offset,
-        CONFIG.containerHeight / 2,
-        40,
-        CONFIG.containerHeight,
-        { isStatic: true }
+        width,
+        height / 2,
+        wallThickness,
+        height,
+        { isStatic: true, render: wallRenderOptions }
       ),
     ];
     Matter.World.add(engine.world, walls);
 
-    // Create one red square that falls into view
-    const square = Matter.Bodies.rectangle(
-      CONFIG.containerWidth / 2,  // center horizontally
-      -CONFIG.square.size,        // starting above the container
-      CONFIG.square.size,
-      CONFIG.square.size,
-      {
-        render: { fillStyle: CONFIG.square.color },
-        restitution: 0.5,
-      }
-    );
-    Matter.World.add(engine.world, square);
+    // Enable mouse control.
+    const mouse = Matter.Mouse.create(render.canvas);
+    const mouseConstraint = Matter.MouseConstraint.create(engine, {
+      mouse: mouse,
+      constraint: { stiffness: 0.2, render: { visible: false } },
+    });
+    Matter.World.add(engine.world, mouseConstraint);
+    render.mouse = mouse;
 
-    // Clean up on unmount
+    // Fit the render viewport to the scene.
+    Matter.Render.lookAt(render, {
+      min: { x: 0, y: 0 },
+      max: { x: width, y: height },
+    });
+
+    // Blue circles with random sizes.
+    const minRadius = 10;
+    const maxRadius = 20;
+
+    const createCircle = () => {
+      const radius = Math.random() * (maxRadius - minRadius) + minRadius;
+      const xPos = Math.random() * (width - 2 * radius) + radius;
+      const circle = Matter.Bodies.circle(
+        xPos,
+        -2 * radius, // start above the canvas
+        radius,
+        { render: { fillStyle: "#3498db" }, restitution: 0.6 }
+      );
+      Matter.World.add(engine.world, circle);
+    };
+
+    // Add one blue circle per second indefinitely.
+    const intervalId = setInterval(createCircle, 1000);
+
+    // Cleanup on unmount.
     return () => {
+      clearInterval(intervalId);
       Matter.Render.stop(render);
       Matter.Runner.stop(runner);
       Matter.World.clear(engine.world);
@@ -98,7 +124,28 @@ const MatterLoadingAnimation = () => {
     };
   }, []);
 
-  return <div ref={sceneRef} className="matter-container" />;
+  // Render the fixed-size 500x500 canvas and center it with some loading text.
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <div
+        ref={sceneRef}
+        style={{
+          width: "250px",
+          height: "250px",
+          boxSizing: "border-box",
+        }}
+      />
+      <p style={{ marginTop: "20px", fontSize: "1.2em" }}>
+        Loading account data...
+      </p>
+    </div>
+  );
 };
 
-export default MatterLoadingAnimation;
+export default TestMatter;
