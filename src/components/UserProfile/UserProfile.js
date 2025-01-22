@@ -108,6 +108,9 @@ const UserProfile = () => {
         <div className="user-profile-header">
           <h1>{displayName}</h1>
           <h2>@{resolvedHandle}</h2>
+          <p><strong>Combined Score: {accountData.combinedScore}</strong></p>
+          <p>Bluesky Score: {accountData.blueskyScore}</p>
+          <p>Atproto Score: {accountData.atprotoScore}</p>
         </div>
         <ResponsiveGridLayout
           className="layout"
@@ -120,17 +123,17 @@ const UserProfile = () => {
           onLayoutChange={handleLayoutChange}
         >
           <div key="AccountData" className="grid-item">
-            <Card title="Account Data">
+            <Card title="Profile">
               <ProfileCard />
             </Card>
           </div>
           <div key="NarrativeCard" className="grid-item">
-            <Card title="NarrativeCard">
+            <Card title="Summary">
               <NarrativeCard />
             </Card>
           </div>
           <div key="PostTypeCard" className="grid-item">
-            <Card title="Post Types">
+            <Card title="Post Type Breakdown">
               <PostTypeCard />
             </Card>
           </div>

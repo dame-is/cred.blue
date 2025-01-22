@@ -3,10 +3,10 @@
 /* Grid item container style */
 .grid-item {
   background: #fff !important;
-  border: 1px solid #ddd;
   padding: 15px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  border-radius: 8px;
+  border: 5px solid #ddd;
+  border-radius: 12px;
 }
 
 /* Paragraph margins inside grid-item */
@@ -97,7 +97,7 @@
 /* Dark mode overrides */
 .dark-mode .grid-item {
   background: #2c2c2c !important;
-  border: 1px solid #444;
+  border: 5px solid #444;
   box-shadow: 0 2px 4px rgba(0,0,0,0.6);
 }
 

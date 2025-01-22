@@ -5,7 +5,7 @@
     width: 100%;
     background-color: #ffffff; /* White background */
     transition: background-color 0.3s ease, border-color 0.3s ease;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 5px solid #dcdcdc;
   }
 
   .cred {
@@ -60,6 +60,11 @@
     text-decoration: none;
     transition: color 0.3s ease;
   }
+
+  .navbar-links {
+    font-weight: bold;
+    margin-top: 2px;
+  }
   
   .navbar-links ul {
     list-style: none;
@@ -111,7 +116,7 @@
   /* Dark Mode Styles */
   .dark-mode .navbar {
     background-color: #2c2c2c; /* Dark background */
-    border-bottom: 1px solid #444;
+    border-bottom: 5px solid #444;
   }
   
   .dark-mode .navbar-logo a {

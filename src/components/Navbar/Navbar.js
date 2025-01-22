@@ -52,10 +52,10 @@ const Navbar = () => {
           <nav className="navbar-links">
             <ul>
               <li>
-                <Link to="/">Home</Link>
+                <Link to="/">home</Link>
               </li>
               <li>
-                <Link to="/about">About</Link>
+                <Link to="/about">about</Link>
               </li>
               {/* Add more links as needed */}
             </ul>
@@ -71,7 +71,7 @@ const Navbar = () => {
               onClick={handleAuthAction}
               aria-label={isAuthenticated ? 'Logout' : 'Login'}
             >
-              {isAuthenticated ? 'Logout' : 'Login'}
+              {isAuthenticated ? 'logout' : 'login'}
             </button>
           </div>
         </div>
