@@ -22,7 +22,7 @@ const SearchBar = () => {
     <form className="search-bar" onSubmit={handleSubmit}>
       <input
         type="text"
-        placeholder="Enter Bluesky username (e.g., dame.bsky.social)"
+        placeholder="(e.g. dame.bsky.social)"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
         required

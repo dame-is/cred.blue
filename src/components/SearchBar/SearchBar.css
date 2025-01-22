@@ -7,7 +7,6 @@
   }
   
   .search-bar input {
-    width: 300px;
     padding: 10px;
     font-size: 1em;
     border: 1px solid #ccc;
@@ -35,7 +34,7 @@
   }
 
   form {
-    padding: 20px 35px;
+    padding: 20px 20px;
     flex-direction: unset;
     gap: 0px;
   }

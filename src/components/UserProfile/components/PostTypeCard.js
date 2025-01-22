@@ -80,7 +80,7 @@ const renderActiveShape = (props) => {
         textAnchor={textAnchor}
         fill="#999"
       >
-        {`(Rate ${(percent * 100).toFixed(2)}%)`}
+        {`${(percent * 100).toFixed(2)}%)`}
       </text>
     </g>
   );
@@ -118,7 +118,7 @@ const PostTypeCard = () => {
             activeIndex={activeIndex}
             activeShape={renderActiveShape}
             data={data}
-            cx="45%"
+            cx="50%"
             cy="50%"
             innerRadius={45}
             outerRadius={80}
