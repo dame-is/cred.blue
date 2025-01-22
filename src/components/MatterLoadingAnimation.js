@@ -136,8 +136,8 @@ const TestMatter = () => {
         initialRadius,
         {
           render: { 
-            fillStyle: "#004f84",
-            strokeStyle: "#3498db",
+            fillStyle: "#004f84c2",
+            strokeStyle: "#3498dbdc",
             lineWidth: 6
           },
           restitution: 0.6
