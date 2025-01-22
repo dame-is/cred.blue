@@ -7,22 +7,22 @@ const TestMatter = () => {
   const sceneRef = useRef(null);
 
   useEffect(() => {
-    // Set the fixed dimensions for the canvas.
+    // Set the fixed (or responsive) dimensions for the canvas.
     const width = 250;
     const height = 250;
 
     // Create engine and set gravity.
     const engine = Matter.Engine.create();
-    engine.world.gravity.y = 0.05;
+    engine.world.gravity.y = 0.1; // A gentle gravity for testing
 
-    // Create the renderer with a fixed 500x500 dimensions.
+    // Create the renderer.
     const render = Matter.Render.create({
       element: sceneRef.current,
       engine: engine,
       options: {
         width,
         height,
-        background: "#rgb(222, 222, 222) 0% 0% / contain",
+        background: "rgb(222, 222, 222)",
         showIds: true,
         wireframes: false,
         pixelRatio: 1,
@@ -34,25 +34,14 @@ const TestMatter = () => {
     const runner = Matter.Runner.create();
     Matter.Runner.run(runner, engine);
 
-    // Walls settings
+    // Walls settings (left, right, bottom).
     const wallThickness = 6;
     const wallRenderOptions = {
-      fillStyle: "#f0f0f000",   // Custom fill
+      fillStyle: "#004f84", // Custom wall color (transparent fill if desired)
     };
 
-    // Create walls with custom styling.
-    // In this example, we'll add three walls: left, right, and bottom.
-    // (You can uncomment/add the top wall if needed.)
     const walls = [
-      // Uncomment to add a top wall:
-      // Matter.Bodies.rectangle(
-      //   width / 2,
-      //   0,
-      //   width,
-      //   wallThickness,
-      //   { isStatic: true, render: wallRenderOptions }
-      // ),
-      // Bottom wall
+      // Bottom wall.
       Matter.Bodies.rectangle(
         width / 2,
         height,
@@ -60,7 +49,7 @@ const TestMatter = () => {
         wallThickness,
         { isStatic: true, render: wallRenderOptions }
       ),
-      // Left wall
+      // Left wall.
       Matter.Bodies.rectangle(
         0,
         height / 2,
@@ -68,7 +57,7 @@ const TestMatter = () => {
         height,
         { isStatic: true, render: wallRenderOptions }
       ),
-      // Right wall
+      // Right wall.
       Matter.Bodies.rectangle(
         width,
         height / 2,
@@ -94,29 +83,58 @@ const TestMatter = () => {
       max: { x: width, y: height },
     });
 
-    // Blue circles with random sizes.
-    const minRadius = 7;
-    const maxRadius = 16;
+    // Settings for our blue circles.
+    const minTargetRadius = 7;
+    const maxTargetRadius = 16;
+    const growthDuration = 500; // milliseconds over which the circle grows
 
-    const createCircle = () => {
-      const radius = Math.random() * (maxRadius - minRadius) + minRadius;
-      const xPos = Math.random() * (width - 2 * radius) + radius;
+    // Function to create a circle that "pops" from the center:
+    const createGrowingCircle = () => {
+      // Determine the final target radius.
+      const targetRadius =
+        Math.random() * (maxTargetRadius - minTargetRadius) + minTargetRadius;
+      // We'll start with a radius of 1 (almost zero).
+      const initialRadius = 1;
+      // Create the circle at the center of the canvas.
       const circle = Matter.Bodies.circle(
-        xPos,
-        -2 * radius, // start above the canvas
-        radius,
-        { render: { 
-            fillStyle: "#004f84",
-            strokeStyle: '#3498db',
-            lineWidth: 6
-        }, 
-        restitution: 0.6 }
+        width / 2,
+        height / 2,
+        initialRadius,
+        {
+          render: {
+            fillStyle: "#3498db",
+            strokeStyle: "#3498db",
+            lineWidth: 6,
+          },
+          restitution: 0.6,
+        }
       );
       Matter.World.add(engine.world, circle);
+
+      // Animate the growth.
+      let currentScale = 1; // starts at a scale factor of 1
+      const startTime = performance.now();
+
+      const grow = (time) => {
+        const elapsed = time - startTime;
+        const progress = Math.min(elapsed / growthDuration, 1); // progress in [0,1]
+        // Compute the desired overall scale factor.
+        // We want the circle's radius to be targetRadius.
+        const desiredScale = targetRadius / initialRadius * progress + (1 - progress);
+        // Determine the factor to scale by since the last frame.
+        const scaleFactor = desiredScale / currentScale;
+        Matter.Body.scale(circle, scaleFactor, scaleFactor);
+        // Update our current scale.
+        currentScale = desiredScale;
+        if (progress < 1) {
+          requestAnimationFrame(grow);
+        }
+      };
+      requestAnimationFrame(grow);
     };
 
-    // Add one blue circle per second indefinitely.
-    const intervalId = setInterval(createCircle, 1000);
+    // Add one growing blue circle per second indefinitely.
+    const intervalId = setInterval(createGrowingCircle, 1000);
 
     // Cleanup on unmount.
     return () => {
@@ -130,7 +148,7 @@ const TestMatter = () => {
     };
   }, []);
 
-  // Render the fixed-size 500x500 canvas and center it with some loading text.
+  // Center the canvas and loading text.
   return (
     <div
       style={{
