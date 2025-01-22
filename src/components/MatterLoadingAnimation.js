@@ -34,6 +34,8 @@ const TestMatter = () => {
   const [message, setMessage] = useState("Loading account data");
   // State to control the fade effect.
   const [fade, setFade] = useState(false);
+  const [circleCount, setCircleCount] = useState(0); // Track circle count
+
 
   // Update the message on a random interval between 4 and 10 seconds.
   useEffect(() => {
@@ -202,6 +204,7 @@ const TestMatter = () => {
         }
       );
       Matter.World.add(engine.world, circle);
+      setCircleCount((prev) => prev + 1); // Increment circle count
 
       // Animate the growth of the circle.
       let currentScale = 1; // Body initially at scale factor 1
@@ -286,6 +289,7 @@ const TestMatter = () => {
     <p className={`loading-text ${fade ? "fade" : ""}`} style={{ marginTop: "20px", fontSize: "1em" }}>
     {message}<span className="dots"></span>
     </p>
+    <p style={{ fontSize: "1.2em", marginTop: "10px" }}>Circles Created: {circleCount}</p>
     </div>
   );
 };
