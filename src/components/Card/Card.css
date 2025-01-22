@@ -2,92 +2,115 @@
 
 /* Grid item container style */
 .grid-item {
-    background: #fff !important;
-    border: 1px solid #ddd;
-    padding: 15px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    border-radius: 8px;
-  }
-  
-  /* Paragraph margins inside grid-item */
-  .grid-item p {
-    margin-bottom: 0px;
-    margin-top: 10px;
-  }
+  background: #fff !important;
+  border: 1px solid #ddd;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 8px;
+}
 
-    /* Ensure grid items don’t overflow */
-    .grid-item {
-      background: transparent;
-      box-sizing: border-box;
-      overflow: clip;
-    }
-  
-  /* Card container to clip overflow if needed */
-  .card {
-    overflow: clip;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  /* Header for title and drag-handle */
-  .card-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between; /* Pushes title to the left and drag handle to the right */
-    margin-bottom: 10px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
-  }
-  
-  /* Card title styles */
-  .card-title {
-    margin: 0;
-    font-size: 1.2em;
-  }
-  
-  /* Card content styles */
-  .card-content {
-    flex-grow: 1;
-    font-size: 0.95em;
-  }
-  
-  /* Styles for the react-resizable handle (if applicable) */
-  .react-resizable-handle {
-    background-image: none !important;
-  }
-  
-  .react-grid-item > .react-resizable-handle::after {
-    border-bottom: 3px solid #00000045;
-    border-right: 3px solid #00000045;
-    bottom: 3px;
-    content: "";
-    height: 10px;
-    position: absolute;
-    right: 3px;
-    width: 10px;
-    margin: 3px;
-    border-end-end-radius: 8px;
-  }
-  
-  /* Draggable Handle Styles */
+/* Paragraph margins inside grid-item */
+.grid-item p {
+  margin-bottom: 0;
+  margin-top: 10px;
+}
+
+/* Ensure grid items don’t overflow */
+.grid-item {
+  background: transparent;
+  box-sizing: border-box;
+  overflow: clip;
+}
+
+/* Card container to clip overflow if needed */
+.card {
+  overflow: clip;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header for title and drag-handle */
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+/* Card title styles */
+.card-title {
+  margin: 0;
+  font-size: 1.2em;
+  color: #000; /* default dark text */
+}
+
+/* Card content styles */
+.card-content {
+  flex-grow: 1;
+  font-size: 0.95em;
+  color: #000;
+}
+
+/* Styles for the react-resizable handle (if applicable) */
+.react-resizable-handle {
+  background-image: none !important;
+}
+
+.react-grid-item > .react-resizable-handle::after {
+  border-bottom: 3px solid #00000045;
+  border-right: 3px solid #00000045;
+  bottom: 3px;
+  content: "";
+  height: 10px;
+  position: absolute;
+  right: 3px;
+  width: 10px;
+  margin: 3px;
+  border-end-end-radius: 8px;
+}
+
+/* Draggable Handle Styles */
+.drag-handle {
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  cursor: move;
+  max-width: 18px;
+  text-align: center;
+}
+
+/* Drag icon styling */
+.drag-icon {
+  font-size: 1.2em;
+  user-select: none;
+}
+
+/* Responsive Adjustments for Cards */
+@media (max-width: 768px) {
   .drag-handle {
-    align-items: center;
-    border-radius: 4px;
-    cursor: move;
-    max-width: 18px;
-    text-align: center;
+    justify-content: center;
   }
-  
-  /* Drag icon styling */
-  .drag-icon {
-    font-size: 1.2em;
-    user-select: none;
-  }
-  
-  /* Responsive Adjustments for Cards */
-  @media (max-width: 768px) {
-    .drag-handle {
-      justify-content: center;
-    }
-  }
-  
+}
+
+/* Dark mode overrides */
+.dark-mode .grid-item {
+  background: #2c2c2c !important;
+  border: 1px solid #444;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.6);
+}
+
+.dark-mode .card-header {
+  border-bottom: 1px solid #555;
+}
+
+.dark-mode .card-title,
+.dark-mode .card-content {
+  color: #fff;
+}
+
+.dark-mode .react-grid-item > .react-resizable-handle::after {
+  border-bottom: 3px solid #ffffff45;
+  border-right: 3px solid #ffffff45;
+}

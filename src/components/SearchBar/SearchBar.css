@@ -36,5 +36,7 @@
 
   form {
     padding: 20px 35px;
+    flex-direction: unset;
+    gap: 0px;
   }
   

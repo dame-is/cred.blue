@@ -19,6 +19,10 @@
   .blue {
     color: #004F84;
   }
+
+  .theme-toggle-button:hover {
+    background: none;
+  }
   
   .navbar-container {
     max-width: 1200px; /* Max width of the content */
@@ -73,27 +77,6 @@
     display: flex;
     align-items: center;
     gap: 20px; /* Space between the toggle and auth buttons */
-  }
-  
-  
-  .auth-button {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-  
-  /* Login Button */
-  .login-button {
-    background-color: #007bff; /* Blue background */
-    color: #ffffff; /* White text */
-    width: 100%
-  }
-  
-  .login-button:hover {
-    background-color: #0056b3; /* Darker blue on hover */
   }
   
   /* Logout Button */
@@ -211,7 +194,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 1.8rem;
+  font-size: 1.6em;
   display: flex;
   align-items: center;
   justify-content: center;

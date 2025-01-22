@@ -9,6 +9,7 @@
   
   .user-profile-header {
     text-align: center;
+    margin-top: 40px;
   }
 
   .user-profile h1 {
@@ -69,4 +70,8 @@
 
   .react-grid-item.react-grid-placeholder.placeholder-resizing {
     transition: none;
+  }
+
+  .react-grid-layout {
+    margin-bottom: 40px;
   }
