@@ -75,8 +75,8 @@ const TestMatter = () => {
       element: sceneRef.current,
       engine: engine,
       options: {
-        width,
-        height,
+        width: "auto",
+        height: "auto",
         background: "rgb(222, 222, 222)",
         showIds: false,
         wireframes: false,
