@@ -35,7 +35,7 @@ const TestMatter = () => {
     Matter.Runner.run(runner, engine);
 
     // Walls settings
-    const wallThickness = 10;
+    const wallThickness = 1;
     const wallRenderOptions = {
       fillStyle: "#004f84",   // Custom fill
     };
@@ -105,7 +105,12 @@ const TestMatter = () => {
         xPos,
         -2 * radius, // start above the canvas
         radius,
-        { render: { fillStyle: "#3498db" }, restitution: 0.6 }
+        { render: { 
+            fillStyle: "#004f84",
+            strokeStyle: '#3498db',
+            lineWidth: 2
+        }, 
+        restitution: 0.6 }
       );
       Matter.World.add(engine.world, circle);
     };
