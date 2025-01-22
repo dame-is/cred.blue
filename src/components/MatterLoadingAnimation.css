@@ -18,6 +18,7 @@ canvas {
   .loading-text {
     font-size: 1em;
     margin-top: 20px;
+    color: #004f84e6;
     opacity: 1;
     transition: opacity 0.5s ease-in-out;
     position: relative;
