@@ -5,6 +5,7 @@ import "./MatterLoadingAnimation.css";
 
 const TestMatter = () => {
   const sceneRef = useRef(null);
+  const timeoutRef = useRef(null); // Use a ref to store the timeout ID
 
   useEffect(() => {
     // Set the fixed dimensions for the canvas.
@@ -22,7 +23,7 @@ const TestMatter = () => {
       options: {
         width,
         height,
-        background: "#rgb(222, 222, 222) 0% 0% / contain",
+        background: "rgb(222, 222, 222)",
         showIds: false,
         wireframes: false,
         pixelRatio: 1,
@@ -41,17 +42,16 @@ const TestMatter = () => {
     };
 
     // Create walls with custom styling.
-    // In this example, we'll add three walls: left, right, and bottom.
+    // In this example, we'll add four walls: top, bottom, left, and right.
     const walls = [
-
+      // Top wall
       Matter.Bodies.rectangle(
         width / 2,
         0,
         width,
         wallThickness,
         { isStatic: true, render: wallRenderOptions }
-        ),
-
+      ),
       // Bottom wall
       Matter.Bodies.rectangle(
         width / 2,
@@ -99,6 +99,13 @@ const TestMatter = () => {
     const maxRadius = 18;
     const growthDuration = 400; // milliseconds over which the circle grows
 
+    // Get custom circle render styling from CSS variables.
+    // You can set these in your CSS file.
+    const rootStyles = getComputedStyle(document.documentElement);
+    const circleFill = rootStyles.getPropertyValue("--circle-fill").trim() || "#004f84c2";
+    const circleStroke = rootStyles.getPropertyValue("--circle-stroke").trim() || "#3498dbdc";
+    const circleLineWidth = parseFloat(rootStyles.getPropertyValue("--circle-linewidth")) || 6;
+
     // Bounce easing function.
     function bounceEaseOut(t) {
       const n1 = 7.5625;
@@ -118,14 +125,13 @@ const TestMatter = () => {
     }
 
     // Create a blue circle that "pops" up with a bounce effect.
-    // The circle will appear in a random position on the canvas.
+    // The circle will appear at a random position on the canvas.
     const createCircle = () => {
       // Determine the final target radius.
-      const targetRadius =
-        Math.random() * (maxRadius - minRadius) + minRadius;
+      const targetRadius = Math.random() * (maxRadius - minRadius) + minRadius;
       // Use a very small initial radius so we can "grow" it.
       const initialRadius = 0.1;
-      // Randomly choose its starting position (ensuring it fits within the canvas).
+      // Randomly choose its starting position, ensuring it fits within the canvas.
       const xPos = Math.random() * (width - 2 * targetRadius) + targetRadius;
       const yPos = Math.random() * (height - 2 * targetRadius) + targetRadius;
       
@@ -136,9 +142,9 @@ const TestMatter = () => {
         initialRadius,
         {
           render: { 
-            fillStyle: "#004f84c2",
-            strokeStyle: "#3498dbdc",
-            lineWidth: 6
+            fillStyle: circleFill,
+            strokeStyle: circleStroke,
+            lineWidth: circleLineWidth
           },
           restitution: 0.6
         }
@@ -152,12 +158,9 @@ const TestMatter = () => {
 
       const grow = (time) => {
         const elapsed = time - startTime;
-        const progress = Math.min(elapsed / growthDuration, 1); // progress in [0, 1]
-        // Compute easing value with bounce.
+        const progress = Math.min(elapsed / growthDuration, 1);
         const easing = bounceEaseOut(progress);
-        // Compute desired overall scale: from 1 (initial) to targetScale.
         const desiredScale = 1 + (targetScale - 1) * easing;
-        // Scale relative to last frame.
         const scaleFactor = desiredScale / currentScale;
         Matter.Body.scale(circle, scaleFactor, scaleFactor);
         currentScale = desiredScale;
@@ -168,12 +171,19 @@ const TestMatter = () => {
       requestAnimationFrame(grow);
     };
 
-    // Add one blue circle every second indefinitely.
-    const intervalId = setInterval(createCircle, 1000);
+    // Instead of a fixed interval, schedule the next circle appearance randomly between 100 and 500 ms.
+    const scheduleNextCircle = () => {
+      const delay = Math.random() * (500 - 100) + 100; // Delay between 100 and 500 ms
+      timeoutRef.current = setTimeout(() => {
+        createCircle();
+        scheduleNextCircle();
+      }, delay);
+    };
+    scheduleNextCircle();
 
     // Cleanup on unmount.
     return () => {
-      clearInterval(intervalId);
+      clearTimeout(timeoutRef.current);
       Matter.Render.stop(render);
       Matter.Runner.stop(runner);
       Matter.World.clear(engine.world);

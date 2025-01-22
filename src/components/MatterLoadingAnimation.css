@@ -5,10 +5,13 @@
     border: 6px solid #bebebe;
     max-width: 100%;
     max-height: 100%;
+    margin-left: 20px;
+    margin-right: 20px;
     user-select: none;
   }
 
-bubble {
-    fillStyle: #004f84c2;
-    strokeStyle: #3498dbdc;
-}
+  :root {
+    --circle-fill: #004f84c2;
+    --circle-stroke: #3498dbdc;
+    --circle-linewidth: 6;
+  }
