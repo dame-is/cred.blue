@@ -11,17 +11,6 @@
     text-align: center;
   }
 
-  /* Grid layout styling */
-  .layout {
-    margin-top: 20px;
-  }
-  
-  /* Ensure grid items don’t overflow */
-  .grid-item {
-    background: transparent;
-    box-sizing: border-box;
-  }
-
   .user-profile h1 {
     margin-left: 20px;
     margin-right: 20px;
@@ -64,4 +53,20 @@
   .user-profile-header {
     text-align: center;
   }
-  
+
+  .react-grid-item.react-grid-placeholder {
+    background: #007bff !important;
+    border-radius: 8px;
+    opacity: 0.2;
+    transition-duration: 100ms;
+    z-index: 2;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+  }
+
+  .react-grid-item.react-grid-placeholder.placeholder-resizing {
+    transition: none;
+  }

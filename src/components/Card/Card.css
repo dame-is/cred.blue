@@ -14,6 +14,13 @@
     margin-bottom: 0px;
     margin-top: 10px;
   }
+
+    /* Ensure grid items don’t overflow */
+    .grid-item {
+      background: transparent;
+      box-sizing: border-box;
+      overflow: clip;
+    }
   
   /* Card container to clip overflow if needed */
   .card {
@@ -29,7 +36,7 @@
     justify-content: space-between; /* Pushes title to the left and drag handle to the right */
     margin-bottom: 10px;
     border-bottom: 1px solid #eee;
-    padding-bottom: 5px;
+    padding-bottom: 10px;
   }
   
   /* Card title styles */
@@ -65,10 +72,8 @@
   /* Draggable Handle Styles */
   .drag-handle {
     align-items: center;
-    background: #f0f0f0;
     border-radius: 4px;
     cursor: move;
-    padding: 5px;
     max-width: 18px;
     text-align: center;
   }
@@ -77,11 +82,6 @@
   .drag-icon {
     font-size: 1.2em;
     user-select: none;
-  }
-  
-  /* Optional: Enhance hover effect for the drag handle */
-  .drag-handle:hover {
-    background: #e0e0e0;
   }
   
   /* Responsive Adjustments for Cards */

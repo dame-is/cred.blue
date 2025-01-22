@@ -10,9 +10,9 @@ import ProfileCard from "./components/ProfileCard";
 import NarrativeCard from "./components/NarrativeCard";
 import PostTypeCard from "./components/PostTypeCard";
 
-import "./UserProfile.css";
 import "react-grid-layout/css/styles.css"; // Import default grid-layout styles
 import "react-resizable/css/styles.css";
+import "./UserProfile.css";
 
 // Create a new context for accountData
 export const AccountDataContext = createContext(null);
