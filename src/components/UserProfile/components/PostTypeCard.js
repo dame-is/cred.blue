@@ -90,16 +90,18 @@ const PostTypeCard = () => {
   const accountData = useContext(AccountDataContext);
   const [activeIndex, setActiveIndex] = useState(0);
 
+  console.log("Account Data:", accountData); // Add this line
+
   if (!accountData) {
     return <div>Loading post types...</div>;
   }
 
   // Prepare the data for the pie chart
   const data = [
-    { name: 'Posts', value: accountData.onlyPosts },
-    { name: 'Replies', value: accountData.onlyReplies },
-    { name: 'Quotes', value: accountData.onlyQuotes },
-    { name: 'Reposts', value: accountData.onlyReposts },
+    { name: 'Posts', value: 43 },
+    { name: 'Replies', value: 22 },
+    { name: 'Quotes', value: 5 },
+    { name: 'Reposts', value: 30 },
   ];
 
   // Handler for when a pie slice is hovered
