@@ -92,7 +92,6 @@ const UserProfile = () => {
     return (
       <div className="user-profile loading-container">
         <MatterLoadingAnimation />
-        <p className="loading-text">Loading account data...</p>
       </div>
     );
   }

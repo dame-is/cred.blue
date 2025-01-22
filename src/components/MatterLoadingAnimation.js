@@ -1,12 +1,46 @@
 // src/components/TestMatter.jsx
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import Matter from "matter-js";
 import "./MatterLoadingAnimation.css";
 
 const TestMatter = () => {
   const sceneRef = useRef(null);
-  const timeoutRef = useRef(null); // Use a ref to store the timeout ID
-  const gravityTimerRef = useRef(null); // Ref to store the gravity update timer
+  const timeoutRef = useRef(null); // For circle appearance
+  const gravityTimerRef = useRef(null); // For dynamic gravity
+  const messageTimeoutRef = useRef(null); // For updating the message
+
+  // Wrap messages in useMemo so they don't change on every render.
+  const messages = useMemo(
+    () => [
+      "Loading account data...",
+      "Searching handle history...",
+      "Prepping analysis summary...",
+      "Constructing visualizations...",
+      "Gathering insights...",
+      "Analyzing post types and frequencies...",
+    ],
+    []
+  );
+
+  // State to hold the current message.
+  const [message, setMessage] = useState("Loading account data...");
+
+  // Update the message on a random interval between 4 and 10 seconds.
+  useEffect(() => {
+    const updateMessage = () => {
+      const delay = Math.random() * (10000 - 4000) + 4000; // delay between 4000ms and 10000ms
+      messageTimeoutRef.current = setTimeout(() => {
+        const randomMessage =
+          messages[Math.floor(Math.random() * messages.length)];
+        setMessage(randomMessage);
+        updateMessage();
+      }, delay);
+    };
+    updateMessage();
+    return () => {
+      clearTimeout(messageTimeoutRef.current);
+    };
+  }, [messages]);
 
   useEffect(() => {
     // Set the fixed dimensions for the canvas.
@@ -15,10 +49,8 @@ const TestMatter = () => {
 
     // Create engine and set initial gravity.
     const engine = Matter.Engine.create();
-    // Set a gravity scale if desired.
     engine.world.gravity.scale = 0.001;
-    // Start with base gravity values.
-    // We'll update these continuously to simulate water motion.
+    // Start with base gravity values (we'll update these continuously).
     engine.world.gravity.x = 0;
     engine.world.gravity.y = 0;
 
@@ -41,16 +73,15 @@ const TestMatter = () => {
     const runner = Matter.Runner.create();
     Matter.Runner.run(runner, engine);
 
-    // Walls settings
+    // Walls settings.
     const wallThickness = 6;
     const wallRenderOptions = {
       fillStyle: "#f0f0f000", // Custom fill (transparent in this case)
     };
 
-    // Create walls with custom styling.
-    // In this example, we'll add four walls: top, bottom, left, and right.
+    // Create walls with custom styling (top, bottom, left, and right).
     const walls = [
-      // Top wall
+      // Top wall.
       Matter.Bodies.rectangle(
         width / 2,
         0,
@@ -58,7 +89,7 @@ const TestMatter = () => {
         wallThickness,
         { isStatic: true, render: wallRenderOptions }
       ),
-      // Bottom wall
+      // Bottom wall.
       Matter.Bodies.rectangle(
         width / 2,
         height,
@@ -66,7 +97,7 @@ const TestMatter = () => {
         wallThickness,
         { isStatic: true, render: wallRenderOptions }
       ),
-      // Left wall
+      // Left wall.
       Matter.Bodies.rectangle(
         0,
         height / 2,
@@ -74,7 +105,7 @@ const TestMatter = () => {
         height,
         { isStatic: true, render: wallRenderOptions }
       ),
-      // Right wall
+      // Right wall.
       Matter.Bodies.rectangle(
         width,
         height / 2,
@@ -101,12 +132,11 @@ const TestMatter = () => {
     });
 
     // SETTINGS FOR OUR BLUE CIRCLES.
-    const minRadius = 2;
-    const maxRadius = 15;
+    const minRadius = 4;
+    const maxRadius = 12;
     const growthDuration = 400; // milliseconds over which the circle grows
 
     // Get custom circle render styling from CSS variables.
-    // You can set these in your CSS file.
     const rootStyles = getComputedStyle(document.documentElement);
     const circleFill = rootStyles.getPropertyValue("--circle-fill").trim() || "#004f84c2";
     const circleStroke = rootStyles.getPropertyValue("--circle-stroke").trim() || "#3498dbdc";
@@ -189,12 +219,11 @@ const TestMatter = () => {
     scheduleNextCircle();
 
     // Now, update gravity dynamically to simulate water-like motion.
-    // For example, let gravity oscillate between two values.
     // Define base values and amplitudes:
     const baseGravityX = 0;
-    const amplitudeX = 0.008; // gravity.x will vary by ±0.002 around baseGravityX
+    const amplitudeX = 0.008; // gravity.x will vary by ±0.008 around baseGravityX
     const baseGravityY = 0.001; // base vertical gravity
-    const amplitudeY = 0.008;   // gravity.y will vary by ±0.001 around baseGravityY
+    const amplitudeY = 0.008;   // gravity.y will vary by ±0.008 around baseGravityY
 
     const updateGravity = () => {
       const t = performance.now() * 0.001; // convert time to seconds
@@ -218,7 +247,7 @@ const TestMatter = () => {
     };
   }, []);
 
-  // Render the fixed-size 250x250 canvas and center it with some loading text.
+  // Render the fixed-size 250x250 canvas and center it with some dynamic loading text.
   return (
     <div
       style={{
@@ -234,7 +263,7 @@ const TestMatter = () => {
         }}
       />
       <p style={{ marginTop: "20px", fontSize: "1.2em" }}>
-        Loading account data...
+        {message}
       </p>
     </div>
   );
