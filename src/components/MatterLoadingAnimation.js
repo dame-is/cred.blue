@@ -101,8 +101,8 @@ const TestMatter = () => {
     });
 
     // SETTINGS FOR OUR BLUE CIRCLES.
-    const minRadius = 4;
-    const maxRadius = 12;
+    const minRadius = 2;
+    const maxRadius = 15;
     const growthDuration = 400; // milliseconds over which the circle grows
 
     // Get custom circle render styling from CSS variables.
@@ -192,9 +192,9 @@ const TestMatter = () => {
     // For example, let gravity oscillate between two values.
     // Define base values and amplitudes:
     const baseGravityX = 0;
-    const amplitudeX = 0.002; // gravity.x will vary by ±0.002 around baseGravityX
+    const amplitudeX = 0.008; // gravity.x will vary by ±0.002 around baseGravityX
     const baseGravityY = 0.001; // base vertical gravity
-    const amplitudeY = 0.001;   // gravity.y will vary by ±0.001 around baseGravityY
+    const amplitudeY = 0.008;   // gravity.y will vary by ±0.001 around baseGravityY
 
     const updateGravity = () => {
       const t = performance.now() * 0.001; // convert time to seconds
