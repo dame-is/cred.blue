@@ -1,7 +1,7 @@
 // frontend/src/components/UserProfile/components/PostTypeCard.js
 import React, { useContext, useState } from "react";
 import { AccountDataContext } from "../UserProfile"; // Adjust the path if needed
-import { PieChart, Pie, Sector, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Sector, Cell, Legend, ResponsiveContainer } from 'recharts';
 
 // Define the renderActiveShape function outside the component for clarity
 const renderActiveShape = (props) => {
@@ -89,6 +89,7 @@ const renderActiveShape = (props) => {
 const PostTypeCard = () => {
   const accountData = useContext(AccountDataContext);
   const [activeIndex, setActiveIndex] = useState(0);
+  const COLORS = ['#0056b3', '#0066cc', '#3399ff', '#66b2ff'];
 
   console.log("Account Data:", accountData); // Add this line
 
@@ -121,10 +122,14 @@ const PostTypeCard = () => {
             cy="50%"
             innerRadius={45}
             outerRadius={80}
-            fill="#007bff"
             dataKey="value"
             onMouseEnter={onPieEnter}
-          />
+          >
+            {data.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+            ))}
+          </Pie>
+          <Legend />
         </PieChart>
       </ResponsiveContainer>
     </div>
