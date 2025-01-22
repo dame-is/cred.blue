@@ -13,7 +13,7 @@ const TestMatter = () => {
 
     // Create engine and set gravity.
     const engine = Matter.Engine.create();
-    engine.world.gravity.y = 1;
+    engine.world.gravity.y = 0.05;
 
     // Create the renderer with a fixed 500x500 dimensions.
     const render = Matter.Render.create({

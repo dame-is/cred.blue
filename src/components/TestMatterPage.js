@@ -10,8 +10,8 @@ const TestMatterPage = () => {
       flexDirection: "column",
       alignItems: "center",
       justifyContent: "center",
-      minHeight: "85vh",
-      background: "#fafafa",
+      minHeight: "80vh",
+      background: "none"
     }}>
       <MatterLoadingAnimation />
     </div>
