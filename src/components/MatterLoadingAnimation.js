@@ -108,7 +108,7 @@ const TestMatter = () => {
         { render: { 
             fillStyle: "#004f84",
             strokeStyle: '#3498db',
-            lineWidth: 2
+            lineWidth: 6
         }, 
         restitution: 0.6 }
       );
