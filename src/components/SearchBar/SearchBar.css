@@ -12,6 +12,7 @@
     font-size: 1em;
     border: 1px solid #ccc;
     border-radius: 5px 0 0 5px;
+    border-right: 0px;
   }
   
   .search-bar button {
@@ -22,9 +23,18 @@
     color: white;
     border-radius: 0 5px 5px 0;
     cursor: pointer;
+    border: 1px solid #007bff;
   }
   
   .search-bar button:hover {
     background-color: #0056b3;
+  }
+
+  input:focus-visible {
+    outline: 0px;
+  }
+
+  form {
+    padding: 20px 35px;
   }
   

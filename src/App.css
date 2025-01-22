@@ -101,3 +101,7 @@ ul {
   background-color: #121212; /* Dark background */
   color: #ffffff; /* Light text */
 }
+
+.main-container {
+  align-content: center;
+}

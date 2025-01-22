@@ -20,7 +20,7 @@ const App = () => {
     <Router>
       <div className="app-container" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <Navbar />
-        <div style={{ flex: 1 }}>
+        <div className="main-container" style={{ flex: 1 }}>
           <Routes>
             <Route
               path="/login"
