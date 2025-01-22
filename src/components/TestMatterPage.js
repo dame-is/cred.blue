@@ -1,7 +1,7 @@
 // src/pages/TestMatterPage.jsx
 import React from "react";
 import TestMatter from "../components/TestMatter"; // Adjust the path if needed
-import MatterLoadingAnimation from "../MatterLoadingAnimation";
+import MatterLoadingAnimation from "../components/MatterLoadingAnimation";
 
 const TestMatterPage = () => {
   return (
