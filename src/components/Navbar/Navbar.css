@@ -72,7 +72,7 @@
   .navbar-actions {
     display: flex;
     align-items: center;
-    gap: 10px; /* Space between the toggle and auth buttons */
+    gap: 20px; /* Space between the toggle and auth buttons */
   }
   
   
@@ -89,6 +89,7 @@
   .login-button {
     background-color: #007bff; /* Blue background */
     color: #ffffff; /* White text */
+    width: 100%
   }
   
   .login-button:hover {
@@ -175,22 +176,18 @@
   }
   
   /* Responsive Design: Links display in a row under the logo */
-@media (max-width: 768px) {
+@media (max-width: 530px) {
   .navbar-container {
     flex-direction: column;
     align-items: center;
-  }
-
-  .navbar-left {
-    width: 100%;
-    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
   }
 
   .navbar-links ul {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    margin-top: 10px;
     padding: 0;
     list-style: none;
   }
@@ -200,12 +197,14 @@
   }
 
   .navbar-actions {
-    margin-top: 15px;
-    justify-content: center;
+    margin-bottom: 15px;
   }
 
-  .navbar-auth-button {
-    margin-top: 10px;
+  .navbar-container {
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    height: 112px;
   }
 }
 
@@ -214,11 +213,12 @@
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   display: flex;
   align-items: center;
   justify-content: center;
   color: inherit;
+  padding: 0px;
 }
 
 .dark-mode .theme-toggle-button {
