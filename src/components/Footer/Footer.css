@@ -63,4 +63,9 @@
     color: var(--navbar-text);
     padding: 1rem 2rem;
     text-align: center;
+    border-top: 1px solid #444;
+  }
+
+  .dark-mode .footer {
+    border-top: 1px solid #ddd;
   }
