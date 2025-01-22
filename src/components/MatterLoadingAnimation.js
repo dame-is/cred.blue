@@ -14,7 +14,9 @@ const TestMatter = () => {
 
     // Create engine and set gravity.
     const engine = Matter.Engine.create();
-    engine.world.gravity.y = 0.1;
+    engine.world.gravity.scale = 0.001;
+    engine.world.gravity.x = 0;
+    engine.world.gravity.y = 0;
 
     // Create the renderer with the fixed dimensions.
     const render = Matter.Render.create({
@@ -95,8 +97,8 @@ const TestMatter = () => {
     });
 
     // Settings for our blue circles.
-    const minRadius = 9;
-    const maxRadius = 18;
+    const minRadius = 4;
+    const maxRadius = 12;
     const growthDuration = 400; // milliseconds over which the circle grows
 
     // Get custom circle render styling from CSS variables.
@@ -173,7 +175,7 @@ const TestMatter = () => {
 
     // Instead of a fixed interval, schedule the next circle appearance randomly between 100 and 500 ms.
     const scheduleNextCircle = () => {
-      const delay = Math.random() * (500 - 100) + 100; // Delay between 100 and 500 ms
+      const delay = Math.random() * (700 - 200) + 100; // Delay between 100 and 500 ms
       timeoutRef.current = setTimeout(() => {
         createCircle();
         scheduleNextCircle();
