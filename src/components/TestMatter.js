@@ -61,7 +61,7 @@ const TestMatter = () => {
       ),
       // Left wall
       Matter.Bodies.rectangle(
-        width / 2,
+        0,
         height / 2,
         wallThickness,
         height,
@@ -94,8 +94,8 @@ const TestMatter = () => {
     });
 
     // Blue circles with random sizes.
-    const minRadius = 2;
-    const maxRadius = 8;
+    const minRadius = 10;
+    const maxRadius = 20;
 
     const createCircle = () => {
       const radius = Math.random() * (maxRadius - minRadius) + minRadius;
