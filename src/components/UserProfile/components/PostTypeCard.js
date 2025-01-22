@@ -98,10 +98,10 @@ const PostTypeCard = () => {
 
   // Prepare the data for the pie chart
   const data = [
-    { name: 'Posts', value: 43 },
-    { name: 'Replies', value: 22 },
-    { name: 'Quotes', value: 5 },
-    { name: 'Reposts', value: 30 },
+    { name: 'Posts', value: accountData.activityAll["app.bsky.feed.post"].onlyPosts },
+    { name: 'Replies', value: accountData.activityAll["app.bsky.feed.post"].onlyReplies },
+    { name: 'Quotes', value: accountData.activityAll["app.bsky.feed.post"].onlyQuotes },
+    { name: 'Reposts', value: accountData.activityAll["app.bsky.feed.post"].onlyReposts },
   ];
 
   // Handler for when a pie slice is hovered
@@ -117,7 +117,7 @@ const PostTypeCard = () => {
             activeIndex={activeIndex}
             activeShape={renderActiveShape}
             data={data}
-            cx="50%"
+            cx="45%"
             cy="50%"
             innerRadius={45}
             outerRadius={80}
