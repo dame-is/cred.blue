@@ -6,24 +6,28 @@ const TestMatter = () => {
   const sceneRef = useRef(null);
 
   useEffect(() => {
-    // Calculate responsive dimensions.
-    // Use either the window dimensions or 500 (whichever is smaller).
-    const width = Math.min(window.innerWidth, 500);
-    const height = Math.min(window.innerHeight, 500);
+    // Set maximum desired dimensions
+    const maxSize = 500;
 
-    // Create engine and set gravity.
+    // Calculate responsive dimensions:
+    // If the viewport is smaller than maxSize, use the viewport dimensions.
+    // Otherwise, use maxSize.
+    const width = Math.min(window.innerWidth, maxSize);
+    const height = Math.min(window.innerHeight, maxSize);
+
+    // Create the Matter.js engine and set gravity.
     const engine = Matter.Engine.create();
     engine.world.gravity.y = 1;
 
-    // Create renderer with responsive dimensions.
+    // Create the renderer using the responsive width and height.
     const render = Matter.Render.create({
       element: sceneRef.current,
       engine: engine,
       options: {
         width,
         height,
-        background: "#rgb(222, 222, 222) 0% 0% / contain",
-        showIds: true,
+        background: "rgb(222, 222, 222)", // Use a light background
+        showAngleIndicator: true,
         wireframes: false,
         pixelRatio: 1,
       },
@@ -37,13 +41,14 @@ const TestMatter = () => {
     // Walls settings.
     const wallThickness = 10;
     const wallRenderOptions = {
-      fillStyle: "#004f84", // Custom wall color.
+      fillStyle: "#004f84", // Custom wall color
     };
 
     // Create walls with custom styling.
-    // (Top wall omitted if you want objects to enter from the top.)
+    // In this example, we'll add three walls: left, right, and bottom.
+    // (The top wall is omitted so that new circles can fall in from above.)
     const walls = [
-      // Bottom wall
+      // Bottom wall.
       Matter.Bodies.rectangle(
         width / 2,
         height,
@@ -51,7 +56,7 @@ const TestMatter = () => {
         wallThickness,
         { isStatic: true, render: wallRenderOptions }
       ),
-      // Left wall
+      // Left wall.
       Matter.Bodies.rectangle(
         0,
         height / 2,
@@ -59,7 +64,7 @@ const TestMatter = () => {
         height,
         { isStatic: true, render: wallRenderOptions }
       ),
-      // Right wall
+      // Right wall.
       Matter.Bodies.rectangle(
         width,
         height / 2,
@@ -80,6 +85,7 @@ const TestMatter = () => {
     render.mouse = mouse;
 
     // Fit the render viewport to the scene.
+    // This makes sure the scene is scaled to appear within the defined bounds.
     Matter.Render.lookAt(render, {
       min: { x: 0, y: 0 },
       max: { x: width, y: height },
@@ -101,7 +107,7 @@ const TestMatter = () => {
       Matter.World.add(engine.world, circle);
     };
 
-    // Add one blue circle per second indefinitely.
+    // Add one blue circle every second indefinitely.
     const intervalId = setInterval(createCircle, 1000);
 
     // Cleanup on unmount.
@@ -116,7 +122,7 @@ const TestMatter = () => {
     };
   }, []);
 
-  // Render a responsive container that centers the canvas and text.
+  // Render a responsive container that centers the canvas and loading text.
   return (
     <div
       style={{
@@ -132,8 +138,8 @@ const TestMatter = () => {
         style={{
           width: "100%",
           maxWidth: "500px",
-          height: "100%",
-          maxHeight: "500px",
+          height: "auto",
+          aspectRatio: "1 / 1",
           boxSizing: "border-box",
         }}
       />
