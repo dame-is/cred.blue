@@ -6,15 +6,19 @@ import "./MatterLoadingAnimation.css";
 const TestMatter = () => {
   const sceneRef = useRef(null);
   const timeoutRef = useRef(null); // Use a ref to store the timeout ID
+  const gravityTimerRef = useRef(null); // Ref to store the gravity update timer
 
   useEffect(() => {
     // Set the fixed dimensions for the canvas.
     const width = 250;
     const height = 250;
 
-    // Create engine and set gravity.
+    // Create engine and set initial gravity.
     const engine = Matter.Engine.create();
+    // Set a gravity scale if desired.
     engine.world.gravity.scale = 0.001;
+    // Start with base gravity values.
+    // We'll update these continuously to simulate water motion.
     engine.world.gravity.x = 0;
     engine.world.gravity.y = 0;
 
@@ -96,7 +100,7 @@ const TestMatter = () => {
       max: { x: width, y: height },
     });
 
-    // Settings for our blue circles.
+    // SETTINGS FOR OUR BLUE CIRCLES.
     const minRadius = 4;
     const maxRadius = 12;
     const growthDuration = 400; // milliseconds over which the circle grows
@@ -173,9 +177,10 @@ const TestMatter = () => {
       requestAnimationFrame(grow);
     };
 
-    // Instead of a fixed interval, schedule the next circle appearance randomly between 100 and 500 ms.
+    // Instead of a fixed interval, schedule the next circle appearance
+    // randomly between 100 and 500 ms.
     const scheduleNextCircle = () => {
-      const delay = Math.random() * (700 - 200) + 100; // Delay between 100 and 500 ms
+      const delay = Math.random() * (500 - 100) + 100; // delay in ms between 100 and 500
       timeoutRef.current = setTimeout(() => {
         createCircle();
         scheduleNextCircle();
@@ -183,9 +188,27 @@ const TestMatter = () => {
     };
     scheduleNextCircle();
 
+    // Now, update gravity dynamically to simulate water-like motion.
+    // For example, let gravity oscillate between two values.
+    // Define base values and amplitudes:
+    const baseGravityX = 0;
+    const amplitudeX = 0.002; // gravity.x will vary by ±0.002 around baseGravityX
+    const baseGravityY = 0.001; // base vertical gravity
+    const amplitudeY = 0.001;   // gravity.y will vary by ±0.001 around baseGravityY
+
+    const updateGravity = () => {
+      const t = performance.now() * 0.001; // convert time to seconds
+      engine.world.gravity.x = baseGravityX + amplitudeX * Math.sin(t);
+      engine.world.gravity.y = baseGravityY + amplitudeY * Math.cos(t);
+    };
+
+    // Update gravity approximately every 16 ms (~60fps).
+    gravityTimerRef.current = setInterval(updateGravity, 16);
+
     // Cleanup on unmount.
     return () => {
       clearTimeout(timeoutRef.current);
+      clearInterval(gravityTimerRef.current);
       Matter.Render.stop(render);
       Matter.Runner.stop(runner);
       Matter.World.clear(engine.world);
@@ -207,8 +230,6 @@ const TestMatter = () => {
       <div
         ref={sceneRef}
         style={{
-          width: "250px",
-          height: "250px",
           boxSizing: "border-box",
         }}
       />
