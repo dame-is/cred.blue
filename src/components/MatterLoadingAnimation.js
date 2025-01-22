@@ -1,9 +1,9 @@
-// src/components/TestMatter.jsx
+// src/components/MatterLoadingAnimation.jsx
 import React, { useEffect, useRef, useState, useMemo } from "react";
 import Matter from "matter-js";
 import "./MatterLoadingAnimation.css";
 
-const TestMatter = () => {
+const MatterLoadingAnimation = () => {
   const sceneRef = useRef(null);
   const timeoutRef = useRef(null); // For circle appearance
   const gravityTimerRef = useRef(null); // For dynamic gravity
@@ -66,6 +66,7 @@ const messages = useMemo(
   // State to control the fade effect.
   const [fade, setFade] = useState(false);
   const [circleCount, setCircleCount] = useState(0); // Track circle count
+  const [specialCircleCount, setSpecialCircleCount] = useState(0); // Special circle count
 
 
   // Update the message on a random interval between 4 and 10 seconds.
@@ -221,9 +222,14 @@ const messages = useMemo(
       const yPos = Math.random() * (height - 2 * targetRadius) + targetRadius;
 
         // Determine if the circle will be special.
-        const isSpecial = Math.random() < 0.2; // 1 in 100 chance
+        const isSpecial = Math.random() < 0.05; // 1 in 100 chance
         const specialFill = "#FFD700"; // Gold color for special circles
         const specialStroke = "#FFA500"; // Orange stroke for special circles
+
+              // Increment special circle count if the circle is special.
+            if (isSpecial) {
+                setSpecialCircleCount((prev) => prev + 1);
+            }
       
       // Create the circle at the random position, with the tiny initial radius.
       const circle = Matter.Bodies.circle(
@@ -325,9 +331,12 @@ const messages = useMemo(
     <p className={`loading-text ${fade ? "fade" : ""}`} style={{ marginTop: "20px", fontSize: "1em" }}>
     {message}<span className="dots"></span>
     </p>
-    <p style={{ fontSize: "1.2em", marginTop: "10px", opacity: "25%" }}>{circleCount}</p>
+    <div style={{ display: "flex", flexDirection: "row", gap: "10px", marginTop: "10px", fontSize: "1.2em", opacity: "25%" }}>
+        <p>{circleCount}</p>
+        <p>{specialCircleCount}</p>
+      </div>
     </div>
   );
 };
 
-export default TestMatter;
+export default MatterLoadingAnimation;
