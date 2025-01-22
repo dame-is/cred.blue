@@ -31,31 +31,24 @@ const UserProfile = () => {
   // Define breakpoints and columns for the grid
   const breakpoints = { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 };
   const cols = { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 };
+  const minW = 2
+  const maxW = 6
+  const minH = 2
+  const maxH = 6
 
   // Set the default layout (ignoring any previously saved layout)
   useEffect(() => {
     setLayouts({
       lg: [
-        { i: "AccountData", x: 0, y: 0, w: 4, h: 4, minW: 3, maxW: 6, minH: 3, maxH: 6 },
-        { i: "NarrativeCard", x: 6, y: 0, w: 4, h: 4, minW: 3, maxW: 6, minH: 3, maxH: 6 },
-        { i: "PostTypeCard", x: 0, y: 4, w: 4, h: 4, minW: 3, maxW: 6, minH: 3, maxH: 6 },
-        { i: "visualization2", x: 4, y: 4, w: 4, h: 4, minW: 3, maxW: 6, minH: 3, maxH: 6 },
-        { i: "recentActivity", x: 8, y: 4, w: 4, h: 4, minW: 3, maxW: 6, minH: 3, maxH: 6 },
-        { i: "connections", x: 0, y: 8, w: 4, h: 4, minW: 3, maxW: 6, minH: 3, maxH: 6 },
-        { i: "settings", x: 4, y: 8, w: 4, h: 4, minW: 3, maxW: 6, minH: 3, maxH: 6 },
-        { i: "extra", x: 8, y: 8, w: 4, h: 4, minW: 3, maxW: 6, minH: 3, maxH: 6 },
-        { i: "additional", x: 0, y: 12, w: 4, h: 4, minW: 3, maxW: 6, minH: 3, maxH: 6 },
-      ],
-      md: [
-        { i: "AccountData", x: 0, y: 0, w: 5, h: 7, minW: 4, maxW: 7, minH: 4, maxH: 8 },
-        { i: "NarrativeCard", x: 5, y: 0, w: 5, h: 7, minW: 4, maxW: 7, minH: 4, maxH: 8 },
-        { i: "PostTypeCard", x: 0, y: 4, w: 5, h: 7, minW: 4, maxW: 7, minMinH: 4, maxH: 8 },
-        { i: "visualization2", x: 5, y: 4, w: 5, h: 7, minW: 4, maxW: 7, minH: 4, maxH: 8 },
-        { i: "recentActivity", x: 0, y: 8, w: 10, h: 7, minW: 8, maxW: 10, minH: 4, maxH: 8 },
-        { i: "connections", x: 0, y: 12, w: 5, h: 7, minW: 4, maxW: 7, minH: 4, maxH: 8 },
-        { i: "settings", x: 5, y: 12, w: 5, h: 7, minW: 4, maxW: 7, minH: 4, maxH: 8 },
-        { i: "extra", x: 0, y: 16, w: 5, h: 7, minW: 4, maxW: 7, minH: 4, maxH: 8 },
-        { i: "additional", x: 5, y: 16, w: 5, h: 7, minW: 4, maxW: 7, minH: 4, maxH: 8 },
+        { i: "AccountData", x: 0, y: 0, w: 4, h: 4, minW, maxW, minH, maxH },
+        { i: "NarrativeCard", x: 6, y: 0, w: 4, h: 4, minW, maxW, minH, maxH },
+        { i: "PostTypeCard", x: 0, y: 4, w: 4, h: 4, minW, maxW, minH, maxH },
+        { i: "visualization2", x: 4, y: 4, w: 4, h: 4, minW, maxW, minH, maxH },
+        { i: "recentActivity", x: 8, y: 4, w: 4, h: 4, minW, maxW, minH, maxH },
+        { i: "connections", x: 0, y: 8, w: 4, h: 4, minW, maxW, minH, maxH },
+        { i: "settings", x: 4, y: 8, w: 4, h: 4, minW, maxW, minH, maxH },
+        { i: "extra", x: 8, y: 8, w: 4, h: 4, minW, maxW, minH, maxH },
+        { i: "additional", x: 0, y: 12, w: 4, h: 4, minW, maxW, minH, maxH },
       ],
       // Define layouts for sm, xs, xxs if needed
     });

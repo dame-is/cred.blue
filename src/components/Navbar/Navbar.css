@@ -4,7 +4,8 @@
 .navbar {
     width: 100%;
     background-color: #ffffff; /* White background */
-    transition: background-color 0.3s ease, border-color 0.3s ease; /* Smooth transitions */
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    border-bottom: 1px solid #ddd;
   }
 
   .cred {
@@ -28,7 +29,7 @@
   }
 
   .dark-mode .blue {
-    color: #3B9AF8;
+    color: #007bff;
   }
 
   .theme-toggle-button:hover {
@@ -110,7 +111,7 @@
   /* Dark Mode Styles */
   .dark-mode .navbar {
     background-color: #2c2c2c; /* Dark background */
-    border-color: #444444; /* Darker border */
+    border-bottom: 1px solid #444;
   }
   
   .dark-mode .navbar-logo a {
@@ -131,7 +132,7 @@
   
   /* Adjust Login Button for Dark Mode */
   .dark-mode .login-button {
-    background-color: #3B9AF8; /* Dark gray background */
+    background-color: #007bff; /* Dark gray background */
     color: #f5f5f5; /* Light text */
   }
   
@@ -216,3 +217,4 @@
 .dark-mode .theme-toggle-button {
   color: #f5f5f5;
 }
+

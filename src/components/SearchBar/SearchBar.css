@@ -40,3 +40,7 @@
     gap: 0px;
   }
   
+  .dark-mode form {
+    background-color: #292929;
+    border: 1px solid #3f3f3f;
+  }

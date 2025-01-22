@@ -1,6 +1,6 @@
 canvas {
     border-radius: 8%;
-    background: #dedede;
+    background: #dedede !important;
     border: 6px solid #bebebe;
     max-width: 100%;
     max-height: 100%;
@@ -8,7 +8,7 @@ canvas {
   }
   
 .dark-mode canvas {
-  background: #4b4b4b;
+  background: #292929 !important;
 }
 
   :root {
@@ -27,7 +27,7 @@ canvas {
   }
 
   .dark-mode .loading-text {
-    color: #0099ffe5;
+    color: #ffffffe5;
   }
   
   .loading-text.fade {

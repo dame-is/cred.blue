@@ -1,10 +1,5 @@
 /* src/components/Footer/Footer.css */
 
-.footer {
-    background-color: #f8f8f8; /* Light gray background */
-    padding: 20px 0;
-  }
-  
   .footer-container {
     max-width: 1200px; /* Max width of the content */
     margin: 0 auto; /* Center the content */
