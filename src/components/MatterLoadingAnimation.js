@@ -31,7 +31,7 @@ const TestMatter = () => {
   useEffect(() => {
     const updateMessage = () => {
       // Random delay between 4000ms and 10000ms.
-      const delay = Math.random() * (10000 - 4000) + 4000;
+      const delay = Math.random() * (5000 - 2000) + 4000;
       messageTimeoutRef.current = setTimeout(() => {
         // Trigger fade-out.
         setFade(true);
@@ -270,9 +270,9 @@ const TestMatter = () => {
           boxSizing: "border-box",
         }}
       />
-      <p className={`loading-text ${fade ? "fade" : ""}`} style={{ marginTop: "20px", fontSize: "1.2em" }}>
-        {message}<span className="dots"></span>
-      </p>
+    <p className={`loading-text ${fade ? "fade" : ""}`} style={{ marginTop: "20px", fontSize: "1.2em" }}>
+    {message}<span className="dots"></span>
+    </p>
     </div>
   );
 };

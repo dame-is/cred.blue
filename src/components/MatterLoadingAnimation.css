@@ -16,35 +16,36 @@ canvas {
     --circle-linewidth: 6;
   }
   
-  /* New styles for the loading text with animated ellipsis */
   .loading-text {
     font-size: 1.2em;
     margin-top: 20px;
     opacity: 1;
     transition: opacity 0.5s ease-in-out;
     position: relative;
-    /* Optional: for smooth text changes */
   }
   
   .loading-text.fade {
     opacity: 0;
   }
   
-  /* The span to show the animated ellipsis */
   .dots::after {
-    content: '';
-    display: inline-block;
-    width: 1em;
-    text-align: left;
-    animation: ellipsis 1s steps(4, end) infinite;
+    content: "."; /* Initial state */
+    animation: ellipsis-dots 1.5s steps(3, end) infinite;
   }
   
-  /* Keyframes for the ellipsis animation */
-  @keyframes ellipsis {
-    0% { width: 0; }
-    25% { width: 0.33em; }
-    50% { width: 0.66em; }
-    75% { width: 1em; }
-    100% { width: 1em; }
+  @keyframes ellipsis-dots {
+    0% {
+      content: ".";
+    }
+    33% {
+      content: "..";
+    }
+    66% {
+      content: "...";
+    }
+    100% {
+      content: ".";
+    }
   }
+  
   
