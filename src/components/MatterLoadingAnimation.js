@@ -23,7 +23,7 @@ const TestMatter = () => {
   );
 
   // State to hold the current message.
-  const [message, setMessage] = useState("Loading account data...");
+  const [message, setMessage] = useState("Loading account data");
   // State to control the fade effect.
   const [fade, setFade] = useState(false);
 

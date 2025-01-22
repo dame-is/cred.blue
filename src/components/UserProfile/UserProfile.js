@@ -26,6 +26,7 @@ const UserProfile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [layouts, setLayouts] = useState({});
+  const [showContent, setShowContent] = useState(false); // Control fade-in for content
 
   // Define breakpoints and columns for the grid
   const breakpoints = { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 };
@@ -81,6 +82,7 @@ const UserProfile = () => {
         setError(err.message);
       } finally {
         setLoading(false);
+        setTimeout(() => setShowContent(true), 500); // Delay content fade-in slightly
       }
     };
 
@@ -90,7 +92,7 @@ const UserProfile = () => {
   // While loading, show our Matter.js visualization.
   if (loading) {
     return (
-      <div className="user-profile loading-container">
+      <div className={`user-profile loading-container ${!loading && "fade-out"}`}>
         <MatterLoadingAnimation />
       </div>
     );
@@ -108,9 +110,8 @@ const UserProfile = () => {
   const { displayName, handle: resolvedHandle } = accountData;
 
   return (
-    // Provide the accountData to any nested components via context.
     <AccountDataContext.Provider value={accountData}>
-      <div className="user-profile">
+      <div className={`user-profile ${showContent ? "fade-in" : "hidden"}`}>
         <div className="user-profile-header">
           <h1>{displayName}</h1>
           <h2>@{resolvedHandle}</h2>

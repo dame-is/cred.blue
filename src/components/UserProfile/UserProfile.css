@@ -33,3 +33,36 @@
       width: 100%;
     }
   }
+
+  .user-profile {
+    margin: auto;
+    max-width: 1200px;
+    margin-top: 40px;
+    opacity: 0; /* Initially hidden */
+    transform: translateY(20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  
+  .user-profile.fade-in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .user-profile.hidden {
+    display: none;
+  }
+  
+  .user-profile.loading-container {
+    opacity: 1;
+    transition: opacity 0.5s ease;
+  }
+  
+  .user-profile.loading-container.fade-out {
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  .user-profile-header {
+    text-align: center;
+  }
+  
