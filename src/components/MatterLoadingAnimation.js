@@ -78,7 +78,7 @@ const TestMatter = () => {
         width,
         height,
         background: "rgb(222, 222, 222)",
-        showIds: false,
+        showIds: true,
         wireframes: false,
         pixelRatio: 'auto',
       },
