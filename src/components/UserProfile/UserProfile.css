@@ -37,7 +37,6 @@
   .user-profile {
     margin: auto;
     max-width: 1200px;
-    margin-top: 40px;
     opacity: 0; /* Initially hidden */
     transform: translateY(20px);
     transition: opacity 0.8s ease, transform 0.8s ease;

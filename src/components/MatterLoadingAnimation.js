@@ -271,7 +271,10 @@ const TestMatter = () => {
         flexDirection: "column",
         alignItems: "center",
         marginLeft: "20px",
-        marginRight: "20px"
+        marginRight: "20px",
+        justifyContent: "center",
+        minHeight: "80vh",
+        background: "none"
       }}
     >
       <div
