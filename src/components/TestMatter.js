@@ -21,7 +21,7 @@ const TestMatter = () => {
       options: {
         width,
         height,
-        background: "#f0f0f0",
+        background: "#rgb(222, 222, 222) 0% 0% / contain",
         showIds: true,
         wireframes: false,
         pixelRatio: 1,
@@ -34,9 +34,9 @@ const TestMatter = () => {
     Matter.Runner.run(runner, engine);
 
     // Walls settings
-    const wallThickness = 25;
+    const wallThickness = 10;
     const wallRenderOptions = {
-      fillStyle: "#2c3e50",   // Custom fill
+      fillStyle: "#004f84",   // Custom fill
     };
 
     // Create walls with custom styling.
@@ -131,7 +131,6 @@ const TestMatter = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        minHeight: "85vh",
       }}
     >
       <div

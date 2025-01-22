@@ -9,7 +9,7 @@ const TestMatterPage = () => {
       flexDirection: "column",
       alignItems: "center",
       justifyContent: "center",
-      minHeight: "100vh",
+      minHeight: "85vh",
       background: "#fafafa",
     }}>
       <TestMatter />
