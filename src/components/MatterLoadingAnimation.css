@@ -30,22 +30,26 @@ canvas {
   
   .dots::after {
     content: ""; /* Initial state */
-    animation: ellipsis-dots 1.5s steps(3, end) infinite;
+    animation: ellipsis-dots 2s steps(4, end) infinite; /* Adjusted duration and steps */
   }
   
   @keyframes ellipsis-dots {
     0% {
       content: "";
     }
-    33% {
+    25% {
       content: ".";
     }
-    66% {
+    50% {
       content: "..";
     }
-    100% {
+    75% {
       content: "...";
     }
+    100% {
+      content: ""; /* Loop back to the initial state */
+    }
   }
+  
   
   

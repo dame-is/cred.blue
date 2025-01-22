@@ -17,7 +17,9 @@ const TestMatter = () => {
       "Prepping analysis summary",
       "Constructing visualizations",
       "Gathering insights",
-      "Analyzing post types and frequencies"
+      "Analyzing post types and frequencies",
+      "Fetching PLC logs",
+      "Compiling engagement stats"
     ],
     []
   );
@@ -262,6 +264,8 @@ const TestMatter = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        marginLeft: "20px",
+        marginRight: "20px"
       }}
     >
       <div
