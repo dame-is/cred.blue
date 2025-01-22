@@ -9,26 +9,57 @@ const TestMatter = () => {
   const gravityTimerRef = useRef(null); // For dynamic gravity
   const messageTimeoutRef = useRef(null); // For updating the message
 
-  // Wrap messages in useMemo so they don't change on every render.
-  const messages = useMemo(
+// Wrap messages in useMemo so they don't change on every render.
+const messages = useMemo(
     () => [
-      "Loading account data",
-      "Searching handle history",
-      "Prepping analysis summary",
-      "Constructing visualizations",
-      "Gathering insights",
-      "Analyzing post types and frequencies",
-      "Fetching PLC logs",
-      "Compiling engagement stats",
-      "Detecting quote posts",
-      "Calculating account age",
-      "Generating Bluesky Score",
-      "Creating Atproto Score",
+      "Counting total posts",
+      "Calculating posts per day",
+      "Measuring replies per day",
+      "Summarizing only replies",
+      "Identifying replies to self",
+      "Comparing self-replies to others' replies",
+      "Estimating reply percentages",
+      "Detecting quotes in posts",
+      "Categorizing quotes by self and others",
+      "Tracking repost activity",
+      "Differentiating self-reposts from others' reposts",
+      "Counting posts with images",
+      "Measuring image posts per day",
+      "Calculating posts with alt text",
+      "Estimating posts without alt text",
+      "Highlighting text-only posts",
+      "Comparing text posts to media posts",
+      "Measuring posts containing mentions",
+      "Tracking posts with links",
+      "Assessing posts with video content",
+      "Calculating engagement metrics",
       "Determining posting style",
-      "Rewarding with badges"
+      "Identifying social interactions",
+      "Analyzing social status trends",
+      "Calculating total collections",
+      "Differentiating Bluesky and non-Bluesky collections",
+      "Comparing records per day",
+      "Tracking Bluesky record percentages",
+      "Measuring non-Bluesky contributions",
+      "Calculating account age in days",
+      "Measuring posts per account age",
+      "Estimating blobs per post",
+      "Evaluating profile completion",
+      "Analyzing follower-to-following ratios",
+      "Compiling narrative insights",
+      "Detecting PLC log operations",
+      "Analyzing handle history and rarity",
+      "Tracking recent profile edits",
+      "Identifying active aliases",
+      "Calculating domain uniqueness",
+      "Generating Bluesky scores",
+      "Calculating Atproto scores",
+      "Evaluating combined credibility scores",
+      "Rewarding badges for activity"
     ],
     []
   );
+  
 
   // State to hold the current message.
   const [message, setMessage] = useState("Loading account data");
@@ -41,7 +72,7 @@ const TestMatter = () => {
   useEffect(() => {
     const updateMessage = () => {
       // Random delay between 4000ms and 10000ms.
-      const delay = Math.random() * (5000 - 2000) + 4000;
+      const delay = Math.random() * (10000 - 1000) + 4000;
       messageTimeoutRef.current = setTimeout(() => {
         // Trigger fade-out.
         setFade(true);
@@ -289,7 +320,7 @@ const TestMatter = () => {
     <p className={`loading-text ${fade ? "fade" : ""}`} style={{ marginTop: "20px", fontSize: "1em" }}>
     {message}<span className="dots"></span>
     </p>
-    <p style={{ fontSize: "1.2em", marginTop: "10px" }}>Circles Created: {circleCount}</p>
+    <p style={{ fontSize: "1.2em", marginTop: "10px" }}>{circleCount}</p>
     </div>
   );
 };
