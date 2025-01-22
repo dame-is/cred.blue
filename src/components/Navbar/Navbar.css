@@ -4,7 +4,6 @@
 .navbar {
     width: 100%;
     background-color: #ffffff; /* White background */
-    border-bottom: 1px solid #eaeaea; /* Light gray border */
     transition: background-color 0.3s ease, border-color 0.3s ease; /* Smooth transitions */
   }
 

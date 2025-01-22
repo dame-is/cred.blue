@@ -102,9 +102,21 @@ ul {
   color: #ffffff; /* Light text */
 }
 
+.dark-mode p {
+  color: #ffffff; /* Light text */
+}
+
 .main-container {
   align-content: center;
   margin: 0 auto;
   max-width: 1200px;
   width: 100%;
+}
+
+.dark-mode .app-container {
+  background-color: black;
+}
+
+.app-container {
+  background-color: #f0f0f0;
 }

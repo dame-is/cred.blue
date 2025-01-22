@@ -2,7 +2,6 @@
 
 .footer {
     background-color: #f8f8f8; /* Light gray background */
-    border-top: 1px solid #eaeaea; /* Light gray border */
     padding: 20px 0;
   }
   
@@ -19,6 +18,10 @@
     margin-bottom: 10px;
   }
   
+  .dark-mode .footer-links {
+    color: white;
+  }
+
   .footer-links a {
     margin: 0 10px; /* Spacing between links */
     text-decoration: none;
