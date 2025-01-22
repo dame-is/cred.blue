@@ -23,7 +23,7 @@ const TestMatter = () => {
         width,
         height,
         background: "#rgb(222, 222, 222) 0% 0% / contain",
-        showIds: true,
+        showIds: false,
         wireframes: false,
         pixelRatio: 1,
       },
@@ -51,7 +51,7 @@ const TestMatter = () => {
         wallThickness,
         { isStatic: true, render: wallRenderOptions }
         ),
-        
+
       // Bottom wall
       Matter.Bodies.rectangle(
         width / 2,
@@ -95,9 +95,9 @@ const TestMatter = () => {
     });
 
     // Settings for our blue circles.
-    const minRadius = 7;
-    const maxRadius = 16;
-    const growthDuration = 600; // milliseconds over which the circle grows
+    const minRadius = 9;
+    const maxRadius = 18;
+    const growthDuration = 400; // milliseconds over which the circle grows
 
     // Bounce easing function.
     function bounceEaseOut(t) {
