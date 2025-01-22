@@ -1,12 +1,16 @@
 canvas {
     border-radius: 8%;
-    background: #ceebff;
+    background: #dedede;
     border: 6px solid #bebebe;
     max-width: 100%;
     max-height: 100%;
     user-select: none;
   }
   
+.dark-mode canvas {
+  background: #4b4b4b;
+}
+
   :root {
     --circle-fill: #004f84e6;
     --circle-stroke: #3498db;
@@ -32,4 +36,20 @@ canvas {
   
   .dots::after {
     content: "..."; /* Initial state */
+  }
+
+  .circle-counters {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    font-size: 1.2em;
+    opacity: 25%;
+  }
+
+  .circle-counters p {
+    margin: 0px;
+  }
+
+  .dark-mode .circle-counters {
+    opacity: 50%;
   }

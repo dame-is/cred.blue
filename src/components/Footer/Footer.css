@@ -17,10 +17,6 @@
   .footer-links {
     margin-bottom: 10px;
   }
-  
-  .dark-mode .footer-links {
-    color: white;
-  }
 
   .footer-links a {
     margin: 0 10px; /* Spacing between links */
@@ -28,6 +24,10 @@
     color: #333333; /* Dark gray color for links */
     font-size: 0.9rem;
     transition: color 0.3s ease;
+  }
+
+  .dark-mode .footer-links a {
+    color: white;
   }
   
   .footer-links a:hover {

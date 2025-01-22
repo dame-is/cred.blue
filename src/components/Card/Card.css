@@ -114,3 +114,8 @@
   border-bottom: 3px solid #ffffff45;
   border-right: 3px solid #ffffff45;
 }
+
+
+.dark-mode .drag-handle {
+  color: white;
+}

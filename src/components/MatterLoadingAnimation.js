@@ -111,7 +111,6 @@ const messages = useMemo(
       options: {
         width,
         height,
-        background: "rgb(222, 222, 222)",
         showIds: false,
         wireframes: false,
         pixelRatio: 'auto',
@@ -331,7 +330,7 @@ const messages = useMemo(
     <p className={`loading-text ${fade ? "fade" : ""}`} style={{ marginTop: "20px", fontSize: "1em" }}>
     {message}<span className="dots"></span>
     </p>
-    <div style={{ display: "flex", flexDirection: "row", gap: "10px", marginTop: "10px", fontSize: "1.2em", opacity: "25%" }}>
+    <div className="circle-counters">
         <p>{circleCount}</p>
         <p>{specialCircleCount}</p>
       </div>
