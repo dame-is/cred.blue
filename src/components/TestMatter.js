@@ -6,15 +6,16 @@ const TestMatter = () => {
   const sceneRef = useRef(null);
 
   useEffect(() => {
-    // Set the fixed dimensions for the canvas.
-    const width = 250;
-    const height = 250;
+    // Calculate responsive dimensions.
+    // Use either the window dimensions or 500 (whichever is smaller).
+    const width = Math.min(window.innerWidth, 500);
+    const height = Math.min(window.innerHeight, 500);
 
     // Create engine and set gravity.
     const engine = Matter.Engine.create();
     engine.world.gravity.y = 1;
 
-    // Create the renderer with a fixed 500x500 dimensions.
+    // Create renderer with responsive dimensions.
     const render = Matter.Render.create({
       element: sceneRef.current,
       engine: engine,
@@ -33,24 +34,15 @@ const TestMatter = () => {
     const runner = Matter.Runner.create();
     Matter.Runner.run(runner, engine);
 
-    // Walls settings
+    // Walls settings.
     const wallThickness = 10;
     const wallRenderOptions = {
-      fillStyle: "#004f84",   // Custom fill
+      fillStyle: "#004f84", // Custom wall color.
     };
 
     // Create walls with custom styling.
-    // In this example, we'll add three walls: left, right, and bottom.
-    // (You can uncomment/add the top wall if needed.)
+    // (Top wall omitted if you want objects to enter from the top.)
     const walls = [
-      // Uncomment to add a top wall:
-      // Matter.Bodies.rectangle(
-      //   width / 2,
-      //   0,
-      //   width,
-      //   wallThickness,
-      //   { isStatic: true, render: wallRenderOptions }
-      // ),
       // Bottom wall
       Matter.Bodies.rectangle(
         width / 2,
@@ -124,20 +116,24 @@ const TestMatter = () => {
     };
   }, []);
 
-  // Render the fixed-size 500x500 canvas and center it with some loading text.
+  // Render a responsive container that centers the canvas and text.
   return (
     <div
       style={{
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh",
       }}
     >
       <div
         ref={sceneRef}
         style={{
-          width: "250px",
-          height: "250px",
+          width: "100%",
+          maxWidth: "500px",
+          height: "100%",
+          maxHeight: "500px",
           boxSizing: "border-box",
         }}
       />
