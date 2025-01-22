@@ -226,7 +226,7 @@ const TestMatter = () => {
     // Instead of a fixed interval, schedule the next circle appearance
     // randomly between 100 and 500 ms.
     const scheduleNextCircle = () => {
-      const delay = Math.random() * (500 - 100) + 100; // delay in ms between 100 and 500
+      const delay = Math.random() * (2500 - 500) + 100; // delay in ms between 100 and 500
       timeoutRef.current = setTimeout(() => {
         createCircle();
         scheduleNextCircle();

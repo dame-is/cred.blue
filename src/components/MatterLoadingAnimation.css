@@ -27,27 +27,5 @@ canvas {
   }
   
   .dots::after {
-    content: ""; /* Initial state */
-    animation: ellipsis-dots 2s steps(4, end) infinite; /* Adjusted duration and steps */
+    content: "..."; /* Initial state */
   }
-  
-  @keyframes ellipsis-dots {
-    0% {
-      content: "";
-    }
-    25% {
-      content: ".";
-    }
-    50% {
-      content: "..";
-    }
-    75% {
-      content: "...";
-    }
-    100% {
-      content: ""; /* Loop back to the initial state */
-    }
-  }
-  
-  
-  
