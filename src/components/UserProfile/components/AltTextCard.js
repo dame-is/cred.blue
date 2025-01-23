@@ -39,6 +39,7 @@ const AltTextCard = () => {
   const computeAnalysis = (postStats) => {
     const {
       postsWithImages,
+      postsCount,
       imagePostsPerDay,
       imagePostsAltText,
       imagePostsNoAltText,
@@ -57,6 +58,7 @@ const AltTextCard = () => {
 
     return {
       postsWithImages,
+      postsCount,
       imagePostsPerDay,
       imagePostsAltText,
       imagePostsNoAltText,
