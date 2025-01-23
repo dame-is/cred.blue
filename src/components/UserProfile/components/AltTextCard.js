@@ -1,6 +1,6 @@
 // frontend/src/components/AltTextCard.jsx
 import React, { useContext, useState, useEffect, useRef } from "react";
-import { AccountDataContext } from "../context/AccountDataContext"; // Adjust the path if needed
+import { AccountDataContext } from "../UserProfile"; // Adjust the path if needed
 import "./AltTextCard.css"; // Optional: add specific styles for AltTextCard
 
 const emojis = ["☹️", "😐", "🙂", "☺️"];
