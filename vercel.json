@@ -1,0 +1,10 @@
+{
+    "redirects": [
+      {
+        "source": "/alt-text",
+        "destination": "https://dame.is/ratingalttext",
+        "permanent": true
+      }
+    ]
+  }
+  

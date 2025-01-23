@@ -3,7 +3,6 @@
 .search-bar-container {
   position: relative;
   width: 100%;
-  max-width: 400px; /* Adjust as needed */
   margin: 0 auto;
 }
 
@@ -23,6 +22,13 @@
   border: 1px solid #ccc;
   border-radius: 5px 0 0 5px;
   border-right: 0px;
+}
+
+form.search-bar {
+  align-items: center;
+  flex-direction: row;
+  gap: 0px;
+  max-width: 100%;
 }
 
 .search-bar button {
@@ -57,19 +63,20 @@ form {
 
 /* New styles for suggestions */
 .suggestions-list {
-  position: absolute;
-  top: 100%;
   left: 0;
-  right: 0;
-  background-color: white;
-  border: 1px solid #ccc;
-  border-top: none;
-  max-height: 200px;
-  overflow-y: auto;
-  z-index: 1000;
   list-style: none;
   margin: 0;
-  padding: 0;
+  overflow-y: auto;
+  padding: 10px;
+  position: absolute;
+  right: 0;
+  top: 112%;
+  z-index: 1000;
+  width: 100%;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px #0000001a;
 }
 
 .suggestion-item {
@@ -83,6 +90,8 @@ form {
 .suggestion-item.active,
 .suggestion-item[aria-selected="true"] {
   background-color: #f0f0f0;
+  border-radius: 6px;
+  border: 1px solid #ddd;
 }
 
 .suggestion-avatar {
@@ -135,4 +144,8 @@ form {
 .dark-mode .suggestion-item.active,
 .dark-mode .suggestion-item[aria-selected="true"] {
   background-color: #555;
+}
+
+.dark-mode .suggestion-handle {
+  color: white;
 }
