@@ -100,27 +100,23 @@ const AltTextCard = () => {
 
   return (
     <div className="alt-text-card">
-      <h2>Alt Text Statistics</h2>
       <ul>
         <li>
-          <strong>Posts with Images:</strong> {analysis.postsWithImages}
+          <strong>{analysis.postsCount}</strong> posts analyzed
         </li>
         <li>
-          <strong>Image Posts per Day:</strong> {analysis.imagePostsPerDay}
+          <strong>{analysis.postsWithImages}</strong> contain images
         </li>
         <li>
-          <strong>Image Posts with Alt Text:</strong> {analysis.imagePostsAltText}
+          <strong>{analysis.imagePostsReplies}</strong> are replies
         </li>
         <li>
-          <strong>Image Posts without Alt Text:</strong> {analysis.imagePostsNoAltText}
-        </li>
-        <li>
-          <strong>Alt Text Percentage:</strong> {analysis.altTextPercentage.toFixed(2)}% {analysis.emoji}
-        </li>
-        <li>
-          <strong>Image Posts (Replies):</strong> {analysis.imagePostsReplies}
+          <strong>{analysis.imagePostsAltText}</strong> posts have alt text
         </li>
       </ul>
+      <h2>
+          <strong>Score: {analysis.altTextPercentage.toFixed(2)}% {analysis.emoji}</strong>
+      </h2>
       <div className="gauge-container">
         <svg className="gauge-svg" viewBox="0 0 400 300">
           {/* Quadrants for the gauge */}

@@ -35,7 +35,7 @@ const UserProfile = () => {
   const minW = 2
   const maxW = 6
   const minH = 2
-  const maxH = 6
+  const maxH = 8
 
   // Set the default layout (ignoring any previously saved layout)
   useEffect(() => {
@@ -44,9 +44,9 @@ const UserProfile = () => {
         { i: "AccountData", x: 0, y: 0, w: 3, h: 6, minW, maxW, minH, maxH },
         { i: "NarrativeCard", x: 3, y: 0, w: 3, h: 6, minW, maxW, minH, maxH },
         { i: "PostTypeCard", x: 6, y: 0, w: 4, h: 6, minW, maxW, minH, maxH },
-        { i: "AltTextCard", x: 5, y: 5, w: 4, h: 4, minW, maxW, minH, maxH },
+        { i: "connections", x: 5, y: 5, w: 4, h: 4, minW, maxW, minH, maxH },
         { i: "recentActivity", x: 8, y: 4, w: 4, h: 4, minW, maxW, minH, maxH },
-        { i: "connections", x: 0, y: 8, w: 4, h: 4, minW, maxW, minH, maxH },
+        { i: "AltTextCard", x: 0, y: 8, w: 4, h: 8, minW, maxW, minH, maxH },
         { i: "settings", x: 4, y: 8, w: 4, h: 4, minW, maxW, minH, maxH },
         { i: "extra", x: 8, y: 8, w: 4, h: 4, minW, maxW, minH, maxH },
         { i: "additional", x: 0, y: 12, w: 4, h: 4, minW, maxW, minH, maxH },
