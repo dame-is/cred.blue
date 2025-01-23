@@ -9,6 +9,7 @@ import MatterLoadingAnimation from "../MatterLoadingAnimation";
 import ProfileCard from "./components/ProfileCard";
 import NarrativeCard from "./components/NarrativeCard";
 import PostTypeCard from "./components/PostTypeCard";
+import AltTextCard from "./components/AltTextCard";
 
 import "react-grid-layout/css/styles.css"; // Import default grid-layout styles
 import "react-resizable/css/styles.css";
@@ -43,7 +44,7 @@ const UserProfile = () => {
         { i: "AccountData", x: 0, y: 0, w: 3, h: 6, minW, maxW, minH, maxH },
         { i: "NarrativeCard", x: 3, y: 0, w: 3, h: 6, minW, maxW, minH, maxH },
         { i: "PostTypeCard", x: 6, y: 0, w: 4, h: 6, minW, maxW, minH, maxH },
-        { i: "visualization2", x: 5, y: 5, w: 4, h: 4, minW, maxW, minH, maxH },
+        { i: "AltTextCard", x: 5, y: 5, w: 4, h: 4, minW, maxW, minH, maxH },
         { i: "recentActivity", x: 8, y: 4, w: 4, h: 4, minW, maxW, minH, maxH },
         { i: "connections", x: 0, y: 8, w: 4, h: 4, minW, maxW, minH, maxH },
         { i: "settings", x: 4, y: 8, w: 4, h: 4, minW, maxW, minH, maxH },
@@ -137,9 +138,9 @@ const UserProfile = () => {
               <PostTypeCard />
             </Card>
           </div>
-          <div key="visualization2" className="grid-item">
-            <Card title="Visualization 2">
-              <p>Chart or graph 2...</p>
+          <div key="AltTextCard" className="grid-item">
+            <Card title="Alt Text Rating">
+              <AltTextCard />
             </Card>
           </div>
           <div key="recentActivity" className="grid-item">
