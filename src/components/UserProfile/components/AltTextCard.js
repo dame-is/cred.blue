@@ -62,7 +62,8 @@ const AltTextCard = () => {
       imagePostsPerDay,
       imagePostsAltText,
       imagePostsNoAltText,
-      altTextPercentage,
+      // **Convert altTextPercentage from decimal to percentage**
+      altTextPercentage: altTextPercentage * 100,
       imagePostsReplies,
       emoji,
     };
@@ -117,7 +118,9 @@ const AltTextCard = () => {
         </li>
       </ul>
       <h2>
-          <strong>Score: {analysis.altTextPercentage.toFixed(2)}% {analysis.emoji}</strong>
+        <strong>
+          Score: {analysis.altTextPercentage.toFixed(2)}% {analysis.emoji}
+        </strong>
       </h2>
       <div className="gauge-container">
         <svg className="gauge-svg" viewBox="0 0 400 300">
@@ -132,6 +135,7 @@ const AltTextCard = () => {
           <g
             id="needle-group"
             className="needle-group"
+            // **Use renderedPercentage directly since it's now a percentage (0-100)**
             transform={`rotate(${(renderedPercentage / 100) * 180},200,300)`}
           >
             {/* Needle from (200,300) to (50,300) */}
@@ -147,11 +151,6 @@ const AltTextCard = () => {
           </g>
         </svg>
       </div>
-      <p>
-        <a href="https://bsky.app/profile/cred.blue" target="_blank" rel="noopener noreferrer">
-          Discover more tools: @cred.blue
-        </a>
-      </p>
     </div>
   );
 };
