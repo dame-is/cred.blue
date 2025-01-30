@@ -12,31 +12,43 @@ const ProfileCard = () => {
   return (
     <>
     <p>
-        <strong>Domain:</strong> {accountData.handle}
-    </p>
-    <p>
         <strong>DID:</strong> {accountData.did}
     </p>
     <p>
-        <strong>Account Created:</strong> {new Date(accountData.createdAt).toLocaleDateString()}{" "}
+        <strong>Domain:</strong> {accountData.handle}
+    </p>
+    <p>
+        <strong>Incept Date:</strong> {new Date(accountData.createdAt).toLocaleDateString()}{" "}
         (<em>
-        {Math.floor(accountData.ageInDays)} days old, {accountData.agePercentage} of Bluesky's history
+        {Math.floor(accountData.ageInDays)} days old, 
         </em>)
     </p>
     <p>
-        <strong>Service Endpoint:</strong> {accountData.serviceEndpoint}
+        <strong>Account Age:</strong> {Math.floor(accountData.ageInDays)} days old
     </p>
     <p>
-        <strong>PDS Type:</strong> {accountData.pdsType}
+        <strong>Contextual Age:</strong> {accountData.agePercentage} of Bluesky's history
     </p>
     <p>
-        <strong>Last Edited:</strong> {accountData.profileEditedDate}
+        <strong>PDS Host:</strong> {accountData.serviceEndpoint}
     </p>
     <p>
-        <strong>Profile Completion:</strong> {accountData.profileCompletion}
+        <strong>PDS Type:</strong> {accountData.pdsType} Server
+    </p>
+    <p>
+        <strong>Profile Edited:</strong> {accountData.profileEditedDate}
+    </p>
+    <p>
+        <strong>Profile State:</strong> {accountData.profileCompletion}
     </p>
     <p>
         <strong>Era:</strong> {accountData.era}
+    </p>
+    <p>
+        <strong>Posting Style:</strong> {accountData.socialStatus}
+    </p>
+    <p>
+        <strong>Social Status:</strong> {accountData.postingStyle}
     </p>
     </>
   );
