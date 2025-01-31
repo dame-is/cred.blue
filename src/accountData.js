@@ -521,15 +521,24 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
     const totalBskyRecordsPerDay = ageInDays ? totalBskyRecords / ageInDays : 0;
     const totalNonBskyRecordsPerDay = ageInDays ? totalNonBskyRecords / ageInDays : 0;
 
-    // Fetch and compute postStats for all-time
-    const postsRecordsAllTime = await fetchRecordsForCollection(
+    // Fetch posts and reposts for all-time and merge them
+    const postsRecordsPostsAllTime = await fetchRecordsForCollection(
       "app.bsky.feed.post",
       () => { updateProgress(); },
       20,
       cutoffTimeAll
     );
+    const postsRecordsRepostsAllTime = await fetchRecordsForCollection(
+      "app.bsky.feed.repost",
+      () => { updateProgress(); },
+      20,
+      cutoffTimeAll
+    );
+    const postsRecordsAllTime = postsRecordsPostsAllTime.concat(postsRecordsRepostsAllTime);
+
     const postsCountAllTime = profile.postsCount || postsRecordsAllTime.length;
     const postStatsAllTime = computePostStats(postsRecordsAllTime, ageInDays);
+
 
     // Parse audit log
     const rawAuditData = await fetchAuditLog();
@@ -645,15 +654,24 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
       const totalBskyRecordsPerDay = days ? totalBskyRecords / days : 0;
       const totalNonBskyRecordsPerDay = days ? totalNonBskyRecords / days : 0;
 
-      // Fetch and compute postStats for the period
-      const postsRecords = await fetchRecordsForCollection(
-        "app.bsky.feed.post",
-        () => { updateProgress(); },
-        20,
-        cutoffTime
-      );
-      const postsCount = postsRecords.length;
-      const postStats = computePostStats(postsRecords, days);
+    // Fetch posts and reposts for the period and merge them
+    const postsRecordsPosts = await fetchRecordsForCollection(
+      "app.bsky.feed.post",
+      () => { updateProgress(); },
+      20,
+      cutoffTime
+    );
+    const postsRecordsReposts = await fetchRecordsForCollection(
+      "app.bsky.feed.repost",
+      () => { updateProgress(); },
+      20,
+      cutoffTime
+    );
+    const postsRecords = postsRecordsPosts.concat(postsRecordsReposts);
+
+    const postsCount = postsRecords.length;
+    const postStats = computePostStats(postsRecords, days);
+
 
       // Compute engagements for the period
       const engagements = await calculateEngagements(cutoffTime);
