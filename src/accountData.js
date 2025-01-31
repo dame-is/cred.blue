@@ -28,8 +28,8 @@ async function getServiceEndpointForDid(resolvedDid) {
 }
 
 /***********************************************************************
-* Global settings and basic caching
-***********************************************************************/
+ * Global settings and basic caching
+ ***********************************************************************/
 let did = null;             // Will be resolved from the handle.
 let handle = null;          // Will be set by the caller (from the URL/searchbar).
 let serviceEndpoint = null; // Will be derived from the PLC Directory.
@@ -40,8 +40,8 @@ const publicServiceEndpoint = "https://public.api.bsky.app";
 const cache = {};
 
 /***********************************************************************
-* Progress Batching Helpers
-***********************************************************************/
+ * Progress Batching Helpers
+ ***********************************************************************/
 // These functions aggregate fast progress increments
 let _actualFetchCount = 0;
 let _displayedFetchCount = 0;
@@ -68,8 +68,8 @@ function finalizeProgress(onProgress) {
 }
 
 /***********************************************************************
-* Helper Functions
-***********************************************************************/
+ * Helper Functions
+ ***********************************************************************/
 async function getJSON(url) {
   try {
     const response = await fetch(url);
@@ -91,8 +91,8 @@ async function cachedGetJSON(url) {
 }
 
 /***********************************************************************
-* Endpoint calls with pagination and caching
-***********************************************************************/
+ * Endpoint calls with pagination and caching
+ ***********************************************************************/
 
 // 1. Fetch Profile data (one-shot)
 async function fetchProfile() {
@@ -101,7 +101,6 @@ async function fetchProfile() {
 }
 
 // 2. Fetch all blobs (paginated)
-// (Not tracked for progress now)
 async function fetchAllBlobsCount(onPage = (inc) => {}, expectedPages = 2) {
   let urlBase = `${serviceEndpoint}/xrpc/com.atproto.sync.listBlobs?did=${encodeURIComponent(did)}&limit=1000`;
   let count = 0, cursor = null;
@@ -123,21 +122,36 @@ async function fetchRepoDescription() {
 }
 
 // 4. Fetch records from a collection (paginated)
-// For endpoints you wish to track, each page calls incrementProgress(1, onPage)
-async function fetchRecordsForCollection(collectionName, onPage = (inc) => {}, expectedPages = 50) {
+async function fetchRecordsForCollection(collectionName, onPage = (inc) => {}, expectedPages = 50, cutoffTime = null) {
   let urlBase = `${serviceEndpoint}/xrpc/com.atproto.repo.listRecords?repo=${encodeURIComponent(did)}&collection=${encodeURIComponent(collectionName)}&limit=100`;
   let records = [];
   let cursor = null;
+  let shouldContinue = true;
   do {
     const url = urlBase + (cursor ? `&cursor=${cursor}` : "");
     const data = await cachedGetJSON(url);
+    let newRecords = []; // Declare newRecords outside the if block
     if (Array.isArray(data.records)) {
-      records = records.concat(data.records);
+      newRecords = data.records;
+      if (cutoffTime) {
+        newRecords = data.records.filter(rec => {
+          const recordTime = new Date(rec.value.createdAt).getTime();
+          return recordTime >= cutoffTime;
+        });
+        // If some records are beyond the cutoff, stop fetching more
+        if (newRecords.length < data.records.length) {
+          shouldContinue = false;
+        }
+      }
+      records = records.concat(newRecords);
     }
     incrementProgress(1, onPage);
     await new Promise((resolve) => setTimeout(resolve, 0));
     cursor = data.cursor || null;
-  } while (cursor);
+    if (cutoffTime && (!cursor || newRecords.length === 0)) {
+      shouldContinue = false;
+    }
+  } while (cursor && shouldContinue);
   return records;
 }
 
@@ -148,7 +162,6 @@ async function fetchAuditLog() {
 }
 
 // 6. Fetch author feed (paginated)
-// Each completed page calls incrementProgress(1, onPage)
 async function fetchAuthorFeed(onPage = (inc) => {}, expectedPages = 10) {
   let urlBase = `${publicServiceEndpoint}/xrpc/app.bsky.feed.getAuthorFeed?actor=${encodeURIComponent(did)}&limit=100`;
   let feed = [];
@@ -167,8 +180,8 @@ async function fetchAuthorFeed(onPage = (inc) => {}, expectedPages = 10) {
 }
 
 /***********************************************************************
-* Calculation Functions
-***********************************************************************/
+ * Calculation Functions
+ ***********************************************************************/
 function roundToTwo(num) {
   return Number(num.toFixed(2));
 }
@@ -324,156 +337,9 @@ function calculateEra(createdAt) {
   return "Unknown";
 }
 
-// Calculate aggregate records for the account by iterating over each collection.
-async function calculateRecordsAggregate(collectionNames, periodDays) {
-  let totalRecords = 0;
-  let totalBskyRecords = 0;
-  let totalNonBskyRecords = 0;
-  const collectionStats = {};
-  const cutoffTime = Date.now() - periodDays * 24 * 60 * 60 * 1000;
-  for (const col of collectionNames) {
-    // Fetch records for the specified collection
-    const recs = await fetchRecordsForCollection(col, () => {});
-    // Filter records based on the cutoff time
-    const filtered = recs.filter((rec) => {
-      const recordTime = new Date(rec.value.createdAt).getTime();
-      return recordTime >= cutoffTime;
-    });
-    const count = filtered.length;
-    const perDay = periodDays ? count / periodDays : 0;
-    collectionStats[col] = {
-      count: roundToTwo(count),
-      perDay: roundToTwo(perDay),
-    };
-    totalRecords += count;
-    if (col.indexOf("app.bsky") !== -1) {
-      totalBskyRecords += count;
-    } else {
-      totalNonBskyRecords += count;
-    }
-  }
-  return { totalRecords, totalBskyRecords, totalNonBskyRecords, collectionStats };
-}
-
-// Calculate engagements for the account using the author feed.
-async function calculateEngagements() {
-  // Use the paginated author feed; expectedPages = 15.
-  const feed = await fetchAuthorFeed(() => {}, 15);
-  let likesReceived = 0;
-  let repostsReceived = 0;
-  let quotesReceived = 0;
-  let repliesReceived = 0;
-  for (const item of feed) {
-    if (item && item.post) {
-      if (JSON.stringify(item.post).includes("#reasonRepost")) continue;
-      likesReceived += item.post.likeCount || 0;
-      repostsReceived += item.post.repostCount || 0;
-      quotesReceived += item.post.quoteCount || 0;
-      repliesReceived += item.post.replyCount || 0;
-    }
-  }
-  return {
-    likesReceived: roundToTwo(likesReceived),
-    repostsReceived: roundToTwo(repostsReceived),
-    quotesReceived: roundToTwo(quotesReceived),
-    repliesReceived: roundToTwo(repliesReceived),
-  };
-}
-
-// Build the analysis narrative paragraphs.
-function buildAnalysisNarrative(accountData) {
-  const { profile, activityAll, alsoKnownAs } = accountData;
-  const { agePercentage } = calculateAge(profile.createdAt);
-  let accountAgeStatement = "";
-  if (agePercentage >= 0.97) {
-      accountAgeStatement = "since the very beginning and is";
-  } else if (agePercentage >= 0.7) {
-      accountAgeStatement = "for a very long time and is";
-  } else if (agePercentage >= 0.5) {
-      accountAgeStatement = "for a long time and is";
-  } else if (agePercentage >= 0.1) {
-      accountAgeStatement = "for awhile and is";
-  } else if (agePercentage >= 0.02) {
-      accountAgeStatement = "for only a short period of time and is";
-  } else {
-      accountAgeStatement = "for barely any time at all";
-  }
-
-  const totalBskyCollections = activityAll.totalBskyCollections || 0;
-  let blueskyFeatures = "";
-  if (totalBskyCollections >= 12) {
-      blueskyFeatures = "they are using all of Bluesky's core features";
-  } else if (totalBskyCollections >= 8) {
-      blueskyFeatures = "they are using most of Bluesky’s core features";
-  } else if (totalBskyCollections >= 3) {
-      blueskyFeatures = "they are using some of Bluesky’s core features";
-  } else {
-      blueskyFeatures = "they haven't used any of Bluesky's core features yet";
-  }
-
-  const totalNonBskyCollections = activityAll.totalNonBskyCollections || 0;
-  const totalNonBskyRecords = activityAll.totalNonBskyRecords || 0;
-  let atprotoEngagement = "";
-  if (totalNonBskyCollections >= 10 && totalNonBskyRecords > 100) {
-      atprotoEngagement = "is extremely engaged, having used many different services or tools";
-  } else if (totalNonBskyCollections >= 5 && totalNonBskyRecords > 50) {
-      atprotoEngagement = "is very engaged, having used many different services or tools";
-  } else if (totalNonBskyCollections > 0 && totalNonBskyRecords > 5) {
-      atprotoEngagement = "has dipped their toes in the water, but has yet to go deeper";
-  } else {
-      atprotoEngagement = "has not yet explored what's out there";
-  }
-
-  let domainHistoryStatement = "";
-  if (alsoKnownAs.totalCustomAkas > 0 && profile.handle.includes("bsky.social")) {
-      domainHistoryStatement = "They've used a custom domain name at some point but are currently using a default Bluesky handle";
-  } else if (!profile.handle.includes("bsky.social")) {
-      domainHistoryStatement = "They currently are using a custom domain";
-  } else if (alsoKnownAs.totalAkas > 2 && !profile.handle.includes("bsky.social")) {
-      domainHistoryStatement = "They have a custom domain set and have a history of using different aliases";
-  } else {
-      domainHistoryStatement = "They still have a default Bluesky handle";
-  }
-
-  let rotationKeyStatement = accountData.rotationKeys === 2 
-      ? "They don't have their own rotation key set" 
-      : "They have their own rotation key set";
-
-  let pdsHostStatement = serviceEndpoint.includes("bsky.network")
-      ? "their PDS is hosted by a Bluesky mushroom"
-      : "their PDS is hosted by either a third-party or themselves";
-
-  // First Paragraph
-  const narrative1 =
-      `${profile.displayName} has been on the network ${accountAgeStatement} ${calculateActivityStatus(activityAll.totalRecordsPerDay)}. ` +
-      `Their profile is ${calculateProfileCompletion(profile)}, and ${blueskyFeatures}. ` +
-      `When it comes to the broader AT Proto ecosystem, this identity ${atprotoEngagement}.`;
-
-  // Second Paragraph
-  const narrative2 =
-      `${domainHistoryStatement} which is ${calculateDomainRarity(profile.handle)}. ` +
-      `${rotationKeyStatement}, and ${pdsHostStatement}.`;
-
-  const era = calculateEra(profile.createdAt);
-  const postingStyle = accountData.postingStyle;
-  const socialStatus = accountData.socialStatus;
-  const mediaType = "a mix of text, images, and video";
-  const followRatio = profile.followersCount > 0 ? roundToTwo(profile.followsCount / profile.followersCount) : 0;
-
-  // Third Paragraph
-  const narrative3 =
-      `${profile.displayName} first joined Bluesky during the ${era} era. ` +
-      `Their style of posting is "${postingStyle}". ` +
-      `Their posts consist of ${mediaType}. ` +
-      `They are a "${socialStatus}" as is indicated by their follower count of ${profile.followersCount} and their follower/following ratio of ${followRatio}.`;
-
-  // **Return an object containing individual narratives**
-  return { narrative1, narrative2, narrative3 };
-}
-
 /***********************************************************************
-* Main Function – Build accountData90Days and accountData30Days JSON objects.
-***********************************************************************/
+ * Main Function – Build accountData90Days and accountData30Days JSON objects.
+ ***********************************************************************/
 export async function loadAccountData(inputHandle, onProgress = () => {}) {
   try {
     // First, set the handle from input and resolve to DID and service endpoint.
@@ -504,7 +370,7 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
     const repoDescription = await fetchRepoDescription();
     let collections = repoDescription.collections || [];
     const totalCollections = collections.length;
-    const bskyCollectionNames = collections.filter((col) => col.indexOf("app.bsky") !== -1);
+    const bskyCollectionNames = collections.filter((col) => col.startsWith("app.bsky"));
     const totalBskyCollections = bskyCollectionNames.length;
     const totalNonBskyCollections = totalCollections - totalBskyCollections;
 
@@ -512,7 +378,6 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
     const targetCollections = [...new Set(collections)];
 
     // 7. Aggregate record counts for overall data (if needed)
-    // Note: If you need overall data beyond 90 and 30 days, keep this.
     const { totalRecords, totalBskyRecords, totalNonBskyRecords, collectionStats } =
       await calculateRecordsAggregate(targetCollections, ageInDays);
     const totalRecordsPerDay = ageInDays ? totalRecords / ageInDays : 0;
@@ -520,16 +385,17 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
     const totalNonBskyRecordsPerDay = ageInDays ? totalNonBskyRecords / ageInDays : 0;
 
     // 8. Detailed post statistics (paginated listRecords for "app.bsky.feed.post")
-    // Expected pages: posts endpoint
     const postsRecords = await fetchRecordsForCollection(
       "app.bsky.feed.post",
       () => { updateProgress(); },
       20
     );
     const postsCount = profile.postsCount || postsRecords.length;
+
     function filterRecords(records, testFunc) {
       return records.filter(testFunc).length;
     }
+
     const onlyPosts = filterRecords(postsRecords, (rec) => !rec.value.hasOwnProperty("reply"));
     const onlyReplies = filterRecords(postsRecords, (rec) => rec.value.hasOwnProperty("reply"));
     const onlyRepliesToSelf = postsRecords.filter((rec) => {
@@ -869,7 +735,7 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
         handleType: profile.handle.includes("bsky.social") ? "default" : "custom",
       },
       analysis: {
-        // **Update the narrative section to include narrative1, narrative2, and narrative3**
+        // Update the narrative section to include narrative1, narrative2, and narrative3
         narrative: {
           narrative1: narrative.narrative1,
           narrative2: narrative.narrative2,
@@ -947,7 +813,7 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
         handleType: profile.handle.includes("bsky.social") ? "default" : "custom",
       },
       analysis: {
-        // **Update the narrative section to include narrative1, narrative2, and narrative3**
+        // Update the narrative section to include narrative1, narrative2, and narrative3
         narrative: {
           narrative1: narrative.narrative1,
           narrative2: narrative.narrative2,
@@ -978,4 +844,154 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
       error: err.toString(),
     };
   }
+}
+
+/***********************************************************************
+ * Additional Helper Functions (if any)
+ ***********************************************************************/
+
+// Build the analysis narrative paragraphs.
+function buildAnalysisNarrative(accountData) {
+  const { profile, activityAll, alsoKnownAs } = accountData;
+  const { agePercentage } = calculateAge(profile.createdAt);
+  let accountAgeStatement = "";
+  if (agePercentage >= 0.97) {
+      accountAgeStatement = "since the very beginning and is";
+  } else if (agePercentage >= 0.7) {
+      accountAgeStatement = "for a very long time and is";
+  } else if (agePercentage >= 0.5) {
+      accountAgeStatement = "for a long time and is";
+  } else if (agePercentage >= 0.1) {
+      accountAgeStatement = "for awhile and is";
+  } else if (agePercentage >= 0.02) {
+      accountAgeStatement = "for only a short period of time and is";
+  } else {
+      accountAgeStatement = "for barely any time at all";
+  }
+
+  const totalBskyCollections = activityAll.totalBskyCollections || 0;
+  let blueskyFeatures = "";
+  if (totalBskyCollections >= 12) {
+      blueskyFeatures = "they are using all of Bluesky's core features";
+  } else if (totalBskyCollections >= 8) {
+      blueskyFeatures = "they are using most of Bluesky’s core features";
+  } else if (totalBskyCollections >= 3) {
+      blueskyFeatures = "they are using some of Bluesky’s core features";
+  } else {
+      blueskyFeatures = "they haven't used any of Bluesky's core features yet";
+  }
+
+  const totalNonBskyCollections = activityAll.totalNonBskyCollections || 0;
+  const totalNonBskyRecords = activityAll.totalNonBskyRecords || 0;
+  let atprotoEngagement = "";
+  if (totalNonBskyCollections >= 10 && totalNonBskyRecords > 100) {
+      atprotoEngagement = "is extremely engaged, having used many different services or tools";
+  } else if (totalNonBskyCollections >= 5 && totalNonBskyRecords > 50) {
+      atprotoEngagement = "is very engaged, having used many different services or tools";
+  } else if (totalNonBskyCollections > 0 && totalNonBskyRecords > 5) {
+      atprotoEngagement = "has dipped their toes in the water, but has yet to go deeper";
+  } else {
+      atprotoEngagement = "has not yet explored what's out there";
+  }
+
+  let domainHistoryStatement = "";
+  if (alsoKnownAs.totalCustomAkas > 0 && profile.handle.includes("bsky.social")) {
+      domainHistoryStatement = "They've used a custom domain name at some point but are currently using a default Bluesky handle";
+  } else if (!profile.handle.includes("bsky.social")) {
+      domainHistoryStatement = "They currently are using a custom domain";
+  } else if (alsoKnownAs.totalAkas > 2 && !profile.handle.includes("bsky.social")) {
+      domainHistoryStatement = "They have a custom domain set and have a history of using different aliases";
+  } else {
+      domainHistoryStatement = "They still have a default Bluesky handle";
+  }
+
+  let rotationKeyStatement = accountData.rotationKeys === 2 
+      ? "They don't have their own rotation key set" 
+      : "They have their own rotation key set";
+
+  let pdsHostStatement = serviceEndpoint.includes("bsky.network")
+      ? "their PDS is hosted by a Bluesky mushroom"
+      : "their PDS is hosted by either a third-party or themselves";
+
+  // First Paragraph
+  const narrative1 =
+      `${profile.displayName} has been on the network ${accountAgeStatement} ${calculateActivityStatus(activityAll.totalRecordsPerDay)}. ` +
+      `Their profile is ${calculateProfileCompletion(profile)}, and ${blueskyFeatures}. ` +
+      `When it comes to the broader AT Proto ecosystem, this identity ${atprotoEngagement}.`;
+
+  // Second Paragraph
+  const narrative2 =
+      `${domainHistoryStatement} which is ${calculateDomainRarity(profile.handle)}. ` +
+      `${rotationKeyStatement}, and ${pdsHostStatement}.`;
+
+  const era = calculateEra(profile.createdAt);
+  const postingStyle = accountData.postingStyle;
+  const socialStatus = accountData.socialStatus;
+  const mediaType = "a mix of text, images, and video";
+  const followRatio = profile.followersCount > 0 ? roundToTwo(profile.followsCount / profile.followersCount) : 0;
+
+  // Third Paragraph
+  const narrative3 =
+      `${profile.displayName} first joined Bluesky during the ${era} era. ` +
+      `Their style of posting is "${postingStyle}". ` +
+      `Their posts consist of ${mediaType}. ` +
+      `They are a "${socialStatus}" as is indicated by their follower count of ${profile.followersCount} and their follower/following ratio of ${followRatio}.`;
+
+  // Return an object containing individual narratives
+  return { narrative1, narrative2, narrative3 };
+}
+
+/***********************************************************************
+ * Function to calculate aggregate records for the account by iterating over each collection.
+ ***********************************************************************/
+async function calculateRecordsAggregate(collectionNames, periodDays) {
+  let totalRecords = 0;
+  let totalBskyRecords = 0;
+  let totalNonBskyRecords = 0;
+  const collectionStats = {};
+  const cutoffTime = Date.now() - periodDays * 24 * 60 * 60 * 1000;
+  for (const col of collectionNames) {
+    // Fetch records for the specified collection with cutoffTime
+    const recs = await fetchRecordsForCollection(col, () => {}, 50, cutoffTime);
+    const count = recs.length;
+    const perDay = periodDays ? count / periodDays : 0;
+    collectionStats[col] = {
+      count: roundToTwo(count),
+      perDay: roundToTwo(perDay),
+    };
+    totalRecords += count;
+    if (col.startsWith("app.bsky")) {
+      totalBskyRecords += count;
+    } else {
+      totalNonBskyRecords += count;
+    }
+  }
+  return { totalRecords, totalBskyRecords, totalNonBskyRecords, collectionStats };
+}
+
+/***********************************************************************
+ * Function to calculate engagements for the account using the author feed.
+ ***********************************************************************/
+async function calculateEngagements() {
+  // Use the paginated author feed; expectedPages = 15.
+  const feed = await fetchAuthorFeed(() => {}, 15);
+  let likesReceived = 0;
+  let repostsReceived = 0;
+  let quotesReceived = 0;
+  let repliesReceived = 0;
+  for (const item of feed) {
+    if (item && item.post) {
+      if (JSON.stringify(item.post).includes("#reasonRepost")) continue;
+      likesReceived += item.post.likeCount || 0;
+      repostsReceived += item.post.repostCount || 0;
+      quotesReceived += item.post.quoteCount || 0;
+      repliesReceived += item.post.replyCount || 0;
+    }
+  }
+  return {
+    likesReceived: roundToTwo(likesReceived),
+    repostsReceived: roundToTwo(repostsReceived),
+    quotesReceived: roundToTwo(quotesReceived),
+    repliesReceived: roundToTwo(repliesReceived),
+  };
 }
