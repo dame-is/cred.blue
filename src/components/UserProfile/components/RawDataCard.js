@@ -1,6 +1,6 @@
 // frontend/src/components/UserProfile/components/RawDataCard.js
 import React, { useContext } from "react";
-import { AccountDataContext } from "../UserProfile"; // Adjust the path if needed
+import { AccountDataContext } from "../UserProfile"; // Ensure the path is correct
 import "./RawDataCard.css"; // Optional: For styling
 
 // Helper function to format dates
@@ -31,7 +31,7 @@ const RenderData = ({ data, indentLevel = 0 }) => {
       return (
         <div style={indentStyle}>
           {Object.entries(data).map(([key, value]) => (
-            <div key={key}>
+            <div key={key} className="data-entry">
               <strong>{key}:</strong>{" "}
               {typeof value === "object" && value !== null ? (
                 <RenderData data={value} indentLevel={indentLevel + 1} />
@@ -49,7 +49,7 @@ const RenderData = ({ data, indentLevel = 0 }) => {
 };
 
 const RawDataCard = () => {
-  const { accountData } = useContext(AccountDataContext); // Destructure for clarity
+  const accountData = useContext(AccountDataContext); // Directly access accountData
 
   if (!accountData) {
     return <div>Loading account data...</div>;

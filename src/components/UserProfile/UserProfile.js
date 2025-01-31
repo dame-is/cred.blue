@@ -44,9 +44,9 @@ const UserProfile = () => {
       lg: [
         { i: "AccountData", x: 0, y: 0, w: 3, h: 6, minW, maxW, minH, maxH },
         { i: "NarrativeCard", x: 3, y: 0, w: 3, h: 6, minW, maxW, minH, maxH },
-        { i: "PostTypeCard", x: 6, y: 0, w: 4, h: 6, minW, maxW, minH, maxH },
-        { i: "RawDataCard", x: 5, y: 5, w: 4, h: 4, minW, maxW, minH, maxH },
-        { i: "AltTextCard", x: 0, y: 8, w: 3, h: 6, minW, maxW, minH, maxH },
+        { i: "PostTypeCard", x: 3, y: 7, w: 4, h: 6, minW, maxW, minH, maxH },
+        { i: "RawDataCard", x: 0, y: 10, w: 4, h: 4, minW, maxW, minH, maxH },
+        { i: "AltTextCard", x: 0, y: 7, w: 3, h: 6, minW, maxW, minH, maxH },
       ],
       // Define layouts for sm, xs, xxs if needed
     });
