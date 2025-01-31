@@ -10,6 +10,7 @@ import ProfileCard from "./components/ProfileCard";
 import NarrativeCard from "./components/NarrativeCard";
 import PostTypeCard from "./components/PostTypeCard";
 import AltTextCard from "./components/AltTextCard";
+import RawDataCard from "./components/RawDataCard";
 
 import "react-grid-layout/css/styles.css"; // Import default grid-layout styles
 import "react-resizable/css/styles.css";
@@ -31,7 +32,7 @@ const UserProfile = () => {
 
   // Define breakpoints and columns for the grid
   const breakpoints = { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 };
-  const cols = { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 };
+  const cols = { lg: 6, md: 10, sm: 6, xs: 4, xxs: 2 };
   const minW = 2
   const maxW = 6
   const minH = 2
@@ -44,12 +45,8 @@ const UserProfile = () => {
         { i: "AccountData", x: 0, y: 0, w: 3, h: 6, minW, maxW, minH, maxH },
         { i: "NarrativeCard", x: 3, y: 0, w: 3, h: 6, minW, maxW, minH, maxH },
         { i: "PostTypeCard", x: 6, y: 0, w: 4, h: 6, minW, maxW, minH, maxH },
-        { i: "connections", x: 5, y: 5, w: 4, h: 4, minW, maxW, minH, maxH },
-        { i: "recentActivity", x: 8, y: 4, w: 4, h: 4, minW, maxW, minH, maxH },
-        { i: "AltTextCard", x: 0, y: 8, w: 4, h: 7, minW, maxW, minH, maxH },
-        { i: "settings", x: 4, y: 8, w: 4, h: 4, minW, maxW, minH, maxH },
-        { i: "extra", x: 8, y: 8, w: 4, h: 4, minW, maxW, minH, maxH },
-        { i: "additional", x: 0, y: 12, w: 4, h: 4, minW, maxW, minH, maxH },
+        { i: "RawDataCard", x: 5, y: 5, w: 4, h: 4, minW, maxW, minH, maxH },
+        { i: "AltTextCard", x: 0, y: 8, w: 3, h: 6, minW, maxW, minH, maxH },
       ],
       // Define layouts for sm, xs, xxs if needed
     });
@@ -143,29 +140,9 @@ const UserProfile = () => {
               <AltTextCard />
             </Card>
           </div>
-          <div key="recentActivity" className="grid-item">
-            <Card title="Recent Activity">
-              <p>Recent user activities...</p>
-            </Card>
-          </div>
-          <div key="connections" className="grid-item">
-            <Card title="Connections">
-              <p>Follower or connection info...</p>
-            </Card>
-          </div>
-          <div key="settings" className="grid-item">
-            <Card title="Settings">
-              <p>Settings details...</p>
-            </Card>
-          </div>
-          <div key="extra" className="grid-item">
-            <Card title="Extra">
-              <p>Extra details...</p>
-            </Card>
-          </div>
-          <div key="additional" className="grid-item">
-            <Card title="Additional Info">
-              <p>Additional information...</p>
+          <div key="RawDataCard" className="grid-item">
+            <Card title="Raw Data">
+              <RawDataCard />
             </Card>
           </div>
         </ResponsiveGridLayout>

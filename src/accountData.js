@@ -200,20 +200,6 @@ function calculateAge(createdAt) {
   return { ageInDays, agePercentage };
 }
   
-function getReplyAuthors(reply) {
-  const authors = [];
-  if (reply.parent && reply.parent.author) {
-    authors.push(reply.parent.author);
-  }
-  if (reply.root && reply.root.author) {
-    authors.push(reply.root.author);
-  }
-  if (reply.grandparent && reply.grandparent.author) {
-    authors.push(reply.grandparent.author);
-  }
-  return authors;
-}
-  
 function calculatePostingStyle(stats) {
   const {
     onlyPostsPerDay = 0,
@@ -276,18 +262,18 @@ function calculateSocialStatus({ ageInDays, followersCount, followsCount }) {
   
 function calculateActivityStatus(rate) {
   if (rate === 0) return "inactive";
-  if (rate > 0 && rate < 1) return "eepy";
-  if (rate >= 1 && rate < 10) return "awake";
-  if (rate >= 10) return "wired";
+  if (rate > 0 && rate < 1) return "barely active";
+  if (rate >= 1 && rate < 10) return "active";
+  if (rate >= 10) return "very active";
 }
   
 function calculateProfileCompletion(profile) {
   const hasDisplayName = Boolean(profile.displayName && profile.displayName.trim());
   const hasBanner = Boolean(profile.banner && profile.banner.trim());
   const hasDescription = Boolean(profile.description && profile.description.trim());
-  if (hasDisplayName && hasBanner && hasDescription) return "Complete";
-  if (hasDisplayName || hasBanner || hasDescription) return "Incomplete";
-  return "Not Started";
+  if (hasDisplayName && hasBanner && hasDescription) return "complete";
+  if (hasDisplayName || hasBanner || hasDescription) return "incomplete";
+  return "not started";
 }
   
 function calculateDomainRarity(handle) {

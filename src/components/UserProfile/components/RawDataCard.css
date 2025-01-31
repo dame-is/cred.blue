@@ -1,0 +1,39 @@
+/* frontend/src/components/UserProfile/components/RawDataCard.css */
+
+.raw-data-card {
+    background-color: #f5f5f5;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+    font-family: Arial, sans-serif;
+    overflow-x: auto;
+  }
+  
+  .raw-data-card h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .raw-data-card strong {
+    color: #555;
+  }
+  
+  .raw-data-card ul {
+    list-style-type: disc;
+    margin-left: 20px;
+  }
+  
+  .raw-data-card ul ul {
+    list-style-type: circle;
+  }
+  
+  .raw-data-card div {
+    margin-bottom: 5px;
+  }
+  
+  .raw-data-card span {
+    color: #666;
+  }
+  
