@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import "./ScoreForm.css";
 
 const ScoreForm = ({ onSubmit, comparisonMode, defaultIdentity, scoreStoredToday }) => {
     const [identity1, setIdentity1] = useState(defaultIdentity || "");
