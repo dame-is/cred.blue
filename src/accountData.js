@@ -56,6 +56,10 @@ function incrementProgress(count = 1, onProgress) {
         _displayedFetchCount += Math.min(1, _actualFetchCount - _displayedFetchCount);
         onProgress(_displayedFetchCount);
       }
+      if (_displayedFetchCount >= _actualFetchCount) {
+        clearInterval(_progressUpdateTimer);
+        _progressUpdateTimer = null;
+      }
     }, 100); // update every 100ms
   }
 }
@@ -91,6 +95,23 @@ async function cachedGetJSON(url) {
 }
 
 /***********************************************************************
+ * Utility Function to Find the First "createdAt" in a Record
+ ***********************************************************************/
+// This function recursively searches for the first occurrence of "createdAt" in an object.
+function findFirstCreatedAt(obj) {
+  if (typeof obj !== 'object' || obj === null) return null;
+  if ('createdAt' in obj) return obj.createdAt;
+  for (const key of Object.keys(obj)) {
+    const value = obj[key];
+    if (typeof value === 'object' && value !== null) {
+      const result = findFirstCreatedAt(value);
+      if (result) return result;
+    }
+  }
+  return null;
+}
+
+/***********************************************************************
  * Endpoint calls with pagination and caching
  ***********************************************************************/
 
@@ -101,13 +122,40 @@ async function fetchProfile() {
 }
 
 // 2. Fetch all blobs (paginated)
-async function fetchAllBlobsCount(onPage = (inc) => {}, expectedPages = 2) {
+async function fetchAllBlobsCount(onPage = (inc) => {}, expectedPages = 2, cutoffTime = null) {
   let urlBase = `${serviceEndpoint}/xrpc/com.atproto.sync.listBlobs?did=${encodeURIComponent(did)}&limit=1000`;
   let count = 0, cursor = null;
   do {
     const url = urlBase + (cursor ? `&cursor=${cursor}` : "");
     const data = await cachedGetJSON(url);
-    count += Array.isArray(data.cids) ? data.cids.length : 0;
+    if (Array.isArray(data.cids)) {
+      for (const cid of data.cids) {
+        // Assuming each CID may have a 'createdAt' field; adjust based on actual API response
+        if (data.blobs && data.blobs[cid]) {
+          const blob = data.blobs[cid];
+          const createdAt = findFirstCreatedAt(blob);
+          if (cutoffTime) {
+            if (createdAt) {
+              const recordTime = new Date(createdAt).getTime();
+              if (recordTime >= cutoffTime) {
+                count += 1;
+              } else {
+                // Since blobs are not necessarily ordered, we continue
+                // Alternatively, if blobs are ordered, we could break here
+              }
+            } else {
+              // No 'createdAt', include it as per instruction
+              count += 1;
+            }
+          } else {
+            count += 1;
+          }
+        } else {
+          // If blob details aren't available, count it by default
+          count += 1;
+        }
+      }
+    }
     onPage(1 / expectedPages);
     await new Promise((resolve) => setTimeout(resolve, 0));
     cursor = data.cursor || null;
@@ -132,18 +180,31 @@ async function fetchRecordsForCollection(collectionName, onPage = (inc) => {}, e
     const data = await cachedGetJSON(url);
     let newRecords = []; // Declare newRecords outside the if block
     if (Array.isArray(data.records)) {
-      newRecords = data.records;
-      if (cutoffTime) {
-        newRecords = data.records.filter(rec => {
-          const recordTime = new Date(rec.value.createdAt).getTime();
-          return recordTime >= cutoffTime;
-        });
-        // If some records are beyond the cutoff, stop fetching more
-        if (newRecords.length < data.records.length) {
-          shouldContinue = false;
+      for (const rec of data.records) {
+        if (cutoffTime) {
+          const createdAt = findFirstCreatedAt(rec);
+          if (createdAt) {
+            const recordTime = new Date(createdAt).getTime();
+            if (recordTime >= cutoffTime) {
+              newRecords.push(rec);
+            } else {
+              // Record is older than cutoff; stop fetching more
+              shouldContinue = false;
+              break;
+            }
+          } else {
+            // No 'createdAt', include it as per instruction
+            newRecords.push(rec);
+          }
+        } else {
+          newRecords.push(rec);
         }
       }
       records = records.concat(newRecords);
+      // If we stopped early due to cutoff, exit the loop
+      if (cutoffTime && newRecords.length < data.records.length) {
+        shouldContinue = false;
+      }
     }
     incrementProgress(1, onPage);
     await new Promise((resolve) => setTimeout(resolve, 0));
@@ -162,22 +223,62 @@ async function fetchAuditLog() {
 }
 
 // 6. Fetch author feed (paginated)
-async function fetchAuthorFeed(onPage = (inc) => {}, expectedPages = 10) {
+async function fetchAuthorFeed(onPage = (inc) => {}, expectedPages = 10, cutoffTime = null) {
   let urlBase = `${publicServiceEndpoint}/xrpc/app.bsky.feed.getAuthorFeed?actor=${encodeURIComponent(did)}&limit=100`;
   let feed = [];
   let cursor = null;
+  let shouldContinue = true;
+
   do {
     const url = urlBase + (cursor ? `&cursor=${cursor}` : "");
     const data = await cachedGetJSON(url);
+    let newRecords = []; // Initialize newRecords for the current page
+
     if (Array.isArray(data.feed)) {
-      feed = feed.concat(data.feed);
+      for (const item of data.feed) {
+        if (cutoffTime) {
+          const createdAt = findFirstCreatedAt(item);
+          if (createdAt) {
+            const itemTime = new Date(createdAt).getTime();
+            if (itemTime >= cutoffTime) {
+              feed.push(item);
+              newRecords.push(item); // Track the added record
+            } else {
+              // Item is older than cutoff; stop fetching more
+              shouldContinue = false;
+              break;
+            }
+          } else {
+            // No 'createdAt', include it as per instruction
+            feed.push(item);
+            newRecords.push(item); // Track the added record
+          }
+        } else {
+          // No cutoffTime specified, include all items
+          feed.push(item);
+          newRecords.push(item); // Track the added record
+        }
+      }
+
+      // If we stopped early due to cutoff, exit the loop
+      if (cutoffTime && newRecords.length < data.feed.length) {
+        shouldContinue = false;
+      }
     }
+
     incrementProgress(1, onPage);
     await new Promise((resolve) => setTimeout(resolve, 0));
     cursor = data.cursor || null;
-  } while (cursor);
+
+    // Corrected condition: Use newRecords.length instead of undefined newRecords
+    if (cutoffTime && (!cursor || newRecords.length === 0)) {
+      shouldContinue = false;
+    }
+  } while (cursor && shouldContinue);
+
   return feed;
 }
+
 
 /***********************************************************************
  * Calculation Functions
@@ -364,7 +465,8 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
     const { ageInDays, agePercentage } = calculateAge(profile.createdAt);
 
     // 4. Fetch blobs (paginated) - not tracked for progress
-    const blobsCount = await fetchAllBlobsCount(() => {}, 10);
+    const cutoffTimeAll = null; // No cutoff for all-time data
+    const blobsCountAll = await fetchAllBlobsCount(() => {}, 10, cutoffTimeAll);
 
     // 5. Repo description (one-shot)
     const repoDescription = await fetchRepoDescription();
@@ -379,16 +481,18 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
 
     // 7. Aggregate record counts for overall data (if needed)
     const { totalRecords, totalBskyRecords, totalNonBskyRecords, collectionStats } =
-      await calculateRecordsAggregate(targetCollections, ageInDays);
+      await calculateRecordsAggregate(targetCollections, ageInDays, cutoffTimeAll);
     const totalRecordsPerDay = ageInDays ? totalRecords / ageInDays : 0;
     const totalBskyRecordsPerDay = ageInDays ? totalBskyRecords / ageInDays : 0;
     const totalNonBskyRecordsPerDay = ageInDays ? totalNonBskyRecords / ageInDays : 0;
 
     // 8. Detailed post statistics (paginated listRecords for "app.bsky.feed.post")
+    const cutoffTimeAllRecords = null; // No cutoff for all-time data
     const postsRecords = await fetchRecordsForCollection(
       "app.bsky.feed.post",
       () => { updateProgress(); },
-      20
+      20,
+      cutoffTimeAllRecords
     );
     const postsCount = profile.postsCount || postsRecords.length;
 
@@ -429,7 +533,8 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
     const repostRecords = await fetchRecordsForCollection(
       "app.bsky.feed.repost",
       () => { updateProgress(); },
-      10
+      10,
+      cutoffTimeAllRecords
     );
     const onlyReposts = repostRecords.length;
     const onlySelfReposts = filterRecords(repostRecords, (rec) => {
@@ -628,10 +733,10 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
           },
         },
         // Move blobs fields under activityAll
-        blobsCount: roundToTwo(blobsCount),
-        blobsPerDay: ageInDays ? roundToTwo(blobsCount / ageInDays) : 0,
-        blobsPerPost: postsCount ? roundToTwo(blobsCount / postsCount) : 0,
-        blobsPerImagePost: postsWithImages ? roundToTwo(blobsCount / postsWithImages) : 0,
+        blobsCount: roundToTwo(blobsCountAll),
+        blobsPerDay: ageInDays ? roundToTwo(blobsCountAll / ageInDays) : 0,
+        blobsPerPost: postsCount ? roundToTwo(blobsCountAll / postsCount) : 0,
+        blobsPerImagePost: postsWithImages ? roundToTwo(blobsCountAll / postsWithImages) : 0,
       },
       postingStyle: postingStyleCalc,
       socialStatus: socialStatusCalc,
@@ -644,24 +749,26 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
 
     // 15. Compute aggregate records for last 30 days (for accountData30Days)
     const periodDays30 = 30;
+    const cutoffTime30 = Date.now() - periodDays30 * 24 * 60 * 60 * 1000;
     const {
       totalRecords: totalRecords30,
       totalBskyRecords: totalBskyRecords30,
       totalNonBskyRecords: totalNonBskyRecords30,
       collectionStats: collectionStats30,
-    } = await calculateRecordsAggregate(targetCollections, periodDays30);
+    } = await calculateRecordsAggregate(targetCollections, periodDays30, cutoffTime30);
     const totalRecordsPerDay30 = periodDays30 ? totalRecords30 / periodDays30 : 0;
     const totalBskyRecordsPerDay30 = periodDays30 ? totalBskyRecords30 / periodDays30 : 0;
     const totalNonBskyRecordsPerDay30 = periodDays30 ? totalNonBskyRecords30 / periodDays30 : 0;
 
     // 16. Compute aggregate records for last 90 days (for accountData90Days)
     const periodDays90 = 90;
+    const cutoffTime90 = Date.now() - periodDays90 * 24 * 60 * 60 * 1000;
     const {
       totalRecords: totalRecords90,
       totalBskyRecords: totalBskyRecords90,
       totalNonBskyRecords: totalNonBskyRecords90,
       collectionStats: collectionStats90,
-    } = await calculateRecordsAggregate(targetCollections, periodDays90);
+    } = await calculateRecordsAggregate(targetCollections, periodDays90, cutoffTime90);
     const totalRecordsPerDay90 = periodDays90 ? totalRecords90 / periodDays90 : 0;
     const totalBskyRecordsPerDay90 = periodDays90 ? totalBskyRecords90 / periodDays90 : 0;
     const totalNonBskyRecordsPerDay90 = periodDays90 ? totalNonBskyRecords90 / periodDays90 : 0;
@@ -721,10 +828,10 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
           },
         },
         // Move blobs fields under activityAll
-        blobsCount: roundToTwo(blobsCount),
-        blobsPerDay: ageInDays ? roundToTwo(blobsCount / ageInDays) : 0,
-        blobsPerPost: postsCount ? roundToTwo(blobsCount / postsCount) : 0,
-        blobsPerImagePost: postsWithImages ? roundToTwo(blobsCount / postsWithImages) : 0,
+        blobsCount: roundToTwo(blobsCountAll),
+        blobsPerDay: ageInDays ? roundToTwo(blobsCountAll / ageInDays) : 0,
+        blobsPerPost: postsCount ? roundToTwo(blobsCountAll / postsCount) : 0,
+        blobsPerImagePost: postsWithImages ? roundToTwo(blobsCountAll / postsWithImages) : 0,
       },
       alsoKnownAs: {
         totalAkas: roundToTwo(totalAkas),
@@ -799,10 +906,10 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
           },
         },
         // Move blobs fields under activityAll
-        blobsCount: roundToTwo(blobsCount),
-        blobsPerDay: ageInDays ? roundToTwo(blobsCount / ageInDays) : 0,
-        blobsPerPost: postsCount ? roundToTwo(blobsCount / postsCount) : 0,
-        blobsPerImagePost: postsWithImages ? roundToTwo(blobsCount / postsWithImages) : 0,
+        blobsCount: roundToTwo(blobsCountAll),
+        blobsPerDay: ageInDays ? roundToTwo(blobsCountAll / ageInDays) : 0,
+        blobsPerPost: postsCount ? roundToTwo(blobsCountAll / postsCount) : 0,
+        blobsPerImagePost: postsWithImages ? roundToTwo(blobsCountAll / postsWithImages) : 0,
       },
       alsoKnownAs: {
         totalAkas: roundToTwo(totalAkas),
@@ -823,7 +930,6 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
     };
 
     // 19. Remove unused aggregation sections (30 and 90 days) as they are now integrated into activityAll.
-
     // 20. Remove activity30Days and activity90Days sections (already removed in the JSON constructions above)
 
     // 21. Build final output JSON.
@@ -944,12 +1050,11 @@ function buildAnalysisNarrative(accountData) {
 /***********************************************************************
  * Function to calculate aggregate records for the account by iterating over each collection.
  ***********************************************************************/
-async function calculateRecordsAggregate(collectionNames, periodDays) {
+async function calculateRecordsAggregate(collectionNames, periodDays, cutoffTime) {
   let totalRecords = 0;
   let totalBskyRecords = 0;
   let totalNonBskyRecords = 0;
   const collectionStats = {};
-  const cutoffTime = Date.now() - periodDays * 24 * 60 * 60 * 1000;
   for (const col of collectionNames) {
     // Fetch records for the specified collection with cutoffTime
     const recs = await fetchRecordsForCollection(col, () => {}, 50, cutoffTime);
@@ -972,9 +1077,9 @@ async function calculateRecordsAggregate(collectionNames, periodDays) {
 /***********************************************************************
  * Function to calculate engagements for the account using the author feed.
  ***********************************************************************/
-async function calculateEngagements() {
+async function calculateEngagements(cutoffTime = null) {
   // Use the paginated author feed; expectedPages = 15.
-  const feed = await fetchAuthorFeed(() => {}, 15);
+  const feed = await fetchAuthorFeed(() => {}, 15, cutoffTime);
   let likesReceived = 0;
   let repostsReceived = 0;
   let quotesReceived = 0;
