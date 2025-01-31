@@ -236,10 +236,23 @@ async function fetchAuthorFeed(onPage = (inc) => {}, expectedPages = 10, cutoffT
 
     if (Array.isArray(data.feed)) {
       for (const item of data.feed) {
+        let createdAt = null;
+
+        // Attempt to directly access 'createdAt' if the structure is known
+        if (item.value && item.value.createdAt) {
+          createdAt = item.value.createdAt;
+        } else {
+          // Fallback to recursive search if 'createdAt' isn't directly accessible
+          createdAt = findFirstCreatedAt(item);
+        }
+
         if (cutoffTime) {
-          const createdAt = findFirstCreatedAt(item);
           if (createdAt) {
             const itemTime = new Date(createdAt).getTime();
+            
+            // Optional: Log the createdAt and itemTime for debugging
+            // console.log(`Item createdAt: ${createdAt}, Item Time: ${itemTime}, Cutoff Time: ${cutoffTime}`);
+
             if (itemTime >= cutoffTime) {
               feed.push(item);
               newRecords.push(item); // Track the added record
@@ -252,6 +265,9 @@ async function fetchAuthorFeed(onPage = (inc) => {}, expectedPages = 10, cutoffT
             // No 'createdAt', include it as per instruction
             feed.push(item);
             newRecords.push(item); // Track the added record
+
+            // Optional: Log that 'createdAt' was not found
+            // console.warn('No createdAt found for item:', item);
           }
         } else {
           // No cutoffTime specified, include all items
@@ -278,6 +294,7 @@ async function fetchAuthorFeed(onPage = (inc) => {}, expectedPages = 10, cutoffT
 
   return feed;
 }
+
 
 
 /***********************************************************************
