@@ -21,13 +21,13 @@ const ProfileCard = () => {
         <strong>Incept Date:</strong> {new Date(accountData.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
     </p>
     <p>
+        <strong>Account Era:</strong> {accountData.era}
+    </p>
+    <p>
         <strong>Account Age:</strong> {Math.floor(accountData.ageInDays)} days old
     </p>
     <p>
         <strong>Contextual Age:</strong> {new Intl.NumberFormat('en-US', { style: 'percent', minimumFractionDigits: 0 }).format(accountData.agePercentage)} of Bluesky's history
-    </p>
-    <p>
-        <strong>Era:</strong> {accountData.era}
     </p>
     <p>
         <strong>Posting Style:</strong> {accountData.postingStyle}
@@ -42,10 +42,10 @@ const ProfileCard = () => {
         <strong>PDS Host:</strong> {accountData.serviceEndpoint}
     </p>
     <p>
-        <strong>Profile Edited:</strong> {accountData.profileEditedDate}
+        <strong>Profile State:</strong> {accountData.profileCompletion}
     </p>
     <p>
-        <strong>Profile State:</strong> {accountData.profileCompletion}
+        <strong>Profile Last Edited:</strong> {accountData.profileEditedDate}
     </p>
     </>
   );

@@ -95,6 +95,28 @@ async function cachedGetJSON(url) {
 }
 
 /***********************************************************************
+ * NEW: Helper Function to Send Account Data to Backend API for Scoring
+ ***********************************************************************/
+async function fetchScores(accountData) {
+  try {
+    const response = await fetch('https://api.cred.blue/api/score', { // Update URL when ready publicly
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(accountData)
+    });
+    if (!response.ok) {
+      throw new Error(`Error: ${response.statusText}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching scores:", error);
+    throw error;
+  }
+}
+
+/***********************************************************************
  * Utility Function to Find the First "createdAt" in a Record
  ***********************************************************************/
 // This function recursively searches for the first occurrence of "createdAt" in an object.
@@ -654,24 +676,23 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
       const totalBskyRecordsPerDay = days ? totalBskyRecords / days : 0;
       const totalNonBskyRecordsPerDay = days ? totalNonBskyRecords / days : 0;
 
-    // Fetch posts and reposts for the period and merge them
-    const postsRecordsPosts = await fetchRecordsForCollection(
-      "app.bsky.feed.post",
-      () => { updateProgress(); },
-      20,
-      cutoffTime
-    );
-    const postsRecordsReposts = await fetchRecordsForCollection(
-      "app.bsky.feed.repost",
-      () => { updateProgress(); },
-      20,
-      cutoffTime
-    );
-    const postsRecords = postsRecordsPosts.concat(postsRecordsReposts);
+      // Fetch posts and reposts for the period and merge them
+      const postsRecordsPosts = await fetchRecordsForCollection(
+        "app.bsky.feed.post",
+        () => { updateProgress(); },
+        20,
+        cutoffTime
+      );
+      const postsRecordsReposts = await fetchRecordsForCollection(
+        "app.bsky.feed.repost",
+        () => { updateProgress(); },
+        20,
+        cutoffTime
+      );
+      const postsRecords = postsRecordsPosts.concat(postsRecordsReposts);
 
-    const postsCount = postsRecords.length;
-    const postStats = computePostStats(postsRecords, days);
-
+      const postsCount = postsRecords.length;
+      const postStats = computePostStats(postsRecords, days);
 
       // Compute engagements for the period
       const engagements = await calculateEngagements(cutoffTime);
@@ -737,8 +758,8 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
         },
       });
 
-      // Assign data to the respective period
-      accountDataPerPeriod[`accountData${label}`] = {
+      // Build the account data object for this period.
+      let periodData = {
         profile: {
           ...profile,
           did: profile.did || did,
@@ -748,6 +769,7 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
         did: profile.did || did,
         profileEditedDate: profile.indexedAt,
         profileCompletion: calculateProfileCompletion(profile),
+        // Temporary score placeholders (will be replaced by backend calculations)
         combinedScore: 250,
         blueskyScore: 150,
         atprotoScore: 100,
@@ -805,6 +827,11 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
           },
         },
       };
+
+      // Send the account data object to the backend scoring API
+      // and update periodData with the scored result.
+      periodData = await fetchScores(periodData);
+      accountDataPerPeriod[`accountData${label}`] = periodData;
     }
 
     // Compute accountData for all-time data (optional, not required per user request)

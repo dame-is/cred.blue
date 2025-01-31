@@ -113,8 +113,11 @@ const UserProfile = () => {
           <h1>{displayName}</h1>
           <h2>@{resolvedHandle}</h2>
           <p><strong>Combined Score: {selectedAccountData.combinedScore}</strong></p>
+          <p><strong>Overall Status: {selectedAccountData.activityAll.activityStatus}</strong></p>
           <p>Bluesky Score: {selectedAccountData.blueskyScore}</p>
+          <p>Bluesky Status: {selectedAccountData.activityAll.bskyActivityStatus}</p>
           <p>Atproto Score: {selectedAccountData.atprotoScore}</p>
+          <p>Atproto Status: {selectedAccountData.activityAll.atprotoActivityStatus}</p>
           
           {/* Toggle Switch */}
           <div className="toggle-switch">
