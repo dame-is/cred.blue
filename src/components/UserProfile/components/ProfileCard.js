@@ -42,10 +42,10 @@ const ProfileCard = () => {
         <strong>Era:</strong> {accountData.era}
     </p>
     <p>
-        <strong>Posting Style:</strong> {accountData.socialStatus}
+        <strong>Posting Style:</strong> {accountData.postingStyle}
     </p>
     <p>
-        <strong>Social Status:</strong> {accountData.postingStyle}
+        <strong>Social Status:</strong> {accountData.socialStatus}
     </p>
     </>
   );

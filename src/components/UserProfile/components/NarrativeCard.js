@@ -5,22 +5,18 @@ import { AccountDataContext } from "../UserProfile"; // Adjust the path if neede
 const NarrativeCard = () => {
   const accountData = useContext(AccountDataContext);
 
-  if (!accountData) {
+  if (!accountData || !accountData.analysis || !accountData.analysis.narrative) {
     return <div>Loading narrative...</div>;
   }
 
+  const { narrative1, narrative2, narrative3 } = accountData.analysis.narrative;
+
   return (
-    <>
-    <p>
-       {accountData.analysis.narrative1}
-    </p>
-    <p>
-       {accountData.analysis.narrative2}
-    </p>
-    <p>
-       {accountData.analysis.narrative3}
-    </p>
-    </>
+    <div className="narrative-card">
+      {narrative1 && <p>{narrative1}</p>}
+      {narrative2 && <p>{narrative2}</p>}
+      {narrative3 && <p>{narrative3}</p>}
+    </div>
   );
 };
 
