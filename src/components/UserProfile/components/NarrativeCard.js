@@ -10,11 +10,17 @@ const NarrativeCard = () => {
   }
 
   return (
-    <div>
-      {accountData.analysis.narrative1 && <p>{accountData.analysis.narrative1}</p>}
-      {accountData.analysis.narrative2 && <p>{accountData.analysis.narrative2}</p>}
-      {accountData.analysis.narrative3 && <p>{accountData.analysis.narrative3}</p>}
-    </div>
+    <>
+    <p>
+       {accountData.analysis.narrative1}
+    </p>
+    <p>
+       {accountData.analysis.narrative2}
+    </p>
+    <p>
+       {accountData.analysis.narrative3}
+    </p>
+    </>
   );
 };
 
