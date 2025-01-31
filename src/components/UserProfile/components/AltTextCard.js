@@ -48,11 +48,11 @@ const AltTextCard = () => {
     } = postStats;
 
     let emoji = emojis[0];
-    if (altTextPercentage >= 75) {
+    if (altTextPercentage >= 0.75) {
       emoji = emojis[3];
-    } else if (altTextPercentage >= 50) {
+    } else if (altTextPercentage >= 0.50) {
       emoji = emojis[2];
-    } else if (altTextPercentage >= 25) {
+    } else if (altTextPercentage >= 0.25) {
       emoji = emojis[1];
     }
 
@@ -119,7 +119,7 @@ const AltTextCard = () => {
       </ul>
       <h2>
         <strong>
-          Score: {analysis.altTextPercentage.toFixed(2)}% {analysis.emoji}
+          Score: {analysis.altTextPercentage.toFixed(0)}% {analysis.emoji}
         </strong>
       </h2>
       <div className="gauge-container">

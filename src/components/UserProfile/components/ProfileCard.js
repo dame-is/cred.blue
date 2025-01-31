@@ -27,18 +27,6 @@ const ProfileCard = () => {
         <strong>Contextual Age:</strong> {new Intl.NumberFormat('en-US', { style: 'percent', minimumFractionDigits: 0 }).format(accountData.agePercentage)} of Bluesky's history
     </p>
     <p>
-        <strong>PDS Host:</strong> {accountData.serviceEndpoint}
-    </p>
-    <p>
-        <strong>PDS Type:</strong> {accountData.pdsType} Server
-    </p>
-    <p>
-        <strong>Profile Edited:</strong> {accountData.profileEditedDate}
-    </p>
-    <p>
-        <strong>Profile State:</strong> {accountData.profileCompletion}
-    </p>
-    <p>
         <strong>Era:</strong> {accountData.era}
     </p>
     <p>
@@ -46,6 +34,18 @@ const ProfileCard = () => {
     </p>
     <p>
         <strong>Social Status:</strong> {accountData.socialStatus}
+    </p>
+    <p>
+        <strong>PDS Type:</strong> {accountData.pdsType} Server
+    </p>
+    <p>
+        <strong>PDS Host:</strong> {accountData.serviceEndpoint}
+    </p>
+    <p>
+        <strong>Profile Edited:</strong> {accountData.profileEditedDate}
+    </p>
+    <p>
+        <strong>Profile State:</strong> {accountData.profileCompletion}
     </p>
     </>
   );
