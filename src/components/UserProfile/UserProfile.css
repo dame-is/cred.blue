@@ -75,3 +75,33 @@
   .react-grid-layout {
     margin-bottom: 40px;
   }
+
+  /* src/components/UserProfile/UserProfile.css */
+
+.user-profile-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.toggle-switch {
+  margin-top: 15px;
+}
+
+.toggle-button {
+  padding: 10px 20px;
+  margin: 0 5px;
+  border: none;
+  background-color: #ddd;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.toggle-button.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.toggle-button:hover {
+  background-color: #ccc;
+}

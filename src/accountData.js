@@ -11,7 +11,7 @@ async function resolveHandleToDid(inputHandle) {
   }
   return data.did;
 }
-  
+
 // Get the service endpoint for the DID by querying the PLC directory.
 async function getServiceEndpointForDid(resolvedDid) {
   const url = `${plcDirectoryEndpoint}/${encodeURIComponent(resolvedDid)}`;
@@ -26,16 +26,16 @@ async function getServiceEndpointForDid(resolvedDid) {
   }
   return svcEntry.serviceEndpoint;
 }
-  
+
 /***********************************************************************
 * Global settings and basic caching
 ***********************************************************************/
-let did = null;            // Will be resolved from the handle.
-let handle = null;         // Will be set by the caller (from the URL/searchbar).
+let did = null;             // Will be resolved from the handle.
+let handle = null;          // Will be set by the caller (from the URL/searchbar).
 let serviceEndpoint = null; // Will be derived from the PLC Directory.
 const plcDirectoryEndpoint = "https://plc.directory";
 const publicServiceEndpoint = "https://public.api.bsky.app";
-  
+
 // Basic in-memory cache to avoid duplicate API calls.
 const cache = {};
 
@@ -66,7 +66,7 @@ function finalizeProgress(onProgress) {
   _displayedFetchCount = _actualFetchCount;
   onProgress(_displayedFetchCount);
 }
-  
+
 /***********************************************************************
 * Helper Functions
 ***********************************************************************/
@@ -82,24 +82,24 @@ async function getJSON(url) {
     throw err;
   }
 }
-  
+
 async function cachedGetJSON(url) {
   if (cache[url]) return cache[url];
   const data = await getJSON(url);
   cache[url] = data;
   return data;
 }
-  
+
 /***********************************************************************
 * Endpoint calls with pagination and caching
 ***********************************************************************/
-  
+
 // 1. Fetch Profile data (one-shot)
 async function fetchProfile() {
   const url = `${publicServiceEndpoint}/xrpc/app.bsky.actor.getProfile?actor=${encodeURIComponent(did)}`;
   return await cachedGetJSON(url);
 }
-  
+
 // 2. Fetch all blobs (paginated)
 // (Not tracked for progress now)
 async function fetchAllBlobsCount(onPage = (inc) => {}, expectedPages = 2) {
@@ -115,13 +115,13 @@ async function fetchAllBlobsCount(onPage = (inc) => {}, expectedPages = 2) {
   } while (cursor);
   return count;
 }
-  
+
 // 3. Fetch repo description (one-shot)
 async function fetchRepoDescription() {
   const url = `${serviceEndpoint}/xrpc/com.atproto.repo.describeRepo?repo=${encodeURIComponent(did)}`;
   return await cachedGetJSON(url);
 }
-  
+
 // 4. Fetch records from a collection (paginated)
 // For endpoints you wish to track, each page calls incrementProgress(1, onPage)
 async function fetchRecordsForCollection(collectionName, onPage = (inc) => {}, expectedPages = 50) {
@@ -140,13 +140,13 @@ async function fetchRecordsForCollection(collectionName, onPage = (inc) => {}, e
   } while (cursor);
   return records;
 }
-  
+
 // 5. Fetch audit log from PLC Directory (one-shot)
 async function fetchAuditLog() {
   const url = `${plcDirectoryEndpoint}/${encodeURIComponent(did)}/log/audit`;
   return await cachedGetJSON(url);
 }
-  
+
 // 6. Fetch author feed (paginated)
 // Each completed page calls incrementProgress(1, onPage)
 async function fetchAuthorFeed(onPage = (inc) => {}, expectedPages = 10) {
@@ -165,14 +165,14 @@ async function fetchAuthorFeed(onPage = (inc) => {}, expectedPages = 10) {
   } while (cursor);
   return feed;
 }
-  
+
 /***********************************************************************
 * Calculation Functions
 ***********************************************************************/
 function roundToTwo(num) {
   return Number(num.toFixed(2));
 }
-  
+
 function roundNumbers(obj) {
   if (Array.isArray(obj)) {
     return obj.map(roundNumbers);
@@ -188,7 +188,7 @@ function roundNumbers(obj) {
     return obj;
   }
 }
-  
+
 function calculateAge(createdAt) {
   const created = new Date(createdAt);
   const today = new Date();
@@ -199,7 +199,7 @@ function calculateAge(createdAt) {
   const agePercentage = daysSinceRef > 0 ? ageInDays / daysSinceRef : 0;
   return { ageInDays, agePercentage };
 }
-  
+
 function calculatePostingStyle(stats) {
   const {
     onlyPostsPerDay = 0,
@@ -248,7 +248,7 @@ function calculatePostingStyle(stats) {
   if (stats.repostOtherPercentage >= 0.5) return "Repost Guy";
   return "Unknown";
 }
-  
+
 function calculateSocialStatus({ ageInDays, followersCount, followsCount }) {
   const followPercentage = followersCount > 0 ? followsCount / followersCount : 0;
   if (ageInDays < 30) return "Newbie";
@@ -259,14 +259,14 @@ function calculateSocialStatus({ ageInDays, followersCount, followsCount }) {
   }
   return "Community Member";
 }
-  
+
 function calculateActivityStatus(rate) {
   if (rate === 0) return "inactive";
   if (rate > 0 && rate < 1) return "barely active";
   if (rate >= 1 && rate < 10) return "active";
   if (rate >= 10) return "very active";
 }
-  
+
 function calculateProfileCompletion(profile) {
   const hasDisplayName = Boolean(profile.displayName && profile.displayName.trim());
   const hasBanner = Boolean(profile.banner && profile.banner.trim());
@@ -275,7 +275,7 @@ function calculateProfileCompletion(profile) {
   if (hasDisplayName || hasBanner || hasDescription) return "incomplete";
   return "not started";
 }
-  
+
 function calculateDomainRarity(handle) {
   if (handle.includes("bsky.social")) {
     const len = handle.length;
@@ -311,7 +311,7 @@ function calculateDomainRarity(handle) {
   }
   return "unknown";
 }
-  
+
 function calculateEra(createdAt) {
   const created = new Date(createdAt);
   if (created >= new Date("2022-11-16") && created <= new Date("2023-01-31")) {
@@ -323,41 +323,18 @@ function calculateEra(createdAt) {
   }
   return "Unknown";
 }
-  
+
 // Calculate aggregate records for the account by iterating over each collection.
-async function calculateRecordsAggregate(collectionNames, ageInDays) {
-  let totalRecords = 0;
-  let totalBskyRecords = 0;
-  let totalNonBskyRecords = 0;
-  const collectionStats = {};
-  for (const col of collectionNames) {
-    // We treat this as one step (no additional page weighting here).
-    const recs = await fetchRecordsForCollection(col, () => {});
-    const count = recs.length;
-    const perDay = ageInDays ? count / ageInDays : 0;
-    collectionStats[col] = {
-      count: roundToTwo(count),
-      perDay: roundToTwo(perDay),
-    };
-    totalRecords += count;
-    if (col.indexOf("app.bsky") !== -1) {
-      totalBskyRecords += count;
-    } else {
-      totalNonBskyRecords += count;
-    }
-  }
-  return { totalRecords, totalBskyRecords, totalNonBskyRecords, collectionStats };
-}
-  
-// Calculate aggregate records for a recent period (in days) by filtering records based on createdAt.
-async function calculateRecordsAggregateForPeriod(collectionNames, periodDays) {
+async function calculateRecordsAggregate(collectionNames, periodDays) {
   let totalRecords = 0;
   let totalBskyRecords = 0;
   let totalNonBskyRecords = 0;
   const collectionStats = {};
   const cutoffTime = Date.now() - periodDays * 24 * 60 * 60 * 1000;
   for (const col of collectionNames) {
+    // Fetch records for the specified collection
     const recs = await fetchRecordsForCollection(col, () => {});
+    // Filter records based on the cutoff time
     const filtered = recs.filter((rec) => {
       const recordTime = new Date(rec.value.createdAt).getTime();
       return recordTime >= cutoffTime;
@@ -377,7 +354,7 @@ async function calculateRecordsAggregateForPeriod(collectionNames, periodDays) {
   }
   return { totalRecords, totalBskyRecords, totalNonBskyRecords, collectionStats };
 }
-  
+
 // Calculate engagements for the account using the author feed.
 async function calculateEngagements() {
   // Use the paginated author feed; expectedPages = 15.
@@ -402,7 +379,7 @@ async function calculateEngagements() {
     repliesReceived: roundToTwo(repliesReceived),
   };
 }
-  
+
 // Build the analysis narrative paragraphs.
 function buildAnalysisNarrative(accountData) {
   const { profile, activityAll, alsoKnownAs } = accountData;
@@ -493,9 +470,9 @@ function buildAnalysisNarrative(accountData) {
   // **Return an object containing individual narratives**
   return { narrative1, narrative2, narrative3 };
 }
-  
+
 /***********************************************************************
-* Main Function – Build accountData and final JSON object.
+* Main Function – Build accountData90Days and accountData30Days JSON objects.
 ***********************************************************************/
 export async function loadAccountData(inputHandle, onProgress = () => {}) {
   try {
@@ -534,7 +511,8 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
     // 6. Build targetCollections array (one-shot)
     const targetCollections = [...new Set(collections)];
 
-    // 7. Aggregate record counts (one-shot)
+    // 7. Aggregate record counts for overall data (if needed)
+    // Note: If you need overall data beyond 90 and 30 days, keep this.
     const { totalRecords, totalBskyRecords, totalNonBskyRecords, collectionStats } =
       await calculateRecordsAggregate(targetCollections, ageInDays);
     const totalRecordsPerDay = ageInDays ? totalRecords / ageInDays : 0;
@@ -608,7 +586,7 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
       );
     });
     // Compute the count of image posts (with alt text) that are replies.
-      const imagePostsReplies = filterRecords(postsRecords, (rec) => {
+    const imagePostsReplies = filterRecords(postsRecords, (rec) => {
       // Check that the post has the image embed type and alt text...
       const isImagePostWithAlt = rec.value.embed &&
       rec.value.embed["$type"] === "app.bsky.embed.images" &&
@@ -616,7 +594,7 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
       rec.value.embed.images.some((img) => img.alt && img.alt.trim());
       // ...and that it is a reply (i.e. the record has a reply property).
       return isImagePostWithAlt && rec.value.reply;
-});
+    });
     const imagePostsNoAltText = postsWithImages - imagePostsAltText;
     const altTextPercentage = postsWithImages ? imagePostsAltText / postsWithImages : 0;
     const postsWithOnlyText = filterRecords(
@@ -758,22 +736,36 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
     const narrative = buildAnalysisNarrative({
       profile,
       activityAll: {
-        totalRecords,
-        totalRecordsPerDay,
-        totalBskyCollections,
-        totalNonBskyCollections,
-        totalBskyRecords,
-        totalBskyRecordsPerDay,
-        totalBskyRecordsPercentage: totalRecords ? totalBskyRecords / totalRecords : 0,
-        totalNonBskyRecords,
-        totalNonBskyRecordsPerDay,
-        totalNonBskyRecordsPercentage: totalRecords ? totalNonBskyRecords / totalRecords : 0,
-        plcOperations,
+        activityStatus: overallActivityStatus,
+        bskyActivityStatus,
+        atprotoActivityStatus,
+        totalCollections: roundToTwo(totalCollections),
+        totalBskyCollections: roundToTwo(totalBskyCollections),
+        totalNonBskyCollections: roundToTwo(totalNonBskyCollections),
+        totalRecords: roundToTwo(totalRecords),
+        totalRecordsPerDay: roundToTwo(totalRecordsPerDay),
+        totalBskyRecords: roundToTwo(totalBskyRecords),
+        totalBskyRecordsPerDay: roundToTwo(totalBskyRecordsPerDay),
+        totalBskyRecordsPercentage: totalRecords ? roundToTwo(totalBskyRecords / totalRecords) : 0,
+        totalNonBskyRecords: roundToTwo(totalNonBskyRecords),
+        totalNonBskyRecordsPerDay: roundToTwo(totalNonBskyRecordsPerDay),
+        totalNonBskyRecordsPercentage: totalRecords ? roundToTwo(totalNonBskyRecords / totalRecords) : 0,
+        plcOperations: roundToTwo(plcOperations),
         ...collectionStats,
         "app.bsky.feed.post": {
           ...postStats,
-          engagementsReceived: engagements, // Integrate the calculated engagements here
+          engagementsReceived: {
+            likesReceived: engagements.likesReceived,
+            repostsReceived: engagements.repostsReceived,
+            quotesReceived: engagements.quotesReceived,
+            repliesReceived: engagements.repliesReceived,
+          },
         },
+        // Move blobs fields under activityAll
+        blobsCount: roundToTwo(blobsCount),
+        blobsPerDay: ageInDays ? roundToTwo(blobsCount / ageInDays) : 0,
+        blobsPerPost: postsCount ? roundToTwo(blobsCount / postsCount) : 0,
+        blobsPerImagePost: postsWithImages ? roundToTwo(blobsCount / postsWithImages) : 0,
       },
       postingStyle: postingStyleCalc,
       socialStatus: socialStatusCalc,
@@ -784,20 +776,32 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
       },
     });
 
-    // 15. Compute aggregate records for last 30 days (one-shot)
-    const periodDays = 30;
+    // 15. Compute aggregate records for last 30 days (for accountData30Days)
+    const periodDays30 = 30;
     const {
       totalRecords: totalRecords30,
       totalBskyRecords: totalBskyRecords30,
       totalNonBskyRecords: totalNonBskyRecords30,
       collectionStats: collectionStats30,
-    } = await calculateRecordsAggregateForPeriod(targetCollections, periodDays);
-    const totalRecordsPerDay30 = periodDays ? totalRecords30 / periodDays : 0;
-    const totalBskyRecordsPerDay30 = periodDays ? totalBskyRecords30 / periodDays : 0;
-    const totalNonBskyRecordsPerDay30 = periodDays ? totalNonBskyRecords30 / periodDays : 0;
+    } = await calculateRecordsAggregate(targetCollections, periodDays30);
+    const totalRecordsPerDay30 = periodDays30 ? totalRecords30 / periodDays30 : 0;
+    const totalBskyRecordsPerDay30 = periodDays30 ? totalBskyRecords30 / periodDays30 : 0;
+    const totalNonBskyRecordsPerDay30 = periodDays30 ? totalNonBskyRecords30 / periodDays30 : 0;
 
-    // 16. Construct final accountData JSON.
-    const accountDataFinal = {
+    // 16. Compute aggregate records for last 90 days (for accountData90Days)
+    const periodDays90 = 90;
+    const {
+      totalRecords: totalRecords90,
+      totalBskyRecords: totalBskyRecords90,
+      totalNonBskyRecords: totalNonBskyRecords90,
+      collectionStats: collectionStats90,
+    } = await calculateRecordsAggregate(targetCollections, periodDays90);
+    const totalRecordsPerDay90 = periodDays90 ? totalRecords90 / periodDays90 : 0;
+    const totalBskyRecordsPerDay90 = periodDays90 ? totalBskyRecords90 / periodDays90 : 0;
+    const totalNonBskyRecordsPerDay90 = periodDays90 ? totalNonBskyRecords90 / periodDays90 : 0;
+
+    // 17. Construct accountData90Days JSON
+    const accountData90Days = {
       profile: {
         ...profile,
         did: profile.did || did,
@@ -816,10 +820,6 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
       createdAt: profile.createdAt,
       ageInDays: roundToTwo(ageInDays),
       agePercentage: roundToTwo(agePercentage),
-      blobsCount: roundToTwo(blobsCount),
-      blobsPerDay: ageInDays ? roundToTwo(blobsCount / ageInDays) : 0,
-      blobsPerPost: postsCount ? roundToTwo(blobsCount / postsCount) : 0,
-      blobsPerImagePost: postsWithImages ? roundToTwo(blobsCount / postsWithImages) : 0,
       followersCount: roundToTwo(profile.followersCount),
       followsCount: roundToTwo(profile.followsCount),
       followPercentage: profile.followersCount ? roundToTwo(profile.followsCount / profile.followersCount) : 0,
@@ -829,22 +829,22 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
       postingStyle: postingStyleCalc,
       socialStatus: socialStatusCalc,
       activityAll: {
-        activityStatus: overallActivityStatus,
-        bskyActivityStatus,
-        atprotoActivityStatus,
+        activityStatus: calculateActivityStatus(totalRecordsPerDay90),
+        bskyActivityStatus: calculateActivityStatus(totalBskyRecordsPerDay90),
+        atprotoActivityStatus: calculateActivityStatus(totalNonBskyRecordsPerDay90),
         totalCollections: roundToTwo(totalCollections),
         totalBskyCollections: roundToTwo(totalBskyCollections),
         totalNonBskyCollections: roundToTwo(totalNonBskyCollections),
-        totalRecords: roundToTwo(totalRecords),
-        totalRecordsPerDay: roundToTwo(totalRecordsPerDay),
-        totalBskyRecords: roundToTwo(totalBskyRecords),
-        totalBskyRecordsPerDay: roundToTwo(totalBskyRecordsPerDay),
-        totalBskyRecordsPercentage: roundToTwo(totalBskyRecords / totalRecords),
-        totalNonBskyRecords: roundToTwo(totalNonBskyRecords),
-        totalNonBskyRecordsPerDay: roundToTwo(totalNonBskyRecordsPerDay),
-        totalNonBskyRecordsPercentage: roundToTwo(totalNonBskyRecords / totalRecords),
+        totalRecords: roundToTwo(totalRecords90),
+        totalRecordsPerDay: roundToTwo(totalRecordsPerDay90),
+        totalBskyRecords: roundToTwo(totalBskyRecords90),
+        totalBskyRecordsPerDay: roundToTwo(totalBskyRecords90 / periodDays90),
+        totalBskyRecordsPercentage: totalRecords90 ? roundToTwo(totalBskyRecords90 / totalRecords90) : 0,
+        totalNonBskyRecords: roundToTwo(totalNonBskyRecords90),
+        totalNonBskyRecordsPerDay: roundToTwo(totalNonBskyRecords90 / periodDays90),
+        totalNonBskyRecordsPercentage: totalRecords90 ? roundToTwo(totalNonBskyRecords90 / totalRecords90) : 0,
         plcOperations: roundToTwo(plcOperations),
-        ...collectionStats,
+        ...collectionStats90,
         "app.bsky.feed.post": {
           ...postStats,
           engagementsReceived: {
@@ -854,16 +854,11 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
             repliesReceived: engagements.repliesReceived,
           },
         },
-      },
-      activityLast30Days: {
-        profileEdited: new Date(profile.indexedAt) > new Date(Date.now() - periodDays * 24 * 60 * 60 * 1000),
-        totalRecords: roundToTwo(totalRecords30),
-        totalRecordsPerDay: roundToTwo(totalRecordsPerDay30),
-        totalBskyRecords: roundToTwo(totalBskyRecords30),
-        totalBskyRecordsPerDay: roundToTwo(totalBskyRecords30 / periodDays),
-        totalNonBskyRecords: roundToTwo(totalNonBskyRecords30),
-        totalNonBskyRecordsPerDay: roundToTwo(totalNonBskyRecords30 / periodDays),
-        collections: collectionStats30,
+        // Move blobs fields under activityAll
+        blobsCount: roundToTwo(blobsCount),
+        blobsPerDay: ageInDays ? roundToTwo(blobsCount / ageInDays) : 0,
+        blobsPerPost: postsCount ? roundToTwo(blobsCount / postsCount) : 0,
+        blobsPerImagePost: postsWithImages ? roundToTwo(blobsCount / postsWithImages) : 0,
       },
       alsoKnownAs: {
         totalAkas: roundToTwo(totalAkas),
@@ -883,13 +878,96 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
       },
     };
 
-    // 17. Build final output JSON.
+    // 18. Construct accountData30Days JSON
+    const accountData30Days = {
+      profile: {
+        ...profile,
+        did: profile.did || did,
+      },
+      displayName: profile.displayName,
+      handle: profile.handle,
+      did: profile.did || did,
+      profileEditedDate: profile.indexedAt,
+      profileCompletion: calculateProfileCompletion(profile),
+      combinedScore: 250,
+      blueskyScore: 150,
+      atprotoScore: 100,
+      scoreGeneratedAt: new Date().toISOString(),
+      serviceEndpoint,
+      pdsType: serviceEndpoint.includes("bsky.network") ? "Bluesky" : "Third-party",
+      createdAt: profile.createdAt,
+      ageInDays: roundToTwo(ageInDays),
+      agePercentage: roundToTwo(agePercentage),
+      followersCount: roundToTwo(profile.followersCount),
+      followsCount: roundToTwo(profile.followsCount),
+      followPercentage: profile.followersCount ? roundToTwo(profile.followsCount / profile.followersCount) : 0,
+      postsCount: roundToTwo(postsCount),
+      rotationKeys: rotationKeysRounded,
+      era: calculateEra(profile.createdAt),
+      postingStyle: postingStyleCalc,
+      socialStatus: socialStatusCalc,
+      activityAll: {
+        activityStatus: calculateActivityStatus(totalRecordsPerDay30),
+        bskyActivityStatus: calculateActivityStatus(totalBskyRecordsPerDay30),
+        atprotoActivityStatus: calculateActivityStatus(totalNonBskyRecordsPerDay30),
+        totalCollections: roundToTwo(totalCollections),
+        totalBskyCollections: roundToTwo(totalBskyCollections),
+        totalNonBskyCollections: roundToTwo(totalNonBskyCollections),
+        totalRecords: roundToTwo(totalRecords30),
+        totalRecordsPerDay: roundToTwo(totalRecordsPerDay30),
+        totalBskyRecords: roundToTwo(totalBskyRecords30),
+        totalBskyRecordsPerDay: roundToTwo(totalBskyRecords30 / periodDays30),
+        totalBskyRecordsPercentage: totalRecords30 ? roundToTwo(totalBskyRecords30 / totalRecords30) : 0,
+        totalNonBskyRecords: roundToTwo(totalNonBskyRecords30),
+        totalNonBskyRecordsPerDay: roundToTwo(totalNonBskyRecords30 / periodDays30),
+        totalNonBskyRecordsPercentage: totalRecords30 ? roundToTwo(totalNonBskyRecords30 / totalRecords30) : 0,
+        plcOperations: roundToTwo(plcOperations),
+        ...collectionStats30,
+        "app.bsky.feed.post": {
+          ...postStats,
+          engagementsReceived: {
+            likesReceived: engagements.likesReceived,
+            repostsReceived: engagements.repostsReceived,
+            quotesReceived: engagements.quotesReceived,
+            repliesReceived: engagements.repliesReceived,
+          },
+        },
+        // Move blobs fields under activityAll
+        blobsCount: roundToTwo(blobsCount),
+        blobsPerDay: ageInDays ? roundToTwo(blobsCount / ageInDays) : 0,
+        blobsPerPost: postsCount ? roundToTwo(blobsCount / postsCount) : 0,
+        blobsPerImagePost: postsWithImages ? roundToTwo(blobsCount / postsWithImages) : 0,
+      },
+      alsoKnownAs: {
+        totalAkas: roundToTwo(totalAkas),
+        activeAkas: activeAkasRounded,
+        totalBskyAkas: roundToTwo(totalBskyAkas),
+        totalCustomAkas: roundToTwo(totalCustomAkas),
+        domainRarity: calculateDomainRarity(profile.handle),
+        handleType: profile.handle.includes("bsky.social") ? "default" : "custom",
+      },
+      analysis: {
+        // **Update the narrative section to include narrative1, narrative2, and narrative3**
+        narrative: {
+          narrative1: narrative.narrative1,
+          narrative2: narrative.narrative2,
+          narrative3: narrative.narrative3,
+        },
+      },
+    };
+
+    // 19. Remove unused aggregation sections (30 and 90 days) as they are now integrated into activityAll.
+
+    // 20. Remove activity30Days and activity90Days sections (already removed in the JSON constructions above)
+
+    // 21. Build final output JSON.
     // Finalize progress so the UI shows the full count.
     finalizeProgress(onProgress);
 
     const finalOutput = {
       message: "accountData retrieved successfully",
-      accountData: accountDataFinal,
+      accountData90Days: accountData90Days,
+      accountData30Days: accountData30Days,
     };
 
     return roundNumbers(finalOutput);
