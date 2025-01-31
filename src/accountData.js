@@ -733,12 +733,8 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
     const rotationKeysRounded = roundToTwo(rotationKeys);
     const activeAkasRounded = roundToTwo(activeAkas);
 
-    // 10. Compute engagements (paginated author feed)
-    // Expected pages: author feed endpoint
-    const engagementsReceived = await fetchAuthorFeed(
-      () => { updateProgress(); },
-      15
-    );
+    // 10. Compute engagements using calculateEngagements
+    const engagements = await calculateEngagements();
 
     // 11. Compute overall activity statuses (one-shot)
     const overallActivityStatus = calculateActivityStatus(totalRecordsPerDay);
@@ -776,7 +772,7 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
         ...collectionStats,
         "app.bsky.feed.post": {
           ...postStats,
-          engagementsReceived,
+          engagementsReceived: engagements, // Integrate the calculated engagements here
         },
       },
       postingStyle: postingStyleCalc,
@@ -851,7 +847,12 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
         ...collectionStats,
         "app.bsky.feed.post": {
           ...postStats,
-          engagementsReceived,
+          engagementsReceived: {
+            likesReceived: engagements.likesReceived,
+            repostsReceived: engagements.repostsReceived,
+            quotesReceived: engagements.quotesReceived,
+            repliesReceived: engagements.repliesReceived,
+          },
         },
       },
       activityLast30Days: {
