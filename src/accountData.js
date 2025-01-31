@@ -285,9 +285,9 @@ async function resolveHandleToDid(inputHandle) {
     const hasDisplayName = Boolean(profile.displayName && profile.displayName.trim());
     const hasBanner = Boolean(profile.banner && profile.banner.trim());
     const hasDescription = Boolean(profile.description && profile.description.trim());
-    if (hasDisplayName && hasBanner && hasDescription) return "complete";
-    if (hasDisplayName || hasBanner || hasDescription) return "incomplete";
-    return "not started";
+    if (hasDisplayName && hasBanner && hasDescription) return "Complete";
+    if (hasDisplayName || hasBanner || hasDescription) return "Incomplete";
+    return "Not Started";
   }
       
   function calculateDomainRarity(handle) {
@@ -329,13 +329,13 @@ async function resolveHandleToDid(inputHandle) {
   function calculateEra(createdAt) {
     const created = new Date(createdAt);
     if (created >= new Date("2022-11-16") && created <= new Date("2023-01-31")) {
-      return "pre-history";
+      return "Pre-history";
     } else if (created >= new Date("2023-02-01") && created <= new Date("2024-01-31")) {
-      return "invite-only";
+      return "Invite-only";
     } else if (created > new Date("2024-01-31")) {
-      return "public-release";
+      return "Public release";
     }
-    return "unknown";
+    return "Unknown";
   }
       
   // Calculate aggregate records for the account by iterating over each collection.
@@ -417,84 +417,88 @@ async function resolveHandleToDid(inputHandle) {
     };
   }
       
-  // Build the analysis narrative paragraphs.
-  function buildAnalysisNarrative(accountData) {
-    const { profile, activityAll, alsoKnownAs } = accountData;
-    const { agePercentage } = calculateAge(profile.createdAt);
-    let accountAgeStatement = "";
-    if (agePercentage >= 0.97) {
-      accountAgeStatement = "since the very beginning and is";
-    } else if (agePercentage >= 0.7) {
-      accountAgeStatement = "for a very long time and is";
-    } else if (agePercentage >= 0.5) {
-      accountAgeStatement = "for a long time and is";
-    } else if (agePercentage >= 0.1) {
-      accountAgeStatement = "for awhile and is";
-    } else if (agePercentage >= 0.02) {
-      accountAgeStatement = "for only a short period of time and is";
-    } else {
-      accountAgeStatement = "for barely any time at all";
-    }
-    const totalBskyCollections = activityAll.totalBskyCollections || 0;
-    let blueskyFeatures = "";
-    if (totalBskyCollections >= 12) {
-      blueskyFeatures = "they are using all of Bluesky's core features";
-    } else if (totalBskyCollections >= 8) {
-      blueskyFeatures = "they are using most of Bluesky’s core features";
-    } else if (totalBskyCollections >= 3) {
-      blueskyFeatures = "they are using some of Bluesky’s core features";
-    } else {
-      blueskyFeatures = "they haven't used any of Bluesky's core features yet";
-    }
-    const totalNonBskyCollections = activityAll.totalNonBskyCollections || 0;
-    const totalNonBskyRecords = activityAll.totalNonBskyRecords || 0;
-    let atprotoEngagement = "";
-    if (totalNonBskyCollections >= 10 && totalNonBskyRecords > 100) {
-      atprotoEngagement = "is extremely engaged, having used many different services or tools";
-    } else if (totalNonBskyCollections >= 5 && totalNonBskyRecords > 50) {
-      atprotoEngagement = "is very engaged, having used many different services or tools";
-    } else if (totalNonBskyCollections > 0 && totalNonBskyRecords > 5) {
-      atprotoEngagement = "has dipped their toes in the water, but has yet to go deeper";
-    } else {
-      atprotoEngagement = "has not yet explored what's out there";
-    }
-    let domainHistoryStatement = "";
-    if (alsoKnownAs.totalCustomAkas > 0 && profile.handle.includes("bsky.social")) {
-      domainHistoryStatement = "They've used a custom domain name at some point but are currently using a default Bluesky handle";
-    } else if (!profile.handle.includes("bsky.social")) {
-      domainHistoryStatement = "They currently are using a custom domain";
-    } else if (alsoKnownAs.totalAkas > 2 && !profile.handle.includes("bsky.social")) {
-      domainHistoryStatement = "They have a custom domain set and have a history of using different aliases";
-    } else {
-      domainHistoryStatement = "They still have a default Bluesky handle";
-    }
-    let rotationKeyStatement = accountData.rotationKeys === 2 
-      ? "They don't have their own rotation key set" 
-      : "They have their own rotation key set";
-    let pdsHostStatement = serviceEndpoint.includes("bsky.network")
-      ? "their PDS is hosted by a Bluesky mushroom"
-      : "their PDS is hosted by either a third-party or themselves";
-        
-    const narrative1 =
-      `${profile.displayName} has been on the network ${accountAgeStatement} ${calculateActivityStatus(activityAll.totalRecordsPerDay)}. ` +
-      `Their profile is ${calculateProfileCompletion(profile)}, and ${blueskyFeatures}. ` +
-      `When it comes to the broader AT Proto ecosystem, this identity ${atprotoEngagement}. ` +
-      `${domainHistoryStatement} which is ${calculateDomainRarity(profile.handle)}. ` +
-      `${rotationKeyStatement}, and ${pdsHostStatement}.`;
-        
-    const era = calculateEra(profile.createdAt);
-    const postingStyle = accountData.postingStyle;
-    const socialStatus = accountData.socialStatus;
-    const mediaType = "a mix of text, images, and video";
-    const followRatio = profile.followersCount > 0 ? roundToTwo(profile.followsCount / profile.followersCount) : 0;
-    const narrative2 =
-      `${profile.displayName} first joined Bluesky during the ${era} era. ` +
-      `Their style of posting is "${postingStyle}". ` +
-      `Their posts consist of ${mediaType}. ` +
-      `They are ${socialStatus} as is indicated by their follower count of ${profile.followersCount} and their follower/following ratio of ${followRatio}.`;
-        
-    return narrative1 + "\n\n" + narrative2;
+// Build the analysis narrative paragraphs.
+function buildAnalysisNarrative(accountData) {
+  const { profile, activityAll, alsoKnownAs, serviceEndpoint } = accountData;
+  const { agePercentage } = calculateAge(profile.createdAt);
+
+  let accountAgeStatement = "";
+  if (agePercentage >= 0.97) {
+    accountAgeStatement = "since the very beginning and is";
+  } else if (agePercentage >= 0.7) {
+    accountAgeStatement = "for a very long time and is";
+  } else if (agePercentage >= 0.5) {
+    accountAgeStatement = "for a long time and is";
+  } else if (agePercentage >= 0.1) {
+    accountAgeStatement = "for awhile and is";
+  } else if (agePercentage >= 0.02) {
+    accountAgeStatement = "for only a short period of time and is";
+  } else {
+    accountAgeStatement = "for barely any time at all";
   }
+
+  const totalBskyCollections = activityAll.totalBskyCollections || 0;
+  let blueskyFeatures = "";
+  if (totalBskyCollections >= 12) {
+    blueskyFeatures = "they are using all of Bluesky's core features";
+  } else if (totalBskyCollections >= 8) {
+    blueskyFeatures = "they are using most of Bluesky’s core features";
+  } else if (totalBskyCollections >= 3) {
+    blueskyFeatures = "they are using some of Bluesky’s core features";
+  } else {
+    blueskyFeatures = "they haven't used any of Bluesky's core features yet";
+  }
+
+  const totalNonBskyCollections = activityAll.totalNonBskyCollections || 0;
+  const totalNonBskyRecords = activityAll.totalNonBskyRecords || 0;
+  let atprotoEngagement = "";
+  if (totalNonBskyCollections >= 10 && totalNonBskyRecords > 100) {
+    atprotoEngagement = "is extremely engaged, having used many different services or tools";
+  } else if (totalNonBskyCollections >= 5 && totalNonBskyRecords > 50) {
+    atprotoEngagement = "is very engaged, having used many different services or tools";
+  } else if (totalNonBskyCollections > 0 && totalNonBskyRecords > 5) {
+    atprotoEngagement = "has dipped their toes in the water, but has yet to go deeper";
+  } else {
+    atprotoEngagement = "has not yet explored what's out there";
+  }
+
+  let domainHistoryStatement = "";
+  if (alsoKnownAs.totalCustomAkas > 0 && profile.handle.includes("bsky.social")) {
+    domainHistoryStatement = "They've used a custom domain name at some point but are currently using a default Bluesky handle";
+  } else if (!profile.handle.includes("bsky.social")) {
+    domainHistoryStatement = "They currently are using a custom domain";
+  } else if (alsoKnownAs.totalAkas > 2 && !profile.handle.includes("bsky.social")) {
+    domainHistoryStatement = "They have a custom domain set and have a history of using different aliases";
+  } else {
+    domainHistoryStatement = "They still have a default Bluesky handle";
+  }
+
+  let rotationKeyStatement = accountData.rotationKeys === 2 
+    ? "They don't have their own rotation key set" 
+    : "They have their own rotation key set";
+  let pdsHostStatement = serviceEndpoint.includes("bsky.network")
+    ? "their PDS is hosted by a Bluesky mushroom"
+    : "their PDS is hosted by either a third-party or themselves";
+
+  // Split narrative into multiple paragraphs
+  const narrativeParagraphs = [
+    `${profile.displayName} has been on the network ${accountAgeStatement} ${calculateActivityStatus(activityAll.totalRecordsPerDay)}. ` +
+    `Their profile is ${calculateProfileCompletion(profile)}, and ${blueskyFeatures}. ` +
+    `When it comes to the broader AT Proto ecosystem, this identity ${atprotoEngagement}.`,
+
+    `${domainHistoryStatement}, which is ${calculateDomainRarity(profile.handle)}. ` +
+    `${rotationKeyStatement}, and ${pdsHostStatement}.`,
+
+    `${profile.displayName} first joined Bluesky during the ${calculateEra(profile.createdAt)} era. ` +
+    `Their style of posting is "${accountData.postingStyle}". ` +
+    `Their posts consist of a mix of text, images, and video. ` +
+    `They are a "${accountData.socialStatus}" as is indicated by their follower count of ${profile.followersCount} ` +
+    `and their follower/following ratio of ${profile.followersCount > 0 ? roundToTwo(profile.followsCount / profile.followersCount) : 0}.`
+  ];
+
+  return narrativeParagraphs;
+}
+
       
   /***********************************************************************
    * Main Function – Build accountData and final JSON object.
