@@ -191,7 +191,6 @@ async function fetchRepoDescription() {
   return await cachedGetJSON(url);
 }
 
-// 4. Fetch records from a collection (paginated)
 async function fetchRecordsForCollection(collectionName, onPage = (inc) => {}, expectedPages = 50, cutoffTime = null) {
   const urlBase = `${serviceEndpoint}/xrpc/com.atproto.repo.listRecords?repo=${encodeURIComponent(did)}&collection=${encodeURIComponent(collectionName)}&limit=100`;
   let records = [];
@@ -201,64 +200,57 @@ async function fetchRecordsForCollection(collectionName, onPage = (inc) => {}, e
   do {
     const url = cursor ? `${urlBase}&cursor=${cursor}` : urlBase;
     const data = await cachedGetJSON(url);
-    let newRecords = []; // Initialize newRecords for the current page
 
-    if (Array.isArray(data.records)) {
-      for (const rec of data.records) {
-        let createdAt = null;
+    // If no records, break out of the loop.
+    if (!Array.isArray(data.records) || data.records.length === 0) {
+      break;
+    }
 
-        // **Explicitly handle 'app.bsky.feed.post' collection**
-        if (collectionName === "app.bsky.feed.post" && rec.value && rec.value.createdAt) {
-          createdAt = rec.value.createdAt;
-        } else {
-          // **Use recursive search for other collections**
-          createdAt = findFirstCreatedAt(rec);
-        }
-
-        if (cutoffTime) {
-          if (createdAt) {
-            const recordTime = new Date(createdAt).getTime();
-
-            // Optional: Debugging log to verify 'createdAt' extraction
-            // console.log(`Record URI: ${rec.uri || rec['0']?.uri}, createdAt: ${createdAt}, recordTime: ${recordTime}, cutoffTime: ${cutoffTime}`);
-
-            if (recordTime >= cutoffTime) {
-              newRecords.push(rec);
-            } else {
-              // Record is older than cutoff; stop fetching more
-              shouldContinue = false;
-              break;
-            }
-          } else {
-            // No 'createdAt', include it as per instruction
-            newRecords.push(rec);
-          }
-        } else {
-          // No cutoffTime specified, include all records
-          newRecords.push(rec);
-        }
+    let newRecords = [];
+    
+    // Process each record in the current page.
+    for (const rec of data.records) {
+      // Always use the recursive search to find the top-most createdAt.
+      const createdAt = findFirstCreatedAt(rec);
+      
+      // If no createdAt is found, include the record by default.
+      if (!createdAt) {
+        newRecords.push(rec);
+        continue;
       }
 
-      records = records.concat(newRecords);
+      const recordTime = new Date(createdAt).getTime();
 
-      // If we stopped early due to cutoff, exit the loop
-      if (cutoffTime && newRecords.length < data.records.length) {
+      // If a cutoff is defined and this record is older than the cutoff, stop here.
+      if (cutoffTime && recordTime < cutoffTime) {
         shouldContinue = false;
+        break;
+      } else {
+        newRecords.push(rec);
       }
     }
 
-    incrementProgress(1, onPage);
+    // Add the records from this page that passed the cutoff check.
+    records = records.concat(newRecords);
+
+    // If not all records in this page passed the cutoff, stop further pagination.
+    if (cutoffTime && newRecords.length < data.records.length) {
+      shouldContinue = false;
+    }
+
+    onPage(1 / expectedPages);
     await new Promise((resolve) => setTimeout(resolve, 0));
     cursor = data.cursor || null;
 
-    // Final check to determine if we should continue fetching
-    if (cutoffTime && (!cursor || newRecords.length === 0)) {
+    // If no new records were added in this page, break out.
+    if (cutoffTime && newRecords.length === 0) {
       shouldContinue = false;
     }
   } while (cursor && shouldContinue);
 
   return records;
 }
+
 
 // 5. Fetch audit log from PLC Directory (one-shot)
 async function fetchAuditLog() {
