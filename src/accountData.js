@@ -191,8 +191,15 @@ async function fetchRepoDescription() {
   return await cachedGetJSON(url);
 }
 
-async function fetchRecordsForCollection(collectionName, onPage = (inc) => {}, expectedPages = 50, cutoffTime = null) {
-  const urlBase = `${serviceEndpoint}/xrpc/com.atproto.repo.listRecords?repo=${encodeURIComponent(did)}&collection=${encodeURIComponent(collectionName)}&limit=100`;
+async function fetchRecordsForCollection(
+  collectionName,
+  onPage = (inc) => {},
+  expectedPages = 50,
+  cutoffTime = null
+) {
+  const urlBase = `${serviceEndpoint}/xrpc/com.atproto.repo.listRecords?repo=${encodeURIComponent(
+    did
+  )}&collection=${encodeURIComponent(collectionName)}&limit=100`;
   let records = [];
   let cursor = null;
   let shouldContinue = true;
@@ -201,18 +208,22 @@ async function fetchRecordsForCollection(collectionName, onPage = (inc) => {}, e
     const url = cursor ? `${urlBase}&cursor=${cursor}` : urlBase;
     const data = await cachedGetJSON(url);
 
-    // If no records, break out of the loop.
-    if (!Array.isArray(data.records) || data.records.length === 0) {
+    // Normalize the records—if data.records is not an array, use Object.values(data)
+    const recordsPage = Array.isArray(data.records)
+      ? data.records
+      : Object.values(data).filter((val) => typeof val === "object");
+
+    if (!recordsPage || recordsPage.length === 0) {
       break;
     }
 
     let newRecords = [];
-    
-    // Process each record in the current page.
-    for (const rec of data.records) {
-      // Always use the recursive search to find the top-most createdAt.
+
+    // Loop over each record in the current page.
+    for (const rec of recordsPage) {
+      // Use your recursive helper to get the first/top-most createdAt.
       const createdAt = findFirstCreatedAt(rec);
-      
+
       // If no createdAt is found, include the record by default.
       if (!createdAt) {
         newRecords.push(rec);
@@ -221,7 +232,7 @@ async function fetchRecordsForCollection(collectionName, onPage = (inc) => {}, e
 
       const recordTime = new Date(createdAt).getTime();
 
-      // If a cutoff is defined and this record is older than the cutoff, stop here.
+      // If a cutoffTime is provided and this record is older than the cutoff, stop processing.
       if (cutoffTime && recordTime < cutoffTime) {
         shouldContinue = false;
         break;
@@ -233,16 +244,15 @@ async function fetchRecordsForCollection(collectionName, onPage = (inc) => {}, e
     // Add the records from this page that passed the cutoff check.
     records = records.concat(newRecords);
 
-    // If not all records in this page passed the cutoff, stop further pagination.
-    if (cutoffTime && newRecords.length < data.records.length) {
+    // If not every record on this page passed the cutoff, stop further pagination.
+    if (cutoffTime && newRecords.length < recordsPage.length) {
       shouldContinue = false;
     }
 
     onPage(1 / expectedPages);
     await new Promise((resolve) => setTimeout(resolve, 0));
-    cursor = data.cursor || null;
 
-    // If no new records were added in this page, break out.
+    cursor = data.cursor || null;
     if (cutoffTime && newRecords.length === 0) {
       shouldContinue = false;
     }
@@ -250,6 +260,7 @@ async function fetchRecordsForCollection(collectionName, onPage = (inc) => {}, e
 
   return records;
 }
+
 
 
 // 5. Fetch audit log from PLC Directory (one-shot)
