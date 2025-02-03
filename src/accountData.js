@@ -195,49 +195,69 @@ async function fetchRecordsForCollection(
   collectionName,
   onPage = (inc) => {},
   expectedPages = 50,
-  cutoffTime = null
+  // Default cutoff: 90 days ago (in milliseconds)
+  cutoffTime = Date.now() - 90 * 24 * 60 * 60 * 1000
 ) {
   const urlBase = `${serviceEndpoint}/xrpc/com.atproto.repo.listRecords?repo=${encodeURIComponent(
     did
   )}&collection=${encodeURIComponent(collectionName)}&limit=100`;
   let records = [];
   let cursor = null;
+  let shouldContinue = true;
 
-  // Label the outer loop so we can break out as soon as we encounter an old record.
-  outer: do {
+  do {
     const url = cursor ? `${urlBase}&cursor=${cursor}` : urlBase;
     const data = await cachedGetJSON(url);
 
-    // Expect the records in data.records (which is an array).
-    const pageRecords = Array.isArray(data.records) ? data.records : [];
-    if (pageRecords.length === 0) break;
-
-    for (const rec of pageRecords) {
-      // Find the first/top‑most createdAt in the record.
-      const createdAt = findFirstCreatedAt(rec);
-
-      // If we have a cutoffTime and a valid createdAt, then check it.
-      if (cutoffTime && createdAt) {
-        const recordTime = new Date(createdAt).getTime();
-        if (recordTime < cutoffTime) {
-          // As soon as we hit a record older than the cutoff,
-          // stop processing further records and pages.
-          break outer;
-        }
-      }
-      // Include the record (if no createdAt exists, include it by default).
-      records.push(rec);
+    // If no records are returned, break out.
+    if (!Array.isArray(data.records) || data.records.length === 0) {
+      break;
     }
 
-    // Update progress (if needed).
+    let newRecords = [];
+
+    // Process each record in the current page.
+    for (const rec of data.records) {
+      // Always search recursively for the top-most "createdAt"
+      const createdAt = findFirstCreatedAt(rec);
+
+      // If no createdAt is found, include the record by default.
+      if (!createdAt) {
+        newRecords.push(rec);
+        continue;
+      }
+
+      const recordTime = new Date(createdAt).getTime();
+
+      // If the record is older than the cutoff (i.e. more than 90 days old), stop further processing.
+      if (recordTime < cutoffTime) {
+        shouldContinue = false;
+        break;
+      } else {
+        newRecords.push(rec);
+      }
+    }
+
+    // Add the records from this page that passed the cutoff check.
+    records = records.concat(newRecords);
+
+    // If not every record in this page passed the cutoff, stop further pagination.
+    if (newRecords.length < data.records.length) {
+      shouldContinue = false;
+    }
+
     onPage(1 / expectedPages);
+    await new Promise((resolve) => setTimeout(resolve, 0));
     cursor = data.cursor || null;
-  } while (cursor);
+
+    // If no new records were added on this page, break out.
+    if (newRecords.length === 0) {
+      shouldContinue = false;
+    }
+  } while (cursor && shouldContinue);
 
   return records;
 }
-
-
 
 
 // 5. Fetch audit log from PLC Directory (one-shot)
