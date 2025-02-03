@@ -168,33 +168,39 @@ async function fetchRecordsForCollection(
   // Default cutoff: 90 days ago in ms
   cutoffTime = Date.now() - 90 * 24 * 60 * 60 * 1000
 ) {
+  console.log(`\n=== fetchRecordsForCollection: ${collectionName} (cutoff=${new Date(cutoffTime).toISOString()}) ===`);
   const urlBase = `${serviceEndpoint}/xrpc/com.atproto.repo.listRecords?repo=${encodeURIComponent(
     did
   )}&collection=${encodeURIComponent(collectionName)}&limit=100`;
 
   let records = [];
   let cursor = null;
-  let shouldContinue = true;
+  let pageCount = 0;
 
-  while (shouldContinue) {
-    // Build URL with or without a cursor
+  while (true) {
+    pageCount++;
     const url = cursor ? `${urlBase}&cursor=${cursor}` : urlBase;
+    console.log(`Fetching page #${pageCount} for ${collectionName} with URL:`, url);
+
     let data;
     try {
       data = await cachedGetJSON(url);
     } catch (err) {
       console.error("Error fetching records for collection:", collectionName, err);
-      break; // network error or similar => stop pagination
-    }
-
-    if (!data || !Array.isArray(data.records) || data.records.length === 0) {
-      // No records => stop
       break;
     }
 
-    let newRecords = [];
+    if (!data || !Array.isArray(data.records) || data.records.length === 0) {
+      console.log(`No more records returned for ${collectionName}; stopping.`);
+      break; // no more data
+    }
+
+    let minCreatedAt = Infinity;
+    const pageRecords = [];
+
+    // 1) Inspect each record in the current page
     for (const rec of data.records) {
-      // Attempt to find `createdAt` — either direct on "app.bsky.feed.post" or fallback
+      // Attempt to find createdAt
       let createdAt;
       if (collectionName === "app.bsky.feed.post" && rec.value?.createdAt) {
         createdAt = rec.value.createdAt;
@@ -202,46 +208,68 @@ async function fetchRecordsForCollection(
         createdAt = findFirstCreatedAt(rec);
       }
 
-      // If we have a cutoffTime, we only keep records above that cutoff
-      if (cutoffTime) {
-        if (!createdAt) {
-          // No createdAt => treat as "include it", or you could skip if desired
-          newRecords.push(rec);
-        } else {
-          const recordTime = new Date(createdAt).getTime();
-          if (recordTime >= cutoffTime) {
-            newRecords.push(rec);
-          } else {
-            // As soon as we see a record older than cutoff => STOP
-            shouldContinue = false;
-            break;
-          }
-        }
+      // 2) Convert to ms, or fallback to a "current" time for missing createdAt
+      let recordTime;
+      if (!createdAt) {
+        recordTime = Date.now(); // If missing, you could treat it as "include always"
+        console.log(
+          `Record with no createdAt => using "now" to compare. URI: ${rec.uri}`
+        );
       } else {
-        // no cutoffTime => include everything
-        newRecords.push(rec);
+        recordTime = new Date(createdAt).getTime();
+      }
+
+      // 3) Debug log
+      console.log(
+        `Record URI: ${rec.uri}, createdAt: ${createdAt}, recordTime=${recordTime}, cutoffTime=${cutoffTime}`
+      );
+
+      // 4) Track minimum createdAt in this page
+      minCreatedAt = Math.min(minCreatedAt, recordTime);
+
+      // 5) We'll decide to include this record only if it's >= cutoffTime
+      if (recordTime >= cutoffTime) {
+        pageRecords.push(rec);
       }
     }
 
-    // Combine newRecords that passed the cutoff
-    records.push(...newRecords);
-
-    // If the page was partially “consumed” (we broke early), or we saw older data => stop
-    if (newRecords.length < data.records.length) {
-      shouldContinue = false;
+    // 6) After analyzing all records in the page, if the earliest record is older than cutoff => no more pages
+    if (minCreatedAt < cutoffTime) {
+      console.log(
+        `Found an older record in this page (minCreatedAt=${new Date(
+          minCreatedAt
+        ).toISOString()}); not fetching further pages.`
+      );
+      // We still add the records that were >= cutoffTime from this page
+      records.push(...pageRecords);
+      break;
     }
 
-    // Update cursor for next page
-    if (shouldContinue && data.cursor) {
-      cursor = data.cursor;
+    // 7) If all records in this page are >= cutoffTime, add them all
+    records.push(...pageRecords);
+
+    // 8) If there's no cursor => done
+    if (!data.cursor) {
+      console.log(`No cursor in response; done fetching for ${collectionName}.`);
+      break;
     } else {
-      // No cursor or we chose to stop => done
+      // Move to next page
+      cursor = data.cursor;
+    }
+
+    // Optional: If we want to avoid infinite loops
+    if (pageCount >= expectedPages) {
+      console.log(`Reached expectedPages (${expectedPages}) for ${collectionName}; stopping.`);
       break;
     }
   }
 
+  console.log(
+    `Finished fetchRecordsForCollection(${collectionName}), got total = ${records.length} records`
+  );
   return records;
 }
+
 
 
 // 5. Fetch audit log from PLC Directory (one-shot)
@@ -250,23 +278,25 @@ async function fetchAuditLog() {
   return await cachedGetJSON(url);
 }
 
-// 6. Fetch author feed (paginated) with cutoff filtering
 async function fetchAuthorFeed(
   onPage = () => {},
   expectedPages = 10,
-  // If null, fetch everything. If you want a default of 90 days, do:
-  cutoffTime = Date.now() - 90 * 24 * 60 * 60 * 1000
+  cutoffTime = Date.now() - 90 * 24 * 60 * 60 * 1000 // default 90 days
 ) {
+  console.log(`\n=== fetchAuthorFeed (cutoff=${new Date(cutoffTime).toISOString()}) ===`);
   const urlBase = `${publicServiceEndpoint}/xrpc/app.bsky.feed.getAuthorFeed?actor=${encodeURIComponent(
     did
   )}&limit=100`;
 
   let feed = [];
   let cursor = null;
-  let shouldContinue = true;
+  let pageCount = 0;
 
-  while (shouldContinue) {
+  while (true) {
+    pageCount++;
     const url = cursor ? `${urlBase}&cursor=${cursor}` : urlBase;
+    console.log(`Fetching page #${pageCount} with URL:`, url);
+
     let data;
     try {
       data = await cachedGetJSON(url);
@@ -275,14 +305,15 @@ async function fetchAuthorFeed(
       break; // network error
     }
 
-    // If no feed array or empty => done
     if (!data || !Array.isArray(data.feed) || data.feed.length === 0) {
+      console.log("No more feed items returned; stopping.");
       break;
     }
 
-    let newRecords = [];
+    let minCreatedAt = Infinity;
+    const pageItems = [];
+
     for (const item of data.feed) {
-      // Attempt to find createdAt
       let createdAt;
       if (item.value?.createdAt) {
         createdAt = item.value.createdAt;
@@ -290,40 +321,52 @@ async function fetchAuthorFeed(
         createdAt = findFirstCreatedAt(item);
       }
 
-      if (cutoffTime) {
-        if (!createdAt) {
-          // No createdAt => treat as included or skip
-          newRecords.push(item);
-        } else {
-          const itemTime = new Date(createdAt).getTime();
-          if (itemTime >= cutoffTime) {
-            newRecords.push(item);
-          } else {
-            // older than cutoff => stop
-            shouldContinue = false;
-            break;
-          }
-        }
+      let itemTime;
+      if (!createdAt) {
+        itemTime = Date.now();
+        console.log(
+          `Feed item with no createdAt => using now. Possibly a fallback.`
+        );
       } else {
-        // no cutoff => include everything
-        newRecords.push(item);
+        itemTime = new Date(createdAt).getTime();
+      }
+
+      console.log(
+        `Feed item with createdAt=${createdAt}, itemTime=${itemTime}, cutoffTime=${cutoffTime}`
+      );
+      minCreatedAt = Math.min(minCreatedAt, itemTime);
+
+      if (itemTime >= cutoffTime) {
+        pageItems.push(item);
       }
     }
 
-    feed.push(...newRecords);
-
-    // If we bailed out mid-page, or found an old record => stop
-    if (newRecords.length < data.feed.length) {
-      shouldContinue = false;
+    if (minCreatedAt < cutoffTime) {
+      console.log(
+        `Encountered an item older than cutoff in this page (minCreatedAt=${new Date(
+          minCreatedAt
+        ).toISOString()}). Stopping further pagination.`
+      );
+      feed.push(...pageItems);
+      break;
     }
 
-    if (shouldContinue && data.cursor) {
-      cursor = data.cursor;
+    feed.push(...pageItems);
+
+    if (!data.cursor) {
+      console.log(`No cursor in response; done fetching feed.`);
+      break;
     } else {
+      cursor = data.cursor;
+    }
+
+    if (pageCount >= expectedPages) {
+      console.log(`Hit expectedPages=${expectedPages}; stopping feed fetch.`);
       break;
     }
   }
 
+  console.log(`Finished fetchAuthorFeed. Got total = ${feed.length} items.`);
   return feed;
 }
 
