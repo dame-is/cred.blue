@@ -161,68 +161,88 @@ async function fetchRepoDescription() {
   return await cachedGetJSON(url);
 }
 
-// 4. Fetch records from a collection (paginated) with cutoff filtering
-async function fetchRecordsForCollection(collectionName, onPage = () => {}, expectedPages = 50, cutoffTime = Date.now() - 90 * 24 * 60 * 60 * 1000) {
-  const urlBase = `${serviceEndpoint}/xrpc/com.atproto.repo.listRecords?repo=${encodeURIComponent(did)}&collection=${encodeURIComponent(collectionName)}&limit=100`;
+async function fetchRecordsForCollection(
+  collectionName,
+  onPage = () => {},
+  expectedPages = 50,
+  // Default cutoff: 90 days ago in ms
+  cutoffTime = Date.now() - 90 * 24 * 60 * 60 * 1000
+) {
+  const urlBase = `${serviceEndpoint}/xrpc/com.atproto.repo.listRecords?repo=${encodeURIComponent(
+    did
+  )}&collection=${encodeURIComponent(collectionName)}&limit=100`;
+
   let records = [];
   let cursor = null;
   let shouldContinue = true;
 
-  do {
+  while (shouldContinue) {
+    // Build URL with or without a cursor
     const url = cursor ? `${urlBase}&cursor=${cursor}` : urlBase;
     let data;
     try {
       data = await cachedGetJSON(url);
     } catch (err) {
       console.error("Error fetching records for collection:", collectionName, err);
+      break; // network error or similar => stop pagination
+    }
+
+    if (!data || !Array.isArray(data.records) || data.records.length === 0) {
+      // No records => stop
       break;
     }
 
-    let newRecords = []; // Initialize newRecords for the current page
-
-    if (Array.isArray(data.records)) {
-      for (const rec of data.records) {
-        let createdAt = null;
-        // If this is the "app.bsky.feed.post" collection, use the direct property
-        if (collectionName === "app.bsky.feed.post" && rec.value && rec.value.createdAt) {
-          createdAt = rec.value.createdAt;
-        } else {
-          createdAt = findFirstCreatedAt(rec);
-        }
-
-        if (cutoffTime) {
-          if (createdAt) {
-            const recordTime = new Date(createdAt).getTime();
-            if (recordTime >= cutoffTime) {
-              newRecords.push(rec);
-            } else {
-              // As soon as we see a record older than the cutoff, stop fetching further pages
-              shouldContinue = false;
-              break;
-            }
-          } else {
-            // No createdAt found; include the record
-            newRecords.push(rec);
-          }
-        } else {
-          newRecords.push(rec);
-        }
+    let newRecords = [];
+    for (const rec of data.records) {
+      // Attempt to find `createdAt` — either direct on "app.bsky.feed.post" or fallback
+      let createdAt;
+      if (collectionName === "app.bsky.feed.post" && rec.value?.createdAt) {
+        createdAt = rec.value.createdAt;
+      } else {
+        createdAt = findFirstCreatedAt(rec);
       }
-      records = records.concat(newRecords);
-      // If not all records in the page passed the cutoff, break out.
-      if (cutoffTime && newRecords.length < data.records.length) {
-        shouldContinue = false;
+
+      // If we have a cutoffTime, we only keep records above that cutoff
+      if (cutoffTime) {
+        if (!createdAt) {
+          // No createdAt => treat as "include it", or you could skip if desired
+          newRecords.push(rec);
+        } else {
+          const recordTime = new Date(createdAt).getTime();
+          if (recordTime >= cutoffTime) {
+            newRecords.push(rec);
+          } else {
+            // As soon as we see a record older than cutoff => STOP
+            shouldContinue = false;
+            break;
+          }
+        }
+      } else {
+        // no cutoffTime => include everything
+        newRecords.push(rec);
       }
     }
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    cursor = data.cursor || null;
-    if (cutoffTime && (!cursor || newRecords.length === 0)) {
+
+    // Combine newRecords that passed the cutoff
+    records.push(...newRecords);
+
+    // If the page was partially “consumed” (we broke early), or we saw older data => stop
+    if (newRecords.length < data.records.length) {
       shouldContinue = false;
     }
-  } while (cursor && shouldContinue);
+
+    // Update cursor for next page
+    if (shouldContinue && data.cursor) {
+      cursor = data.cursor;
+    } else {
+      // No cursor or we chose to stop => done
+      break;
+    }
+  }
 
   return records;
 }
+
 
 // 5. Fetch audit log from PLC Directory (one-shot)
 async function fetchAuditLog() {
@@ -231,64 +251,82 @@ async function fetchAuditLog() {
 }
 
 // 6. Fetch author feed (paginated) with cutoff filtering
-async function fetchAuthorFeed(onPage = () => {}, expectedPages = 10, cutoffTime = null) {
-  let urlBase = `${publicServiceEndpoint}/xrpc/app.bsky.feed.getAuthorFeed?actor=${encodeURIComponent(did)}&limit=100`;
+async function fetchAuthorFeed(
+  onPage = () => {},
+  expectedPages = 10,
+  // If null, fetch everything. If you want a default of 90 days, do:
+  cutoffTime = Date.now() - 90 * 24 * 60 * 60 * 1000
+) {
+  const urlBase = `${publicServiceEndpoint}/xrpc/app.bsky.feed.getAuthorFeed?actor=${encodeURIComponent(
+    did
+  )}&limit=100`;
+
   let feed = [];
   let cursor = null;
   let shouldContinue = true;
 
-  do {
-    const url = urlBase + (cursor ? `&cursor=${cursor}` : "");
+  while (shouldContinue) {
+    const url = cursor ? `${urlBase}&cursor=${cursor}` : urlBase;
     let data;
     try {
       data = await cachedGetJSON(url);
     } catch (err) {
       console.error("Error fetching author feed:", err);
+      break; // network error
+    }
+
+    // If no feed array or empty => done
+    if (!data || !Array.isArray(data.feed) || data.feed.length === 0) {
       break;
     }
-    let newRecords = []; // Initialize newRecords for the current page
 
-    if (Array.isArray(data.feed)) {
-      for (const item of data.feed) {
-        let createdAt = null;
-        if (item.value && item.value.createdAt) {
-          createdAt = item.value.createdAt;
-        } else {
-          createdAt = findFirstCreatedAt(item);
-        }
-
-        if (cutoffTime) {
-          if (createdAt) {
-            const itemTime = new Date(createdAt).getTime();
-            if (itemTime >= cutoffTime) {
-              feed.push(item);
-              newRecords.push(item);
-            } else {
-              shouldContinue = false;
-              break;
-            }
-          } else {
-            feed.push(item);
-            newRecords.push(item);
-          }
-        } else {
-          feed.push(item);
-          newRecords.push(item);
-        }
+    let newRecords = [];
+    for (const item of data.feed) {
+      // Attempt to find createdAt
+      let createdAt;
+      if (item.value?.createdAt) {
+        createdAt = item.value.createdAt;
+      } else {
+        createdAt = findFirstCreatedAt(item);
       }
-      if (cutoffTime && newRecords.length < data.feed.length) {
-        shouldContinue = false;
+
+      if (cutoffTime) {
+        if (!createdAt) {
+          // No createdAt => treat as included or skip
+          newRecords.push(item);
+        } else {
+          const itemTime = new Date(createdAt).getTime();
+          if (itemTime >= cutoffTime) {
+            newRecords.push(item);
+          } else {
+            // older than cutoff => stop
+            shouldContinue = false;
+            break;
+          }
+        }
+      } else {
+        // no cutoff => include everything
+        newRecords.push(item);
       }
     }
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    cursor = data.cursor || null;
-    if (cutoffTime && (!cursor || newRecords.length === 0)) {
+
+    feed.push(...newRecords);
+
+    // If we bailed out mid-page, or found an old record => stop
+    if (newRecords.length < data.feed.length) {
       shouldContinue = false;
     }
-  } while (cursor && shouldContinue);
+
+    if (shouldContinue && data.cursor) {
+      cursor = data.cursor;
+    } else {
+      break;
+    }
+  }
 
   return feed;
 }
+
 
 /***********************************************************************
  * Calculation Functions
