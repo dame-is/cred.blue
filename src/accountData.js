@@ -40,38 +40,6 @@ const publicServiceEndpoint = "https://public.api.bsky.app";
 const cache = {};
 
 /***********************************************************************
- * Progress Batching Helpers
- ***********************************************************************/
-// These functions aggregate fast progress increments
-let _actualFetchCount = 0;
-let _displayedFetchCount = 0;
-let _progressUpdateTimer = null;
-
-function incrementProgress(count = 1, onProgress) {
-  _actualFetchCount += count;
-  if (!_progressUpdateTimer) {
-    _progressUpdateTimer = setInterval(() => {
-      if (_displayedFetchCount < _actualFetchCount) {
-        // Increase by 1 (or more if needed)
-        _displayedFetchCount += Math.min(1, _actualFetchCount - _displayedFetchCount);
-        onProgress(_displayedFetchCount);
-      }
-      if (_displayedFetchCount >= _actualFetchCount) {
-        clearInterval(_progressUpdateTimer);
-        _progressUpdateTimer = null;
-      }
-    }, 100); // update every 100ms
-  }
-}
-
-function finalizeProgress(onProgress) {
-  clearInterval(_progressUpdateTimer);
-  _progressUpdateTimer = null;
-  _displayedFetchCount = _actualFetchCount;
-  onProgress(_displayedFetchCount);
-}
-
-/***********************************************************************
  * Helper Functions
  ***********************************************************************/
 async function getJSON(url) {
@@ -144,15 +112,20 @@ async function fetchProfile() {
 }
 
 // 2. Fetch all blobs (paginated)
-async function fetchAllBlobsCount(onPage = (inc) => {}, expectedPages = 2, cutoffTime = null) {
+async function fetchAllBlobsCount(onPage = () => {}, expectedPages = 2, cutoffTime = null) {
   let urlBase = `${serviceEndpoint}/xrpc/com.atproto.sync.listBlobs?did=${encodeURIComponent(did)}&limit=1000`;
   let count = 0, cursor = null;
   do {
     const url = urlBase + (cursor ? `&cursor=${cursor}` : "");
-    const data = await cachedGetJSON(url);
+    let data;
+    try {
+      data = await cachedGetJSON(url);
+    } catch (err) {
+      console.error("Error fetching blobs:", err);
+      break;
+    }
     if (Array.isArray(data.cids)) {
       for (const cid of data.cids) {
-        // Assuming each CID may have a 'createdAt' field; adjust based on actual API response
         if (data.blobs && data.blobs[cid]) {
           const blob = data.blobs[cid];
           const createdAt = findFirstCreatedAt(blob);
@@ -161,12 +134,9 @@ async function fetchAllBlobsCount(onPage = (inc) => {}, expectedPages = 2, cutof
               const recordTime = new Date(createdAt).getTime();
               if (recordTime >= cutoffTime) {
                 count += 1;
-              } else {
-                // Since blobs are not necessarily ordered, we continue
-                // Alternatively, if blobs are ordered, we could break here
               }
             } else {
-              // No 'createdAt', include it as per instruction
+              // No 'createdAt', include it
               count += 1;
             }
           } else {
@@ -178,7 +148,7 @@ async function fetchAllBlobsCount(onPage = (inc) => {}, expectedPages = 2, cutof
         }
       }
     }
-    onPage(1 / expectedPages);
+    // Wait a tick before next page
     await new Promise((resolve) => setTimeout(resolve, 0));
     cursor = data.cursor || null;
   } while (cursor);
@@ -191,8 +161,8 @@ async function fetchRepoDescription() {
   return await cachedGetJSON(url);
 }
 
-// 4. Fetch records from a collection (paginated)
-async function fetchRecordsForCollection(collectionName, onPage = (inc) => {}, expectedPages = 50, cutoffTime = null) {
+// 4. Fetch records from a collection (paginated) with cutoff filtering
+async function fetchRecordsForCollection(collectionName, onPage = () => {}, expectedPages = 50, cutoffTime = Date.now() - 90 * 24 * 60 * 60 * 1000) {
   const urlBase = `${serviceEndpoint}/xrpc/com.atproto.repo.listRecords?repo=${encodeURIComponent(did)}&collection=${encodeURIComponent(collectionName)}&limit=100`;
   let records = [];
   let cursor = null;
@@ -200,58 +170,52 @@ async function fetchRecordsForCollection(collectionName, onPage = (inc) => {}, e
 
   do {
     const url = cursor ? `${urlBase}&cursor=${cursor}` : urlBase;
-    const data = await cachedGetJSON(url);
+    let data;
+    try {
+      data = await cachedGetJSON(url);
+    } catch (err) {
+      console.error("Error fetching records for collection:", collectionName, err);
+      break;
+    }
+
     let newRecords = []; // Initialize newRecords for the current page
 
     if (Array.isArray(data.records)) {
       for (const rec of data.records) {
         let createdAt = null;
-
-        // **Explicitly handle 'app.bsky.feed.post' collection**
+        // If this is the "app.bsky.feed.post" collection, use the direct property
         if (collectionName === "app.bsky.feed.post" && rec.value && rec.value.createdAt) {
           createdAt = rec.value.createdAt;
         } else {
-          // **Use recursive search for other collections**
           createdAt = findFirstCreatedAt(rec);
         }
 
         if (cutoffTime) {
           if (createdAt) {
             const recordTime = new Date(createdAt).getTime();
-
-            // Optional: Debugging log to verify 'createdAt' extraction
-            // console.log(`Record URI: ${rec.uri || rec['0']?.uri}, createdAt: ${createdAt}, recordTime: ${recordTime}, cutoffTime: ${cutoffTime}`);
-
             if (recordTime >= cutoffTime) {
               newRecords.push(rec);
             } else {
-              // Record is older than cutoff; stop fetching more
+              // As soon as we see a record older than the cutoff, stop fetching further pages
               shouldContinue = false;
               break;
             }
           } else {
-            // No 'createdAt', include it as per instruction
+            // No createdAt found; include the record
             newRecords.push(rec);
           }
         } else {
-          // No cutoffTime specified, include all records
           newRecords.push(rec);
         }
       }
-
       records = records.concat(newRecords);
-
-      // If we stopped early due to cutoff, exit the loop
+      // If not all records in the page passed the cutoff, break out.
       if (cutoffTime && newRecords.length < data.records.length) {
         shouldContinue = false;
       }
     }
-
-    incrementProgress(1, onPage);
     await new Promise((resolve) => setTimeout(resolve, 0));
     cursor = data.cursor || null;
-
-    // Final check to determine if we should continue fetching
     if (cutoffTime && (!cursor || newRecords.length === 0)) {
       shouldContinue = false;
     }
@@ -266,8 +230,8 @@ async function fetchAuditLog() {
   return await cachedGetJSON(url);
 }
 
-// 6. Fetch author feed (paginated)
-async function fetchAuthorFeed(onPage = (inc) => {}, expectedPages = 10, cutoffTime = null) {
+// 6. Fetch author feed (paginated) with cutoff filtering
+async function fetchAuthorFeed(onPage = () => {}, expectedPages = 10, cutoffTime = null) {
   let urlBase = `${publicServiceEndpoint}/xrpc/app.bsky.feed.getAuthorFeed?actor=${encodeURIComponent(did)}&limit=100`;
   let feed = [];
   let cursor = null;
@@ -275,62 +239,49 @@ async function fetchAuthorFeed(onPage = (inc) => {}, expectedPages = 10, cutoffT
 
   do {
     const url = urlBase + (cursor ? `&cursor=${cursor}` : "");
-    const data = await cachedGetJSON(url);
+    let data;
+    try {
+      data = await cachedGetJSON(url);
+    } catch (err) {
+      console.error("Error fetching author feed:", err);
+      break;
+    }
     let newRecords = []; // Initialize newRecords for the current page
 
     if (Array.isArray(data.feed)) {
       for (const item of data.feed) {
         let createdAt = null;
-
-        // Attempt to directly access 'createdAt' if the structure is known
         if (item.value && item.value.createdAt) {
           createdAt = item.value.createdAt;
         } else {
-          // Fallback to recursive search if 'createdAt' isn't directly accessible
           createdAt = findFirstCreatedAt(item);
         }
 
         if (cutoffTime) {
           if (createdAt) {
             const itemTime = new Date(createdAt).getTime();
-            
-            // Optional: Log the createdAt and itemTime for debugging
-            // console.log(`Item createdAt: ${createdAt}, Item Time: ${itemTime}, Cutoff Time: ${cutoffTime}`);
-
             if (itemTime >= cutoffTime) {
               feed.push(item);
-              newRecords.push(item); // Track the added record
+              newRecords.push(item);
             } else {
-              // Item is older than cutoff; stop fetching more
               shouldContinue = false;
               break;
             }
           } else {
-            // No 'createdAt', include it as per instruction
             feed.push(item);
-            newRecords.push(item); // Track the added record
-
-            // Optional: Log that 'createdAt' was not found
-            // console.warn('No createdAt found for item:', item);
+            newRecords.push(item);
           }
         } else {
-          // No cutoffTime specified, include all items
           feed.push(item);
-          newRecords.push(item); // Track the added record
+          newRecords.push(item);
         }
       }
-
-      // If we stopped early due to cutoff, exit the loop
       if (cutoffTime && newRecords.length < data.feed.length) {
         shouldContinue = false;
       }
     }
-
-    incrementProgress(1, onPage);
     await new Promise((resolve) => setTimeout(resolve, 0));
     cursor = data.cursor || null;
-
-    // Corrected condition: Use newRecords.length instead of undefined newRecords
     if (cutoffTime && (!cursor || newRecords.length === 0)) {
       shouldContinue = false;
     }
@@ -510,11 +461,6 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
     did = await resolveHandleToDid(handle);
     serviceEndpoint = await getServiceEndpointForDid(did);
 
-    // Initialize progress tracking
-    const updateProgress = () => { 
-      incrementProgress(1, onProgress); 
-    };
-
     // Fetch profile
     const profile = await fetchProfile();
 
@@ -546,13 +492,13 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
     // Fetch posts and reposts for all-time and merge them
     const postsRecordsPostsAllTime = await fetchRecordsForCollection(
       "app.bsky.feed.post",
-      () => { updateProgress(); },
+      () => {},
       20,
       cutoffTimeAll
     );
     const postsRecordsRepostsAllTime = await fetchRecordsForCollection(
       "app.bsky.feed.repost",
-      () => { updateProgress(); },
+      () => {},
       20,
       cutoffTimeAll
     );
@@ -560,7 +506,6 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
 
     const postsCountAllTime = profile.postsCount || postsRecordsAllTime.length;
     const postStatsAllTime = computePostStats(postsRecordsAllTime, ageInDays);
-
 
     // Parse audit log
     const rawAuditData = await fetchAuditLog();
@@ -679,13 +624,13 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
       // Fetch posts and reposts for the period and merge them
       const postsRecordsPosts = await fetchRecordsForCollection(
         "app.bsky.feed.post",
-        () => { updateProgress(); },
+        () => {},
         20,
         cutoffTime
       );
       const postsRecordsReposts = await fetchRecordsForCollection(
         "app.bsky.feed.repost",
-        () => { updateProgress(); },
+        () => {},
         20,
         cutoffTime
       );
@@ -697,7 +642,7 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
       // Compute engagements for the period
       const engagements = await calculateEngagements(cutoffTime);
 
-      // Assign postStats to include engagements
+      // Add engagements to postStats
       postStats.engagementsReceived = {
         likesReceived: engagements.likesReceived,
         repostsReceived: engagements.repostsReceived,
@@ -834,19 +779,11 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
       accountDataPerPeriod[`accountData${label}`] = periodData;
     }
 
-    // Compute accountData for all-time data (optional, not required per user request)
-    // const accountDataAllTime = { /* Similar structure as accountData30Days and accountData90Days */ };
-
-    // Finalize progress so the UI shows the full count.
-    finalizeProgress(onProgress);
-
     // Build final output JSON.
     const finalOutput = {
       message: "accountData retrieved successfully",
       accountData90Days: accountDataPerPeriod.accountData90Days,
       accountData30Days: accountDataPerPeriod.accountData30Days,
-      // You can include accountDataAllTime if implemented
-      // accountDataAllTime: accountDataAllTime,
     };
 
     return roundNumbers(finalOutput);
@@ -950,7 +887,6 @@ function buildAnalysisNarrative(accountData) {
       `Their posts consist of ${mediaType}. ` +
       `They are a "${socialStatus}" as is indicated by their follower count of ${profile.followersCount} and their follower/following ratio of ${followRatio}.`;
 
-  // Return an object containing individual narratives
   return { narrative1, narrative2, narrative3 };
 }
 
@@ -1072,12 +1008,10 @@ function computePostStats(postsRecords, periodDays) {
   });
   // Compute the count of image posts (with alt text) that are replies.
   const imagePostsReplies = filterRecords(postsRecords, (rec) => {
-    // Check that the post has the image embed type and alt text...
     const isImagePostWithAlt = rec.value.embed &&
-    rec.value.embed["$type"] === "app.bsky.embed.images" &&
-    rec.value.embed.images &&
-    rec.value.embed.images.some((img) => img.alt && img.alt.trim());
-    // ...and that it is a reply (i.e. the record has a reply property).
+      rec.value.embed["$type"] === "app.bsky.embed.images" &&
+      rec.value.embed.images &&
+      rec.value.embed.images.some((img) => img.alt && img.alt.trim());
     return isImagePostWithAlt && rec.value.reply;
   });
   const imagePostsNoAltText = postsWithImages - imagePostsAltText;
