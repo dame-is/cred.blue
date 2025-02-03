@@ -202,64 +202,41 @@ async function fetchRecordsForCollection(
   )}&collection=${encodeURIComponent(collectionName)}&limit=100`;
   let records = [];
   let cursor = null;
-  let shouldContinue = true;
 
-  do {
+  // Label the outer loop so we can break out as soon as we encounter an old record.
+  outer: do {
     const url = cursor ? `${urlBase}&cursor=${cursor}` : urlBase;
     const data = await cachedGetJSON(url);
 
-    // Normalize the records—if data.records is not an array, use Object.values(data)
-    const recordsPage = Array.isArray(data.records)
-      ? data.records
-      : Object.values(data).filter((val) => typeof val === "object");
+    // Expect the records in data.records (which is an array).
+    const pageRecords = Array.isArray(data.records) ? data.records : [];
+    if (pageRecords.length === 0) break;
 
-    if (!recordsPage || recordsPage.length === 0) {
-      break;
-    }
-
-    let newRecords = [];
-
-    // Loop over each record in the current page.
-    for (const rec of recordsPage) {
-      // Use your recursive helper to get the first/top-most createdAt.
+    for (const rec of pageRecords) {
+      // Find the first/top‑most createdAt in the record.
       const createdAt = findFirstCreatedAt(rec);
 
-      // If no createdAt is found, include the record by default.
-      if (!createdAt) {
-        newRecords.push(rec);
-        continue;
+      // If we have a cutoffTime and a valid createdAt, then check it.
+      if (cutoffTime && createdAt) {
+        const recordTime = new Date(createdAt).getTime();
+        if (recordTime < cutoffTime) {
+          // As soon as we hit a record older than the cutoff,
+          // stop processing further records and pages.
+          break outer;
+        }
       }
-
-      const recordTime = new Date(createdAt).getTime();
-
-      // If a cutoffTime is provided and this record is older than the cutoff, stop processing.
-      if (cutoffTime && recordTime < cutoffTime) {
-        shouldContinue = false;
-        break;
-      } else {
-        newRecords.push(rec);
-      }
+      // Include the record (if no createdAt exists, include it by default).
+      records.push(rec);
     }
 
-    // Add the records from this page that passed the cutoff check.
-    records = records.concat(newRecords);
-
-    // If not every record on this page passed the cutoff, stop further pagination.
-    if (cutoffTime && newRecords.length < recordsPage.length) {
-      shouldContinue = false;
-    }
-
+    // Update progress (if needed).
     onPage(1 / expectedPages);
-    await new Promise((resolve) => setTimeout(resolve, 0));
-
     cursor = data.cursor || null;
-    if (cutoffTime && newRecords.length === 0) {
-      shouldContinue = false;
-    }
-  } while (cursor && shouldContinue);
+  } while (cursor);
 
   return records;
 }
+
 
 
 
