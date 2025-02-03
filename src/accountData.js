@@ -195,66 +195,46 @@ async function fetchRecordsForCollection(
   collectionName,
   onPage = (inc) => {},
   expectedPages = 50,
-  // Default cutoff: 90 days ago (in milliseconds)
-  cutoffTime = Date.now() - 90 * 24 * 60 * 60 * 1000
+  cutoffTime = Date.now() - 90 * 24 * 60 * 60 * 1000 // default 90-day cutoff
 ) {
   const urlBase = `${serviceEndpoint}/xrpc/com.atproto.repo.listRecords?repo=${encodeURIComponent(
     did
   )}&collection=${encodeURIComponent(collectionName)}&limit=100`;
   let records = [];
   let cursor = null;
-  let shouldContinue = true;
 
   do {
     const url = cursor ? `${urlBase}&cursor=${cursor}` : urlBase;
     const data = await cachedGetJSON(url);
-
-    // If no records are returned, break out.
     if (!Array.isArray(data.records) || data.records.length === 0) {
       break;
     }
 
-    let newRecords = [];
-
-    // Process each record in the current page.
+    // Determine the earliest (i.e. minimum) createdAt in the current page
+    let minCreatedAt = Infinity;
+    const pageRecords = [];
     for (const rec of data.records) {
-      // Always search recursively for the top-most "createdAt"
       const createdAt = findFirstCreatedAt(rec);
-
-      // If no createdAt is found, include the record by default.
-      if (!createdAt) {
-        newRecords.push(rec);
-        continue;
-      }
-
-      const recordTime = new Date(createdAt).getTime();
-
-      // If the record is older than the cutoff (i.e. more than 90 days old), stop further processing.
-      if (recordTime < cutoffTime) {
-        shouldContinue = false;
-        break;
-      } else {
-        newRecords.push(rec);
+      // If no createdAt is found, use the current time as a fallback.
+      const recordTime = createdAt ? new Date(createdAt).getTime() : Date.now();
+      minCreatedAt = Math.min(minCreatedAt, recordTime);
+      // Only include records that are newer than the cutoff
+      if (recordTime >= cutoffTime) {
+        pageRecords.push(rec);
       }
     }
 
-    // Add the records from this page that passed the cutoff check.
-    records = records.concat(newRecords);
-
-    // If not every record in this page passed the cutoff, stop further pagination.
-    if (newRecords.length < data.records.length) {
-      shouldContinue = false;
-    }
-
+    records.push(...pageRecords);
     onPage(1 / expectedPages);
     await new Promise((resolve) => setTimeout(resolve, 0));
-    cursor = data.cursor || null;
 
-    // If no new records were added on this page, break out.
-    if (newRecords.length === 0) {
-      shouldContinue = false;
+    // If the earliest record in this page is older than the cutoff,
+    // then stop fetching further pages.
+    if (minCreatedAt < cutoffTime) {
+      break;
     }
-  } while (cursor && shouldContinue);
+    cursor = data.cursor || null;
+  } while (cursor);
 
   return records;
 }
