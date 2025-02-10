@@ -219,11 +219,6 @@ async function fetchRecordsForCollection(
         recordTime = new Date(createdAt).getTime();
       }
 
-      // 3) Debug log
-      console.log(
-        `Record URI: ${rec.uri}, createdAt: ${createdAt}, recordTime=${recordTime}, cutoffTime=${cutoffTime}`
-      );
-
       // 4) Track minimum createdAt in this page
       minCreatedAt = Math.min(minCreatedAt, recordTime);
 

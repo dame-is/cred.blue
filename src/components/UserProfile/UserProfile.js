@@ -83,6 +83,9 @@ const UserProfile = () => {
     fetchAccountData();
   }, [username]);
 
+  console.log("30 Day Account Data:", accountData30Days); // Add this line
+  console.log("90 Day Account Data:", accountData90Days); // Add this line
+
   // While loading, show our Matter.js visualization.
   if (loading) {
     return (

@@ -91,8 +91,6 @@ const PostTypeCard = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const COLORS = ['#0056b3', '#0066cc', '#3399ff', '#66b2ff'];
 
-  console.log("Account Data:", accountData); // Add this line
-
   if (!accountData) {
     return <div>Loading post types...</div>;
   }
