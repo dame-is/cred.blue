@@ -11,7 +11,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import PropTypes from "prop-types";
-import "./ScoreResult.css"; // Update CSS file name/path as needed
+import "./CompareScores.css"; // Update CSS file name/path as needed
 
 const CompareScoresResults = ({ result, loading }) => {
   // State for toggling which scores to display
