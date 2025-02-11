@@ -25,6 +25,8 @@ const AltTextRatingTool = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [autocompleteActive, setAutocompleteActive] = useState(false);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
+  // New state: show results div immediately after submission.
+  const [showResults, setShowResults] = useState(false);
 
   // Ref for the gauge needle (SVG group).
   const needleGroupRef = useRef(null);
@@ -260,6 +262,8 @@ const AltTextRatingTool = () => {
   // ----------------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // Immediately show the results div as soon as the button is clicked.
+    setShowResults(true);
     setLoading(true);
     setShareButtonVisible(false);
     setAnalysis(null);
@@ -359,7 +363,8 @@ const AltTextRatingTool = () => {
             </button>
           </div>
         </form>
-        <div className="results" style={{ display: analysis ? 'block' : 'none' }}>
+        {/* The results div now uses showResults to control visibility */}
+        <div className="results" style={{ display: showResults ? 'block' : 'none' }}>
           <div id="textResults">{textResults}</div>
           <div className="gauge-container">
             <svg className="gauge-svg" viewBox="0 0 400 300">
