@@ -11,7 +11,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import PropTypes from "prop-types";
-import "./CompareScores.css"; // Update CSS file name/path as needed
+import "./CompareScores.css"; // Adjust the CSS path as needed
 
 const CompareScoresResults = ({ result, loading }) => {
   // State for toggling which scores to display
@@ -70,13 +70,16 @@ const CompareScoresResults = ({ result, loading }) => {
   // Determine if we are in comparison mode
   const isComparison = Array.isArray(result);
 
-  // Extract the score data and breakdown data from a score object.
-  // If the object has a "data" property, use that; otherwise, use the object itself.
+  /**
+   * Extracts the actual score data from the object.
+   * If the object contains an "accountData90Days" property, we use that.
+   * Otherwise, we assume the object itself is the score data.
+   */
   const extractData = (scoreObj) => {
-    if (scoreObj.data && scoreObj.breakdown) {
+    if (scoreObj.accountData90Days) {
       return {
-        scoreData: scoreObj.data,
-        breakdownData: scoreObj.breakdown,
+        scoreData: scoreObj.accountData90Days,
+        breakdownData: scoreObj.accountData90Days.breakdown || {},
       };
     }
     return {
@@ -166,8 +169,13 @@ const CompareScoresResults = ({ result, loading }) => {
   // Render a chart for a single identity.
   const renderSingleChart = (scoreObj) => {
     const { scoreData } = extractData(scoreObj);
-    // Note: use "scoreGeneratedAt" from the response
-    const { handle = "Unknown Handle", blueskyScore, atprotoScore, combinedScore, scoreGeneratedAt } = scoreData;
+    const {
+      handle = "Unknown Handle",
+      blueskyScore,
+      atprotoScore,
+      combinedScore,
+      scoreGeneratedAt,
+    } = scoreData;
     const chartData = [
       {
         handle,
@@ -211,7 +219,13 @@ const CompareScoresResults = ({ result, loading }) => {
     if (isComparison && Array.isArray(result) && result.length === 2) {
       const chartData = result.map((scoreObj) => {
         const { scoreData } = extractData(scoreObj);
-        const { handle = "Unknown Handle", blueskyScore, atprotoScore, combinedScore, scoreGeneratedAt } = scoreData;
+        const {
+          handle = "Unknown Handle",
+          blueskyScore,
+          atprotoScore,
+          combinedScore,
+          scoreGeneratedAt,
+        } = scoreData;
         return {
           handle,
           Bluesky: blueskyScore || 0,
@@ -326,24 +340,10 @@ CompareScoresResults.propTypes = {
   result: PropTypes.oneOfType([
     PropTypes.arrayOf(
       PropTypes.shape({
-        handle: PropTypes.string.isRequired,
-        did: PropTypes.string.isRequired,
-        blueskyScore: PropTypes.number.isRequired,
-        atprotoScore: PropTypes.number.isRequired,
-        combinedScore: PropTypes.number.isRequired,
-        scoreGeneratedAt: PropTypes.string.isRequired,
-        breakdown: PropTypes.object.isRequired,
+        // Note: The shape here is not enforced strictly because we extract the inner data.
       })
     ),
-    PropTypes.shape({
-      handle: PropTypes.string.isRequired,
-      did: PropTypes.string.isRequired,
-      blueskyScore: PropTypes.number.isRequired,
-      atprotoScore: PropTypes.number.isRequired,
-      combinedScore: PropTypes.number.isRequired,
-      scoreGeneratedAt: PropTypes.string.isRequired,
-      breakdown: PropTypes.object.isRequired,
-    }),
+    PropTypes.shape({}),
   ]),
   loading: PropTypes.bool.isRequired,
 };
