@@ -12,20 +12,46 @@ async function resolveHandleToDid(inputHandle) {
   return data.did;
 }
 
-// Get the service endpoint for the DID by querying the PLC directory.
+// Get the service endpoint for the DID by querying either the PLC directory or (for did:web identities) the well-known DID document.
 async function getServiceEndpointForDid(resolvedDid) {
-  const url = `${plcDirectoryEndpoint}/${encodeURIComponent(resolvedDid)}`;
+  let url;
+  
+  if (resolvedDid.startsWith("did:web:")) {
+    // For did:web, remove the prefix to get the domain.
+    // (Example: "did:web:example.com" → "example.com")
+    const domain = resolvedDid.slice("did:web:".length);
+    // Construct the URL for the well-known DID document.
+    url = `https://${domain}/.well-known/did.json`;
+  } else if (resolvedDid.startsWith("did:plc:")) {
+    // For did:plc, use your PLC directory endpoint.
+    url = `${plcDirectoryEndpoint}/${encodeURIComponent(resolvedDid)}`;
+  } else {
+    throw new Error(`Unsupported DID method for DID: ${resolvedDid}`);
+  }
+
+  // Fetch the DID document
   const data = await getJSON(url);
   if (!data.service || !Array.isArray(data.service)) {
     throw new Error("Could not determine service endpoint for DID.");
   }
-  // Look for the service entry with type "AtprotoPersonalDataServer"
-  const svcEntry = data.service.find((svc) => svc.type === "AtprotoPersonalDataServer");
+
+  // Look for the service endpoint.
+  // For PLC DIDs, we specifically look for the service with type "AtprotoPersonalDataServer".
+  // For did:web, we try to pick that service if present, otherwise fallback to the first available entry.
+  let svcEntry;
+  if (resolvedDid.startsWith("did:plc:")) {
+    svcEntry = data.service.find((svc) => svc.type === "AtprotoPersonalDataServer");
+  } else if (resolvedDid.startsWith("did:web:")) {
+    svcEntry = data.service.find((svc) => svc.type === "AtprotoPersonalDataServer") || data.service[0];
+  }
+
   if (!svcEntry || !svcEntry.serviceEndpoint) {
     throw new Error("Could not determine service endpoint for DID.");
   }
+  
   return svcEntry.serviceEndpoint;
 }
+
 
 /***********************************************************************
  * Global settings and basic caching
