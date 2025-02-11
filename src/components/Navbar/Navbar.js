@@ -57,6 +57,9 @@ const Navbar = () => {
               <li>
                 <Link to="/about">about</Link>
               </li>
+              <li>
+                <Link to="/compare">compare</Link>
+              </li>
               {/* Add more links as needed */}
             </ul>
           </nav>

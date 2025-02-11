@@ -10,6 +10,7 @@ import About from './components/About/About';
 import Home from './components/Home/Home';
 import UserProfile from './components/UserProfile/UserProfile';
 import TestMatterPage from './components/TestMatterPage';  // New import for test page
+import CompareScores from './components/CompareScores/CompareScores';  // New import for compare page
 import "./App.css";
 import { AuthContext } from './AuthContext';
 
@@ -34,6 +35,8 @@ const App = () => {
             />
             <Route path="/about" element={<About />} />
             <Route path="/home" element={<Home />} />
+            {/* Added CompareScores route */}
+            <Route path="/compare" element={<CompareScores />} />
             <Route
               path="/app/*"
               element={
@@ -44,8 +47,9 @@ const App = () => {
                 )
               }
             />
+            {/* Note: placing this route after /compare avoids conflict */}
             <Route path="/:username" element={<UserProfile />} />
-            <Route path="/test-matter" element={<TestMatterPage />} />  {/* New route */}
+            <Route path="/test-matter" element={<TestMatterPage />} />
             <Route path="*" element={<Navigate to={isAuthenticated ? '/app' : '/home'} replace />} />
           </Routes>
         </div>
