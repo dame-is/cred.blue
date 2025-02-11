@@ -609,7 +609,8 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
     const postsCountAllTime = profile.postsCount || postsRecordsAllTime.length;
     const postStatsAllTime = computePostStats(postsRecordsAllTime, ageInDays);
 
-    // Parse audit log or use defaults for did:web identities
+    // Parse audit log (or use defaults for did:web identities)
+    let plcOperations;
     let totalAkas, totalBskyAkas, totalCustomAkas, rotationKeysRounded, activeAkasRounded;
 
     if (did.startsWith("did:web:")) {
@@ -619,13 +620,14 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
       totalCustomAkas = 1;
       rotationKeysRounded = 3;
       activeAkasRounded = 1;
+      plcOperations = 0;
     } else {
       // For did:plc identities, fetch and process the audit log as usual
       const rawAuditData = await fetchAuditLog();
       let auditRecords = Array.isArray(rawAuditData)
         ? rawAuditData
         : Object.values(rawAuditData);
-      const plcOperations = auditRecords.length;
+      plcOperations = auditRecords.length;
       let rotationKeys = 0;
       let activeAkas = 0;
       let akaSet = new Set();
