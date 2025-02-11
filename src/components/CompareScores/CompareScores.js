@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import CompareScoresResults from "./CompareScoresResults";
 // Adjust the import path for your score data module as needed:
-import { loadAccountData } from "../../yourScoreDataModule";
+import { loadAccountData } from "../../accountData";
 
 const CompareScores = () => {
   const [username1, setUsername1] = useState("");
