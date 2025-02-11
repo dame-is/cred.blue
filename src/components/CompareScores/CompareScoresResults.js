@@ -1,3 +1,5 @@
+// frontend/src/components/CompareScores/CompareScoresResults.js
+
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import {
   BarChart,
@@ -9,32 +11,28 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import PropTypes from "prop-types";
-import "./CompareScores.css"; // You can rename/update this CSS file if needed
+import "./ScoreResult.css"; // Update CSS file name/path as needed
 
 const CompareScoresResults = ({ result, loading }) => {
-  // State Hooks
+  // State for toggling which scores to display
   const [showBluesky, setShowBluesky] = useState(true);
   const [showAtproto, setShowAtproto] = useState(true);
   const [, setActiveHandle] = useState(null);
 
-  // Ref to track if the component is mounted
+  // Keep track of whether the component is mounted
   const isMounted = useRef(true);
-
   useEffect(() => {
-    // Cleanup function to set isMounted to false when component unmounts
     return () => {
       isMounted.current = false;
     };
   }, []);
 
-  // Safe state updater to prevent setting state on unmounted components
   const safeSetActiveHandle = useCallback((handle) => {
     if (isMounted.current && typeof setActiveHandle === "function") {
       setActiveHandle(handle);
     }
   }, []);
 
-  // Debugging: Log the received result prop
   useEffect(() => {
     console.log("CompareScoresResults received:", result);
   }, [result]);
@@ -42,7 +40,7 @@ const CompareScoresResults = ({ result, loading }) => {
   if (loading) {
     return (
       <div className="score-result">
-        {/* Loading Skeletons */}
+        {/* Loading Skeleton */}
         <div className="loading-skeleton">
           <div className="skeleton-title"></div>
           <div className="skeleton-bar"></div>
@@ -69,98 +67,57 @@ const CompareScoresResults = ({ result, loading }) => {
     return <div className="error">Error: {result.error}</div>;
   }
 
-  /**
-   * Determine if result is array or single object.
-   */
+  // Determine if we are in comparison mode
   const isComparison = Array.isArray(result);
 
-  /**
-   * Function to extract score data and breakdown from a single score object.
-   * @param {Object} scoreObj - Single score object.
-   * @returns {Object} - { scoreData, breakdownData }
-   */
+  // Extract the score data and breakdown data from a score object.
+  // If the object has a "data" property, use that; otherwise, use the object itself.
   const extractData = (scoreObj) => {
-    // If the scoreObj has 'data' and 'breakdown', use them
     if (scoreObj.data && scoreObj.breakdown) {
       return {
         scoreData: scoreObj.data,
         breakdownData: scoreObj.breakdown,
       };
     }
-    // Else, assume scoreObj itself has the data fields and breakdown
     return {
       scoreData: scoreObj,
       breakdownData: scoreObj.breakdown || {},
     };
   };
 
-  /**
-   * Renders the score breakdown sections for a given identity.
-   * @param {Object} scoreObj - The result data for a single identity.
-   * @param {String} label - A unique label to prevent key conflicts.
-   */
+  // Render a breakdown summary from an object of key/value pairs.
+  const renderBreakdownSummary = (breakdownData) => {
+    if (!breakdownData || Object.keys(breakdownData).length === 0) {
+      return <p>No breakdown data available.</p>;
+    }
+    return (
+      <ul>
+        {Object.entries(breakdownData).map(([key, value]) => (
+          <li key={key}>
+            {key}:{" "}
+            {typeof value === "object" ? JSON.stringify(value, null, 2) : value}
+          </li>
+        ))}
+      </ul>
+    );
+  };
+
+  // Render the score breakdown for one identity.
   const renderScoreBreakdown = (scoreObj, label) => {
     const { scoreData, breakdownData } = extractData(scoreObj);
     const { handle = "Unknown Handle" } = scoreData;
-    const blueskyBreakdown = breakdownData.bluesky || [];
-    const atprotoBreakdown = breakdownData.atproto || [];
-
     return (
       <div className="score-breakdown" key={label}>
         <h3 className="score-breakdown-header">{handle}</h3>
-
         <div className="breakdown-section">
-          <h4>Bluesky Score Breakdown</h4>
-          {blueskyBreakdown.length > 0 ? (
-            <ul>
-              {blueskyBreakdown.map((item, index) => (
-                <li key={`${label}-bluesky-${index}`}>
-                  {item.description}: {Math.ceil(item.points)} points
-                  {(item.value || item.details) && (
-                    <span>
-                      {" "}
-                      (
-                      {item.value ? item.value : item.details ? item.details : ""}
-                      )
-                    </span>
-                  )}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No Bluesky score breakdown available.</p>
-          )}
-        </div>
-
-        <div className="breakdown-section">
-          <h4>Atproto Score Breakdown</h4>
-          {atprotoBreakdown.length > 0 ? (
-            <ul>
-              {atprotoBreakdown.map((item, index) => (
-                <li key={`${label}-atproto-${index}`}>
-                  {item.description}: {Math.ceil(item.points)} points
-                  {(item.value || item.details) && (
-                    <span>
-                      {" "}
-                      (
-                      {item.value ? item.value : item.details ? item.details : ""}
-                      )
-                    </span>
-                  )}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No Atproto score breakdown available.</p>
-          )}
+          <h4>Score Breakdown</h4>
+          {renderBreakdownSummary(breakdownData)}
         </div>
       </div>
     );
   };
 
-  /**
-   * Renders the score toggle checkboxes.
-   */
+  // Render the toggle checkboxes.
   const renderCheckboxes = () => (
     <div className="score-toggle-controls">
       <label>
@@ -182,12 +139,10 @@ const CompareScoresResults = ({ result, loading }) => {
     </div>
   );
 
-  /**
-   * Custom Tooltip Component for Recharts.
-   */
+  // Custom tooltip for the chart.
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
-      const dataPoint = payload[0].payload; // Assuming the first payload contains necessary data
+      const dataPoint = payload[0].payload;
       return (
         <div className="custom-tooltip">
           <p className="label">
@@ -208,27 +163,20 @@ const CompareScoresResults = ({ result, loading }) => {
     label: PropTypes.string,
   };
 
-  /**
-   * Renders the score chart for single mode.
-   * @param {Object} scoreObj - The result data for a single identity.
-   */
+  // Render a chart for a single identity.
   const renderSingleChart = (scoreObj) => {
     const { scoreData } = extractData(scoreObj);
-    const { handle = "Unknown Handle", blueskyScore, atprotoScore, combinedScore, generatedAt } = scoreData;
-
-    // Prepare data for Recharts
+    // Note: use "scoreGeneratedAt" from the response
+    const { handle = "Unknown Handle", blueskyScore, atprotoScore, combinedScore, scoreGeneratedAt } = scoreData;
     const chartData = [
       {
         handle,
         Bluesky: blueskyScore || 0,
         Atproto: atprotoScore || 0,
         Combined: combinedScore || 0,
-        generatedAt: generatedAt || new Date().toISOString(),
+        scoreGeneratedAt: scoreGeneratedAt || new Date().toISOString(),
       },
     ];
-
-    console.log("Single Chart Data:", chartData);
-
     return (
       <div className="single-chart">
         <h3>Score Overview</h3>
@@ -258,26 +206,20 @@ const CompareScoresResults = ({ result, loading }) => {
     );
   };
 
-  /**
-   * Renders the score chart for comparison mode.
-   */
+  // Render a comparison chart when two identities are being compared.
   const renderComparisonChart = () => {
     if (isComparison && Array.isArray(result) && result.length === 2) {
-      // Prepare data for Recharts
       const chartData = result.map((scoreObj) => {
         const { scoreData } = extractData(scoreObj);
-        const { handle = "Unknown Handle", blueskyScore, atprotoScore, combinedScore, generatedAt } = scoreData;
+        const { handle = "Unknown Handle", blueskyScore, atprotoScore, combinedScore, scoreGeneratedAt } = scoreData;
         return {
           handle,
           Bluesky: blueskyScore || 0,
           Atproto: atprotoScore || 0,
           Combined: combinedScore || 0,
-          generatedAt: generatedAt || new Date().toISOString(),
+          scoreGeneratedAt: scoreGeneratedAt || new Date().toISOString(),
         };
       });
-
-      console.log("Comparison Chart Data:", chartData);
-
       return (
         <div className="comparison-chart">
           <h3>Score Comparison</h3>
@@ -309,26 +251,23 @@ const CompareScoresResults = ({ result, loading }) => {
     return null;
   };
 
-  /**
-   * Renders the comparison summary.
-   */
+  // Render a high-level comparison summary based on the combined scores.
   const renderComparisonSummary = () => {
     if (isComparison && Array.isArray(result) && result.length === 2) {
       const [first, second] = result.map((scoreObj) => extractData(scoreObj).scoreData);
       const firstScore = first.combinedScore || 0;
       const secondScore = second.combinedScore || 0;
-
       return (
         <div className="comparison-summary">
           <div className="comparison-summary-text">
             <h3>High-Level Comparison</h3>
             <p>
               <strong>{first.handle || "Unknown Handle"}</strong> has a combined score of{" "}
-              <strong>{Math.ceil(firstScore.toFixed(2))}</strong>.
+              <strong>{Math.ceil(firstScore)}</strong>.
             </p>
             <p>
               <strong>{second.handle || "Unknown Handle"}</strong> has a combined score of{" "}
-              <strong>{Math.ceil(secondScore.toFixed(2))}</strong>.
+              <strong>{Math.ceil(secondScore)}</strong>.
             </p>
             <p>
               {firstScore > secondScore ? (
@@ -350,9 +289,7 @@ const CompareScoresResults = ({ result, loading }) => {
     return null;
   };
 
-  /**
-   * Renders the score chart (either single or comparison mode).
-   */
+  // Choose which chart to render: single or comparison.
   const renderChart = () => {
     if (isComparison && Array.isArray(result)) {
       return (
@@ -366,9 +303,7 @@ const CompareScoresResults = ({ result, loading }) => {
     }
   };
 
-  /**
-   * Renders the score breakdowns for all identities.
-   */
+  // Render breakdown details for each identity.
   const renderAllBreakdowns = () => {
     if (isComparison && Array.isArray(result)) {
       return result.map((scoreObj, index) =>
@@ -389,7 +324,6 @@ const CompareScoresResults = ({ result, loading }) => {
 
 CompareScoresResults.propTypes = {
   result: PropTypes.oneOfType([
-    // Comparison Mode: Array of score objects
     PropTypes.arrayOf(
       PropTypes.shape({
         handle: PropTypes.string.isRequired,
@@ -397,53 +331,18 @@ CompareScoresResults.propTypes = {
         blueskyScore: PropTypes.number.isRequired,
         atprotoScore: PropTypes.number.isRequired,
         combinedScore: PropTypes.number.isRequired,
-        generatedAt: PropTypes.string.isRequired,
-        breakdown: PropTypes.shape({
-          bluesky: PropTypes.arrayOf(
-            PropTypes.shape({
-              description: PropTypes.string.isRequired,
-              points: PropTypes.number.isRequired,
-              value: PropTypes.string,
-              details: PropTypes.string,
-            })
-          ),
-          atproto: PropTypes.arrayOf(
-            PropTypes.shape({
-              description: PropTypes.string.isRequired,
-              points: PropTypes.number.isRequired,
-              value: PropTypes.string,
-              details: PropTypes.string,
-            })
-          ),
-        }).isRequired,
+        scoreGeneratedAt: PropTypes.string.isRequired,
+        breakdown: PropTypes.object.isRequired,
       })
     ),
-    // Single Mode: Single score object
     PropTypes.shape({
       handle: PropTypes.string.isRequired,
       did: PropTypes.string.isRequired,
       blueskyScore: PropTypes.number.isRequired,
       atprotoScore: PropTypes.number.isRequired,
       combinedScore: PropTypes.number.isRequired,
-      generatedAt: PropTypes.string.isRequired,
-      breakdown: PropTypes.shape({
-        bluesky: PropTypes.arrayOf(
-          PropTypes.shape({
-            description: PropTypes.string.isRequired,
-            points: PropTypes.number.isRequired,
-            value: PropTypes.string,
-            details: PropTypes.string,
-          })
-        ),
-        atproto: PropTypes.arrayOf(
-          PropTypes.shape({
-            description: PropTypes.string.isRequired,
-            points: PropTypes.number.isRequired,
-            value: PropTypes.string,
-            details: PropTypes.string,
-          })
-        ),
-      }).isRequired,
+      scoreGeneratedAt: PropTypes.string.isRequired,
+      breakdown: PropTypes.object.isRequired,
     }),
   ]),
   loading: PropTypes.bool.isRequired,
