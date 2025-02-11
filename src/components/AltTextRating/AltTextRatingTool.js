@@ -1,35 +1,52 @@
 // frontend/src/pages/AltTextRatingTool.js
 
 import React, { useState, useEffect, useRef } from 'react';
-import './AltTextRatingTool.css'; // Create a CSS file to include your styles
+import './AltTextRatingTool.css';
 
 const PUBLIC_API_URL = "https://public.api.bsky.app";
-// Define the static minimum date (as in your original script)
+// Define the static minimum date from your original script.
 const STATIC_MIN_DATE = new Date("2023-04-22T12:01:00Z");
 
 const AltTextRatingTool = () => {
-  // Form and analysis states
+  // Form state and analysis data.
   const [username, setUsername] = useState('');
   const [analysis, setAnalysis] = useState(null);
   const [allRecords, setAllRecords] = useState([]);
   const [actorDID, setActorDID] = useState('');
   const [loading, setLoading] = useState(false);
-  // Controlled checkboxes:
+  // Checkboxes state.
   const [useLast90Days, setUseLast90Days] = useState(false);
   const [excludeReplies, setExcludeReplies] = useState(false);
-  // For showing the Share button after analysis
+  // For the share button.
   const [shareButtonVisible, setShareButtonVisible] = useState(false);
-  // For displaying text results (as JSX)
+  // For text results display.
   const [textResults, setTextResults] = useState(null);
+  // For autocomplete suggestions.
+  const [suggestions, setSuggestions] = useState([]);
+  const [autocompleteActive, setAutocompleteActive] = useState(false);
+  const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
 
-  // Ref for the gauge needle group in the SVG
+  // Ref for the gauge needle (SVG group).
   const needleGroupRef = useRef(null);
+  // Refs for animation.
+  const animFrameIdRef = useRef(null);
+  const lastTimestampRef = useRef(null);
+  const currentOscillationRef = useRef(0);
+  const oscillationDirectionRef = useRef(1);
 
   // ----------------------------
-  // Helper Functions (converted from your inline scripts)
+  // Helper functions (converted from inline script)
   // ----------------------------
 
-  // Remove directional formatting characters and resolve handle to DID.
+  // Update the gauge needle based on the given percentage.
+  const updateGauge = (percentage) => {
+    const angleDeg = (percentage / 100) * 180;
+    if (needleGroupRef.current) {
+      needleGroupRef.current.setAttribute("transform", `rotate(${angleDeg},200,300)`);
+    }
+  };
+
+  // Resolve handle to DID (with cleaning of directional characters).
   async function resolveHandleToDID(handle) {
     const cleanedHandle = handle.replace(/[\u200E\u200F\u202A-\u202E]/g, '');
     const res = await fetch(`${PUBLIC_API_URL}/xrpc/com.atproto.identity.resolveHandle?handle=${encodeURIComponent(cleanedHandle)}`);
@@ -38,7 +55,7 @@ const AltTextRatingTool = () => {
     throw new Error("Invalid username. Please try again without including the '@' symbol before the domain.");
   }
 
-  // Fetch the service endpoint given a DID.
+  // Fetch the service endpoint for a given DID.
   async function fetchServiceEndpoint(did) {
     let url;
     if (did.startsWith("did:web:")) {
@@ -74,7 +91,7 @@ const AltTextRatingTool = () => {
     return records;
   }
 
-  // A simple check for “reply to self”
+  // Check if a reply is directed to self.
   function isReplyToSelf(rec, actor) {
     return (
       rec.value.reply &&
@@ -84,7 +101,7 @@ const AltTextRatingTool = () => {
     );
   }
 
-  // Analyze posts (using similar logic to your original analyzePosts function).
+  // Analyze posts based on checkboxes.
   function analyzePosts(records, useLast90Days, excludeReplies, actor) {
     let dynamicMinDate;
     if (useLast90Days) {
@@ -157,47 +174,98 @@ const AltTextRatingTool = () => {
     };
   }
 
-  // Update the gauge needle based on the given percentage.
-  const updateGauge = (percentage) => {
-    const angleDeg = (percentage / 100) * 180;
-    if (needleGroupRef.current) {
-      needleGroupRef.current.setAttribute("transform", `rotate(${angleDeg},200,300)`);
+  // ----------------------------
+  // Gauge Needle Animation (using requestAnimationFrame)
+  // ----------------------------
+
+  const baseSpeed = 0.10; // base speed per millisecond
+  const oscillationMin = 0; // minimum percentage
+  const oscillationMax = 100; // maximum percentage
+  const bounceRange = 10;   // bounce offset
+
+  const animateNeedle = (timestamp) => {
+    if (!lastTimestampRef.current) {
+      lastTimestampRef.current = timestamp;
+    }
+    const deltaTime = timestamp - lastTimestampRef.current;
+    lastTimestampRef.current = timestamp;
+
+    const randomFactor = 0.8 + Math.random() * 0.4; // between 0.8 and 1.2
+    const increment = baseSpeed * deltaTime * randomFactor;
+    currentOscillationRef.current += oscillationDirectionRef.current * increment;
+
+    if (currentOscillationRef.current >= oscillationMax) {
+      currentOscillationRef.current = oscillationMax - Math.random() * bounceRange;
+      oscillationDirectionRef.current = -1;
+    } else if (currentOscillationRef.current <= oscillationMin) {
+      currentOscillationRef.current = oscillationMin + Math.random() * bounceRange;
+      oscillationDirectionRef.current = 1;
+    }
+
+    updateGauge(currentOscillationRef.current);
+    animFrameIdRef.current = requestAnimationFrame(animateNeedle);
+  };
+
+  const startNeedleAnimation = () => {
+    currentOscillationRef.current = oscillationMin;
+    oscillationDirectionRef.current = 1;
+    lastTimestampRef.current = null;
+    if (animFrameIdRef.current) {
+      cancelAnimationFrame(animFrameIdRef.current);
+    }
+    animFrameIdRef.current = requestAnimationFrame(animateNeedle);
+  };
+
+  const stopNeedleAnimation = () => {
+    if (animFrameIdRef.current) {
+      cancelAnimationFrame(animFrameIdRef.current);
+      animFrameIdRef.current = null;
     }
   };
 
-  // Update the share button action (opens an intent URL in a new tab)
-  const handleShare = () => {
-    if (!analysis) return;
-    const shareText =
-      `My alt text rating score is ${analysis.altTextPercentage.toFixed(2)}% ${analysis.emoji}\n\n` +
-      `${analysis.totalPosts} posts analyzed,\n` +
-      `${analysis.postsWithImages} contain images,\n` +
-      `${analysis.postsWithAltText} have alt text...\n\n` +
-      `Get your Bluesky alt text rating here: dame.is/ratingalttext`;
-    const intentUrl = `https://bsky.app/intent/compose?text=${encodeURIComponent(shareText)}`;
-    window.open(intentUrl, '_blank');
+  // ----------------------------
+  // Autocomplete Functions (with debounce)
+  // ----------------------------
+  const debounce = (func, delay) => {
+    let timer;
+    return (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => func(...args), delay);
+    };
   };
 
-  // Build a JSX fragment to display text analysis results.
-  const renderTextResults = (analysisResult) => (
-    <div>
-      <p>{analysisResult.totalPosts} posts analyzed</p>
-      <p>{analysisResult.postsWithImages} contain images</p>
-      <p>{analysisResult.repliesWithImages} are replies</p>
-      <p>{analysisResult.postsWithAltText} posts have alt text</p>
-      <h2>Score: {analysisResult.altTextPercentage.toFixed(2)}% {analysisResult.emoji}</h2>
-    </div>
-  );
+  const fetchSuggestions = async (query) => {
+    if (!query) {
+      setSuggestions([]);
+      return;
+    }
+    try {
+      const res = await fetch(
+        `https://public.api.bsky.app/xrpc/app.bsky.actor.searchActorsTypeahead?q=${encodeURIComponent(query)}&limit=5`
+      );
+      if (!res.ok) throw new Error("Failed to fetch suggestions");
+      const data = await res.json();
+      setSuggestions(data.actors || []);
+      setAutocompleteActive(true);
+    } catch (error) {
+      console.error("Error fetching suggestions:", error);
+      setSuggestions([]);
+    }
+  };
+
+  const debouncedFetchSuggestions = useRef(debounce(fetchSuggestions, 300)).current;
 
   // ----------------------------
   // Event Handlers
   // ----------------------------
-  async function handleSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setShareButtonVisible(false);
     setAnalysis(null);
     setTextResults(null);
+    stopNeedleAnimation(); // Stop any existing animation
+    startNeedleAnimation(); // Start needle oscillation until results are computed
 
     try {
       const did = await resolveHandleToDID(username);
@@ -211,14 +279,15 @@ const AltTextRatingTool = () => {
       setTextResults(renderTextResults(analysisResult));
       updateGauge(analysisResult.altTextPercentage);
       setShareButtonVisible(true);
+      stopNeedleAnimation();
     } catch (error) {
       setTextResults(<p style={{ color: 'red' }}>Error: {error.message}</p>);
       updateGauge(0);
+      stopNeedleAnimation();
     }
     setLoading(false);
-  }
+  };
 
-  // When checkbox states change and we already have records, re-run the analysis.
   useEffect(() => {
     if (allRecords.length > 0 && actorDID) {
       const newAnalysis = analyzePosts(allRecords, useLast90Days, excludeReplies, actorDID);
@@ -226,15 +295,24 @@ const AltTextRatingTool = () => {
       setTextResults(renderTextResults(newAnalysis));
       updateGauge(newAnalysis.altTextPercentage);
     }
-  }, [useLast90Days, excludeReplies]);
+  }, [useLast90Days, excludeReplies]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // ----------------------------
-  // (Optional) Autocomplete logic could be added here via another useEffect or a separate component.
-  // ----------------------------
+  useEffect(() => {
+    debouncedFetchSuggestions(username);
+  }, [username, debouncedFetchSuggestions]);
+
+  const renderTextResults = (analysisResult) => (
+    <div>
+      <p>{analysisResult.totalPosts} posts analyzed</p>
+      <p>{analysisResult.postsWithImages} contain images</p>
+      <p>{analysisResult.repliesWithImages} are replies</p>
+      <p>{analysisResult.postsWithAltText} posts have alt text</p>
+      <h2>Score: {analysisResult.altTextPercentage.toFixed(2)}% {analysisResult.emoji}</h2>
+    </div>
+  );
 
   return (
     <div className="alt-text-rating-tool">
-      {/* Alt Text Rating Form */}
       <div id="alt-text-rating-form" className="alt-card">
         <h1>Bluesky Alt Text Rating</h1>
         <p>How consistently do you use alt text?</p>
@@ -247,22 +325,44 @@ const AltTextRatingTool = () => {
               placeholder="(e.g., dame.bsky.social)"
               required
             />
-            {/* Autocomplete suggestions can be rendered here if implemented */}
-            <div id="autocomplete-list" className="autocomplete-items"></div>
+            {autocompleteActive && suggestions.length > 0 && (
+              <div className="autocomplete-items">
+                {suggestions.map((actor, index) => (
+                  <div
+                    key={actor.handle}
+                    className={`autocomplete-item ${index === activeSuggestionIndex ? 'active' : ''}`}
+                    onClick={() => {
+                      setUsername(actor.handle);
+                      setSuggestions([]);
+                      setAutocompleteActive(false);
+                    }}
+                  >
+                    <img src={actor.avatar} alt={`${actor.handle}'s avatar`} />
+                    <span>{actor.handle}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
           <div className="action-row">
             <button type="submit">Analyze</button>
-            <button type="button" onClick={handleShare} style={{ display: shareButtonVisible ? 'inline-block' : 'none' }}>
+            <button
+              type="button"
+              onClick={() => window.open(
+                `https://bsky.app/intent/compose?text=${encodeURIComponent(
+                  `My alt text rating score is ${analysis?.altTextPercentage?.toFixed(2)}% ${analysis?.emoji}\n\n${analysis?.totalPosts} posts analyzed,\n${analysis?.postsWithImages} contain images,\n${analysis?.postsWithAltText} have alt text...\n\nGet your Bluesky alt text rating here: dame.is/ratingalttext`
+                )}`, '_blank'
+              )}
+              style={{ display: shareButtonVisible ? 'inline-block' : 'none' }}
+            >
               Share Results
             </button>
           </div>
         </form>
-        {/* Results */}
         <div className="results" style={{ display: analysis ? 'block' : 'none' }}>
           <div id="textResults">{textResults}</div>
           <div className="gauge-container">
             <svg className="gauge-svg" viewBox="0 0 400 300">
-              {/* Quadrant paths */}
               <path d="M50,300 A150,150 0 0,1 93.93,193.93 L200,300 Z" fill="#ff0000" />
               <path d="M93.93,193.93 A150,150 0 0,1 200,150 L200,300 Z" fill="#ff9900" />
               <path d="M200,150 A150,150 0 0,1 306.07,193.93 L200,300 Z" fill="#ffff66" />
@@ -305,7 +405,6 @@ const AltTextRatingTool = () => {
           </p>
         </div>
       </div>
-      {/* Extra Info Card */}
       <div id="extra-info" className="alt-card">
         <div className="resources">
           <h3>Learn more about alt text:</h3>
