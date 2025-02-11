@@ -8,6 +8,7 @@ import Login from './components/Login/Login';
 import MainApp from './components/MainApp/MainApp';
 import About from './components/About/About';
 import Home from './components/Home/Home';
+import AltTextRatingTool from './components/AltTextRating/AltTextRatingTool';
 import UserProfile from './components/UserProfile/UserProfile';
 import TestMatterPage from './components/TestMatterPage';  // New import for test page
 import CompareScores from './components/CompareScores/CompareScores';  // New import for compare page
@@ -33,10 +34,10 @@ const App = () => {
                 )
               }
             />
-            <Route path="/about" element={<About />} />
             <Route path="/home" element={<Home />} />
-            {/* Added CompareScores route */}
             <Route path="/compare" element={<CompareScores />} />
+            <Route path="/alt-text" element={<AltTextRatingTool />} />
+            <Route path="/about" element={<About />} />
             <Route
               path="/app/*"
               element={

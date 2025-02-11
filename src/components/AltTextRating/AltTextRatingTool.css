@@ -1,0 +1,388 @@
+/* AltTextRatingTool.css */
+
+/* === Specific Styles for Alt Text Analyzer === */
+
+.alt-card {
+    background-color: var(--post-background-color);
+    padding: 20px;
+    border: 1px solid #ccc;
+    text-align: center;
+    max-width: 95%;
+    margin: auto;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+body.dark-mode .alt-card {
+    border-color: #444;
+}
+
+#alt-text-rating-form h1 {
+    text-align: center;
+    margin-top: 0px;
+    font-size: 1.5em; /* Adjusted for better readability */
+}
+
+.results {
+    margin-top: 20px;
+    font-size: 0.95em;
+    word-wrap: break-word; /* Prevent long text from breaking the layout */
+}
+
+.results p {
+    margin-bottom: 4px;
+    word-wrap: break-word; /* Prevent long text from breaking the layout */
+}
+
+.results h2 {
+    color: var(--text-color);
+    font-size: 1.5em;
+    max-width: 200px;
+    margin: 20px auto;
+    text-align: center;
+}
+
+.resources h3 {
+    font-size: 1em;
+    margin-top: 0px;
+}
+
+.resources ul {
+    list-style: none;
+    padding: 0;
+    font-size: 0.7em;
+    margin-bottom: 0px;
+}
+
+.credblue ul {
+    list-style: none;
+    padding: 0;
+    font-size: 0.7em;
+}
+
+.credblue h3 {
+    font-size: 1em;
+    margin-top: 20px;
+}
+
+.resources li {
+    margin-bottom: 5px;
+}
+
+.resources a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+.resources a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive: For smaller screens, stack the elements vertically */
+@media (max-width: 500px) {
+    .search-bar {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .checkbox-container {
+        margin-left: 0;
+    }
+}
+
+/* General Styles for the search bar */
+.search-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px; /* space between the input and the action row */
+    margin-top: 15px;
+}
+
+/* Style for the input */
+.search-bar input {
+    width: 90%;
+    max-width: 300px;
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+}
+
+/* Action row: contains the button and the checkbox, arranged horizontally */
+.action-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+}
+
+/* Style for the Analyze button */
+.search-bar button {
+    padding: 10px 20px;
+    font-size: 1em;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.search-bar button:hover {
+    background-color: #0056b3;
+}
+
+.custom-checkbox input[type="checkbox"]:checked:hover + .checkbox-indicator {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.custom-checkbox input[type="checkbox"]:hover + .checkbox-indicator {
+    background-color: #8fc5ff;
+}
+
+/* Custom Checkbox Styles */
+.custom-checkbox {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 0.9em;
+    user-select: none;
+}
+
+/* Hide the default checkbox appearance */
+.custom-checkbox input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 15px;
+    height: 15px;
+    margin: 0;
+    border: 2px solid #007bff;
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    background-color: #fff;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+/* Create a custom indicator (optional: you can use the input element itself) */
+.custom-checkbox .checkbox-indicator {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #007bff;
+    border-radius: 4px;
+    margin-right: 8px;
+    position: relative;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+/* Hide the native checkmark; we use the indicator to display the check state. */
+.custom-checkbox input[type="checkbox"]:checked + .checkbox-indicator {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+/* Optional: Add a checkmark icon using CSS pseudo-elements */
+.custom-checkbox input[type="checkbox"]:checked + .checkbox-indicator::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 6px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+/* When clicking, have a subtle focus outline */
+.custom-checkbox input[type="checkbox"]:focus {
+    box-shadow: 0 0 3px 2px rgba(0, 123, 255, 0.5);
+}
+
+/* Hide the native checkbox visually but still keep it accessible. */
+.custom-checkbox input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Instead, we use the indicator to toggle */
+.custom-checkbox {
+    position: relative;
+    padding-left: 33px; /* space for the checkbox indicator */
+    margin-bottom: 19px;
+    font-size: 1em;
+}
+
+/* Ensure the indicator sits in the correct position */
+.custom-checkbox .checkbox-indicator {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+
+.filters-container {
+    font-size: 0.8em;
+  }
+
+.alt-text-rating-tool {
+    padding: 20px;
+  }
+  
+  .alt-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .search-bar input {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+  }
+  
+  .action-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .gauge-container {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .needle-group {
+    transition: transform 0.2s linear;
+  }
+  
+  /* Checkbox styles */
+  .filters-container {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  
+  .checkbox-container {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 7px;
+  }
+  
+  .checkbox-container input {
+    margin-right: 5px;
+  }
+  
+  /* Autocomplete (if needed) */
+  .autocomplete-items {
+    position: absolute;
+    border: 1px solid #ddd;
+    background: #fff;
+    z-index: 99;
+    top: 100%;
+    left: 0;
+    right: 0;
+  }
+  
+  .autocomplete-item {
+    padding: 5px;
+    cursor: pointer;
+  }
+  
+  .autocomplete-item:hover,
+  .autocomplete-item.active {
+    background: #e9e9e9;
+  }
+  
+
+      /* Responsive container for the gauge */
+      .gauge-container {
+        margin: 20px auto;
+        width: 100%;
+        max-width: 400px;
+        position: relative;
+        padding-bottom: 0;
+        margin-top: -27px;
+        margin-bottom: -16px;
+      }
+      .gauge-container svg {
+        position: relative;
+        top: -18px;
+        left: 0;
+        width: 100%;
+        margin-top: -93px;
+        overflow: hidden;
+      }
+
+
+@media (max-width: 450px) {
+    .gauge-container {
+        margin: 20px auto;
+        width: 100%;
+        max-width: 400px;
+        position: relative;
+        padding-bottom: 0;
+        margin-top: 25px;
+        margin-bottom: -16px;
+      }
+}
+
+/* Container for autocomplete items */
+.autocomplete-items {
+    position: absolute;
+    z-index: 99;
+    top: 116%;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    overflow: clip;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding-top: 5px;
+  }
+
+  /* Hide the autocomplete container when it's empty */
+.autocomplete-items:empty {
+    display: none;
+  }
+
+  .dark-mode .autocomplete-items {
+    color: black;
+  }
+  
+  /* Style each item */
+  .autocomplete-item {
+    padding: 9px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-size: 0.9em;
+  padding-top: 4px;
+  }
+  
+  /* Highlighted item */
+  .autocomplete-item:hover,
+  .autocomplete-item.active {
+    background-color: #e9e9e9;
+  }
+  
+  /* Avatar image */
+  .autocomplete-item img {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 7px;
+    object-fit: cover;
+  }

@@ -505,3 +505,30 @@ form {
     color: #555;
     font-size: 14px;
 }
+
+
+.compare-scores-page h2 {
+    text-align: center;
+  }
+
+  .compare-scores-page {
+    margin-top: 50px;
+    margin-bottom: 50px;
+  }
+
+  .compare-scores-page input {
+    border: 1px solid;
+    border-radius: 4px;
+    padding: 10px;
+    display: flex;
+  }
+
+  .compare-scores-page form {
+    border: 1px solid;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px #0000001a;
+    justify-content: center;
+    margin: 10px auto;
+    max-width: 193px;
+    padding: 20px 30px;
+  }
