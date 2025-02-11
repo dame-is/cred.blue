@@ -609,35 +609,53 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
     const postsCountAllTime = profile.postsCount || postsRecordsAllTime.length;
     const postStatsAllTime = computePostStats(postsRecordsAllTime, ageInDays);
 
-    // Parse audit log
-    const rawAuditData = await fetchAuditLog();
-    let auditRecords = Array.isArray(rawAuditData) ? rawAuditData : Object.values(rawAuditData);
-    const plcOperations = auditRecords.length;
-    let rotationKeys = 0;
-    let activeAkas = 0;
-    let akaSet = new Set();
-    if (plcOperations > 0) {
-      auditRecords.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-      const latestRecord = auditRecords[auditRecords.length - 1];
-      if (latestRecord.operation && Array.isArray(latestRecord.operation.rotationKeys)) {
-        rotationKeys = latestRecord.operation.rotationKeys.length;
-      }
-      if (latestRecord.operation && Array.isArray(latestRecord.operation.alsoKnownAs)) {
-        activeAkas = latestRecord.operation.alsoKnownAs.length;
-      }
-      auditRecords.forEach((record) => {
-        if (record.operation && Array.isArray(record.operation.alsoKnownAs)) {
-          record.operation.alsoKnownAs.forEach((alias) => {
-            akaSet.add(alias);
-          });
+    // Parse audit log or use defaults for did:web identities
+    let totalAkas, totalBskyAkas, totalCustomAkas, rotationKeysRounded, activeAkasRounded;
+
+    if (did.startsWith("did:web:")) {
+      // For did:web identities, skip fetching the audit log and use default values
+      totalAkas = 1;
+      totalBskyAkas = 0;
+      totalCustomAkas = 1;
+      rotationKeysRounded = 3;
+      activeAkasRounded = 1;
+    } else {
+      // For did:plc identities, fetch and process the audit log as usual
+      const rawAuditData = await fetchAuditLog();
+      let auditRecords = Array.isArray(rawAuditData)
+        ? rawAuditData
+        : Object.values(rawAuditData);
+      const plcOperations = auditRecords.length;
+      let rotationKeys = 0;
+      let activeAkas = 0;
+      let akaSet = new Set();
+      
+      if (plcOperations > 0) {
+        auditRecords.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        const latestRecord = auditRecords[auditRecords.length - 1];
+        if (latestRecord.operation && Array.isArray(latestRecord.operation.rotationKeys)) {
+          rotationKeys = latestRecord.operation.rotationKeys.length;
         }
-      });
+        if (latestRecord.operation && Array.isArray(latestRecord.operation.alsoKnownAs)) {
+          activeAkas = latestRecord.operation.alsoKnownAs.length;
+        }
+        auditRecords.forEach((record) => {
+          if (record.operation && Array.isArray(record.operation.alsoKnownAs)) {
+            record.operation.alsoKnownAs.forEach((alias) => {
+              akaSet.add(alias);
+            });
+          }
+        });
+      }
+      totalAkas = akaSet.size;
+      totalBskyAkas = Array.from(akaSet).filter((alias) =>
+        alias.includes("bsky.social")
+      ).length;
+      totalCustomAkas = roundToTwo(totalAkas - totalBskyAkas);
+      rotationKeysRounded = roundToTwo(rotationKeys);
+      activeAkasRounded = roundToTwo(activeAkas);
     }
-    const totalAkas = akaSet.size;
-    const totalBskyAkas = Array.from(akaSet).filter((alias) => alias.includes("bsky.social")).length;
-    const totalCustomAkas = roundToTwo(totalAkas - totalBskyAkas);
-    const rotationKeysRounded = roundToTwo(rotationKeys);
-    const activeAkasRounded = roundToTwo(activeAkas);
+
 
     // Compute engagements for all-time data
     const engagementsAllTime = await calculateEngagements(cutoffTimeAll);
