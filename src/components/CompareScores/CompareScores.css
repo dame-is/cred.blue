@@ -538,3 +538,7 @@ form {
     gap: 15px;
     padding: 20px 30px;
   }
+
+  .loading-container-1 {
+    min-height: 0vh !important;
+  }
