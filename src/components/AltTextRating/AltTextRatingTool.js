@@ -277,8 +277,8 @@ const AltTextRatingTool = () => {
     </div>
   );
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // Refactor the common search/analysis logic into runAnalysis.
+  const runAnalysis = async () => {
     setShowResults(true);
     setLoading(true);
     setShareButtonVisible(false);
@@ -306,6 +306,11 @@ const AltTextRatingTool = () => {
       stopNeedleAnimation();
     }
     setLoading(false);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    runAnalysis();
   };
 
   useEffect(() => {
@@ -344,6 +349,8 @@ const AltTextRatingTool = () => {
                       debouncedFetchSuggestions.cancel();
                       setSkipAutocomplete(true);
                       setTimeout(() => setSkipAutocomplete(false), 500);
+                      // Trigger the analysis immediately when a suggestion is clicked.
+                      runAnalysis();
                     }}
                   >
                     <img src={actor.avatar} alt={`${actor.handle}'s avatar`} />
