@@ -310,6 +310,9 @@ const messages = useMemo(
   // Render the fixed-size 250x250 canvas and center it with dynamic loading text.
   return (
     <div
+      className={
+        'loading-container-1'
+      }
       style={{
         display: "flex",
         flexDirection: "column",
