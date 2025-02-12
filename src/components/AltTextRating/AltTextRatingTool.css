@@ -235,6 +235,8 @@ body.dark-mode .alt-card {
     padding: 20px;
     max-width: 400px;
     margin: auto;
+    margin-top: 30px;
+    margin-bottom: 20px;
   }
   
   .alt-card {
