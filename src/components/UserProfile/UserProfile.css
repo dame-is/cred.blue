@@ -56,7 +56,7 @@
   }
 
   .react-grid-item.react-grid-placeholder {
-    background: #007bff !important;
+    background: #3B9AF8 !important;
     border-radius: 8px;
     opacity: 0.2;
     transition-duration: 100ms;
@@ -98,7 +98,7 @@
 }
 
 .toggle-button.active {
-  background-color: #007bff;
+  background-color: #3B9AF8;
   color: white;
 }
 

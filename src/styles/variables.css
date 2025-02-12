@@ -3,7 +3,7 @@
 :root {
     --navbar-bg: #ffffff;
     --navbar-text: #000000;
-    --button-bg: #007bff;
+    --button-bg: #3B9AF8;
     --button-text: #ffffff;
     --background: #f0f0f0;
     --text: #000000;
@@ -23,7 +23,7 @@
   .light-mode {
     --navbar-bg: #ffffff;
     --navbar-text: #000000;
-    --button-bg: #007bff;
+    --button-bg: #3B9AF8;
     --button-text: #ffffff;
     --background: #f0f0f0;
     --text: #000000;

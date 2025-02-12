@@ -140,7 +140,7 @@
 
 /* Bluesky Segment */
 .bluesky-segment {
-  background-color: #007bff; /* Blue color */
+  background-color: #3B9AF8; /* Blue color */
   position: relative;
   transition: opacity 0.3s ease;
 }
@@ -190,7 +190,7 @@
 .score-breakdown-header {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #007bff; /* Blue color to make it stand out */
+    color: #3B9AF8; /* Blue color to make it stand out */
     text-align: center;
     margin-bottom: 1rem;
 }
@@ -302,7 +302,7 @@ form {
     top: 0;
     left: 0;
     height: 100%;
-    background: #007bff;
+    background: #3B9AF8;
     border-radius: 5px;
     z-index: 0;
     width: 100%;
@@ -445,7 +445,7 @@ form {
 .score-breakdown-header {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #007bff; /* Blue color to make it stand out */
+    color: #3B9AF8; /* Blue color to make it stand out */
     text-align: center;
     margin-bottom: 1rem;
 }
@@ -541,4 +541,8 @@ form {
 
   .loading-container-1 {
     min-height: 0vh !important;
+  }
+
+  .compare-scores.loading-container {
+    margin-top: 30px;
   }

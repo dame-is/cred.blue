@@ -29,7 +29,7 @@
   }
 
   .dark-mode .blue {
-    color: #007bff;
+    color: #3B9AF8;
   }
 
   .theme-toggle-button:hover {
@@ -56,7 +56,7 @@
   .navbar-logo a {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #007bff; /* Blue color for the logo */
+    color: #3B9AF8; /* Blue color for the logo */
     text-decoration: none;
     transition: color 0.3s ease;
   }
@@ -86,7 +86,7 @@
   }
   
   .navbar-links ul li a:hover {
-    color: #007bff; /* Change color on hover */
+    color: #3B9AF8; /* Change color on hover */
   }
   
   /* Right Section: Actions */
@@ -137,7 +137,7 @@
   
   /* Adjust Login Button for Dark Mode */
   .dark-mode .login-button {
-    background-color: #007bff; /* Dark gray background */
+    background-color: #3B9AF8; /* Dark gray background */
     color: #f5f5f5; /* Light text */
   }
   
@@ -176,7 +176,7 @@
   }
   
   /* Responsive Design: Links display in a row under the logo */
-@media (max-width: 530px) {
+@media (max-width: 600px) {
   .navbar-container {
     flex-direction: column;
     align-items: center;
@@ -200,6 +200,7 @@
     display: flex;
     gap: 20px;
     justify-content: center;
+    margin-top: 25px;
   }
 
   .navbar-links {
@@ -232,7 +233,7 @@
 
   .navbar-left {
     align-items: center;
-    display: flex;
+    display: block;
   }
 
   .navbar-logo {

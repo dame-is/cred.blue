@@ -35,11 +35,11 @@ form.search-bar {
   padding: 10px 20px;
   font-size: 1em;
   border: none;
-  background-color: #007bff;
+  background-color: #3B9AF8;
   color: white;
   border-radius: 0 5px 5px 0;
   cursor: pointer;
-  border: 1px solid #007bff;
+  border: 1px solid #3B9AF8;
 }
 
 .search-bar button:hover {

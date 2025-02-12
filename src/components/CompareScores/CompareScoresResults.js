@@ -206,7 +206,7 @@ const CompareScoresResults = ({ result, loading }) => {
             <YAxis />
             <Tooltip content={<CustomTooltip />} />
             <Legend />
-            {showBluesky && <Bar dataKey="Bluesky" stackId="a" fill="#007bff" />}
+            {showBluesky && <Bar dataKey="Bluesky" stackId="a" fill="#3B9AF8" />}
             {showAtproto && <Bar dataKey="Atproto" stackId="a" fill="#28a745" />}
           </BarChart>
         </ResponsiveContainer>
@@ -255,7 +255,7 @@ const CompareScoresResults = ({ result, loading }) => {
               <YAxis />
               <Tooltip content={<CustomTooltip />} />
               <Legend />
-              {showBluesky && <Bar dataKey="Bluesky" stackId="a" fill="#007bff" />}
+              {showBluesky && <Bar dataKey="Bluesky" stackId="a" fill="#3B9AF8" />}
               {showAtproto && <Bar dataKey="Atproto" stackId="a" fill="#28a745" />}
             </BarChart>
           </ResponsiveContainer>

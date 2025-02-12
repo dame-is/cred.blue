@@ -274,7 +274,7 @@ const ScoreResult = ({ result, loading }) => {
             <Tooltip content={<CustomTooltip />} /> {/* Use Custom Tooltip */}
             <Legend />
             {showBluesky && (
-              <Bar dataKey="Bluesky" stackId="a" fill="#007bff" />
+              <Bar dataKey="Bluesky" stackId="a" fill="#3B9AF8" />
             )}
             {showAtproto && (
               <Bar dataKey="Atproto" stackId="a" fill="#28a745" />
@@ -329,7 +329,7 @@ const ScoreResult = ({ result, loading }) => {
               <Tooltip content={<CustomTooltip />} /> {/* Use Custom Tooltip */}
               <Legend />
               {showBluesky && (
-                <Bar dataKey="Bluesky" stackId="a" fill="#007bff" />
+                <Bar dataKey="Bluesky" stackId="a" fill="#3B9AF8" />
               )}
               {showAtproto && (
                 <Bar dataKey="Atproto" stackId="a" fill="#28a745" />

@@ -76,7 +76,7 @@ html {
 }
 
 .form-link {
-  color: #007bff;
+  color: #3B9AF8;
   text-decoration: none;
   font-size: 0.9rem;
   transition: color 0.3s ease;
@@ -114,7 +114,7 @@ html {
 }
 
 .credit-link-anchor {
-  background-color: #3b9af8;
+  background-color: unset;
   text-decoration: none;
   transition: color 0.3s ease;
 }

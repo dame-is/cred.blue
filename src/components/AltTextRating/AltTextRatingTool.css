@@ -90,7 +90,7 @@ body.dark-mode .alt-card {
 
 .resources a {
     text-decoration: none;
-    color: #007bff;
+    color: #3B9AF8;
 }
 
 .resources a:hover {
@@ -177,7 +177,7 @@ body.dark-mode .alt-card {
     width: 15px;
     height: 15px;
     margin: 0;
-    border: 2px solid #007bff;
+    border: 2px solid #3B9AF8;
     border-radius: 4px;
     outline: none;
     cursor: pointer;
@@ -191,7 +191,7 @@ body.dark-mode .alt-card {
     display: inline-block;
     width: 20px;
     height: 20px;
-    border: 2px solid #007bff;
+    border: 2px solid #3B9AF8;
     border-radius: 4px;
     margin-right: 8px;
     position: relative;
@@ -200,8 +200,8 @@ body.dark-mode .alt-card {
 
 /* Hide the native checkmark; we use the indicator to display the check state. */
 .custom-checkbox input[type="checkbox"]:checked + .checkbox-indicator {
-    background-color: #007bff;
-    border-color: #007bff;
+    background-color: #3B9AF8;
+    border-color: #3B9AF8;
 }
 
 /* Optional: Add a checkmark icon using CSS pseudo-elements */
@@ -244,7 +244,6 @@ body.dark-mode .alt-card {
     top: 50%;
     transform: translateY(-50%);
 }
-
 
 .filters-container {
     font-size: 0.8em;
@@ -422,4 +421,8 @@ body.dark-mode .alt-card {
     list-style: none;
     padding: 0;
     margin-top: 0px;
+  }
+
+  .alt-text-rating-tool .gauge-svg {
+    margin-top: -89px;
   }
