@@ -99,16 +99,15 @@ body.dark-mode .alt-card {
     margin-top: 15px;
 }
 
-/* Style for the input */
 .search-bar input {
-    width: 90%;
-    max-width: 300px;
-    padding: 10px;
-    font-size: 1em;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    display: flex;
+    margin-top: 5px;
+    padding: 9px;
     text-align: center;
-}
+    width: auto;
+  }
 
 /* Action row: contains the button and the checkbox, arranged horizontally */
 .action-row {
@@ -240,15 +239,8 @@ body.dark-mode .alt-card {
   
   .alt-card {
     background: #fff;
-    border: 1px solid #ddd;
     padding: 20px;
     margin-bottom: 20px;
-  }
-  
-  .search-bar input {
-    font-size: 16px;
-    padding: 8px;
-    width: 90%;
   }
   
   .action-row {

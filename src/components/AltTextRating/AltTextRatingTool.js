@@ -180,7 +180,6 @@ const AltTextRatingTool = () => {
   // ----------------------------
   // Gauge Needle Animation (using requestAnimationFrame)
   // ----------------------------
-
   const baseSpeed = 0.10; // base speed per millisecond
   const oscillationMin = 0; // minimum percentage
   const oscillationMax = 100; // maximum percentage
@@ -227,14 +226,18 @@ const AltTextRatingTool = () => {
   };
 
   // ----------------------------
-  // Autocomplete Functions (with debounce)
+  // Autocomplete Functions (with debounce and cancel)
   // ----------------------------
   const debounce = (func, delay) => {
     let timer;
-    return (...args) => {
+    const debounced = (...args) => {
       clearTimeout(timer);
       timer = setTimeout(() => func(...args), delay);
     };
+    debounced.cancel = () => {
+      clearTimeout(timer);
+    };
+    return debounced;
   };
 
   const fetchSuggestions = async (query) => {
@@ -258,19 +261,31 @@ const AltTextRatingTool = () => {
 
   const debouncedFetchSuggestions = useRef(debounce(fetchSuggestions, 300)).current;
 
-  // ----------------------------
-  // Event Handlers
-  // ----------------------------
+  useEffect(() => {
+    if (!skipAutocomplete) {
+      debouncedFetchSuggestions(username);
+    }
+  }, [username, debouncedFetchSuggestions, skipAutocomplete]);
+
+  const renderTextResults = (analysisResult) => (
+    <div>
+      <p>{analysisResult.totalPosts} posts analyzed</p>
+      <p>{analysisResult.postsWithImages} contain images</p>
+      <p>{analysisResult.repliesWithImages} are replies</p>
+      <p>{analysisResult.postsWithAltText} posts have alt text</p>
+      <h2>Score: {analysisResult.altTextPercentage.toFixed(2)}% {analysisResult.emoji}</h2>
+    </div>
+  );
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Immediately show the results div as soon as the button is clicked.
     setShowResults(true);
     setLoading(true);
     setShareButtonVisible(false);
     setAnalysis(null);
     setTextResults(null);
-    stopNeedleAnimation(); // Stop any existing animation
-    startNeedleAnimation(); // Start needle oscillation until results are computed
+    stopNeedleAnimation();
+    startNeedleAnimation();
 
     try {
       const did = await resolveHandleToDID(username);
@@ -302,23 +317,6 @@ const AltTextRatingTool = () => {
     }
   }, [useLast90Days, excludeReplies]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  useEffect(() => {
-    if (!skipAutocomplete) {
-      debouncedFetchSuggestions(username);
-    }
-  }, [username, debouncedFetchSuggestions, skipAutocomplete]);
-  
-
-  const renderTextResults = (analysisResult) => (
-    <div>
-      <p>{analysisResult.totalPosts} posts analyzed</p>
-      <p>{analysisResult.postsWithImages} contain images</p>
-      <p>{analysisResult.repliesWithImages} are replies</p>
-      <p>{analysisResult.postsWithAltText} posts have alt text</p>
-      <h2>Score: {analysisResult.altTextPercentage.toFixed(2)}% {analysisResult.emoji}</h2>
-    </div>
-  );
-
   return (
     <div className="alt-text-rating-tool">
       <div id="alt-text-rating-form" className="alt-card">
@@ -336,22 +334,22 @@ const AltTextRatingTool = () => {
             {autocompleteActive && suggestions.length > 0 && (
               <div className="autocomplete-items">
                 {suggestions.map((actor, index) => (
-                    <div
-                        key={actor.handle}
-                        className={`autocomplete-item ${index === activeSuggestionIndex ? 'active' : ''}`}
-                        onClick={() => {
-                        setUsername(actor.handle);
-                        setSuggestions([]);
-                        setAutocompleteActive(false);
-                        // Set a flag to skip fetching suggestions for a short time.
-                        setSkipAutocomplete(true);
-                        setTimeout(() => setSkipAutocomplete(false), 500);
-                        }}
-                    >
-                        <img src={actor.avatar} alt={`${actor.handle}'s avatar`} />
-                        <span>{actor.handle}</span>
-                    </div>
-                    ))}
+                  <div
+                    key={actor.handle}
+                    className={`autocomplete-item ${index === activeSuggestionIndex ? 'active' : ''}`}
+                    onClick={() => {
+                      setUsername(actor.handle);
+                      setSuggestions([]);
+                      setAutocompleteActive(false);
+                      debouncedFetchSuggestions.cancel();
+                      setSkipAutocomplete(true);
+                      setTimeout(() => setSkipAutocomplete(false), 500);
+                    }}
+                  >
+                    <img src={actor.avatar} alt={`${actor.handle}'s avatar`} />
+                    <span>{actor.handle}</span>
+                  </div>
+                ))}
               </div>
             )}
           </div>
@@ -370,7 +368,6 @@ const AltTextRatingTool = () => {
             </button>
           </div>
         </form>
-        {/* The results div now uses showResults to control visibility */}
         <div className="results" style={{ display: showResults ? 'block' : 'none' }}>
           <div id="textResults">{textResults}</div>
           <div className="gauge-container">
