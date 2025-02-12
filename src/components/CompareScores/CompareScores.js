@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import CompareScoresResults from "./CompareScoresResults";
-// Adjust the import path for your score data module as needed:
 import { loadAccountData } from "../../accountData";
+import MatterLoadingAnimation from "../MatterLoadingAnimation"; // Adjust the path as needed
 
 const CompareScores = () => {
   // Input states
@@ -213,8 +213,13 @@ const CompareScores = () => {
         <button type="submit">Compare</button>
       </form>
       {error && <div className="error" style={{ color: "red" }}>{error}</div>}
-      {loading && <div>Loading...</div>}
-      {results && <CompareScoresResults result={results} loading={loading} />}
+      {loading ? (
+        <div className="compare-scores loading-container">
+          <MatterLoadingAnimation />
+        </div>
+      ) : (
+        results && <CompareScoresResults result={results} loading={loading} />
+      )}
     </div>
   );
 };
