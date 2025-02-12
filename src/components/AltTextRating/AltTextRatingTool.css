@@ -4,15 +4,13 @@
 
 .alt-card {
     background-color: var(--post-background-color);
-    padding: 20px;
-    border: 1px solid #ccc;
-    text-align: center;
+    margin: auto auto 20px;
     max-width: 95%;
-    margin: auto;
-    border-radius: 5px;
-    margin-bottom: 20px;
-    padding-top: 30px;
-    padding-bottom: 30px;
+    text-align: center;
+    border: 5px solid #ddd;
+    border-radius: 12px;
+    box-shadow: none;
+    padding: 20px 30px;
 }
 
 body.dark-mode .alt-card {
@@ -392,10 +390,18 @@ body.dark-mode .alt-card {
 
   .alt-text-rating-tool form.search-bar {
     align-items: center;
-    gap: 0;
     display: flex;
     flex-direction: column;
-    padding: 20px 0px;
+    gap: 14px;
+    padding: 0px;
+    background-color: unset;
+    border: 0px;
+    border-radius: 0px;
+    box-shadow: none;
+    justify-content: center;
+    width: 100%;
+    max-width: 100%;
+    margin: 0px;
   }
 
   .alt-text-rating-tool ul {

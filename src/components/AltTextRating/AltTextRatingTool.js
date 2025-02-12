@@ -25,6 +25,7 @@ const AltTextRatingTool = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [autocompleteActive, setAutocompleteActive] = useState(false);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
+  const [skipAutocomplete, setSkipAutocomplete] = useState(false);
   // New state: show results div immediately after submission.
   const [showResults, setShowResults] = useState(false);
 
@@ -302,8 +303,11 @@ const AltTextRatingTool = () => {
   }, [useLast90Days, excludeReplies]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    debouncedFetchSuggestions(username);
-  }, [username, debouncedFetchSuggestions]);
+    if (!skipAutocomplete) {
+      debouncedFetchSuggestions(username);
+    }
+  }, [username, debouncedFetchSuggestions, skipAutocomplete]);
+  
 
   const renderTextResults = (analysisResult) => (
     <div>
@@ -332,19 +336,22 @@ const AltTextRatingTool = () => {
             {autocompleteActive && suggestions.length > 0 && (
               <div className="autocomplete-items">
                 {suggestions.map((actor, index) => (
-                  <div
-                    key={actor.handle}
-                    className={`autocomplete-item ${index === activeSuggestionIndex ? 'active' : ''}`}
-                    onClick={() => {
-                      setUsername(actor.handle);
-                      setSuggestions([]);
-                      setAutocompleteActive(false);
-                    }}
-                  >
-                    <img src={actor.avatar} alt={`${actor.handle}'s avatar`} />
-                    <span>{actor.handle}</span>
-                  </div>
-                ))}
+                    <div
+                        key={actor.handle}
+                        className={`autocomplete-item ${index === activeSuggestionIndex ? 'active' : ''}`}
+                        onClick={() => {
+                        setUsername(actor.handle);
+                        setSuggestions([]);
+                        setAutocompleteActive(false);
+                        // Set a flag to skip fetching suggestions for a short time.
+                        setSkipAutocomplete(true);
+                        setTimeout(() => setSkipAutocomplete(false), 500);
+                        }}
+                    >
+                        <img src={actor.avatar} alt={`${actor.handle}'s avatar`} />
+                        <span>{actor.handle}</span>
+                    </div>
+                    ))}
               </div>
             )}
           </div>

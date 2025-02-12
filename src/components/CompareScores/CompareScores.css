@@ -514,21 +514,27 @@ form {
   .compare-scores-page {
     margin-top: 50px;
     margin-bottom: 50px;
+    text-align: center;
   }
 
   .compare-scores-page input {
-    border: 1px solid;
-    border-radius: 4px;
-    padding: 10px;
     display: flex;
+    padding: 9px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    width: auto;
+    margin-top: 5px;
+    text-align: center;
   }
 
   .compare-scores-page form {
-    border: 1px solid;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px #0000001a;
     justify-content: center;
     margin: 10px auto;
     max-width: 193px;
+    background: #fff !important;
+    border: 5px solid #ddd;
+    border-radius: 12px;
+    box-shadow: none;
+    gap: 15px;
     padding: 20px 30px;
   }
