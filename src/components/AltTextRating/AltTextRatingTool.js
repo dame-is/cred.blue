@@ -25,7 +25,8 @@ const AltTextRatingTool = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [autocompleteActive, setAutocompleteActive] = useState(false);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
-  const [skipAutocomplete, setSkipAutocomplete] = useState(false);
+  // New state to store a selected suggestion
+  const [selectedSuggestion, setSelectedSuggestion] = useState('');
   // New state: show results div immediately after submission.
   const [showResults, setShowResults] = useState(false);
 
@@ -262,11 +263,15 @@ const AltTextRatingTool = () => {
   const debouncedFetchSuggestions = useRef(debounce(fetchSuggestions, 300)).current;
 
   useEffect(() => {
-    if (!skipAutocomplete) {
+    // Only fetch suggestions if the username does NOT match a selected suggestion.
+    if (!selectedSuggestion) {
       debouncedFetchSuggestions(username);
     }
-  }, [username, debouncedFetchSuggestions, skipAutocomplete]);
+  }, [username, debouncedFetchSuggestions, selectedSuggestion]);
 
+  // ----------------------------
+  // Render text analysis results.
+  // ----------------------------
   const renderTextResults = (analysisResult) => (
     <div>
       <p>{analysisResult.totalPosts} posts analyzed</p>
@@ -277,8 +282,11 @@ const AltTextRatingTool = () => {
     </div>
   );
 
-  // Refactor the common search/analysis logic into runAnalysis.
-  const runAnalysis = async () => {
+  // ----------------------------
+  // Form Handler
+  // ----------------------------
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     setShowResults(true);
     setLoading(true);
     setShareButtonVisible(false);
@@ -308,11 +316,6 @@ const AltTextRatingTool = () => {
     setLoading(false);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    runAnalysis();
-  };
-
   useEffect(() => {
     if (allRecords.length > 0 && actorDID) {
       const newAnalysis = analyzePosts(allRecords, useLast90Days, excludeReplies, actorDID);
@@ -321,6 +324,16 @@ const AltTextRatingTool = () => {
       updateGauge(newAnalysis.altTextPercentage);
     }
   }, [useLast90Days, excludeReplies]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ----------------------------
+  // Input onChange: clear selectedSuggestion if user types manually.
+  // ----------------------------
+  const handleInputChange = (e) => {
+    setUsername(e.target.value);
+    if (selectedSuggestion && e.target.value !== selectedSuggestion) {
+      setSelectedSuggestion('');
+    }
+  };
 
   return (
     <div className="alt-text-rating-tool">
@@ -332,7 +345,7 @@ const AltTextRatingTool = () => {
             <input
               type="text"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={handleInputChange}
               placeholder="(e.g., dame.bsky.social)"
               required
             />
@@ -344,13 +357,10 @@ const AltTextRatingTool = () => {
                     className={`autocomplete-item ${index === activeSuggestionIndex ? 'active' : ''}`}
                     onClick={() => {
                       setUsername(actor.handle);
+                      setSelectedSuggestion(actor.handle);
                       setSuggestions([]);
                       setAutocompleteActive(false);
                       debouncedFetchSuggestions.cancel();
-                      setSkipAutocomplete(true);
-                      setTimeout(() => setSkipAutocomplete(false), 500);
-                      // Trigger the analysis immediately when a suggestion is clicked.
-                      runAnalysis();
                     }}
                   >
                     <img src={actor.avatar} alt={`${actor.handle}'s avatar`} />
