@@ -65,7 +65,7 @@ html {
 }
 
 .form-input:focus {
-  border-color: #007bff; /* Blue border on focus */
+  background-color: #3b9af8;
   outline: none;
 }
 
@@ -88,7 +88,7 @@ html {
 
 /* Login Button */
 .login-button {
-  background-color: #007bff;
+  background-color: #3b9af8;
   border: none;
   border-radius: 4px;
   color: #fff;
@@ -114,7 +114,7 @@ html {
 }
 
 .credit-link-anchor {
-  color: #007bff;
+  background-color: #3b9af8;
   text-decoration: none;
   transition: color 0.3s ease;
 }

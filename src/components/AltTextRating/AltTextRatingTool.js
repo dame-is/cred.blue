@@ -274,10 +274,10 @@ const AltTextRatingTool = () => {
   // ----------------------------
   const renderTextResults = (analysisResult) => (
     <div>
-      <p>{analysisResult.totalPosts} posts analyzed</p>
-      <p>{analysisResult.postsWithImages} contain images</p>
-      <p>{analysisResult.repliesWithImages} are replies</p>
-      <p>{analysisResult.postsWithAltText} posts have alt text</p>
+      <p><strong>{analysisResult.totalPosts}</strong> posts analyzed</p>
+      <p><strong>{analysisResult.postsWithImages}</strong> contain images</p>
+      <p><strong>{analysisResult.repliesWithImages}</strong> are replies</p>
+      <p><strong>{analysisResult.postsWithAltText}</strong> posts have alt text</p>
       <h2>Score: {analysisResult.altTextPercentage.toFixed(2)}% {analysisResult.emoji}</h2>
     </div>
   );
@@ -371,8 +371,9 @@ const AltTextRatingTool = () => {
             )}
           </div>
           <div className="action-row">
-            <button type="submit">Analyze</button>
+            <button className="analyze-button" type="submit">Analyze</button>
             <button
+                className="share-button"
               type="button"
               onClick={() => window.open(
                 `https://bsky.app/intent/compose?text=${encodeURIComponent(

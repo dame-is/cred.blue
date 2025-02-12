@@ -105,3 +105,16 @@
 .toggle-button:hover {
   background-color: #ccc;
 }
+
+.user-profile-header p {
+  margin-top: 0px;
+  margin-bottom: 2px;
+}
+
+.user-profile-header h2 {
+  font-size: 1.2em;
+}
+
+.user-profile-header h1 {
+  margin-bottom: 0px;
+}

@@ -58,7 +58,7 @@ const Navbar = () => {
                 <Link to="/compare">compare</Link>
               </li>
               <li>
-                <Link to="/alt-text">alt-text</Link>
+                <Link to="/alt-text">alt text</Link>
               </li>
               <li>
                 <Link to="/about">about</Link>
