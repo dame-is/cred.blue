@@ -145,7 +145,14 @@ ul {
   gap: 3px;
   display: flex;
   flex-direction: column;
-  padding: 8px;
+  padding: 10px;
+  text-align: left;
+}
+
+.autocomplete-item {
+  display: flex;
+  overflow: clip;
+  padding: 6px;
 }
 
 .autocomplete-item:hover {
