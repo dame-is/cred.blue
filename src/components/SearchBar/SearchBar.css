@@ -26,8 +26,7 @@
 
 form.search-bar {
   align-items: center;
-  flex-direction: row;
-  gap: 0px;
+  gap: 18px;
 }
 
 .search-bar input {
@@ -85,6 +84,8 @@ form {
   overflow-x: clip;
   max-width: 250px;
   margin-top: 20px;
+  position: absolute;
+  top: 43%;
 }
 
 .suggestion-item {

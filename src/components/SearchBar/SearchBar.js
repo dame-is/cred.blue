@@ -1,5 +1,3 @@
-// src/components/SearchBar/SearchBar.jsx
-
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SearchBar.css";
@@ -7,78 +5,61 @@ import "./SearchBar.css";
 const SearchBar = () => {
   const [username, setUsername] = useState("");
   const [suggestions, setSuggestions] = useState([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [autocompleteActive, setAutocompleteActive] = useState(false);
+  const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
+  const [selectedSuggestion, setSelectedSuggestion] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1); // New state
   const navigate = useNavigate();
   const debounceTimeout = useRef(null);
-  const suggestionsRef = useRef(null);
+
+  // Debounce function (similar to AltTextRatingTool)
+  const debounce = (func, delay) => {
+    let timer;
+    const debounced = (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => func(...args), delay);
+    };
+    debounced.cancel = () => {
+      clearTimeout(timer);
+    };
+    return debounced;
+  };
 
   // Fetch suggestions from the API
-  const fetchSuggestions = useCallback(async (query) => {
+  const fetchSuggestions = async (query) => {
     if (!query) {
       setSuggestions([]);
       return;
     }
-
+    
     setIsLoading(true);
     try {
-      const response = await fetch(
-        `https://public.api.bsky.app/xrpc/app.bsky.actor.searchActorsTypeahead?q=${encodeURIComponent(
-          query
-        )}&limit=5`
+      const res = await fetch(
+        `https://public.api.bsky.app/xrpc/app.bsky.actor.searchActorsTypeahead?q=${encodeURIComponent(query)}&limit=5`
       );
-
-      if (!response.ok) {
-        console.error("Error fetching suggestions:", response.statusText);
-        setSuggestions([]);
-        return;
-      }
-
-      const data = await response.json();
+      if (!res.ok) throw new Error("Failed to fetch suggestions");
+      const data = await res.json();
       setSuggestions(data.actors || []);
+      setAutocompleteActive(true);
     } catch (error) {
       console.error("Error fetching suggestions:", error);
       setSuggestions([]);
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  };
 
-  // Debounce the API call to prevent excessive requests
+  const debouncedFetchSuggestions = useRef(debounce(fetchSuggestions, 300)).current;
+
   useEffect(() => {
-    if (debounceTimeout.current) {
-      clearTimeout(debounceTimeout.current);
+    // Only fetch suggestions if the username does NOT match a selected suggestion
+    if (!selectedSuggestion) {
+      debouncedFetchSuggestions(username);
     }
-
-    debounceTimeout.current = setTimeout(() => {
-      fetchSuggestions(username.trim());
-    }, 300); // 300ms debounce delay
-
     return () => {
-      if (debounceTimeout.current) {
-        clearTimeout(debounceTimeout.current);
-      }
+      debouncedFetchSuggestions.cancel();
     };
-  }, [username, fetchSuggestions]);
-
-  // Handle clicks outside the suggestions dropdown to close it
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        suggestionsRef.current &&
-        !suggestionsRef.current.contains(event.target)
-      ) {
-        setShowSuggestions(false);
-        setActiveSuggestionIndex(-1); // Reset active suggestion
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  }, [username, debouncedFetchSuggestions, selectedSuggestion]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -87,114 +68,108 @@ const SearchBar = () => {
       navigate(`/${encodedUsername}`);
       setUsername("");
       setSuggestions([]);
-      setShowSuggestions(false);
+      setAutocompleteActive(false);
       setActiveSuggestionIndex(-1);
     }
-  };
-
-  const handleSuggestionClick = (handle) => {
-    setUsername(handle);
-    setSuggestions([]);
-    setShowSuggestions(false);
-    setActiveSuggestionIndex(-1);
-    // Optionally, navigate immediately upon selection
-    navigate(`/${encodeURIComponent(handle)}`);
   };
 
   const handleInputChange = (e) => {
     setUsername(e.target.value);
-    setShowSuggestions(true);
-    setActiveSuggestionIndex(-1); // Reset active suggestion on input change
+    if (selectedSuggestion && e.target.value !== selectedSuggestion) {
+      setSelectedSuggestion('');
+    }
   };
 
-  // Handle key down events for keyboard navigation
   const handleKeyDown = (e) => {
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      if (suggestions.length > 0) {
-        setActiveSuggestionIndex((prevIndex) =>
-          prevIndex < suggestions.length - 1 ? prevIndex + 1 : 0
-        );
-      }
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      if (suggestions.length > 0) {
-        setActiveSuggestionIndex((prevIndex) =>
-          prevIndex > 0 ? prevIndex - 1 : suggestions.length - 1
-        );
-      }
-    } else if (e.key === "Enter") {
-      if (activeSuggestionIndex >= 0 && activeSuggestionIndex < suggestions.length) {
+    if (!autocompleteActive) return;
+
+    switch (e.key) {
+      case "ArrowDown":
         e.preventDefault();
-        handleSuggestionClick(suggestions[activeSuggestionIndex].handle);
-      }
-    } else if (e.key === "Escape") {
-      setShowSuggestions(false);
-      setActiveSuggestionIndex(-1);
+        setActiveSuggestionIndex(prev => 
+          prev < suggestions.length - 1 ? prev + 1 : 0
+        );
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        setActiveSuggestionIndex(prev => 
+          prev > 0 ? prev - 1 : suggestions.length - 1
+        );
+        break;
+      case "Enter":
+        if (activeSuggestionIndex >= 0 && activeSuggestionIndex < suggestions.length) {
+          e.preventDefault();
+          const selectedHandle = suggestions[activeSuggestionIndex].handle;
+          setUsername(selectedHandle);
+          setSelectedSuggestion(selectedHandle);
+          setSuggestions([]);
+          setAutocompleteActive(false);
+          navigate(`/${encodeURIComponent(selectedHandle)}`);
+        }
+        break;
+      case "Escape":
+        setAutocompleteActive(false);
+        setActiveSuggestionIndex(-1);
+        break;
+      default:
+        break;
     }
   };
 
   return (
-    <div className="search-bar-container" ref={suggestionsRef}>
+    <div className="search-bar-container">
       <form className="search-bar" onSubmit={handleSubmit} role="search">
-        <input
-          type="text"
-          placeholder="(e.g. dame.bsky.social)"
-          value={username}
-          onChange={handleInputChange}
-          required
-          onFocus={() => {
-            if (suggestions.length > 0) setShowSuggestions(true);
-          }}
-          onKeyDown={handleKeyDown} // Added key down handler
-          role="combobox"
-          aria-autocomplete="list"
-          aria-controls="suggestions-list"
-          aria-expanded={showSuggestions}
-          aria-haspopup="listbox"
-          aria-activedescendant={
-            activeSuggestionIndex >= 0
-              ? `suggestion-${activeSuggestionIndex}`
-              : undefined
-          }
-        />
-              {showSuggestions && suggestions.length > 0 && (
-        <ul
-          className="suggestions-list"
-          id="suggestions-list"
-          role="listbox"
-          aria-label="Username suggestions"
-        >
-          {suggestions.map((actor, index) => (
-            <li
-              key={actor.did}
-              id={`suggestion-${index}`}
-              className={`suggestion-item ${
-                index === activeSuggestionIndex ? "active" : ""
-              }`}
-              role="option"
-              aria-selected={index === activeSuggestionIndex}
-              onClick={() => handleSuggestionClick(actor.handle)}
-              onMouseEnter={() => setActiveSuggestionIndex(index)} // Optional: highlight on hover
-            >
-              <img
-                src={actor.avatar}
-                alt={`${actor.handle} avatar`}
-                className="suggestion-avatar"
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = "/default-avatar.png"; // Fallback avatar
-                }}
-              />
-              <span className="suggestion-handle">{actor.handle}</span>
-            </li>
-          ))}
-        </ul>
-      )}
+        <div style={{ position: 'relative' }}>
+          <input
+            type="text"
+            placeholder="(e.g. dame.bsky.social)"
+            value={username}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            required
+            role="combobox"
+            aria-autocomplete="list"
+            aria-controls="autocomplete-items"
+            aria-expanded={autocompleteActive}
+            aria-haspopup="listbox"
+            aria-activedescendant={
+              activeSuggestionIndex >= 0
+                ? `suggestion-${activeSuggestionIndex}`
+                : undefined
+            }
+          />
+          {autocompleteActive && suggestions.length > 0 && (
+            <div className="autocomplete-items" id="autocomplete-items">
+              {suggestions.map((actor, index) => (
+                <div
+                  key={actor.handle}
+                  className={`autocomplete-item ${index === activeSuggestionIndex ? 'active' : ''}`}
+                  onClick={() => {
+                    setUsername(actor.handle);
+                    setSelectedSuggestion(actor.handle);
+                    setSuggestions([]);
+                    setAutocompleteActive(false);
+                    debouncedFetchSuggestions.cancel();
+                    navigate(`/${encodeURIComponent(actor.handle)}`);
+                  }}
+                >
+                  <img 
+                    src={actor.avatar} 
+                    alt={`${actor.handle}'s avatar`}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = "/default-avatar.png";
+                    }}
+                  />
+                  <span>{actor.handle}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
         <button type="submit">Search</button>
       </form>
       {isLoading && <div className="loading">Loading...</div>}
-      {/* Accessible live region for screen readers */}
       <div
         role="status"
         aria-live="polite"
