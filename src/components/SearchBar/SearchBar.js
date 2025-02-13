@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SearchBar.css";
 
@@ -12,7 +12,6 @@ const SearchBar = () => {
   const navigate = useNavigate();
   const debounceTimeout = useRef(null);
 
-  // Debounce function (similar to AltTextRatingTool)
   const debounce = (func, delay) => {
     let timer;
     const debounced = (...args) => {
@@ -25,7 +24,6 @@ const SearchBar = () => {
     return debounced;
   };
 
-  // Fetch suggestions from the API
   const fetchSuggestions = async (query) => {
     if (!query) {
       setSuggestions([]);
@@ -52,7 +50,6 @@ const SearchBar = () => {
   const debouncedFetchSuggestions = useRef(debounce(fetchSuggestions, 300)).current;
 
   useEffect(() => {
-    // Only fetch suggestions if the username does NOT match a selected suggestion
     if (!selectedSuggestion) {
       debouncedFetchSuggestions(username);
     }
@@ -118,66 +115,70 @@ const SearchBar = () => {
 
   return (
     <div className="search-bar-container">
-      <form className="search-bar" onSubmit={handleSubmit} role="search">
-        <div style={{ position: 'relative' }}>
-          <input
-            type="text"
-            placeholder="(e.g. dame.bsky.social)"
-            value={username}
-            onChange={handleInputChange}
-            onKeyDown={handleKeyDown}
-            required
-            role="combobox"
-            aria-autocomplete="list"
-            aria-controls="autocomplete-items"
-            aria-expanded={autocompleteActive}
-            aria-haspopup="listbox"
-            aria-activedescendant={
-              activeSuggestionIndex >= 0
-                ? `suggestion-${activeSuggestionIndex}`
-                : undefined
-            }
-          />
-          {autocompleteActive && suggestions.length > 0 && (
-            <div className="autocomplete-items" id="autocomplete-items">
-              {suggestions.map((actor, index) => (
-                <div
-                  key={actor.handle}
-                  className={`autocomplete-item ${index === activeSuggestionIndex ? 'active' : ''}`}
-                  onClick={() => {
-                    setUsername(actor.handle);
-                    setSelectedSuggestion(actor.handle);
-                    setSuggestions([]);
-                    setAutocompleteActive(false);
-                    debouncedFetchSuggestions.cancel();
-                    navigate(`/${encodeURIComponent(actor.handle)}`);
-                  }}
-                >
-                  <img 
-                    src={actor.avatar} 
-                    alt={`${actor.handle}'s avatar`}
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = "/default-avatar.png";
+      <div className="search-bar">
+        <form className="search-bar" onSubmit={handleSubmit} role="search" autoComplete="off">
+          <div style={{ position: 'relative' }}>
+            <input
+              type="text"
+              placeholder="(e.g. dame.bsky.social)"
+              value={username}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+              required
+              role="combobox"
+              aria-autocomplete="list"
+              aria-controls="autocomplete-items"
+              aria-expanded={autocompleteActive}
+              aria-haspopup="listbox"
+              aria-activedescendant={
+                activeSuggestionIndex >= 0
+                  ? `suggestion-${activeSuggestionIndex}`
+                  : undefined
+              }
+            />
+            {autocompleteActive && suggestions.length > 0 && (
+              <div className="autocomplete-items" id="autocomplete-items">
+                {suggestions.map((actor, index) => (
+                  <div
+                    key={actor.handle}
+                    className={`autocomplete-item ${index === activeSuggestionIndex ? 'active' : ''}`}
+                    onClick={() => {
+                      setUsername(actor.handle);
+                      setSelectedSuggestion(actor.handle);
+                      setSuggestions([]);
+                      setAutocompleteActive(false);
+                      debouncedFetchSuggestions.cancel();
+                      navigate(`/${encodeURIComponent(actor.handle)}`);
                     }}
-                  />
-                  <span>{actor.handle}</span>
-                </div>
-              ))}
-            </div>
-          )}
+                  >
+                    <img 
+                      src={actor.avatar} 
+                      alt={`${actor.handle}'s avatar`}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "/default-avatar.png";
+                      }}
+                    />
+                    <span>{actor.handle}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          <div className="action-row">
+            <button type="submit" className="submit-button">Submit</button>
+          </div>
+        </form>
+        {isLoading && <div className="loading">Loading...</div>}
+        <div
+          role="status"
+          aria-live="polite"
+          className="sr-only"
+        >
+          {suggestions.length > 0
+            ? `${suggestions.length} suggestions available.`
+            : "No suggestions available."}
         </div>
-        <button type="submit">Search</button>
-      </form>
-      {isLoading && <div className="loading">Loading...</div>}
-      <div
-        role="status"
-        aria-live="polite"
-        className="sr-only"
-      >
-        {suggestions.length > 0
-          ? `${suggestions.length} suggestions available.`
-          : "No suggestions available."}
       </div>
     </div>
   );
