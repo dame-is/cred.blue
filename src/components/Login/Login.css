@@ -7,15 +7,15 @@ html {
 
 /* Main Content Container */
 .login-container {
-  background: #ffffff;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  padding: 30px 20px;
-  max-width: 500px;
-  width: 90%;
-  margin: 80px auto 60px auto; /* Top margin for Navbar, bottom for Footer */
+  background: #fff;
   box-sizing: border-box;
+  margin: auto auto 20px;
+  max-width: 500px;
   text-align: center;
+  border: 5px solid #ddd;
+  border-radius: 12px;
+  box-shadow: none;
+  padding: 20px 30px;
 }
 
 /* Login Header */
@@ -65,7 +65,7 @@ html {
 }
 
 .form-input:focus {
-  background-color: #3b9af8;
+  background-color: #e6f3ff;
   outline: none;
 }
 

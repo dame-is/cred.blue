@@ -158,9 +158,7 @@ const SearchBar = () => {
               : undefined
           }
         />
-        <button type="submit">Search</button>
-      </form>
-      {showSuggestions && suggestions.length > 0 && (
+              {showSuggestions && suggestions.length > 0 && (
         <ul
           className="suggestions-list"
           id="suggestions-list"
@@ -193,6 +191,8 @@ const SearchBar = () => {
           ))}
         </ul>
       )}
+        <button type="submit">Search</button>
+      </form>
       {isLoading && <div className="loading">Loading...</div>}
       {/* Accessible live region for screen readers */}
       <div

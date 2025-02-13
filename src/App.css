@@ -13,7 +13,7 @@
 
 h1 {
   font-size: 1.8em;
-  font-family: "articulat-heavy-cf", sans-serif;
+  font-family: "articulat-cf", sans-serif;
   font-weight: 900;
   font-style: normal;
   color: #3B9AF8;
@@ -119,4 +119,9 @@ ul {
 
 .app-container {
   background-color: #f0f0f0;
+}
+
+.form-input:focus {
+  background-color: #e6f3ff;
+  outline: none;
 }

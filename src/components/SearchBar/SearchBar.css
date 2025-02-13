@@ -7,12 +7,12 @@
 }
 
 .search-bar {
+  align-items: center;
   display: flex;
-  width: 100%;
-  /* Existing styles */
-  padding: 10px;
-  flex-direction: row;
-  gap: 0px;
+  flex-direction: column;
+  gap: 15px;
+  margin: 0px auto;
+  padding: 20px;
 }
 
 .search-bar input {
@@ -28,7 +28,16 @@ form.search-bar {
   align-items: center;
   flex-direction: row;
   gap: 0px;
-  max-width: 100%;
+}
+
+.search-bar input {
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  display: flex;
+  margin-top: 0px;
+  padding: 9px;
+  text-align: center;
+  width: auto;
 }
 
 .search-bar button {
@@ -63,20 +72,19 @@ form {
 
 /* New styles for suggestions */
 .suggestions-list {
-  left: 0;
-  list-style: none;
-  margin: 0;
-  overflow-y: auto;
-  padding: 10px;
-  position: absolute;
-  right: 0;
-  top: 112%;
-  z-index: 1000;
-  width: 100%;
   background-color: #f9f9f9;
   border: 1px solid #ddd;
   border-radius: 8px;
   box-shadow: 0 2px 4px #0000001a;
+  list-style: none;
+  margin: 0;
+  overflow-y: auto;
+  padding: 10px;
+  width: 100%;
+  z-index: 1000;
+  overflow-x: clip;
+  max-width: 250px;
+  margin-top: 20px;
 }
 
 .suggestion-item {

@@ -1,5 +1,6 @@
 .home-page {
     max-width: 500px;
+    margin: auto;
 }
 
 .home-page h1 {
@@ -7,6 +8,12 @@
   }
 
 .home-content {
-    padding: 20px;
-    max-width: 400px;
+    background-color: white;
+    border: 5px solid #ddd;
+    border-radius: 12px;
+    box-shadow: none;
+    margin: auto auto 20px;
+    padding: 40px;
+    text-align: center;
 }
+

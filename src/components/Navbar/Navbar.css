@@ -200,7 +200,6 @@
     display: flex;
     gap: 20px;
     justify-content: center;
-    margin-top: 25px;
   }
 
   .navbar-links {
@@ -217,7 +216,7 @@
     align-items: center;
     flex-direction: column;
     justify-content: center;
-    row-gap: 20px;
+    row-gap: 25px;
     margin-top: 27px;
     margin-bottom: 27px;
     display: flex;
