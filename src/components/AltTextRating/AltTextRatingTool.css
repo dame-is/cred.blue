@@ -111,7 +111,6 @@ body.dark-mode .alt-card {
     flex-direction: column;
     align-items: center;
     gap: 15px; /* space between the input and the action row */
-    margin-top: 15px;
 }
 
 .search-bar input {
