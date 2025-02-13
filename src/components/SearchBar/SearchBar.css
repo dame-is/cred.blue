@@ -8,11 +8,18 @@
 
 .search-bar {
   align-items: center;
+  background-color: initial;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  margin: 0px auto;
-  padding: 20px;
+  gap: 14px;
+  justify-content: center;
+  margin: 0;
+  max-width: 100%;
+  padding: 0;
+  width: 100%;
 }
 
 .search-bar input {

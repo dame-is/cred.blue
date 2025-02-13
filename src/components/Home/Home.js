@@ -11,7 +11,7 @@ const Home = () => {
       <h1>Welcome</h1>
       <p>
         {/* Your home content here */}
-        Discover and compare Bluesky accounts based on their activity and engagement.
+        Generate a Bluesky credibility score. Understand your Atproto data footprint. Vibe check strangers and new accounts
       </p>
       {/* Include the SearchBar */}
       <SearchBar />
