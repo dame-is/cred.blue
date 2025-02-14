@@ -46,28 +46,28 @@ const ScoreGauge = ({ score }) => {
   };
 
   return (
-    <div className="score-gauge" style={{ width: '100%', height: 300 }}>
-      <PieChart>
+    <div className="score-gauge" style={{ width: '100%', height: '100%' }}>
         <ResponsiveContainer>
-            <Pie
-            dataKey="value"
-            startAngle={180}
-            endAngle={0}
-            data={data}
-            cx={cx}
-            cy={cy}
-            innerRadius={iR}
-            outerRadius={oR}
-            fill="#8884d8"
-            stroke="none"
-            >
-            {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
-            ))}
-            </Pie>
-        </ResponsiveContainer>
-        {needle(score, data, cx, cy, iR, oR, '#FFD700')}
-      </PieChart>
+            <PieChart>
+                    <Pie
+                    dataKey="value"
+                    startAngle={180}
+                    endAngle={0}
+                    data={data}
+                    cx={cx}
+                    cy={cy}
+                    innerRadius={iR}
+                    outerRadius={oR}
+                    fill="#8884d8"
+                    stroke="none"
+                    >
+                    {data.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                    </Pie>
+                {needle(score, data, cx, cy, iR, oR, '#FFD700')}
+            </PieChart>
+      </ResponsiveContainer>
       <div className="text-center font-semibold mt-2">
         Score: {score} / {MAX_SCORE}
       </div>
