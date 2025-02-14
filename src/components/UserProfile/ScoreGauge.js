@@ -12,15 +12,20 @@ const ScoreGauge = ({ score }) => {
     { name: 'Q4', value: 25, color: '#66b2ff' },
   ];
 
-  const needle = (value, data, cx, cy, iR, oR, color) => {
+  // Custom component to render the needle with proper pixel values
+  const GaugeNeedle = ({ cx, cy, value }) => {
+    if (typeof cx !== 'number' || typeof cy !== 'number') return null;
+
     const total = MAX_SCORE;
     const ang = 180.0 * (1 - value / total);
+    const iR = Math.min(cx, cy) * 0.25;  // 25% of minimum dimension
+    const oR = Math.min(cx, cy) * 0.8;   // 80% of minimum dimension
     const length = (iR + 2 * oR) / 3;
     const sin = Math.sin(-RADIAN * ang);
     const cos = Math.cos(-RADIAN * ang);
     const r = 5;
-    const x0 = cx;  // Removed +5 offset
-    const y0 = cy;  // Removed +5 offset
+    const x0 = cx;
+    const y0 = cy;
     const xba = x0 + r * sin;
     const yba = y0 - r * cos;
     const xbb = x0 - r * sin;
@@ -29,20 +34,20 @@ const ScoreGauge = ({ score }) => {
     const yp = y0 + length * sin;
 
     return [
-      <circle key="needle-circle" cx={x0} cy={y0} r={r} fill={color} stroke="none" />,
+      <circle key="needle-circle" cx={x0} cy={y0} r={r} fill="#FFD700" stroke="none" />,
       <path
         key="needle-path"
         d={`M${xba} ${yba}L${xbb} ${ybb} L${xp} ${yp} L${xba} ${yba}`}
         stroke="none"
-        fill={color}
+        fill="#FFD700"
       />,
     ];
   };
 
   return (
-    <div style={{ width: '100%', height: 220 }}>
-      <ResponsiveContainer width="100%" height="100%">
-        <PieChart margin={{ top: 10, right: 10, bottom: 10, left: 10 }}>
+    <div className="flex flex-col items-center" style={{ width: '100%', height: 200 }}>
+      <ResponsiveContainer width="100%" height={160}>
+        <PieChart>
           <Pie
             dataKey="value"
             startAngle={180}
@@ -59,10 +64,16 @@ const ScoreGauge = ({ score }) => {
               <Cell key={`cell-${index}`} fill={entry.color} />
             ))}
           </Pie>
-          {needle(score, data, '50%', '50%', '25%', '80%', '#FFD700')}
+          {({ width, height }) => (
+            <GaugeNeedle 
+              cx={width / 2} 
+              cy={height / 2} 
+              value={score}
+            />
+          )}
         </PieChart>
       </ResponsiveContainer>
-      <div className="text-center font-semibold mt-2">
+      <div className="text-center font-semibold">
         Score: {score} / {MAX_SCORE}
       </div>
     </div>
