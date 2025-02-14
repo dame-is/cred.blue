@@ -83,15 +83,27 @@ input {
   width: auto;
 }
 
+input:hover {
+  border: 2px solid #c3e6ff;
+  background: #e5f4ff;
+}
+
+input:focus {
+  border: 2px solid #c3e6ff;
+  background: #e5f4ff;
+}
+
 button {
-  padding: 10px 20px;
-  background: #3B9AF8;
-  color: #fff;
+  background: #3b9af8;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
+  color: #fff;
   cursor: pointer;
-  max-width: 100px;
   margin: auto;
+  max-width: 100px;
+  padding: 10px 15px;
+  font-weight: 700;
+  font-size: 1em;
 }
 
 button:hover {

@@ -1,6 +1,7 @@
 .home-page {
-    max-width: 500px;
-    margin: auto;
+    margin: 30px auto 20px;
+    max-width: 400px;
+    padding: 20px;
 }
 
 .home-page h1 {
@@ -12,7 +13,6 @@
     border: 5px solid #ddd;
     border-radius: 12px;
     box-shadow: none;
-    margin: auto auto 20px;
     padding: 40px;
     text-align: center;
     display: flex;

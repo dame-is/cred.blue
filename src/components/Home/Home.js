@@ -11,7 +11,7 @@ const Home = () => {
       <h1>Welcome</h1>
       <p>
         {/* Your home content here */}
-        Generate a Bluesky credibility score. Understand your Atproto data footprint. Vibe check strangers and new accounts
+        Generate a Bluesky credibility score. Understand your Atproto data footprint. Vibe check strangers and new accounts.
       </p>
       {/* Include the SearchBar */}
       <SearchBar />

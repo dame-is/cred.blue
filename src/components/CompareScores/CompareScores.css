@@ -517,16 +517,6 @@ form {
     text-align: center;
   }
 
-  .compare-scores-page input {
-    display: flex;
-    padding: 9px;
-    border: 2px solid #ddd;
-    border-radius: 6px;
-    width: auto;
-    margin-top: 5px;
-    text-align: center;
-  }
-
   .compare-scores-page form {
     justify-content: center;
     margin: 10px auto;
