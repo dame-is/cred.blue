@@ -169,16 +169,6 @@ const SearchBar = () => {
             <button type="submit" className="submit-button">Submit</button>
           </div>
         </form>
-        {isLoading && <div className="loading">Loading...</div>}
-        <div
-          role="status"
-          aria-live="polite"
-          className="sr-only"
-        >
-          {suggestions.length > 0
-            ? `${suggestions.length} suggestions available.`
-            : "No suggestions available."}
-        </div>
       </div>
     </div>
   );

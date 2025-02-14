@@ -218,19 +218,6 @@
     font-weight: bold;
 }
 
-form {
-    display: flex;
-    align-items: center;
-    justify-content: center; /* Centers the content horizontally */
-    max-width: 300px; /* Set a maximum width for the container */
-    margin: 10px auto; /* Center the div on the page */
-    padding: 20px 30px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
 /* Center score breakdown card in single mode */
 .single-mode .score-breakdown {
     max-width: 400px;
