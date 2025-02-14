@@ -1,13 +1,8 @@
 /* Main container for single mode and comparison mode */
 .score-result {
-    width: 70%;
-    max-width: 800px; /* Optional: cap the width for larger screens */
-    margin: 20px auto; /* Center horizontally and add vertical spacing */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    margin: 20px auto;
     width: 100%;
-}
+  }
 
 .mode-toggle {
     display: flex;
@@ -384,11 +379,6 @@
     .bar-label {
         width: 100px;
     }
-
-    .score-toggle-controls {
-        flex-direction: column;
-        align-items: flex-start;
-    }
 }
 
 @media (max-width: 768px) {
@@ -501,7 +491,6 @@
   .compare-scores-page {
     text-align: center;
     margin: 30px auto 20px;
-    max-width: 400px;
     text-align: center;
     padding: 20px;
   }
@@ -532,4 +521,13 @@
     max-width: 291px;
     margin-top: 0px;
   margin-bottom: 0px;
+  }
+
+  .recharts-responsive-container {
+    max-width: 500px;
+    margin: auto;
+  }
+
+  .score-toggle-controls input {
+    margin-top: 0px;
   }

@@ -151,9 +151,9 @@ const CompareScoresResults = ({ result, loading }) => {
           <p className="label">
             <strong>{dataPoint.handle || "Unknown Handle"}</strong>
           </p>
+          <p>{`Combined Score: ${dataPoint.Combined || 0}`}</p>
           {showBluesky && <p>{`Bluesky Score: ${dataPoint.Bluesky || 0}`}</p>}
           {showAtproto && <p>{`Atproto Score: ${dataPoint.Atproto || 0}`}</p>}
-          <p>{`Combined Score: ${dataPoint.Combined || 0}`}</p>
         </div>
       );
     }
@@ -207,7 +207,7 @@ const CompareScoresResults = ({ result, loading }) => {
             <Tooltip content={<CustomTooltip />} />
             <Legend />
             {showBluesky && <Bar dataKey="Bluesky" stackId="a" fill="#3B9AF8" />}
-            {showAtproto && <Bar dataKey="Atproto" stackId="a" fill="#28a745" />}
+            {showAtproto && <Bar dataKey="Atproto" stackId="a" fill="#004f84" />}
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -256,7 +256,7 @@ const CompareScoresResults = ({ result, loading }) => {
               <Tooltip content={<CustomTooltip />} />
               <Legend />
               {showBluesky && <Bar dataKey="Bluesky" stackId="a" fill="#3B9AF8" />}
-              {showAtproto && <Bar dataKey="Atproto" stackId="a" fill="#28a745" />}
+              {showAtproto && <Bar dataKey="Atproto" stackId="a" fill="#004f84" />}
             </BarChart>
           </ResponsiveContainer>
         </div>
