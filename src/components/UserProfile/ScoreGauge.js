@@ -46,7 +46,7 @@ const ScoreGauge = ({ score }) => {
   };
 
   return (
-    <div className="score-gauge" style={{ width: '100%', height: '100%' }}>
+    <div className="score-gauge" style={{ width: '100%', height: 300 }}>
       <PieChart>
         <ResponsiveContainer>
             <Pie
