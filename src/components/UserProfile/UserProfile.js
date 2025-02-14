@@ -5,6 +5,7 @@ import { Responsive, WidthProvider } from "react-grid-layout";
 import { loadAccountData } from "../../accountData";
 import Card from "../Card/Card";
 import MatterLoadingAnimation from "../MatterLoadingAnimation";
+import ScoreGauge from './ScoreGauge';
 
 import ProfileCard from "./components/ProfileCard";
 import NarrativeCard from "./components/NarrativeCard";
@@ -98,15 +99,21 @@ const UserProfile = () => {
     <AccountDataContext.Provider value={selectedAccountData}>
       <div className={`user-profile ${showContent ? "fade-in" : "hidden"}`}>
         <div className="user-profile-header">
-          <h1>{displayName}</h1>
-          <h2>@{resolvedHandle}</h2>
-          <p><strong>Combined Score: {selectedAccountData.combinedScore}</strong></p>
-          <p><strong>Overall Status: {selectedAccountData.activityAll.activityStatus}</strong></p>
-          <p>Bluesky Score: {selectedAccountData.blueskyScore}</p>
-          <p>Bluesky Status: {selectedAccountData.activityAll.bskyActivityStatus}</p>
-          <p>Atproto Score: {selectedAccountData.atprotoScore}</p>
-          <p>Atproto Status: {selectedAccountData.activityAll.atprotoActivityStatus}</p>
-          
+          <div className="user-profile-header-main">
+            <h1>{displayName}</h1>
+            <h2>@{resolvedHandle}</h2>
+            <p><strong>Combined Score: {selectedAccountData.combinedScore}</strong></p>
+            <p><strong>Overall Status: {selectedAccountData.activityAll.activityStatus}</strong></p>
+            <p>Bluesky Score: {selectedAccountData.blueskyScore}</p>
+            <p>Bluesky Status: {selectedAccountData.activityAll.bskyActivityStatus}</p>
+            <p>Atproto Score: {selectedAccountData.atprotoScore}</p>
+            <p>Atproto Status: {selectedAccountData.activityAll.atprotoActivityStatus}</p>
+          </div>
+
+          <div className="user-profile-header-rechart">
+            <ScoreGauge score={selectedAccountData.combinedScore} />
+          </div>
+
           <div className="toggle-switch">
             <button
               className={`toggle-button ${selectedPeriod === '30' ? 'active' : ''}`}

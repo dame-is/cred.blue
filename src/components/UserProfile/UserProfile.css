@@ -118,3 +118,17 @@
 .user-profile-header h1 {
   margin-bottom: 0px;
 }
+
+.user-profile-header-rechart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.score-gauge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
