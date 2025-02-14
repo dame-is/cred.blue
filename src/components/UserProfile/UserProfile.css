@@ -84,7 +84,7 @@
 }
 
 .toggle-switch {
-  margin-top: 15px;
+  margin-top: 57.5px;
 }
 
 .toggle-button {
@@ -120,15 +120,14 @@
 }
 
 .user-profile-header-rechart {
+  max-width: 416.5px;
+  margin: auto;
+  height: 179.5px;
   display: flex;
-  justify-content: center;
   align-items: center;
-  padding: 1rem;
-  margin-top: 1rem;
+  justify-content: center;
 }
 
-.score-gauge {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.text-center.font-semibold.mt-2 {
+  margin-top: -23px;
 }

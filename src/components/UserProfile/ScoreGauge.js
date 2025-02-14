@@ -68,7 +68,7 @@ const ScoreGauge = ({ score }) => {
             {needle(score, data, cx, cy, iR, oR, '#FFD700')}
         </PieChart>
         <div className="text-center font-semibold mt-2">
-            Score: {score} / {MAX_SCORE}
+            {score} / {MAX_SCORE}
       </div>
       </ResponsiveContainer>
     </div>
