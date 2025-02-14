@@ -1,5 +1,5 @@
 import React from 'react';
-import { PieChart, Pie, Cell } from 'recharts';
+import { ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 const RADIAN = Math.PI / 180;
 const MAX_SCORE = 1000;
@@ -46,24 +46,26 @@ const ScoreGauge = ({ score }) => {
   };
 
   return (
-    <div className="score-gauge">
-      <PieChart width={300} height={200}>
-        <Pie
-          dataKey="value"
-          startAngle={180}
-          endAngle={0}
-          data={data}
-          cx={cx}
-          cy={cy}
-          innerRadius={iR}
-          outerRadius={oR}
-          fill="#8884d8"
-          stroke="none"
-        >
-          {data.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={entry.color} />
-          ))}
-        </Pie>
+    <div className="score-gauge" style={{ width: '100%', height: '100%' }}>
+      <PieChart>
+        <ResponsiveContainer>
+            <Pie
+            dataKey="value"
+            startAngle={180}
+            endAngle={0}
+            data={data}
+            cx={cx}
+            cy={cy}
+            innerRadius={iR}
+            outerRadius={oR}
+            fill="#8884d8"
+            stroke="none"
+            >
+            {data.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.color} />
+            ))}
+            </Pie>
+        </ResponsiveContainer>
         {needle(score, data, cx, cy, iR, oR, '#FFD700')}
       </PieChart>
       <div className="text-center font-semibold mt-2">
