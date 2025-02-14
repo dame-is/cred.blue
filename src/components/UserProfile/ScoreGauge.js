@@ -4,7 +4,7 @@ import { ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 const RADIAN = Math.PI / 180;
 const MAX_SCORE = 1000;
 
-const ScoreGauge = ({ score }) => {
+const ScoreGauge = ({ score, shadowColor = 'rgba(0, 0, 0, 0.3)' }) => {
   // Create four equal sections
   const data = [
     { name: 'Q1', value: 25, color: '#0056b3' },
@@ -52,11 +52,9 @@ const ScoreGauge = ({ score }) => {
         <PieChart>
           <defs>
             <filter id="dropShadow" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur in="SourceAlpha" stdDeviation="2" />
-              <feOffset dx="1" dy="1" result="offsetblur" />
-              <feComponentTransfer>
-                <feFuncA type="linear" slope="0.2" />
-              </feComponentTransfer>
+              <feOffset dx="2" dy="2" />
+              <feFlood flood-color={shadowColor} />
+              <feComposite in2="SourceAlpha" operator="in" />
               <feMerge>
                 <feMergeNode />
                 <feMergeNode in="SourceGraphic" />

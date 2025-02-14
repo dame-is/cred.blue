@@ -6,11 +6,7 @@
     max-width: 1200px;
     margin-top: 40px;
   }
-  
-  .user-profile-header {
-    text-align: center;
-    margin-top: 40px;
-  }
+
 
   .user-profile h1 {
     margin: 0px;
@@ -79,11 +75,12 @@
 
 .user-profile-header {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
+  margin-top: 55px;
 }
 
 .toggle-switch {
-  margin-top: 50px;
+  margin-top: 65px;
 }
 
 .toggle-button {
@@ -122,14 +119,17 @@
 .user-profile-header-rechart {
   max-width: 416.5px;
   margin: auto;
-  height: 185px;
+  height: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .text-center.font-semibold.mt-2 {
-  margin-top: -23px;
+  margin-top: -18.5px;
+  font-size: 1.4em;
+  font-weight: 600;
+  color: #004f84;
 }
 
 .user-profile-header-main {
