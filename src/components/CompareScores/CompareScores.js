@@ -142,8 +142,8 @@ const CompareScores = () => {
 
   return (
     <div className="compare-scores-page">
-      <h2>Compare Scores</h2>
       <form onSubmit={handleSubmit}>
+      <h2>Compare Scores</h2>
         <div>
           <label>
             Username 1:

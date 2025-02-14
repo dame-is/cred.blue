@@ -212,17 +212,17 @@ body.dark-mode .alt-card {
   }
 
   .alt-text-rating-tool {
-    padding: 20px;
+    margin: 30px auto 20px;
     max-width: 400px;
-    margin: auto;
-    margin-top: 30px;
-    margin-bottom: 20px;
+    padding: 20px;
+    gap: 20px;
+    display: flex;
+    flex-direction: column;
   }
   
   .alt-card {
     background: #fff;
     padding: 35px 20px;
-    margin-bottom: 20px;
   }
   
   .action-row {

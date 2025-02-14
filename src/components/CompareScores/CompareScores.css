@@ -218,19 +218,6 @@
     font-weight: bold;
 }
 
-form {
-    display: flex;
-    align-items: center;
-    justify-content: center; /* Centers the content horizontally */
-    max-width: 300px; /* Set a maximum width for the container */
-    margin: 10px auto; /* Center the div on the page */
-    padding: 20px 30px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
 /* Center score breakdown card in single mode */
 .single-mode .score-breakdown {
     max-width: 400px;
@@ -512,21 +499,10 @@ form {
   }
 
   .compare-scores-page {
-    margin-top: 50px;
-    margin-bottom: 50px;
     text-align: center;
-  }
-
-  .compare-scores-page form {
-    justify-content: center;
-    margin: 10px auto;
-    max-width: 193px;
-    background: #fff !important;
-    border: 5px solid #ddd;
-    border-radius: 12px;
-    box-shadow: none;
-    gap: 15px;
-    padding: 20px 30px;
+    margin: 30px auto 20px;
+    max-width: 400px;
+    text-align: center;
   }
 
   .loading-container-1 {
@@ -535,4 +511,9 @@ form {
 
   .compare-scores.loading-container {
     margin-top: 30px;
+  }
+  
+  .compare-scores-page h2 {
+    text-align: center;
+    margin: 0px;
   }
