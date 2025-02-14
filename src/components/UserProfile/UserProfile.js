@@ -89,7 +89,7 @@ const UserProfile = () => {
     }
   }, [accountData30Days, accountData90Days, selectedPeriod]);
 
-  // Your existing data fetching effect
+  // Data fetching effect
   useEffect(() => {
     const fetchAccountData = async () => {
       try {
@@ -138,9 +138,49 @@ const UserProfile = () => {
   return (
     <AccountDataContext.Provider value={selectedAccountData}>
       <div className={`user-profile ${showContent ? "fade-in" : "hidden"}`}>
-        {/* Header section remains the same */}
         <div className="user-profile-header">
-          {/* ... your existing header content ... */}
+          <div className="user-profile-header-main">
+            <CircularLogo 
+              did={selectedAccountData.did}
+              size={200}
+              textColor="#004f84"
+            />
+            <div className="user-profile-name">
+              <h1>{displayName}</h1>
+              <h2>@{resolvedHandle}</h2>
+            </div>
+            <div className="user-profile-data">
+              <div className="user-profile-score">
+                <p><strong>Combined Score: {selectedAccountData.combinedScore}</strong></p>
+                <p>Bluesky Score: {selectedAccountData.blueskyScore}</p>
+                <p>Atproto Score: {selectedAccountData.atprotoScore}</p>
+              </div>
+              <div className="user-profile-activity">
+                <p><strong>Overall Status: {selectedAccountData.activityAll.activityStatus}</strong></p>
+                <p>Bluesky Status: {selectedAccountData.activityAll.bskyActivityStatus}</p>
+                <p>Atproto Status: {selectedAccountData.activityAll.atprotoActivityStatus}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="user-profile-header-rechart">
+            <ScoreGauge score={selectedAccountData.combinedScore} />
+          </div>
+
+          <div className="toggle-switch">
+            <button
+              className={`toggle-button ${selectedPeriod === '30' ? 'active' : ''}`}
+              onClick={() => setSelectedPeriod('30')}
+            >
+              Last 30 Days
+            </button>
+            <button
+              className={`toggle-button ${selectedPeriod === '90' ? 'active' : ''}`}
+              onClick={() => setSelectedPeriod('90')}
+            >
+              Last 90 Days
+            </button>
+          </div>
         </div>
 
         <ResponsiveGridLayout
