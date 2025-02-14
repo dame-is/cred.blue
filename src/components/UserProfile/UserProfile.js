@@ -50,6 +50,13 @@ const UserProfile = () => {
         { i: "RawDataCard", x: 0, y: 10, w: 4, h: 8, minW, maxW, minH, maxH },
         { i: "AltTextCard", x: 0, y: 7, w: 2, h: 6, minW, maxW, minH, maxH },
       ],
+      sm: [
+        { i: "ProfileCard", x: 0, y: 0, w: 3, h: 6, minW, maxW, minH, maxH },
+        { i: "NarrativeCard", x: 3, y: 0, w: 3, h: 6, minW, maxW, minH, maxH },
+        { i: "PostTypeCard", x: 3, y: 7, w: 4, h: 6, minW, maxW, minH, maxH },
+        { i: "RawDataCard", x: 0, y: 10, w: 4, h: 8, minW, maxW, minH, maxH },
+        { i: "AltTextCard", x: 0, y: 7, w: 2, h: 6, minW, maxW, minH, maxH },
+      ],
       // Define layouts for other breakpoints if needed
     });
   }, [username]);
