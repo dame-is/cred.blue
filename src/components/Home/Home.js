@@ -10,9 +10,7 @@ const Home = () => {
     <main className="home-page">
       <div className="home-content">
       <CircularLogo 
-              logoSrc={"/credbluebadge.png"}
               size={200}
-              textColor="#004f84"
       />
       <h1>Welcome</h1>
       <p>

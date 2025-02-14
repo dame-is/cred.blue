@@ -1,19 +1,22 @@
 import React, { useEffect, useRef } from 'react';
 
-const CircularLogo = ({ 
+const CircularLogo = ({
   did = "did:plc:gq4fo3u6tqzzdkjlwzpb23tj",
-  logoSrc = "/api/placeholder/100/100",
+  logoSrc = "/credbluebadge.png",
   size = 200,
-  textColor = "#333333"
+  textColor = "#004f84",
+  textGap = 5,  // New prop to control space between logo and text
+  fontSize = 16   // New prop to control text size
 }) => {
-  // Format the DID with bullet points for better spacing
-  const text = `${did}  `;
+  const text = `${did} `;
   const textGroupRef = useRef(null);
+  
+  // Adjust logo and text positioning calculations
   const logoSize = size * 0.4;
-  const radius = (size / 2) - 20;
+  const textRadius = (logoSize / 2) + textGap;  // Text radius is now based on logo size plus gap
   
   // Repeat text to ensure full coverage
-  const repeatedText = text.repeat(2);  // We need fewer repeats with this approach
+  const repeatedText = text.repeat(2);
 
   useEffect(() => {
     if (textGroupRef.current) {
@@ -21,7 +24,7 @@ const CircularLogo = ({
       let animationFrameId;
       
       const animate = () => {
-        rotation = (rotation - 0.2) % 360;  // Negative for clockwise rotation
+        rotation = (rotation - 0.2) % 360;
         if (textGroupRef.current) {
           textGroupRef.current.style.transform = `rotate(${rotation}deg)`;
         }
@@ -40,9 +43,9 @@ const CircularLogo = ({
 
   return (
     <div className="relative w-full flex justify-center items-center">
-      <svg 
-        width={size} 
-        height={size} 
+      <svg
+        width={size}
+        height={size}
         viewBox={`0 0 ${size} ${size}`}
         className="relative"
       >
@@ -51,13 +54,17 @@ const CircularLogo = ({
           <defs>
             <path
               id="circlePath"
-              d={`M ${size/2}, ${size/2} m -${radius}, 0 a ${radius},${radius} 0 1,1 ${radius*2},0 a ${radius},${radius} 0 1,1 -${radius*2},0`}
+              d={`
+                M ${size/2}, ${(size/2) - textRadius}
+                a ${textRadius},${textRadius} 0 1,1 0,${textRadius * 2}
+                a ${textRadius},${textRadius} 0 1,1 0,-${textRadius * 2}
+              `}
               fill="none"
             />
           </defs>
-
-          <text fill={textColor} fontSize="16">
-            <textPath 
+          
+          <text fill={textColor} fontSize={fontSize}>
+            <textPath
               href="#circlePath"
               spacing="auto"
               startOffset="0"

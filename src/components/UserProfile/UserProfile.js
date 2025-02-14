@@ -103,7 +103,6 @@ const UserProfile = () => {
           <div className="user-profile-header-main">
             <CircularLogo 
               did={selectedAccountData.did}
-              logoSrc={selectedAccountData.avatar || "/credbluebadge.png"}
               size={200}
               textColor="#004f84"
             />
