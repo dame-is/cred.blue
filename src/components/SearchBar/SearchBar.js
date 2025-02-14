@@ -1,8 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { ThemeContext } from '../contexts/ThemeContext';
 import "./SearchBar.css";
 
 const SearchBar = () => {
+  const { isDarkMode } = useContext(ThemeContext);
   const [username, setUsername] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [autocompleteActive, setAutocompleteActive] = useState(false);
@@ -114,61 +116,70 @@ const SearchBar = () => {
   };
 
   return (
-    <div className="search-bar-container">
-      <div className="search-bar">
-        <form className="search-bar" onSubmit={handleSubmit} role="search" autoComplete="off">
-          <div style={{ position: 'relative' }}>
-            <input
-              type="text"
-              placeholder="(e.g. dame.bsky.social)"
-              value={username}
-              onChange={handleInputChange}
-              onKeyDown={handleKeyDown}
-              required
-              role="combobox"
-              aria-autocomplete="list"
-              aria-controls="autocomplete-items"
-              aria-expanded={autocompleteActive}
-              aria-haspopup="listbox"
-              aria-activedescendant={
-                activeSuggestionIndex >= 0
-                  ? `suggestion-${activeSuggestionIndex}`
-                  : undefined
-              }
-            />
-            {autocompleteActive && suggestions.length > 0 && (
-              <div className="autocomplete-items" id="autocomplete-items">
-                {suggestions.map((actor, index) => (
-                  <div
-                    key={actor.handle}
-                    className={`autocomplete-item ${index === activeSuggestionIndex ? 'active' : ''}`}
-                    onClick={() => {
-                      setUsername(actor.handle);
-                      setSelectedSuggestion(actor.handle);
-                      setSuggestions([]);
-                      setAutocompleteActive(false);
-                      debouncedFetchSuggestions.cancel();
-                      navigate(`/${encodeURIComponent(actor.handle)}`);
+    <div className={`search-bar-container ${isDarkMode ? 'dark-mode' : ''}`}>
+      <form className="search-bar" onSubmit={handleSubmit} role="search">
+        <div style={{ position: 'relative' }}>
+          <input
+            type="text"
+            placeholder="(e.g. dame.bsky.social)"
+            value={username}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            required
+            role="combobox"
+            aria-autocomplete="list"
+            aria-controls="autocomplete-items"
+            aria-expanded={autocompleteActive}
+            aria-haspopup="listbox"
+            aria-activedescendant={
+              activeSuggestionIndex >= 0
+                ? `suggestion-${activeSuggestionIndex}`
+                : undefined
+            }
+            className={isDarkMode ? 'dark-mode' : ''}
+          />
+          {autocompleteActive && suggestions.length > 0 && (
+            <div className={`autocomplete-items ${isDarkMode ? 'dark-mode' : ''}`} 
+                 id="autocomplete-items">
+              {suggestions.map((actor, index) => (
+                <div
+                  key={actor.handle}
+                  className={`autocomplete-item ${index === activeSuggestionIndex ? 'active' : ''} 
+                             ${isDarkMode ? 'dark-mode' : ''}`}
+                  onClick={() => {
+                    setUsername(actor.handle);
+                    setSelectedSuggestion(actor.handle);
+                    setSuggestions([]);
+                    setAutocompleteActive(false);
+                    debouncedFetchSuggestions.cancel();
+                    navigate(`/${encodeURIComponent(actor.handle)}`);
+                  }}
+                >
+                  <img 
+                    src={actor.avatar} 
+                    alt={`${actor.handle}'s avatar`}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = "/default-avatar.png";
                     }}
-                  >
-                    <img 
-                      src={actor.avatar} 
-                      alt={`${actor.handle}'s avatar`}
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = "/default-avatar.png";
-                      }}
-                    />
-                    <span>{actor.handle}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-          <div className="action-row">
-            <button type="submit" className="submit-button">Submit</button>
-          </div>
-        </form>
+                  />
+                  <span>{actor.handle}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+        <button type="submit" className={isDarkMode ? 'dark-mode' : ''}>Search</button>
+      </form>
+      {isLoading && <div className="loading">Loading...</div>}
+      <div
+        role="status"
+        aria-live="polite"
+        className="sr-only"
+      >
+        {suggestions.length > 0
+          ? `${suggestions.length} suggestions available.`
+          : "No suggestions available."}
       </div>
     </div>
   );
