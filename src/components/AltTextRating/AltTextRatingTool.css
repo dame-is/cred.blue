@@ -40,7 +40,8 @@ body.dark-mode .alt-card {
 .checkbox-container {
     align-items: center;
     display: flex;
-    margin-bottom: 7px;
+    margin-bottom: 15px;
+    margin-right: 0px;
   }
 
 .results p {
@@ -250,12 +251,7 @@ body.dark-mode .alt-card {
     justify-content: center;
     margin-bottom: 10px;
     margin-top: 20px;
-  }
-  
-  .checkbox-container {
-    display: inline-flex;
-    align-items: center;
-    margin-right: 7px;
+    gap: 20px;
   }
   
   .checkbox-container input {

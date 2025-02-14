@@ -35,16 +35,5 @@
     margin-top: -55px;
     overflow: hidden;
   }
-  
-  .checkbox-container {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
-  }
-  
-  .checkbox-container input {
-    margin-right: 10px;
-    width: 16px;
-    height: 16px;
-  }
+
   
