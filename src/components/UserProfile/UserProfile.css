@@ -123,7 +123,10 @@
   width: 100%;
   max-width: 400px;
   margin: 1rem auto;
-  height: 250px; /* Gives enough room for the gauge and score text */
+  height: 270px; /* Increased to give more room */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .score-gauge {
