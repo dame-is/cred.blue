@@ -5,19 +5,21 @@ const CircularLogo = ({
   logoSrc = "/credbluebadge.png",
   size = 200,
   textColor = "#004f84",
-  textGap = 3,
-  fontSize = 16
+  textGap = 5,
+  fontSize = 16,
+  viewBoxPadding = 20  // New prop to control viewBox size
 }) => {
   const text = `${did} `;
   const textGroupRef = useRef(null);
   
   // Calculate dimensions based on content
   const logoSize = size * 0.4;
-  const textRadius = (logoSize / 2) + textGap + fontSize; // Add fontSize to account for text height
-  const totalSize = Math.max(logoSize + (textGap + fontSize) * 2, textRadius * 2); // Minimum size needed
+  const textRadius = (logoSize / 2) + textGap + fontSize;
+  const contentSize = Math.max(logoSize + (textGap + fontSize) * 2, textRadius * 2);
   
-  // Center coordinates
-  const center = totalSize / 2;
+  // Add padding to viewBox
+  const viewBoxSize = contentSize + (viewBoxPadding * 2);
+  const center = viewBoxSize / 2;
   
   // Repeat text to ensure full coverage
   const repeatedText = text.repeat(2);
@@ -48,9 +50,9 @@ const CircularLogo = ({
   return (
     <div className="relative inline-flex justify-center items-center">
       <svg
-        width={totalSize}
-        height={totalSize}
-        viewBox={`0 0 ${totalSize} ${totalSize}`}
+        width={viewBoxSize}
+        height={viewBoxSize}
+        viewBox={`0 0 ${viewBoxSize} ${viewBoxSize}`}
         className="relative"
       >
         {/* Group for rotating text */}
