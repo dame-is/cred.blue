@@ -33,8 +33,8 @@ const UserProfile = () => {
   const [showContent, setShowContent] = useState(false); // Control fade-in for content
 
   // Define breakpoints and columns for the grid
-  const breakpoints = { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 };
-  const cols = { lg: 6, md: 10, sm: 6, xs: 4, xxs: 2 };
+  const breakpoints = { lg: 1200, sm: 768 };
+  const cols = { lg: 6, sm: 2 };
   const minW = 2;
   const maxW = 6;
   const minH = 2;
