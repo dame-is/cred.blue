@@ -15,7 +15,18 @@ const About = () => {
         <p>
         The cred.blue score is not set in stone. It will evolve in tandem with the AT Protocol and Atmosphere.
         </p>
-      </div>
+        <h2>
+        Roadmap
+        </h2>
+        <p>
+        Future versions of cred.blue will focus on the following features and functionality...
+        </p>
+        <ul>
+        <li>Authenticated data analysis</li>
+        <li>Lexicon and tracking</li>
+        <li>Badges and rewards</li>
+        </ul>
+      </div> 
       </main>
     </>
   );
