@@ -11,7 +11,7 @@ const Home = () => {
       <div className="home-content">
       <CircularLogo 
               logoSrc={"/credbluebadge.png"}
-              size={150}
+              size={200}
               textColor="#004f84"
       />
       <h1>Welcome</h1>
