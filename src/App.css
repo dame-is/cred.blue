@@ -80,6 +80,7 @@ input {
   margin: auto;
   align-content: center;
   justify-content: center;
+  font-size: 1.1em
 }
 
 @media (max-width: 450px) {
