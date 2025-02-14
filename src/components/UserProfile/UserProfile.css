@@ -148,3 +148,7 @@
   justify-content: center;
   gap: 35px;
 }
+
+.circular-badge {
+  margin-bottom: 10px;
+}

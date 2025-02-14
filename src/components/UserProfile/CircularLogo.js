@@ -5,7 +5,7 @@ const CircularLogo = ({
   logoSrc = "/credbluebadge.png",
   size = 200,
   textColor = "#004f84",
-  textGap = 5,
+  textGap = 2,
   fontSize = 16,
   viewBoxPadding = 20  // New prop to control viewBox size
 }) => {
@@ -48,7 +48,7 @@ const CircularLogo = ({
   }, []);
 
   return (
-    <div className="relative inline-flex justify-center items-center">
+    <div className="circular-badge">
       <svg
         width={viewBoxSize}
         height={viewBoxSize}
