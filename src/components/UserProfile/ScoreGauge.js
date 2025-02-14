@@ -5,7 +5,6 @@ const RADIAN = Math.PI / 180;
 const MAX_SCORE = 1000;
 
 const ScoreGauge = ({ score, shadowColor = 'rgba(150,127,0,0.74)' }) => {
-  // Create four equal sections
   const data = [
     { name: 'Q1', value: 25, color: '#0056b3' },
     { name: 'Q2', value: 25, color: '#0066cc' },
@@ -36,11 +35,20 @@ const ScoreGauge = ({ score, shadowColor = 'rgba(150,127,0,0.74)' }) => {
 
     return (
       <g filter="url(#dropShadow)">
-        <circle cx={x0} cy={y0} r={r} fill={color} stroke="none" />
         <path
-          d={`M${xba} ${yba}L${xbb} ${ybb} L${xp} ${yp} L${xba} ${yba}`}
-          stroke="none"
+          d={`
+            M ${xba} ${yba}
+            L ${xbb} ${ybb}
+            L ${xp} ${yp}
+            L ${xba} ${yba}
+            Z
+            M ${x0} ${y0}
+            m -${r}, 0
+            a ${r},${r} 0 1,0 ${r*2},0
+            a ${r},${r} 0 1,0 -${r*2},0
+          `}
           fill={color}
+          stroke="none"
         />
       </g>
     );
@@ -51,14 +59,14 @@ const ScoreGauge = ({ score, shadowColor = 'rgba(150,127,0,0.74)' }) => {
       <ResponsiveContainer>
         <PieChart>
           <defs>
-            <filter id="dropShadow" x="-50%" y="-50%" width="200%" height="200%">
-              <feOffset dx="2" dy="2" />
-              <feFlood flood-color={shadowColor} />
-              <feComposite in2="SourceAlpha" operator="in" />
-              <feMerge>
-                <feMergeNode />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
+            <filter id="dropShadow">
+              <feDropShadow 
+                dx="3" 
+                dy="3" 
+                stdDeviation="0" 
+                floodColor={shadowColor}
+                floodOpacity="1"
+              />
             </filter>
           </defs>
           

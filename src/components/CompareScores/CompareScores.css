@@ -49,15 +49,21 @@
 }
 
 .score-breakdown {
-    flex: 1;
-    max-width: 100%; /* Full width by default */
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    box-sizing: border-box; /* Include padding and border in width */
-}
+    box-sizing: border-box;
+    flex: 1 1;
+    max-width: 100%;
+    font-size: 16px;
+    padding: 30px;
+    text-align: center;
+    background: #fff;
+    border: 5px solid #ddd;
+    border-radius: 12px;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 10px auto;
+  }
 
 /* Remove or comment out the existing custom bar-fill since Recharts handles it */
 .bar-fill {
@@ -292,17 +298,18 @@
 
 /* High-Level Comparison Summary */
 .comparison-summary {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    padding: 15px;
-    background-color: #e3f7e6;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     font-size: 16px;
+    padding: 15px;
     text-align: center;
-}
+    background: #fff;
+    border: 5px solid #ddd;
+    border-radius: 12px;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 10px auto;
+  }
 
 .comparison-summary p {
     margin: 10px 0;
@@ -390,21 +397,9 @@
 
 /* Additional Styles for Breakdown Sections */
 
-/* Ensure that the breakdown sections are clearly separated */
-.score-breakdown .breakdown-section {
-    background-color: #ffffff; /* White background for clarity */
-    padding: 1rem;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-    border: 1px solid #ddd;
-}
-
-.score-breakdown .breakdown-section:last-child {
-    margin-bottom: 0;
-}
-
 .score-breakdown .breakdown-section h4 {
     margin-bottom: 0.5rem;
+    margin-top: 0px;
     color: #333;
 }
 
@@ -418,19 +413,14 @@
     color: #555;
 }
 
-/* Score Breakdown Header */
 .score-breakdown-header {
+    color: #3b9af8;
     font-size: 1.5rem;
-    font-weight: bold;
-    color: #3B9AF8; /* Blue color to make it stand out */
+    font-weight: 700;
+    margin-bottom: 0px;
     text-align: center;
-    margin-bottom: 1rem;
-}
-
-/* Ensure that the username header doesn't interfere with breakdown sections */
-.score-breakdown-header + .breakdown-section {
-    margin-top: 0;
-}
+    margin-top: 0px;
+  }
 
 /* Customize Recharts Tooltip */
 .recharts-tooltip-wrapper {
