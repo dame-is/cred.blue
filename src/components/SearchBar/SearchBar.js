@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { ThemeContext } from '../contexts/ThemeContext';
+import { ThemeContext } from '../../contexts/ThemeContext';
 import "./SearchBar.css";
 
 const SearchBar = () => {
