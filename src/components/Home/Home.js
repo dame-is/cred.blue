@@ -3,11 +3,17 @@
 import React from 'react';
 import SearchBar from '../SearchBar/SearchBar'; // Import SearchBar
 import './Home.css'; // Create corresponding CSS
+import CircularLogo from '../UserProfile/CircularLogo';
 
 const Home = () => {
   return (
     <main className="home-page">
       <div className="home-content">
+      <CircularLogo 
+              logoSrc={"/credbluebadge.png"}
+              size={150}
+              textColor="#004f84"
+      />
       <h1>Welcome</h1>
       <p>
         {/* Your home content here */}

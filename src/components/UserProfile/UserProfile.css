@@ -142,3 +142,9 @@
   display: flex;
   flex-direction: column;
 }
+
+.user-profile-data {
+  flex-direction: row;
+  justify-content: center;
+  gap: 35px;
+}
