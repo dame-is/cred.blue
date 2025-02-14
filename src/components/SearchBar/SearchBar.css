@@ -22,25 +22,6 @@
   width: 100%;
 }
 
-.search-bar input {
-  flex: 1;
-  padding: 10px;
-  font-size: 1em;
-  border: 1px solid #ccc;
-  border-radius: 5px 0 0 5px;
-  border-right: 0px;
-}
-
-.search-bar input {
-  border: 2px solid #ddd;
-  border-radius: 6px;
-  display: flex;
-  margin-top: 0px;
-  padding: 9px;
-  text-align: center;
-  width: auto;
-}
-
 form.search-bar {
   align-items: center;
   gap: 10px;

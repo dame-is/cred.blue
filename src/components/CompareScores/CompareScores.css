@@ -503,6 +503,7 @@
     margin: 30px auto 20px;
     max-width: 400px;
     text-align: center;
+    padding: 20px;
   }
 
   .loading-container-1 {
@@ -512,8 +513,23 @@
   .compare-scores.loading-container {
     margin-top: 30px;
   }
-  
+
   .compare-scores-page h2 {
     text-align: center;
     margin: 0px;
+  }
+
+  .compare-scores-page input {
+    margin-top: 10px;
+  }
+
+  .compare-scores-page h1 {
+    margin: 0px;
+  }
+
+  .compare-scores-page form {
+    padding: 30px 20px;
+    max-width: 291px;
+    margin-top: 0px;
+  margin-bottom: 0px;
   }

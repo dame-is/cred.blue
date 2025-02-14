@@ -224,11 +224,14 @@ body.dark-mode .alt-card {
     background: #fff;
     padding: 35px 20px;
   }
+
+  .share-button {
+    background: #858585;
+  }
   
   .action-row {
     display: flex;
     gap: 10px;
-    margin-top: 10px;
   }
   
   .gauge-container {
@@ -242,11 +245,11 @@ body.dark-mode .alt-card {
   
   /* Checkbox styles */
   .filters-container {
-    display: flex;
     align-items: center;
-    margin-top: 10px;
+    display: flex;
     justify-content: center;
     margin-bottom: 10px;
+    margin-top: 20px;
   }
   
   .checkbox-container {
@@ -292,11 +295,12 @@ body.dark-mode .alt-card {
       }
 }
 
-  .alt-text-rating-tool ul {
-    font-size: .7em;
+.alt-text-rating-tool ul {
+    font-size: 0.9em;
     list-style: none;
+    margin-top: 0;
     padding: 0;
-    margin-top: 0px;
+    text-align: center;
   }
 
   .alt-text-rating-tool .gauge-svg {
