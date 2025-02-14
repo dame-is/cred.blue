@@ -15,16 +15,16 @@ const ScoreGauge = ({ score }) => {
 
   const cx = 200;
   const cy = 200;
-  const iR = 30;
+  const iR = 50;
   const oR = 150;
 
   const needle = (value, data, cx, cy, iR, oR, color) => {
     const total = MAX_SCORE;
     const ang = 180.0 * (1 - value / total);
-    const length = (iR + 2 * oR) / 3;
+    const length = (iR + 2 * oR) / 2.5;
     const sin = Math.sin(-RADIAN * ang);
     const cos = Math.cos(-RADIAN * ang);
-    const r = 5;
+    const r = 8;
     const x0 = cx + 5;
     const y0 = cy + 5;
     const xba = x0 + r * sin;
@@ -46,7 +46,7 @@ const ScoreGauge = ({ score }) => {
   };
 
   return (
-    <div className="score-gauge" style={{ width: '100%', height: 300 }}>
+    <div className="score-gauge" style={{ width: '100%', height: 250 }}>
       <ResponsiveContainer>
         <PieChart>
             <Pie

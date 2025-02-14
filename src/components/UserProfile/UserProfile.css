@@ -84,7 +84,7 @@
 }
 
 .toggle-switch {
-  margin-top: 57.5px;
+  margin-top: 50px;
 }
 
 .toggle-button {
@@ -122,7 +122,7 @@
 .user-profile-header-rechart {
   max-width: 416.5px;
   margin: auto;
-  height: 179.5px;
+  height: 185px;
   display: flex;
   align-items: center;
   justify-content: center;

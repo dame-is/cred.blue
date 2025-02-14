@@ -100,14 +100,20 @@ const UserProfile = () => {
       <div className={`user-profile ${showContent ? "fade-in" : "hidden"}`}>
         <div className="user-profile-header">
           <div className="user-profile-header-main">
-            <h1>{displayName}</h1>
-            <h2>@{resolvedHandle}</h2>
-            <p><strong>Combined Score: {selectedAccountData.combinedScore}</strong></p>
-            <p><strong>Overall Status: {selectedAccountData.activityAll.activityStatus}</strong></p>
-            <p>Bluesky Score: {selectedAccountData.blueskyScore}</p>
-            <p>Bluesky Status: {selectedAccountData.activityAll.bskyActivityStatus}</p>
-            <p>Atproto Score: {selectedAccountData.atprotoScore}</p>
-            <p>Atproto Status: {selectedAccountData.activityAll.atprotoActivityStatus}</p>
+            <div className="user-profile-name">
+              <h1>{displayName}</h1>
+              <h2>@{resolvedHandle}</h2>
+            </div>
+            <div className="user-profile-score">
+              <p><strong>Combined Score: {selectedAccountData.combinedScore}</strong></p>
+              <p>Bluesky Score: {selectedAccountData.blueskyScore}</p>
+              <p>Atproto Score: {selectedAccountData.atprotoScore}</p>
+            </div>
+            <div className="user-profile-activity">
+              <p><strong>Overall Status: {selectedAccountData.activityAll.activityStatus}</strong></p>
+              <p>Bluesky Status: {selectedAccountData.activityAll.bskyActivityStatus}</p>
+              <p>Atproto Status: {selectedAccountData.activityAll.atprotoActivityStatus}</p>
+            </div>
           </div>
 
           <div className="user-profile-header-rechart">
