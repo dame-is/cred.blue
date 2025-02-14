@@ -6,6 +6,7 @@ import { loadAccountData } from "../../accountData";
 import Card from "../Card/Card";
 import MatterLoadingAnimation from "../MatterLoadingAnimation";
 import ScoreGauge from './ScoreGauge';
+import CircularLogo from './CircularLogo';
 
 import ProfileCard from "./components/ProfileCard";
 import NarrativeCard from "./components/NarrativeCard";
@@ -100,6 +101,12 @@ const UserProfile = () => {
       <div className={`user-profile ${showContent ? "fade-in" : "hidden"}`}>
         <div className="user-profile-header">
           <div className="user-profile-header-main">
+            <CircularLogo 
+              did={selectedAccountData.did}
+              logoSrc={selectedAccountData.avatar || "/public/credbluebadge.png"}
+              size={150}
+              textColor="#1D4ED8"
+            />
             <div className="user-profile-name">
               <h1>{displayName}</h1>
               <h2>@{resolvedHandle}</h2>
