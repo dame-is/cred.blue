@@ -1,5 +1,5 @@
 import React from 'react';
-import { PieChart, Pie, Cell } from 'recharts';
+import { ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 const RADIAN = Math.PI / 180;
 const MAX_SCORE = 1000;
@@ -13,10 +13,10 @@ const ScoreGauge = ({ score }) => {
     { name: 'Q4', value: 25, color: '#66b2ff' },
   ];
 
-  const cx = 150;
-  const cy = 100;
+  const cx = 200;
+  const cy = 200;
   const iR = 30;
-  const oR = 80;
+  const oR = 150;
 
   const needle = (value, data, cx, cy, iR, oR, color) => {
     const total = MAX_SCORE;
@@ -46,29 +46,31 @@ const ScoreGauge = ({ score }) => {
   };
 
   return (
-    <div className="score-gauge">
-      <PieChart width={300} height={200}>
-        <Pie
-          dataKey="value"
-          startAngle={180}
-          endAngle={0}
-          data={data}
-          cx={cx}
-          cy={cy}
-          innerRadius={iR}
-          outerRadius={oR}
-          fill="#8884d8"
-          stroke="none"
-        >
-          {data.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={entry.color} />
-          ))}
-        </Pie>
-        {needle(score, data, cx, cy, iR, oR, '#FFD700')}
-      </PieChart>
-      <div className="text-center font-semibold mt-2">
-        Score: {score} / {MAX_SCORE}
+    <div className="score-gauge" style={{ width: '100%', height: 300 }}>
+      <ResponsiveContainer>
+        <PieChart>
+            <Pie
+            dataKey="value"
+            startAngle={180}
+            endAngle={0}
+            data={data}
+            cx={cx}
+            cy={cy}
+            innerRadius={iR}
+            outerRadius={oR}
+            fill="#8884d8"
+            stroke="none"
+            >
+            {data.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.color} />
+            ))}
+            </Pie>
+            {needle(score, data, cx, cy, iR, oR, '#FFD700')}
+        </PieChart>
+        <div className="text-center font-semibold mt-2">
+            Score: {score} / {MAX_SCORE}
       </div>
+      </ResponsiveContainer>
     </div>
   );
 };
