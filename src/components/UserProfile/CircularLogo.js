@@ -3,9 +3,9 @@ import React, { useEffect, useRef } from 'react';
 const CircularLogo = ({
   did = "did:plc:gq4fo3u6tqzzdkjlwzpb23tj",
   logoSrc = "/credbluebadge.png",
-  size = 200,
+  size = 250,
   textColor = "#004f84",
-  textGap = 2,
+  textGap = 5,
   fontSize = 16,
   viewBoxPadding = 20
 }) => {
@@ -25,7 +25,7 @@ const CircularLogo = ({
   const center = viewBoxSize / 2;
   
   // Repeat text to ensure full coverage
-  const repeatedText = text.repeat(2);
+  const repeatedText = text.repeat(1);
 
   useEffect(() => {
     if (textGroupRef.current) {
