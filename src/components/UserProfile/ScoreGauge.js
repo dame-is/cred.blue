@@ -34,22 +34,37 @@ const ScoreGauge = ({ score }) => {
     const xp = x0 + length * cos;
     const yp = y0 + length * sin;
 
-    return [
-      <circle key="needle-circle" cx={x0} cy={y0} r={r} fill={color} stroke="none" />,
-      <path
-        key="needle-path"
-        d={`M${xba} ${yba}L${xbb} ${ybb} L${xp} ${yp} L${xba} ${yba}`}
-        stroke="none"
-        fill={color}
-      />,
-    ];
+    return (
+      <g filter="url(#dropShadow)">
+        <circle cx={x0} cy={y0} r={r} fill={color} stroke="none" />
+        <path
+          d={`M${xba} ${yba}L${xbb} ${ybb} L${xp} ${yp} L${xba} ${yba}`}
+          stroke="none"
+          fill={color}
+        />
+      </g>
+    );
   };
 
   return (
     <div className="score-gauge" style={{ width: '100%', height: 250 }}>
       <ResponsiveContainer>
         <PieChart>
-            <Pie
+          <defs>
+            <filter id="dropShadow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur in="SourceAlpha" stdDeviation="2" />
+              <feOffset dx="1" dy="1" result="offsetblur" />
+              <feComponentTransfer>
+                <feFuncA type="linear" slope="0.2" />
+              </feComponentTransfer>
+              <feMerge>
+                <feMergeNode />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+          
+          <Pie
             dataKey="value"
             startAngle={180}
             endAngle={0}
@@ -60,17 +75,17 @@ const ScoreGauge = ({ score }) => {
             outerRadius={oR}
             fill="#8884d8"
             stroke="none"
-            >
+          >
             {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
+              <Cell key={`cell-${index}`} fill={entry.color} />
             ))}
-            </Pie>
-            {needle(score, data, cx, cy, iR, oR, '#FFD700')}
+          </Pie>
+          {needle(score, data, cx, cy, iR, oR, '#FFD700')}
         </PieChart>
-        <div className="text-center font-semibold mt-2">
-            {score} / {MAX_SCORE}
-      </div>
       </ResponsiveContainer>
+      <div className="text-center font-semibold mt-2">
+        {score} / {MAX_SCORE}
+      </div>
     </div>
   );
 };
