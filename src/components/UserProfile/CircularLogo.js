@@ -5,7 +5,7 @@ const CircularLogo = ({
   logoSrc = "/credbluebadge.png",
   size = 200,
   textColor = "#004f84",
-  textGap = 1,
+  textGap = 2,
   fontSize = 16,
   viewBoxPadding = 20
 }) => {
@@ -14,13 +14,11 @@ const CircularLogo = ({
   
   // Calculate dimensions based on content
   const logoSize = size * 0.4;
+  // Simplified radius calculation - directly from logo edge plus gap
+  const textRadius = (logoSize / 2) + textGap;
   
-  // Revised text radius calculation to make textGap more impactful
-  const baseRadius = logoSize / 2;  // Radius of the logo
-  const textRadius = baseRadius + (textGap * fontSize) + fontSize;  // Scale gap by fontSize
-  
-  // Calculate total content size
-  const contentSize = (textRadius + fontSize) * 2;  // Double the radius plus text height
+  // Calculate total size needed for content
+  const contentSize = (textRadius + fontSize) * 2;
   
   // Add padding to viewBox
   const viewBoxSize = contentSize + (viewBoxPadding * 2);
