@@ -13,7 +13,12 @@ const ScoreGauge = ({ score }) => {
     { name: 'Q4', value: 25, color: '#66b2ff' },
   ];
 
-  const needle = (value, cx, cy, iR, oR, color) => {
+  const cx = 150;
+  const cy = 100;
+  const iR = 30;
+  const oR = 80;
+
+  const needle = (value, data, cx, cy, iR, oR, color) => {
     const total = MAX_SCORE;
     const ang = 180.0 * (1 - value / total);
     const length = (iR + 2 * oR) / 3;
@@ -40,43 +45,29 @@ const ScoreGauge = ({ score }) => {
     ];
   };
 
-  // Custom rendering function for the pie chart that includes the needle
-  const renderPieChart = ({ width, height }) => {
-    const cx = width / 2;
-    const cy = height / 2;
-    const iR = Math.min(width, height) * 0.15; // 15% of minimum dimension
-    const oR = Math.min(width, height) * 0.4;  // 40% of minimum dimension
-
-    return (
-      <PieChart width={width} height={height}>
-        <Pie
-          dataKey="value"
-          startAngle={180}
-          endAngle={0}
-          data={data}
-          cx={cx}
-          cy={cy}
-          innerRadius={iR}
-          outerRadius={oR}
-          fill="#8884d8"
-          stroke="none"
-        >
-          {data.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={entry.color} />
-          ))}
-        </Pie>
-        {needle(score, cx, cy, iR, oR, '#FFD700')}
-      </PieChart>
-    );
-  };
-
   return (
-    <div className="w-full">
-      <div className="w-full" style={{ height: '200px' }}>
-        <ResponsiveContainer width="100%" height="100%">
-          {renderPieChart}
-        </ResponsiveContainer>
-      </div>
+    <div style={{ width: '100%', height: 200 }}>
+      <ResponsiveContainer width="100%" height="100%">
+        <PieChart>
+          <Pie
+            dataKey="value"
+            startAngle={180}
+            endAngle={0}
+            data={data}
+            cx={cx}
+            cy={cy}
+            innerRadius={iR}
+            outerRadius={oR}
+            fill="#8884d8"
+            stroke="none"
+          >
+            {data.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={entry.color} />
+            ))}
+          </Pie>
+          {needle(score, data, cx, cy, iR, oR, '#FFD700')}
+        </PieChart>
+      </ResponsiveContainer>
       <div className="text-center font-semibold mt-2">
         Score: {score} / {MAX_SCORE}
       </div>
