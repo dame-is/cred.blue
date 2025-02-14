@@ -10,7 +10,7 @@ const Home = () => {
     <main className="home-page">
       <div className="home-content">
       <CircularLogo 
-              size={200}
+              size={250}
       />
       <h1>Welcome</h1>
       <p>

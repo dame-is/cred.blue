@@ -5,27 +5,25 @@ const CircularLogo = ({
   logoSrc = "/credbluebadge.png",
   size = 250,
   textColor = "#004f84",
-  textGap = 5,
+  textGap = 10,
   fontSize = 16,
-  viewBoxPadding = 20
+  viewBoxPadding = 20,
+  gapDegrees = 10  // Gap in degrees between text start/end
 }) => {
-  const text = `${did} `;
+  const text = `${did}`;  // Removed extra space since we'll control spacing
   const textGroupRef = useRef(null);
   
   // Calculate dimensions based on content
   const logoSize = size * 0.4;
-  // Simplified radius calculation - directly from logo edge plus gap
   const textRadius = (logoSize / 2) + textGap;
-  
-  // Calculate total size needed for content
   const contentSize = (textRadius + fontSize) * 2;
-  
-  // Add padding to viewBox
   const viewBoxSize = contentSize + (viewBoxPadding * 2);
   const center = viewBoxSize / 2;
-  
-  // Repeat text to ensure full coverage
-  const repeatedText = text.repeat(1);
+
+  // Calculate circumference and text length
+  const circumference = 2 * Math.PI * textRadius;
+  const gapSize = (gapDegrees / 360) * circumference; // Size of gap in pixels
+  const textLength = circumference - gapSize; // Available space for text
 
   useEffect(() => {
     if (textGroupRef.current) {
@@ -76,9 +74,11 @@ const CircularLogo = ({
             <textPath
               href="#circlePath"
               spacing="auto"
-              startOffset="0"
+              startOffset={`${(gapDegrees / 2)}%`}  // Start after half the gap
+              textLength={textLength}
+              lengthAdjust="spacing"
             >
-              {repeatedText}
+              {text}
             </textPath>
           </text>
         </g>
