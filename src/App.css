@@ -77,7 +77,6 @@ input {
   max-width: 200px;
   padding: 9px;
   text-align: center;
-  width: 100%;
   margin: auto;
   align-content: center;
   justify-content: center;
@@ -85,7 +84,7 @@ input {
 
 @media (max-width: 450px) {
   input {
-    max-width: 60%;
+    max-width: 85%;
     margin: auto;
     }
 }
