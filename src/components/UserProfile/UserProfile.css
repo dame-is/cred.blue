@@ -120,13 +120,11 @@
 }
 
 .user-profile-header-rechart {
-  width: 100%;
-  max-width: 400px;
-  margin: 1rem auto;
-  height: 270px; /* Increased to give more room */
   display: flex;
-  flex-direction: column;
   justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  margin-top: 1rem;
 }
 
 .score-gauge {
