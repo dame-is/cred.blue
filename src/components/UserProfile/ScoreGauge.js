@@ -4,7 +4,7 @@ import { ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 const RADIAN = Math.PI / 180;
 const MAX_SCORE = 1000;
 
-const ScoreGauge = ({ score, shadowColor = 'rgba(0, 0, 0, 0.3)' }) => {
+const ScoreGauge = ({ score, shadowColor = 'rgba(150,127,0,0.74)' }) => {
   // Create four equal sections
   const data = [
     { name: 'Q1', value: 25, color: '#0056b3' },

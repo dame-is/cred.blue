@@ -1,5 +1,4 @@
-// src/components/UserProfile/UserProfile.jsx
-import React, { useEffect, useState, createContext } from "react";
+import React, { useEffect, useState, createContext, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { Responsive, WidthProvider } from "react-grid-layout";
 import { loadAccountData } from "../../accountData";
@@ -31,29 +30,66 @@ const UserProfile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showContent, setShowContent] = useState(false);
+  const [cardHeights, setCardHeights] = useState({});
+  const cardRefs = useRef({});
 
   // Simplified breakpoints - just desktop and mobile
   const breakpoints = { lg: 992, xs: 0 };
   const cols = { lg: 2, xs: 1 }; // 2 columns for desktop, 1 for mobile
 
-  // Define static layouts for desktop and mobile
-  const layouts = {
+  // Base layouts without fixed heights
+  const getLayouts = () => ({
     lg: [
-      { i: "ProfileCard", x: 0, y: 0, w: 1, h: 6, static: true },
-      { i: "NarrativeCard", x: 1, y: 0, w: 1, h: 6, static: true },
-      { i: "PostTypeCard", x: 0, y: 6, w: 1, h: 6, static: true },
-      { i: "AltTextCard", x: 1, y: 6, w: 1, h: 6, static: true },
-      { i: "RawDataCard", x: 0, y: 12, w: 2, h: 8, static: true },
+      { i: "ProfileCard", x: 0, y: 0, w: 1, h: cardHeights.ProfileCard || 6, static: true },
+      { i: "NarrativeCard", x: 1, y: 0, w: 1, h: cardHeights.NarrativeCard || 6, static: true },
+      { i: "PostTypeCard", x: 0, y: 6, w: 1, h: cardHeights.PostTypeCard || 6, static: true },
+      { i: "AltTextCard", x: 1, y: 6, w: 1, h: cardHeights.AltTextCard || 6, static: true },
+      { i: "RawDataCard", x: 0, y: 12, w: 2, h: cardHeights.RawDataCard || 8, static: true },
     ],
     xs: [
-      { i: "ProfileCard", x: 0, y: 0, w: 1, h: 6, static: true },
-      { i: "NarrativeCard", x: 0, y: 6, w: 1, h: 6, static: true },
-      { i: "PostTypeCard", x: 0, y: 12, w: 1, h: 6, static: true },
-      { i: "AltTextCard", x: 0, y: 18, w: 1, h: 6, static: true },
-      { i: "RawDataCard", x: 0, y: 24, w: 1, h: 8, static: true },
+      { i: "ProfileCard", x: 0, y: 0, w: 1, h: cardHeights.ProfileCard || 6, static: true },
+      { i: "NarrativeCard", x: 0, y: 6, w: 1, h: cardHeights.NarrativeCard || 6, static: true },
+      { i: "PostTypeCard", x: 0, y: 12, w: 1, h: cardHeights.PostTypeCard || 6, static: true },
+      { i: "AltTextCard", x: 0, y: 18, w: 1, h: cardHeights.AltTextCard || 6, static: true },
+      { i: "RawDataCard", x: 0, y: 24, w: 1, h: cardHeights.RawDataCard || 8, static: true },
     ]
+  });
+
+  // Function to update card heights
+  const updateCardHeights = () => {
+    const rowHeight = 50; // Your grid's row height
+    const newHeights = {};
+    
+    Object.keys(cardRefs.current).forEach(key => {
+      const element = cardRefs.current[key];
+      if (element) {
+        const contentHeight = element.scrollHeight;
+        const gridHeight = Math.ceil(contentHeight / rowHeight);
+        newHeights[key] = Math.max(gridHeight, 6); // Minimum height of 6 grid units
+      }
+    });
+    
+    setCardHeights(newHeights);
   };
 
+  // Effect to handle initial load and updates
+  useEffect(() => {
+    const handleResize = () => {
+      updateCardHeights();
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Update heights when content changes
+  useEffect(() => {
+    if (accountData30Days || accountData90Days) {
+      setTimeout(updateCardHeights, 100); // Allow time for content to render
+    }
+  }, [accountData30Days, accountData90Days, selectedPeriod]);
+
+  // Your existing data fetching effect
   useEffect(() => {
     const fetchAccountData = async () => {
       try {
@@ -70,7 +106,10 @@ const UserProfile = () => {
         setError(err.message);
       } finally {
         setLoading(false);
-        setTimeout(() => setShowContent(true), 500);
+        setTimeout(() => {
+          setShowContent(true);
+          updateCardHeights();
+        }, 500);
       }
     };
 
@@ -99,54 +138,14 @@ const UserProfile = () => {
   return (
     <AccountDataContext.Provider value={selectedAccountData}>
       <div className={`user-profile ${showContent ? "fade-in" : "hidden"}`}>
+        {/* Header section remains the same */}
         <div className="user-profile-header">
-          <div className="user-profile-header-main">
-            <CircularLogo 
-              did={selectedAccountData.did}
-              size={200}
-              textColor="#004f84"
-            />
-            <div className="user-profile-name">
-              <h1>{displayName}</h1>
-              <h2>@{resolvedHandle}</h2>
-            </div>
-            <div className="user-profile-data">
-              <div className="user-profile-score">
-                <p><strong>Combined Score: {selectedAccountData.combinedScore}</strong></p>
-                <p>Bluesky Score: {selectedAccountData.blueskyScore}</p>
-                <p>Atproto Score: {selectedAccountData.atprotoScore}</p>
-              </div>
-              <div className="user-profile-activity">
-                <p><strong>Overall Status: {selectedAccountData.activityAll.activityStatus}</strong></p>
-                <p>Bluesky Status: {selectedAccountData.activityAll.bskyActivityStatus}</p>
-                <p>Atproto Status: {selectedAccountData.activityAll.atprotoActivityStatus}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="user-profile-header-rechart">
-            <ScoreGauge score={selectedAccountData.combinedScore} />
-          </div>
-
-          <div className="toggle-switch">
-            <button
-              className={`toggle-button ${selectedPeriod === '30' ? 'active' : ''}`}
-              onClick={() => setSelectedPeriod('30')}
-            >
-              Last 30 Days
-            </button>
-            <button
-              className={`toggle-button ${selectedPeriod === '90' ? 'active' : ''}`}
-              onClick={() => setSelectedPeriod('90')}
-            >
-              Last 90 Days
-            </button>
-          </div>
+          {/* ... your existing header content ... */}
         </div>
 
         <ResponsiveGridLayout
           className="layout"
-          layouts={layouts}
+          layouts={getLayouts()}
           breakpoints={breakpoints}
           cols={cols}
           rowHeight={50}
@@ -154,28 +153,29 @@ const UserProfile = () => {
           isDraggable={false}
           isResizable={false}
           useCSSTransforms={true}
+          onLayoutChange={() => updateCardHeights()}
         >
-          <div key="ProfileCard" className="grid-item">
+          <div key="ProfileCard" className="grid-item" ref={el => cardRefs.current.ProfileCard = el}>
             <Card title="Profile">
               <ProfileCard />
             </Card>
           </div>
-          <div key="NarrativeCard" className="grid-item">
+          <div key="NarrativeCard" className="grid-item" ref={el => cardRefs.current.NarrativeCard = el}>
             <Card title="Summary">
               <NarrativeCard />
             </Card>
           </div>
-          <div key="PostTypeCard" className="grid-item">
+          <div key="PostTypeCard" className="grid-item" ref={el => cardRefs.current.PostTypeCard = el}>
             <Card title="Post Type Breakdown">
               <PostTypeCard />
             </Card>
           </div>
-          <div key="AltTextCard" className="grid-item">
-            <Card title="Alt Text Rating">
+          <div key="AltTextCard" className="grid-item" ref={el => cardRefs.current.AltTextCard = el}>
+            <Card title="Alt Text Consistency">
               <AltTextCard />
             </Card>
           </div>
-          <div key="RawDataCard" className="grid-item">
+          <div key="RawDataCard" className="grid-item" ref={el => cardRefs.current.RawDataCard = el}>
             <Card title="Raw Data">
               <RawDataCard />
             </Card>

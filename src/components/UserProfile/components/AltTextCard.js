@@ -119,7 +119,7 @@ const AltTextCard = () => {
       </ul>
       <h2>
         <strong>
-          Score: {analysis.altTextPercentage.toFixed(0)}% {analysis.emoji}
+          {analysis.altTextPercentage.toFixed(0)}% {analysis.emoji}
         </strong>
       </h2>
       <div className="gauge-container">

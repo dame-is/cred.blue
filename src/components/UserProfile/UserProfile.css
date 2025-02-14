@@ -150,12 +150,27 @@
 }
 
 .circular-badge {
-  margin-top: -38px;
-  margin-bottom: -21.5px;
+  margin-top: -22px;
+  margin-bottom: -8px;
 }
 
 .user-profile-name {
   gap: 7px;
   display: flex;
   flex-direction: column;
+}
+
+.loading-container-1 {
+  min-height: 0 !important;
+  margin-bottom: 30px;
+  margin-top: 30px;
+}
+
+.grid-item {
+  overflow: visible !important;
+}
+
+.react-grid-item {
+  transition: all 200ms ease;
+  transition-property: left, top;
 }
