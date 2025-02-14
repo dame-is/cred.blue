@@ -1,32 +1,30 @@
-/* src/styles/variables.css */
-
 :root {
-    --navbar-bg: #ffffff;
-    --navbar-text: #000000;
-    --button-bg: #3B9AF8;
-    --button-text: #ffffff;
-    --background: #f0f0f0;
-    --text: #000000;
-    /* Add more variables as needed */
-  }
-  
-  .dark-mode {
-    --navbar-bg: #1f1f1f;
-    --navbar-text: #f5f5f5;
-    --button-bg: #555555;
-    --button-text: #f5f5f5;
-    --background: #121212;
-    --text: #ffffff;
-    /* Adjust other variables for dark mode */
-  }
-  
-  .light-mode {
-    --navbar-bg: #ffffff;
-    --navbar-text: #000000;
-    --button-bg: #3B9AF8;
-    --button-text: #ffffff;
-    --background: #f0f0f0;
-    --text: #000000;
-    /* Redefine if necessary */
-  }
-  
+  --navbar-bg: #ffffff;
+  --navbar-text: #000000;
+  --button-bg: #3B9AF8;
+  --button-text: #ffffff;
+  --background: #f0f0f0;
+  --text: #000000;
+  --card-border: #ddd;  /* New variable for card borders */
+  /* Add more variables as needed */
+}
+
+.dark-mode {
+  --navbar-bg: #1f1f1f;
+  --navbar-text: #f5f5f5;
+  --button-bg: #555555;
+  --button-text: #f5f5f5;
+  --background: #121212;
+  --text: #ffffff;
+  --card-border: #333333;  /* Darker border for dark mode */
+}
+
+.light-mode {
+  --navbar-bg: #ffffff;
+  --navbar-text: #000000;
+  --button-bg: #3B9AF8;
+  --button-text: #ffffff;
+  --background: #f0f0f0;
+  --text: #000000;
+  --card-border: #ddd;  /* Same as root for light mode */
+}

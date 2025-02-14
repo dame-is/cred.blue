@@ -2,20 +2,22 @@
     margin: 30px auto 20px;
     max-width: 400px;
     padding: 20px;
-}
-
-.home-page h1 {
-    margin: 0px;
   }
-
-.home-content {
-    background-color: white;
-    border: 5px solid #ddd;
+  
+  .home-page h1 {
+    margin: 0px;
+    color: var(--navbar-text);
+    transition: color 0.3s ease;
+  }
+  
+  .home-content {
+    background-color: var(--navbar-bg);
+    border: 5px solid var(--card-border);
     border-radius: 12px;
     box-shadow: none;
     padding: 40px;
     text-align: center;
     display: flex;
     flex-direction: column;
-}
-
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
