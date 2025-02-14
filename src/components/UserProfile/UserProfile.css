@@ -13,8 +13,7 @@
   }
 
   .user-profile h1 {
-    margin-left: 20px;
-    margin-right: 20px;
+    margin: 0px;
   }
   
   /* Media query for responsiveness (optional, handled by react-grid-layout) */
@@ -113,6 +112,7 @@
 
 .user-profile-header h2 {
   font-size: 1.2em;
+  margin: 0px;
 }
 
 .user-profile-header h1 {
@@ -130,4 +130,15 @@
 
 .text-center.font-semibold.mt-2 {
   margin-top: -23px;
+}
+
+.user-profile-header-main {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.user-profile-data {
+  display: flex;
+  flex-direction: column;
 }
