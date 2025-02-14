@@ -121,7 +121,7 @@ const SearchBar = () => {
         <div style={{ position: 'relative' }}>
           <input
             type="text"
-            placeholder="(e.g. dame.bsky.social)"
+            placeholder="(e.g. user.bsky.social)"
             value={username}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
