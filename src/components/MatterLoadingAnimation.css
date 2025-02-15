@@ -1,15 +1,11 @@
 canvas {
     border-radius: 12px;
-    background: #dedede !important;
+    background-color: var(--navbar-bg);
     border: 5px solid var(--card-border);
     max-width: 100%;
     max-height: 100%;
     user-select: none;
   }
-  
-.dark-mode canvas {
-  background: #292929 !important;
-}
 
   :root {
     --circle-fill: #004f84e6;

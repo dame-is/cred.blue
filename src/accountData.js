@@ -1043,21 +1043,35 @@ async function calculateRecordsAggregate(collectionNames, periodDays, cutoffTime
  * Function to calculate engagements for the account using the author feed.
  ***********************************************************************/
 async function calculateEngagements(cutoffTime = null) {
-  // Use the paginated author feed; expectedPages = 15.
+  console.log("Starting engagement calculation");
   const feed = await fetchAuthorFeed(() => {}, 15, cutoffTime);
+  
   let likesReceived = 0;
   let repostsReceived = 0;
   let quotesReceived = 0;
   let repliesReceived = 0;
+
   for (const item of feed) {
-    if (item && item.post) {
-      if (JSON.stringify(item.post).includes("#reasonRepost")) continue;
+    // Check if the item has post and record properties based on the JSON structure
+    if (item && item.post && item.post.record) {
+      // Skip reposts if that's still desired
+      if (item.post.record.$type === "app.bsky.feed.repost") continue;
+      
+      // Add the counts from the post
       likesReceived += item.post.likeCount || 0;
       repostsReceived += item.post.repostCount || 0;
       quotesReceived += item.post.quoteCount || 0;
       repliesReceived += item.post.replyCount || 0;
     }
   }
+
+  console.log("Engagement counts:", {
+    likesReceived,
+    repostsReceived,
+    quotesReceived,
+    repliesReceived
+  });
+
   return {
     likesReceived: roundToTwo(likesReceived),
     repostsReceived: roundToTwo(repostsReceived),
