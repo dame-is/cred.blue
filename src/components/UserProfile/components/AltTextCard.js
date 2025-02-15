@@ -31,19 +31,19 @@ const AltTextCard = () => {
     emoji = emojis[1];
   }
 
-  // Prepare data for RadialBarChart
+  // Prepare data for RadialBarChart - ensure values are numbers
   const data = [
     {
       name: "Total Images",
-      images: postsWithImages,
-      fill: '#FFA500', // Gold color for total images
+      images: Number(postsWithImages) || 0,
+      fill: '#FFD700', // Gold color for total images
     },
     {
       name: "With Alt Text",
-      images: imagePostsAltText,
-      fill: '#FFD700', // Blue color for alt text images
+      images: Number(imagePostsAltText) || 0,
+      fill: '#0056b3', // Blue color for alt text images
     }
-  ];
+  ].filter(item => item.images > 0);
 
   return (
     <div className="alt-text-card">
@@ -83,7 +83,7 @@ const AltTextCard = () => {
               label={{
                 position: 'insideStart',
                 fill: '#fff',
-                formatter: (value, entry) => `${entry.name}: ${value}`,
+                formatter: (value) => value ? `${value}` : ''
               }}
               background={{ fill: '#eee' }}
               clockWise
