@@ -116,7 +116,7 @@
 .user-profile-header-rechart {
   max-width: 416.5px;
   margin: auto;
-  height: 200px;
+  height: 90.5px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -144,7 +144,7 @@
   flex-direction: row;
   justify-content: center;
   gap: 35px;
-  margin-top: 65px;
+  margin-top: 111px;
   margin-bottom: 30px;
 }
 

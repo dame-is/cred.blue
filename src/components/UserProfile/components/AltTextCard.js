@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { AccountDataContext } from "../UserProfile";
+import { AccountDataContext } from "../UserProfile"; // Adjust the path if needed
 import { RadialBarChart, RadialBar, ResponsiveContainer } from 'recharts';
 import "./AltTextCard.css";
 
@@ -31,26 +31,19 @@ const AltTextCard = () => {
     emoji = emojis[1];
   }
 
-  // Prepare data for RadialBarChart - using the same structure as the example
+  // Prepare data for RadialBarChart
   const data = [
     {
-      name: 'Total Images',
-      images: Number(postsWithImages) || 0,
-      fill: '#FFA500',
+      name: "Total Images",
+      images: postsWithImages,
+      fill: '#FFA500', // Gold color for total images
     },
     {
-      name: 'With Alt Text',
-      images: Number(imagePostsAltText) || 0,
-      fill: '#FFD700',
-    },
-  ].filter(item => item.images > 0);
-
-  const style = {
-    top: '50%',
-    right: 0,
-    transform: 'translate(0, -50%)',
-    lineHeight: '24px',
-  };
+      name: "With Alt Text",
+      images: imagePostsAltText,
+      fill: '#FFD700', // Blue color for alt text images
+    }
+  ];
 
   return (
     <div className="alt-text-card">
@@ -73,23 +66,26 @@ const AltTextCard = () => {
           {(altTextPercentage * 100).toFixed(0)}% {emoji}
         </strong>
       </h2>
-      <div style={{ width: '100%', height: '100%' }}>
+      <div style={{ width: '100%', height: 300 }}>
         <ResponsiveContainer>
           <RadialBarChart 
             cx="50%" 
             cy="50%" 
-            innerRadius="10%" 
-            outerRadius="60%" 
+            innerRadius="30%" 
+            outerRadius="100%" 
             barSize={40} 
             data={data}
+            startAngle={180}
+            endAngle={-180}
           >
             <RadialBar
               minAngle={15}
-              label={{ 
+              label={{
                 position: 'insideStart',
                 fill: '#fff',
+                formatter: (value, entry) => `${entry.name}: ${value}`,
               }}
-              background
+              background={{ fill: '#eee' }}
               clockWise
               dataKey="images"
             />
