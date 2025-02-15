@@ -1,7 +1,7 @@
 // src/components/Footer/Footer.jsx
-
 import React from 'react';
-import './Footer.css'; // Import the corresponding CSS
+import { Link } from 'react-router-dom';
+import './Footer.css';
 
 const Footer = () => {
   return (
@@ -9,19 +9,17 @@ const Footer = () => {
       <div className="footer-container">
         {/* Important Links */}
         <div className="footer-links">
-          <a href="/privacy">Privacy Policy</a>
-          <a href="/terms">Terms of Service</a>
+          <Link to="/privacy">Privacy Policy</Link>
+          <Link to="/terms">Terms of Service</Link>
           <a
-            href="https://bsky.app/profile/dame.bsky.social"
+            href="https://bsky.app/profile/dame.is"
             target="_blank"
             rel="noopener noreferrer"
             className="credit-link-anchor"
           >
-            Made by @dame.bsky.social
+            Made by @dame.is
           </a>
-          {/* Add more links as needed */}
         </div>
-
         {/* Additional Info */}
         <div className="footer-info">
           <p>&copy; {new Date().getFullYear()} cred.blue. All rights reserved.</p>

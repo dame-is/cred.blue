@@ -1,0 +1,10 @@
+.about-page {
+    margin: 30px auto 20px;
+    max-width: 400px;
+    padding: 20px;
+}
+
+.about-page .alt-card {
+    text-align: left;
+    padding: 20px 30px;
+  }

@@ -61,7 +61,7 @@ const ScoreGauge = ({ score, shadowColor = 'rgba(150,127,0,0.74)' }) => {
           <defs>
             <filter id="dropShadow">
               <feDropShadow 
-                dx="3" 
+                dx="1" 
                 dy="3" 
                 stdDeviation="0" 
                 floodColor={shadowColor}
