@@ -1,6 +1,6 @@
 canvas {
     border-radius: 12px;
-    background-color: var(--navbar-bg);
+    background-color: var(--navbar-bg) !important;
     border: 5px solid var(--card-border);
     max-width: 100%;
     max-height: 100%;

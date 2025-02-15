@@ -735,14 +735,14 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
     for (const period of periods) {
       const { days, label } = period;
       const cutoffTime = Date.now() - days * 24 * 60 * 60 * 1000;
-
+    
       // Aggregate record counts for the period
       const { totalRecords, totalBskyRecords, totalNonBskyRecords, collectionStats } =
         await calculateRecordsAggregate(targetCollections, days, cutoffTime);
       const totalRecordsPerDay = days ? totalRecords / days : 0;
       const totalBskyRecordsPerDay = days ? totalBskyRecords / days : 0;
       const totalNonBskyRecordsPerDay = days ? totalNonBskyRecords / days : 0;
-
+    
       // Fetch posts and reposts for the period and merge them
       const postsRecordsPosts = await fetchRecordsForCollection(
         "app.bsky.feed.post",
@@ -757,39 +757,44 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
         cutoffTime
       );
       const postsRecords = postsRecordsPosts.concat(postsRecordsReposts);
-
+    
       const postsCount = postsRecords.length;
       const postStats = computePostStats(postsRecords, days);
-
-      // Compute engagements for the period
+    
+      // Compute engagements for the period and merge with postStats
       const engagements = await calculateEngagements(cutoffTime);
-
-      // Add engagements to postStats
-      postStats.engagementsReceived = {
-        likesReceived: engagements.likesReceived,
-        repostsReceived: engagements.repostsReceived,
-        quotesReceived: engagements.quotesReceived,
-        repliesReceived: engagements.repliesReceived,
+      console.log("Engagements calculated:", engagements);
+    
+      const completePostStats = {
+        ...postStats,
+        engagementsReceived: {
+          likesReceived: engagements.likesReceived,
+          repostsReceived: engagements.repostsReceived,
+          quotesReceived: engagements.quotesReceived,
+          repliesReceived: engagements.repliesReceived,
+        }
       };
-
+    
+      console.log("Complete post stats:", completePostStats);
+    
       // Compute activity statuses for the period
       const activityStatus = calculateActivityStatus(totalRecordsPerDay);
       const bskyActivityStatus = calculateActivityStatus(totalBskyRecordsPerDay);
       const atprotoActivityStatus = calculateActivityStatus(totalNonBskyRecordsPerDay);
-
+    
       // Compute posting style for the period
       const postingStyle = calculatePostingStyle({
-        ...postStats,
+        ...completePostStats,  // Use complete stats here
         totalBskyRecordsPerDay,
       });
-
+    
       // Compute social status for the period
       const socialStatus = calculateSocialStatus({
         ageInDays,
         followersCount: profile.followersCount || 0,
         followsCount: profile.followsCount || 0,
       });
-
+    
       // Build analysis narrative for the period
       const narrative = buildAnalysisNarrative({
         profile,
@@ -809,12 +814,11 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
           totalNonBskyRecordsPerDay: roundToTwo(totalNonBskyRecords / days),
           plcOperations: roundToTwo(plcOperations),
           ...collectionStats,
-          "app.bsky.feed.post": postStats,
-          // Move blobs fields under activityAll
+          "app.bsky.feed.post": completePostStats,  // Use complete stats here
           blobsCount: roundToTwo(blobsCountAll),
           blobsPerDay: ageInDays ? roundToTwo(blobsCountAll / ageInDays) : 0,
           blobsPerPost: postsCount ? roundToTwo(blobsCountAll / postsCount) : 0,
-          blobsPerImagePost: postStats.postsWithImages ? roundToTwo(blobsCountAll / postStats.postsWithImages) : 0,
+          blobsPerImagePost: completePostStats.postsWithImages ? roundToTwo(blobsCountAll / completePostStats.postsWithImages) : 0,
         },
         postingStyle,
         socialStatus,
@@ -824,7 +828,7 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
           totalBskyAkas: roundToTwo(totalBskyAkas),
         },
       });
-
+    
       // Build the account data object for this period.
       let periodData = {
         profile: {
@@ -836,7 +840,6 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
         did: profile.did || did,
         profileEditedDate: profile.indexedAt,
         profileCompletion: calculateProfileCompletion(profile),
-        // Temporary score placeholders (will be replaced by backend calculations)
         combinedScore: 250,
         blueskyScore: 150,
         atprotoScore: 100,
@@ -871,12 +874,11 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
           totalNonBskyRecordsPercentage: totalRecords ? roundToTwo(totalNonBskyRecords / totalRecords) : 0,
           plcOperations: roundToTwo(plcOperations),
           ...collectionStats,
-          "app.bsky.feed.post": postStats,
-          // Move blobs fields under activityAll
+          "app.bsky.feed.post": completePostStats,  // Use complete stats here
           blobsCount: roundToTwo(blobsCountAll),
           blobsPerDay: ageInDays ? roundToTwo(blobsCountAll / ageInDays) : 0,
           blobsPerPost: postsCount ? roundToTwo(blobsCountAll / postsCount) : 0,
-          blobsPerImagePost: postStats.postsWithImages ? roundToTwo(blobsCountAll / postStats.postsWithImages) : 0,
+          blobsPerImagePost: completePostStats.postsWithImages ? roundToTwo(blobsCountAll / completePostStats.postsWithImages) : 0,
         },
         alsoKnownAs: {
           totalAkas: roundToTwo(totalAkas),
@@ -894,9 +896,13 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
           },
         },
       };
-
+    
+      // Debug log before API call
+      console.log("Period data before API call:", JSON.stringify({
+        activityAll: periodData.activityAll["app.bsky.feed.post"],
+      }, null, 2));
+    
       // Send the account data object to the backend scoring API
-      // and update periodData with the scored result.
       periodData = await fetchScores(periodData);
       accountDataPerPeriod[`accountData${label}`] = periodData;
     }
@@ -1052,12 +1058,14 @@ async function calculateEngagements(cutoffTime = null) {
   let repliesReceived = 0;
 
   for (const item of feed) {
-    // Check if the item has post and record properties based on the JSON structure
-    if (item && item.post && item.post.record) {
-      // Skip reposts if that's still desired
-      if (item.post.record.$type === "app.bsky.feed.repost") continue;
+    if (item && item.post) {
+      console.log("Processing post:", {
+        likeCount: item.post.likeCount,
+        repostCount: item.post.repostCount,
+        quoteCount: item.post.quoteCount,
+        replyCount: item.post.replyCount
+      });
       
-      // Add the counts from the post
       likesReceived += item.post.likeCount || 0;
       repostsReceived += item.post.repostCount || 0;
       quotesReceived += item.post.quoteCount || 0;
@@ -1065,19 +1073,15 @@ async function calculateEngagements(cutoffTime = null) {
     }
   }
 
-  console.log("Engagement counts:", {
-    likesReceived,
-    repostsReceived,
-    quotesReceived,
-    repliesReceived
-  });
-
-  return {
+  const results = {
     likesReceived: roundToTwo(likesReceived),
     repostsReceived: roundToTwo(repostsReceived),
     quotesReceived: roundToTwo(quotesReceived),
     repliesReceived: roundToTwo(repliesReceived),
   };
+
+  console.log("Final engagement counts:", results);
+  return results;
 }
 
 /***********************************************************************
