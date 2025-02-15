@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
-import { AccountDataContext } from "../UserProfile"; // Adjust the path if needed
-import { RadialBarChart, RadialBar, ResponsiveContainer, Tooltip } from 'recharts';
+import { AccountDataContext } from "../UserProfile";
+import { RadialBarChart, RadialBar, ResponsiveContainer } from 'recharts';
 import "./AltTextCard.css";
 
 const emojis = ["☹️", "😐", "🙂", "☺️"];
@@ -31,19 +31,26 @@ const AltTextCard = () => {
     emoji = emojis[1];
   }
 
-  // Prepare data for RadialBarChart - ensure values are numbers
+  // Prepare data for RadialBarChart - using the same structure as the example
   const data = [
     {
       name: 'Total Images',
-      value: Number(postsWithImages) || 0,
+      images: Number(postsWithImages) || 0,
       fill: '#FFA500',
     },
     {
       name: 'With Alt Text',
-      value: Number(imagePostsAltText) || 0,
-      fill: '#00cc00',
+      images: Number(imagePostsAltText) || 0,
+      fill: '#FFD700',
     },
-  ].filter(item => item.value > 0); // Only show bars with values > 0
+  ].filter(item => item.images > 0);
+
+  const style = {
+    top: '50%',
+    right: 0,
+    transform: 'translate(0, -50%)',
+    lineHeight: '24px',
+  };
 
   return (
     <div className="alt-text-card">
@@ -66,31 +73,25 @@ const AltTextCard = () => {
           {(altTextPercentage * 100).toFixed(0)}% {emoji}
         </strong>
       </h2>
-      <div style={{ width: '100%', height: 300 }}>
+      <div style={{ width: '100%', height: '100%' }}>
         <ResponsiveContainer>
           <RadialBarChart 
             cx="50%" 
             cy="50%" 
-            innerRadius="30%" 
-            outerRadius="80%" 
+            innerRadius="10%" 
+            outerRadius="60%" 
             barSize={40} 
             data={data}
-            startAngle={180}
-            endAngle={0}
           >
             <RadialBar
               minAngle={15}
-              background={{ fill: '#eee' }}
-              clockWise={false}
-              dataKey="value"
-            />
-            <Tooltip
-              formatter={(value, name) => [value, name]}
-              contentStyle={{
-                backgroundColor: '#fff',
-                border: '1px solid #ccc',
-                padding: '10px'
+              label={{ 
+                position: 'insideStart',
+                fill: '#fff',
               }}
+              background
+              clockWise
+              dataKey="images"
             />
           </RadialBarChart>
         </ResponsiveContainer>
