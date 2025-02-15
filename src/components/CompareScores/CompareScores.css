@@ -55,8 +55,8 @@
     font-size: 16px;
     padding: 30px;
     text-align: center;
-    background: #fff;
-    border: 5px solid #ddd;
+    background-color: var(--navbar-bg);
+    border: 5px solid var(--card-border);
     border-radius: 12px;
     box-shadow: none;
     display: flex;
@@ -79,11 +79,11 @@
 
 /* New styles for the breakdown sections */
 .score-breakdown .breakdown-section {
-    background-color: #ffffff; /* White background for clarity */
+    background-color: var(--navbar-bg);
+    border: 5px solid var(--card-border);
     padding: 1rem;
     border-radius: 8px;
     margin-bottom: 1rem;
-    border: 1px solid #ddd;
 }
 
 .score-breakdown .breakdown-section:last-child {
@@ -115,7 +115,7 @@
 
 .score-toggle-controls label {
   font-size: 14px;
-  color: #333;
+  color: var(--text);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -301,8 +301,8 @@
     font-size: 16px;
     padding: 15px;
     text-align: center;
-    background: #fff;
-    border: 5px solid #ddd;
+    background-color: var(--navbar-bg);
+    border: 5px solid var(--card-border);
     border-radius: 12px;
     box-shadow: none;
     display: flex;
@@ -313,7 +313,6 @@
 
 .comparison-summary p {
     margin: 10px 0;
-    color: #333;
 }
 
 .comparison-summary-text {

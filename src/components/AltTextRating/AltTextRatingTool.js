@@ -346,7 +346,7 @@ const AltTextRatingTool = () => {
               type="text"
               value={username}
               onChange={handleInputChange}
-              placeholder="(e.g., dame.bsky.social)"
+              placeholder="(e.g., user.bsky.social)"
               required
             />
             {autocompleteActive && suggestions.length > 0 && (

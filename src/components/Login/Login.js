@@ -1,85 +1,82 @@
 // src/components/Login/Login.jsx
-
 import React, { useState, useContext } from 'react';
-import './Login.css'; // Ensure you have appropriate styles
-import { AuthContext } from '../../AuthContext'; // Adjust the path as necessary
+import { AuthContext } from '../../AuthContext';
+import { ThemeContext } from '../../contexts/ThemeContext';
+import './Login.css';
 
 const Login = () => {
+  const { isDarkMode } = useContext(ThemeContext);
   const [appPassword, setAppPassword] = useState('');
   const [handle, setHandle] = useState('');
   const [error, setError] = useState('');
-  const { handleLoginSuccess } = useContext(AuthContext); // Function to update AuthContext
-
+  const { handleLoginSuccess } = useContext(AuthContext);
   const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
   const handleLogin = async (e) => {
-    e.preventDefault(); // Prevent default form submission behavior
-    setError(''); // Reset error message
+    e.preventDefault();
+    setError('');
 
-    // Basic validation
     if (!handle || !appPassword) {
       setError('Please enter both your handle and app password.');
       return;
     }
 
     try {
-      console.log('Attempting login with:', { handle, appPassword });
-
-      // Send POST request to /api/login with credentials
-      const response = await fetch(`${backendUrl}/api/login`, { // Using relative URL due to proxy setup
+      const response = await fetch(`${backendUrl}/api/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ identifier: handle.trim(), password: appPassword.trim() }),
-        credentials: 'include', // Include cookies in the request
+        body: JSON.stringify({ 
+          identifier: handle.trim(), 
+          password: appPassword.trim() 
+        }),
+        credentials: 'include',
       });
 
       const data = await response.json();
-
+      
       if (response.ok) {
-        console.log('Login successful! Handle:', data.handle);
-        handleLoginSuccess(data.handle); // Update AuthContext with user handle
-        // Optionally, redirect the user or update UI here
+        handleLoginSuccess(data.handle);
       } else {
-        console.error('Login failed:', data.error);
         setError(data.error || 'Login failed. Please try again.');
       }
     } catch (error) {
-      console.error('Error during login:', error);
       setError('An error occurred during login. Please try again.');
     }
   };
 
   return (
-    <main className="login-container">
-
-      <div className="login-form">
-        <h2 className="login-subtitle">Login with Bluesky</h2>
-
-        <form onSubmit={handleLogin}>
-          <div className="form-group">
+    <main className="home-page">
+      <div className={`home-content ${isDarkMode ? 'dark-mode' : ''}`}>
+        <h1>Login</h1>
+        <p>
+          Enter your Bluesky handle and app password to access your account.
+        </p>
+        
+        <form onSubmit={handleLogin} className="login-form">
+          <div className="input-container">
             <input
               type="text"
               id="handle"
-              className="form-input"
               placeholder="Handle (user.bsky.social)"
               value={handle}
               onChange={(e) => setHandle(e.target.value)}
-              aria-label="User Handle"  /* Accessibility Improvement */
+              className={isDarkMode ? 'dark-mode' : ''}
+              aria-label="User Handle"
               required
             />
           </div>
 
-          <div className="form-group">
+          <div className="input-container">
             <input
               type="password"
               id="appPassword"
-              className="form-input"
-              placeholder="App Password (keod-iadh-kbrx-pafw)"
+              placeholder="App Password"
               value={appPassword}
               onChange={(e) => setAppPassword(e.target.value)}
-              aria-label="App Password" /* Accessibility Improvement */
+              className={isDarkMode ? 'dark-mode' : ''}
+              aria-label="App Password"
               required
             />
           </div>
@@ -89,20 +86,26 @@ const Login = () => {
               href="https://bsky.app/settings/app-passwords"
               target="_blank"
               rel="noopener noreferrer"
-              className="form-link"
+              className={`form-link ${isDarkMode ? 'dark-mode' : ''}`}
             >
-              Need an app password? Go here.
+              Need an app password?
             </a>
           </div>
 
-          <button type="submit" className="login-button">
+          <button 
+            type="submit"
+            className={isDarkMode ? 'dark-mode' : ''}
+          >
             Login
           </button>
         </form>
-      </div>
 
-      {/* Error Message */}
-      {error && <p className="error">{error}</p>}
+        {error && (
+          <div className={`error-message ${isDarkMode ? 'dark-mode' : ''}`}>
+            {error}
+          </div>
+        )}
+      </div>
     </main>
   );
 };

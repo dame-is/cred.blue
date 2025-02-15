@@ -52,6 +52,14 @@ p {
   transition: color 0.3s ease;
 }
 
+a {
+  color: #3b9af8;
+}
+
+a:visited {
+  color: #0056b3;
+}
+
 body {
   margin: 0;
   font-family: "articulat-cf", sans-serif;

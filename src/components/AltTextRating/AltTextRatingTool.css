@@ -308,5 +308,5 @@ body.dark-mode .alt-card {
   }
 
   .share-button {
-    background: gray;
+    background: gray !important;
   }
