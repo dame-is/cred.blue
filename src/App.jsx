@@ -8,6 +8,8 @@ import Login from './components/Login/Login';
 import MainApp from './components/MainApp/MainApp';
 import About from './components/About/About';
 import Home from './components/Home/Home';
+import Terms from './components/PrivacyTerms/Terms';
+import Privacy from './components/PrivacyTerms/Privacy';
 import AltTextRatingTool from './components/AltTextRating/AltTextRatingTool';
 import UserProfile from './components/UserProfile/UserProfile';
 import TestMatterPage from './components/TestMatterPage';  // New import for test page
@@ -49,6 +51,8 @@ const App = () => {
               }
             />
             {/* Note: placing this route after /compare avoids conflict */}
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
             <Route path="/:username" element={<UserProfile />} />
             <Route path="/test-matter" element={<TestMatterPage />} />
             <Route path="*" element={<Navigate to={isAuthenticated ? '/app' : '/home'} replace />} />
