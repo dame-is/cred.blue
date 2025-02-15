@@ -2,7 +2,10 @@
 
 .alt-text-card {
     text-align: center;
-}
+    display: flex;
+    align-content: center;
+    justify-content: center;
+  }
 
   .alt-text-card h2 {
     text-align: center;

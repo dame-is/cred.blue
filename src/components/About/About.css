@@ -6,5 +6,8 @@
 
 .about-page .alt-card {
     text-align: left;
-    padding: 20px 30px;
   }
+
+.about-page ul {
+    margin-top: -5px;
+}

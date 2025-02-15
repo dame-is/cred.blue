@@ -6,17 +6,19 @@
   --background: #f0f0f0;
   --text: #000000;
   --card-border: #ddd;  /* New variable for card borders */
+  --circular-logo-text: #004f84;  /* Default light mode color */
   /* Add more variables as needed */
 }
 
 .dark-mode {
   --navbar-bg: #1f1f1f;
   --navbar-text: #f5f5f5;
-  --button-bg: #555555;
+  --button-bg: #3b9af8;
   --button-text: #f5f5f5;
   --background: #121212;
   --text: #ffffff;
   --card-border: #333333;  /* Darker border for dark mode */
+  --circular-logo-text: #ffffff98;  /* Default dark mode color */
 }
 
 .light-mode {

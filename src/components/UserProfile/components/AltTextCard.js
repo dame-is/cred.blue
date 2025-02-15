@@ -60,12 +60,12 @@ const AltTextCard = () => {
         <li>
           <strong>{imagePostsAltText}</strong> posts have alt text
         </li>
-      </ul>
-      <h2>
+        <h2>
         <strong>
           {(altTextPercentage * 100).toFixed(0)}% {emoji}
         </strong>
       </h2>
+      </ul>
       <div style={{ width: '100%', height: 300 }}>
         <ResponsiveContainer>
           <RadialBarChart 

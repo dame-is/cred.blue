@@ -4,15 +4,14 @@ const CircularLogo = ({
   did = "did:plc:gq4fo3u6tqzzdkjlwzpb23tj",
   logoSrc = "/credbluebadge.png",
   size = 250,
-  textColor = "#004f84",
   textGap = 10,
   fontSize = 22,
   viewBoxPadding = 20,
-  gapDegrees = 3  // Gap in degrees between text start/end
+  gapDegrees = 3 // Gap in degrees between text start/end
 }) => {
-  const text = `${did}`;  // Removed extra space since we'll control spacing
+  const text = `${did}`;
   const textGroupRef = useRef(null);
-  
+
   // Calculate dimensions based on content
   const logoSize = size * 0.4;
   const textRadius = (logoSize / 2) + textGap;
@@ -29,7 +28,7 @@ const CircularLogo = ({
     if (textGroupRef.current) {
       let rotation = 0;
       let animationFrameId;
-      
+
       const animate = () => {
         rotation = (rotation - 0.2) % 360;
         if (textGroupRef.current) {
@@ -37,9 +36,9 @@ const CircularLogo = ({
         }
         animationFrameId = requestAnimationFrame(animate);
       };
-      
+
       animate();
-      
+
       return () => {
         if (animationFrameId) {
           cancelAnimationFrame(animationFrameId);
@@ -69,12 +68,11 @@ const CircularLogo = ({
               fill="none"
             />
           </defs>
-          
-          <text fill={textColor} fontSize={fontSize}>
+          <text className="circular-logo-text" fontSize={fontSize}>
             <textPath
               href="#circlePath"
               spacing="auto"
-              startOffset={`${(gapDegrees / 2)}%`}  // Start after half the gap
+              startOffset={`${(gapDegrees / 2)}%`}
               textLength={textLength}
               lengthAdjust="spacing"
             >

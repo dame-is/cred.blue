@@ -182,3 +182,19 @@
   margin: 0px;
   font-size: 0.8em;
 }
+
+.circular-badge {
+  position: relative;
+  display: inline-block;
+}
+
+/* Light mode styles */
+.circular-logo-text {
+  fill: var(--circular-logo-text, #004f84);
+  transition: fill 0.3s ease;
+}
+
+/* Dark mode styles */
+.dark-mode .circular-logo-text {
+  fill: var(--circular-logo-text-dark, #4ba3ff);
+}

@@ -1,5 +1,4 @@
 /* src/app.css */
-
 @import './styles/variables.css';
 
 .App {
@@ -9,25 +8,28 @@
   margin: 0;
   padding: 20px;
   text-align: center;
-  color: #000000;
-  background-color: #f4f4f9;
+  color: var(--text);
+  background-color: var(--background);
+  transition: color 0.3s ease, background-color 0.3s ease;
 }
 
 h1 {
   font-family: "articulat-cf", sans-serif;
   font-weight: 800;
-  color: #3b9af8;
+  color: var(--button-bg);
   font-size: 2.1em;
   margin-top: 0px;
   margin-bottom: 8.5px;
+  transition: color 0.3s ease;
 }
 
 h2 {
-  color: black;
+  color: var(--text);
   font-size: 1.5em;
   margin-top: 28px;
   margin-bottom: 10px;
   font-weight: 800;
+  transition: color 0.3s ease;
 }
 
 h3 {
@@ -35,7 +37,8 @@ h3 {
   font-family: "articulat-cf", sans-serif;
   font-weight: 800;
   font-style: normal;
-  color: #004F84;
+  color: var(--text);
+  transition: color 0.3s ease;
 }
 
 p {
@@ -45,25 +48,23 @@ p {
   font-family: "articulat-cf", sans-serif;
   font-weight: 500;
   font-style: normal;
-  color: #000000;
+  color: var(--text);
+  transition: color 0.3s ease;
 }
 
 body {
-  margin-top: 1.2em;
-  margin-bottom: 1.2em;
-  font-size: 1em;
   margin: 0;
   font-family: "articulat-cf", sans-serif;
   font-weight: 500;
   font-style: normal;
-  background-color: #f0f0f0; /* Light background */
-  color: #000000; /* Dark text */
+  background-color: var(--background);
+  color: var(--text);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 form {
-  background: #fff;
-  border: 5px solid #ddd;
+  background: var(--navbar-bg);
+  border: 5px solid var(--card-border);
   border-radius: 12px;
   box-shadow: none;
   gap: 15px;
@@ -72,10 +73,11 @@ form {
   padding: 20px 30px;
   display: flex;
   flex-direction: column;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 input {
-  border: 2px solid #ddd;
+  border: 2px solid var(--card-border);
   border-radius: 6px;
   max-width: 200px;
   padding: 9px;
@@ -83,37 +85,41 @@ input {
   margin: auto;
   align-content: center;
   justify-content: center;
-  font-size: 1.1em
+  font-size: 1.1em;
+  background-color: var(--navbar-bg);
+  color: var(--text);
+  transition: all 0.3s ease;
 }
 
 @media (max-width: 450px) {
   input {
     max-width: 85%;
     margin: auto;
-    }
+  }
 }
 
 input:hover {
-  border: 2px solid #c3e6ff;
-  background: #e5f4ff;
+  border: 2px solid var(--button-bg);
+  background: var(--background);
 }
 
 input:focus {
-  border: 2px solid #c3e6ff;
-  background: #e5f4ff;
+  border: 2px solid var(--button-bg);
+  background: var(--background);
 }
 
 button {
-  background: #3b9af8;
+  background: var(--button-bg);
   border: none;
   border-radius: 6px;
-  color: #fff;
+  color: var(--button-text);
   cursor: pointer;
   margin: auto;
   max-width: 150px;
   padding: 10px 15px;
   font-weight: 700;
   font-size: 1em;
+  transition: background-color 0.3s ease;
 }
 
 button:hover {
@@ -121,22 +127,15 @@ button:hover {
 }
 
 .error {
-  color: red;
+  color: #ff4444;
+  transition: color 0.3s ease;
 }
 
 ul {
   display: inline-block;
   margin: 10px 0px;
   text-align: left;
-}
-
-.dark-mode body {
-  background-color: #121212; /* Dark background */
-  color: #ffffff; /* Light text */
-}
-
-.dark-mode p {
-  color: #ffffff; /* Light text */
+  color: var(--text);
 }
 
 .main-container {
@@ -146,80 +145,106 @@ ul {
   width: 100%;
 }
 
-.dark-mode .app-container {
-  background-color: black;
-}
-
 .app-container {
-  background-color: #f0f0f0;
+  background-color: var(--background);
+  transition: background-color 0.3s ease;
 }
 
 .form-input:focus {
-  background-color: #e6f3ff;
+  background-color: var(--background);
   outline: none;
 }
 
 .autocomplete-items {
-  background-color: #fff;
+  background-color: var(--navbar-bg);
   left: 0;
   overflow: clip;
   position: absolute;
   right: 0;
   top: 116%;
   z-index: 99;
-  border: 2px solid #ddd;
+  border: 2px solid var(--card-border);
   border-radius: 6px;
   gap: 3px;
   display: flex;
   flex-direction: column;
   padding: 10px;
   text-align: left;
+  transition: all 0.3s ease;
 }
 
 .autocomplete-item {
   display: flex;
   overflow: clip;
   padding: 6px;
+  color: var(--text);
+  transition: all 0.3s ease;
 }
 
 .autocomplete-item:hover {
-  background-color: #e9e9e9;
+  background-color: var(--background);
   border-radius: 6px;
-  border: 2px solid #ddd;
+  border: 2px solid var(--card-border);
 }
 
-  /* Avatar image */
-  .autocomplete-item img {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    margin-right: 7px;
-    object-fit: cover;
-  }
+.autocomplete-item img {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-right: 7px;
+  object-fit: cover;
+}
 
-    /* Hide the autocomplete container when it's empty */
-  .autocomplete-items:empty {
-    display: none;
-  }
+.autocomplete-items:empty {
+  display: none;
+}
 
-  .dark-mode .autocomplete-items {
-    color: black;
-  }
+.last-updated {
+  font-style: italic;
+  margin-bottom: 20px;
+  opacity: 26.5%;
+  font-size: 0.8em;
+  text-align: center;
+  color: var(--text);
+  transition: color 0.3s ease;
+}
 
-  .last-updated {
-    font-style: italic;
-    margin-bottom: 20px;
-    opacity: 26.5%;
-    font-size: 0.8em;
-    text-align: center;
-  }
+.alt-card {
+  padding: 30px;
+  background: var(--navbar-bg);
+  transition: background-color 0.3s ease;
+}
 
-  .alt-card {
-    padding: 30px;
-  }
+.alt-card h1 {
+  text-align: center;
+}
 
-  .alt-card h1 {
-    text-align: center;
-  }
+/* Dark mode overrides */
+.dark-mode .App,
+.dark-mode body,
+.dark-mode .app-container {
+  background-color: var(--background);
+  color: var(--text);
+}
 
-  
+.dark-mode input:hover,
+.dark-mode input:focus {
+  background-color: #2d2d2d;
+  border-color: var(--button-bg);
+}
+
+.dark-mode button:hover {
+  background-color: #1a75d2;
+}
+
+.dark-mode .error {
+  color: #ff6b6b;
+}
+
+.dark-mode .autocomplete-item:hover {
+  background-color: #2d2d2d;
+}
+
+.dark-mode .last-updated {
+  opacity: 0.4;
+}
