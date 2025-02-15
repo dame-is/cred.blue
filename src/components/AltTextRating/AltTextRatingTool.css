@@ -6,7 +6,7 @@
     background-color: var(--post-background-color);
     max-width: 95%;
     text-align: center;
-    border: 5px solid #ddd;
+    border: 5px solid var(--card-border);
     border-radius: 12px;
     box-shadow: none;
     padding: 20px 30px;
@@ -301,4 +301,12 @@ body.dark-mode .alt-card {
 
   .alt-text-rating-tool .gauge-svg {
     margin-top: -89px;
+  }
+
+  .action-row button {
+    margin: 0px;
+  }
+
+  .share-button {
+    background: gray;
   }

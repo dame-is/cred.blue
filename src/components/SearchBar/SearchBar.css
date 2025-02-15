@@ -69,14 +69,6 @@
   background: #0056b3;
 }
 
-.search-bar button.dark-mode {
-  background-color: #555;
-}
-
-.search-bar button.dark-mode:hover {
-  background-color: #666;
-}
-
 .autocomplete-items {
   background-color: var(--navbar-bg);
   border: 2px solid var(--button-bg);

@@ -171,7 +171,6 @@ const SearchBar = () => {
         </div>
         <button type="submit" className={isDarkMode ? 'dark-mode' : ''}>Search</button>
       </form>
-      {isLoading && <div className="loading">Loading...</div>}
       <div
         role="status"
         aria-live="polite"
