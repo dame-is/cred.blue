@@ -1090,21 +1090,25 @@ async function calculateEngagements(cutoffTime = null) {
   let repliesReceived = 0;
 
   for (const item of feed) {
-    if (item && item.post) {
-      // Debug log with URI for tracking
-      console.log("Processing post metrics:", {
+    // Only consider posts from this author
+    if (item && item.post && item.post.author && item.post.author.did === did) {
+      // Debug log entire post structure to verify what we're accessing
+      console.log("Processing post structure:", JSON.stringify({
         uri: item.post.uri,
-        likeCount: item.post.likeCount,
-        repostCount: item.post.repostCount,
-        quoteCount: item.post.quoteCount,
-        replyCount: item.post.replyCount
-      });
+        author: item.post.author.did,
+        metrics: {
+          likeCount: item.post.likeCount,
+          repostCount: item.post.repostCount,
+          quoteCount: item.post.quoteCount,
+          replyCount: item.post.replyCount
+        }
+      }, null, 2));
       
-      // Only add the direct post metrics
-      likesReceived += item.post.likeCount || 0;
-      repostsReceived += item.post.repostCount || 0;
-      quotesReceived += item.post.quoteCount || 0;
-      repliesReceived += item.post.replyCount || 0;
+      // Only add the direct post metrics, ignoring any nested metrics
+      if (item.post.likeCount !== undefined) likesReceived += item.post.likeCount;
+      if (item.post.repostCount !== undefined) repostsReceived += item.post.repostCount;
+      if (item.post.quoteCount !== undefined) quotesReceived += item.post.quoteCount;
+      if (item.post.replyCount !== undefined) repliesReceived += item.post.replyCount;
     }
   }
 
@@ -1118,7 +1122,6 @@ async function calculateEngagements(cutoffTime = null) {
   console.log("Final engagement counts (top-level only):", results);
   return results;
 }
-
 
 /***********************************************************************
  * Function to compute post statistics based on records and period
