@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { AccountDataContext } from "../UserProfile"; // Adjust the path if needed
-import { RadialBarChart, RadialBar, ResponsiveContainer } from 'recharts';
+import { RadialBarChart, RadialBar, ResponsiveContainer, Tooltip } from 'recharts';
 import "./AltTextCard.css";
 
 const emojis = ["☹️", "😐", "🙂", "☺️"];
@@ -31,19 +31,19 @@ const AltTextCard = () => {
     emoji = emojis[1];
   }
 
-  // Prepare data for RadialBarChart
+  // Prepare data for RadialBarChart - ensure values are numbers
   const data = [
     {
       name: 'Total Images',
-      images: postsWithImages,
-      fill: '#FFA500', // Orange for total images
+      value: Number(postsWithImages) || 0,
+      fill: '#FFA500',
     },
     {
       name: 'With Alt Text',
-      images: imagePostsAltText,
-      fill: '#00cc00', // Green for images with alt text
+      value: Number(imagePostsAltText) || 0,
+      fill: '#00cc00',
     },
-  ];
+  ].filter(item => item.value > 0); // Only show bars with values > 0
 
   return (
     <div className="alt-text-card">
@@ -80,13 +80,16 @@ const AltTextCard = () => {
           >
             <RadialBar
               minAngle={15}
-              background
+              background={{ fill: '#eee' }}
               clockWise={false}
-              dataKey="images"
-              label={{
-                position: 'insideStart',
-                fill: '#fff',
-                formatter: (value, entry) => entry.name
+              dataKey="value"
+            />
+            <Tooltip
+              formatter={(value, name) => [value, name]}
+              contentStyle={{
+                backgroundColor: '#fff',
+                border: '1px solid #ccc',
+                padding: '10px'
               }}
             />
           </RadialBarChart>
