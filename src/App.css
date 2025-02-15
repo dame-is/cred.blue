@@ -14,19 +14,20 @@
 }
 
 h1 {
-  font-size: 1.8em;
   font-family: "articulat-cf", sans-serif;
   font-weight: 800;
-  font-style: normal;
-  color: #3B9AF8;
+  color: #3b9af8;
+  font-size: 2.1em;
+  margin-top: 0px;
+  margin-bottom: 8.5px;
 }
 
 h2 {
+  color: black;
   font-size: 1.5em;
-  font-family: "articulat-cf", sans-serif;
+  margin-top: 28px;
+  margin-bottom: 10px;
   font-weight: 800;
-  font-style: normal;
-  color: #004F84;
 }
 
 h3 {
@@ -124,9 +125,9 @@ button:hover {
 }
 
 ul {
-  text-align: left;
   display: inline-block;
-  margin: 20px auto;
+  margin: 10px 0px;
+  text-align: left;
 }
 
 .dark-mode body {
@@ -204,3 +205,21 @@ ul {
   .dark-mode .autocomplete-items {
     color: black;
   }
+
+  .last-updated {
+    font-style: italic;
+    margin-bottom: 20px;
+    opacity: 26.5%;
+    font-size: 0.8em;
+    text-align: center;
+  }
+
+  .alt-card {
+    padding: 30px;
+  }
+
+  .alt-card h1 {
+    text-align: center;
+  }
+
+  

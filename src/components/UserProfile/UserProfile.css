@@ -87,7 +87,7 @@
   padding: 10px 20px;
   margin: 0 5px;
   border: none;
-  background-color: #ddd;
+  background-color: #a9a9a9;
   cursor: pointer;
   border-radius: 4px;
   transition: background-color 0.3s;
@@ -173,4 +173,8 @@
 .react-grid-item {
   transition: all 200ms ease;
   transition-property: left, top;
+}
+
+.narrative-card p:first-letter {
+  text-transform: capitalize;
 }

@@ -148,6 +148,8 @@ const UserProfile = () => {
             <div className="user-profile-name">
               <h1>{displayName}</h1>
               <h2>@{resolvedHandle}</h2>
+              <h3>{selectedAccountData.socialStatus}</h3>
+              <h3>{selectedAccountData.postingStyle}</h3>
             </div>
             <div className="user-profile-data">
               <div className="user-profile-score">
@@ -190,7 +192,7 @@ const UserProfile = () => {
           cols={cols}
           rowHeight={50}
           margin={[20, 20]}
-          isDraggable={false}
+          isDraggable={true}
           isResizable={false}
           useCSSTransforms={true}
           onLayoutChange={() => updateCardHeights()}

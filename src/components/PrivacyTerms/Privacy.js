@@ -6,7 +6,7 @@ import './PrivacyTerms.css';
 const Privacy = () => {
   return (
     <>
-      <main className="about-page">
+      <main className="privacy-terms-page">
       <div className="alt-card">
         <h1>Privacy Policy</h1>
         <div class="last-updated">Last Updated: February 13, 2025</div>
