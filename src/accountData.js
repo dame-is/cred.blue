@@ -302,7 +302,7 @@ async function fetchAuditLog() {
 async function fetchAuthorFeed(
   onPage = () => {},
   expectedPages = 10,
-  cutoffTime = Date.now() - 90 * 24 * 60 * 60 * 1000 // default 90 days
+  cutoffTime = Date.now() - 90 * 24 * 60 * 60 * 1000
 ) {
   console.log(`\n=== fetchAuthorFeed (cutoff=${new Date(cutoffTime).toISOString()}) ===`);
   const urlBase = `${publicServiceEndpoint}/xrpc/app.bsky.feed.getAuthorFeed?actor=${encodeURIComponent(
@@ -323,7 +323,7 @@ async function fetchAuthorFeed(
       data = await cachedGetJSON(url);
     } catch (err) {
       console.error("Error fetching author feed:", err);
-      break; // network error
+      break;
     }
 
     if (!data || !Array.isArray(data.feed) || data.feed.length === 0) {
@@ -335,26 +335,23 @@ async function fetchAuthorFeed(
     const pageItems = [];
 
     for (const item of data.feed) {
-      let createdAt;
-      if (item.value?.createdAt) {
-        createdAt = item.value.createdAt;
-      } else {
-        createdAt = findFirstCreatedAt(item);
-      }
-
+      // Only look at the main post's createdAt, not any nested reply data
+      let createdAt = item.post?.record?.createdAt;
+      
       let itemTime;
       if (!createdAt) {
         itemTime = Date.now();
         console.log(
-          `Feed item with no createdAt => using now. Possibly a fallback.`
+          `Feed item with no createdAt => using now. Post URI: ${item.post?.uri}`
         );
       } else {
         itemTime = new Date(createdAt).getTime();
       }
 
       console.log(
-        `Feed item with createdAt=${createdAt}, itemTime=${itemTime}, cutoffTime=${cutoffTime}`
+        `Feed item with createdAt=${createdAt}, itemTime=${itemTime}, cutoffTime=${cutoffTime}, URI=${item.post?.uri}`
       );
+      
       minCreatedAt = Math.min(minCreatedAt, itemTime);
 
       if (itemTime >= cutoffTime) {
@@ -364,7 +361,7 @@ async function fetchAuthorFeed(
 
     if (minCreatedAt < cutoffTime) {
       console.log(
-        `Encountered an item older than cutoff in this page (minCreatedAt=${new Date(
+        `Encountered a main post older than cutoff in this page (minCreatedAt=${new Date(
           minCreatedAt
         ).toISOString()}). Stopping further pagination.`
       );
