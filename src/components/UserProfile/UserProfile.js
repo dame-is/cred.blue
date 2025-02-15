@@ -148,10 +148,18 @@ const UserProfile = () => {
             <div className="user-profile-name">
               <h1>{displayName}</h1>
               <h2>@{resolvedHandle}</h2>
+            </div>
+            <div className="user-profile-badges">
               <h3>{selectedAccountData.socialStatus}</h3>
               <h3>{selectedAccountData.postingStyle}</h3>
             </div>
-            <div className="user-profile-data">
+          </div>
+
+          <div className="user-profile-header-rechart">
+            <ScoreGauge score={selectedAccountData.combinedScore} />
+          </div>
+
+          <div className="user-profile-data">
               <div className="user-profile-score">
                 <p><strong>Combined Score: {selectedAccountData.combinedScore}</strong></p>
                 <p>Bluesky Score: {selectedAccountData.blueskyScore}</p>
@@ -163,11 +171,6 @@ const UserProfile = () => {
                 <p>Atproto Status: {selectedAccountData.activityAll.atprotoActivityStatus}</p>
               </div>
             </div>
-          </div>
-
-          <div className="user-profile-header-rechart">
-            <ScoreGauge score={selectedAccountData.combinedScore} />
-          </div>
 
           <div className="toggle-switch">
             <button

@@ -15,7 +15,7 @@ const ScoreGauge = ({ score, shadowColor = 'rgba(150,127,0,0.74)' }) => {
   const cx = 200;
   const cy = 200;
   const iR = 50;
-  const oR = 150;
+  const oR = 100;
 
   const needle = (value, data, cx, cy, iR, oR, color) => {
     const total = MAX_SCORE;

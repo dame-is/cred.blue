@@ -79,9 +79,6 @@
   margin-top: 55px;
 }
 
-.toggle-switch {
-  margin-top: 65px;
-}
 
 .toggle-button {
   padding: 10px 20px;
@@ -147,6 +144,8 @@
   flex-direction: row;
   justify-content: center;
   gap: 35px;
+  margin-top: 65px;
+  margin-bottom: 30px;
 }
 
 .circular-badge {
@@ -177,4 +176,9 @@
 
 .narrative-card p:first-letter {
   text-transform: capitalize;
+}
+
+.user-profile-badges h3 {
+  margin: 0px;
+  font-size: 0.8em;
 }
