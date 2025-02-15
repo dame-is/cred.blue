@@ -764,7 +764,7 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
       // Compute engagements for the period and merge with postStats
       // First, calculate engagements
       const engagements = await calculateEngagements(cutoffTime);
-      console.log("Raw engagements calculated:", engagements);  // Debug log
+      console.log("Raw engagements calculated:", engagements);
 
       // Create complete post stats
       const completePostStats = {
@@ -773,13 +773,24 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
         repostsReceived: engagements.repostsReceived,
         quotesReceived: engagements.quotesReceived,
         repliesReceived: engagements.repliesReceived,
-        engagementsReceived: {  // Keep both for backwards compatibility
+        engagementsReceived: {
           likesReceived: engagements.likesReceived,
           repostsReceived: engagements.repostsReceived,
           quotesReceived: engagements.quotesReceived,
           repliesReceived: engagements.repliesReceived,
         }
       };
+    
+        // Verify engagement data is properly structured
+  console.log("Verification - engagements in completePostStats:", {
+    direct: {
+      likesReceived: completePostStats.likesReceived,
+      repostsReceived: completePostStats.repostsReceived,
+      quotesReceived: completePostStats.quotesReceived,
+      repliesReceived: completePostStats.repliesReceived
+    },
+    nested: completePostStats.engagementsReceived
+  });
 
       console.log("Complete post stats before period data:", completePostStats);  // Debug log
     
@@ -880,7 +891,12 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
           totalNonBskyRecordsPercentage: totalRecords ? roundToTwo(totalNonBskyRecords / totalRecords) : 0,
           plcOperations: roundToTwo(plcOperations),
           ...collectionStats,
-          "app.bsky.feed.post": completePostStats,  // Use complete stats here
+          "app.bsky.feed.post": {
+                  ...completePostStats,
+                  engagementsReceived: {
+                    ...completePostStats.engagementsReceived
+                  }
+                },
           blobsCount: roundToTwo(blobsCountAll),
           blobsPerDay: ageInDays ? roundToTwo(blobsCountAll / ageInDays) : 0,
           blobsPerPost: postsCount ? roundToTwo(blobsCountAll / postsCount) : 0,
@@ -909,6 +925,17 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
       console.log("Period data before API call:", JSON.stringify({
         activityAll: periodData.activityAll["app.bsky.feed.post"],
       }, null, 2));
+
+      // Right before the fetchScores call:
+      console.log("Final verification - post stats in period data:", {
+        direct: {
+          likesReceived: periodData.activityAll["app.bsky.feed.post"].likesReceived,
+          repostsReceived: periodData.activityAll["app.bsky.feed.post"].repostsReceived,
+          quotesReceived: periodData.activityAll["app.bsky.feed.post"].quotesReceived,
+          repliesReceived: periodData.activityAll["app.bsky.feed.post"].repliesReceived
+        },
+        nested: periodData.activityAll["app.bsky.feed.post"].engagementsReceived
+      });
     
       // Send the account data object to the backend scoring API
       periodData = await fetchScores(periodData);
@@ -1067,13 +1094,16 @@ async function calculateEngagements(cutoffTime = null) {
 
   for (const item of feed) {
     if (item && item.post) {
-      console.log("Processing post:", {
+      // Debug log with URI for tracking
+      console.log("Processing post metrics:", {
+        uri: item.post.uri,
         likeCount: item.post.likeCount,
         repostCount: item.post.repostCount,
         quoteCount: item.post.quoteCount,
         replyCount: item.post.replyCount
       });
       
+      // Only add the direct post metrics
       likesReceived += item.post.likeCount || 0;
       repostsReceived += item.post.repostCount || 0;
       quotesReceived += item.post.quoteCount || 0;
@@ -1088,9 +1118,10 @@ async function calculateEngagements(cutoffTime = null) {
     repliesReceived: roundToTwo(repliesReceived),
   };
 
-  console.log("Final engagement counts:", results);
+  console.log("Final engagement counts (top-level only):", results);
   return results;
 }
+
 
 /***********************************************************************
  * Function to compute post statistics based on records and period
