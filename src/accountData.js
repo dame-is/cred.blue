@@ -762,20 +762,26 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
       const postStats = computePostStats(postsRecords, days);
     
       // Compute engagements for the period and merge with postStats
+      // First, calculate engagements
       const engagements = await calculateEngagements(cutoffTime);
-      console.log("Engagements calculated:", engagements);
-    
+      console.log("Raw engagements calculated:", engagements);  // Debug log
+
+      // Create complete post stats
       const completePostStats = {
         ...postStats,
-        engagementsReceived: {
+        likesReceived: engagements.likesReceived,
+        repostsReceived: engagements.repostsReceived,
+        quotesReceived: engagements.quotesReceived,
+        repliesReceived: engagements.repliesReceived,
+        engagementsReceived: {  // Keep both for backwards compatibility
           likesReceived: engagements.likesReceived,
           repostsReceived: engagements.repostsReceived,
           quotesReceived: engagements.quotesReceived,
           repliesReceived: engagements.repliesReceived,
         }
       };
-    
-      console.log("Complete post stats:", completePostStats);
+
+      console.log("Complete post stats before period data:", completePostStats);  // Debug log
     
       // Compute activity statuses for the period
       const activityStatus = calculateActivityStatus(totalRecordsPerDay);
@@ -896,6 +902,8 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
           },
         },
       };
+
+      console.log("Final post stats in period data:", periodData.activityAll["app.bsky.feed.post"]);
     
       // Debug log before API call
       console.log("Period data before API call:", JSON.stringify({
