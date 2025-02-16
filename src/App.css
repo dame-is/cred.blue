@@ -241,10 +241,6 @@ ul {
   border-color: var(--button-bg);
 }
 
-.dark-mode button:hover {
-  background-color: #1a75d2;
-}
-
 .dark-mode .error {
   color: #ff6b6b;
 }

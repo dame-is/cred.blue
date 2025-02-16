@@ -309,6 +309,7 @@
     flex-direction: column;
     gap: 15px;
     margin: 10px auto;
+    max-width: 500px;
   }
 
 .comparison-summary p {

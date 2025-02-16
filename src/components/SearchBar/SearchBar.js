@@ -169,7 +169,7 @@ const SearchBar = () => {
             </div>
           )}
         </div>
-        <button type="submit" className={isDarkMode ? 'dark-mode' : ''}>Search</button>
+        <button type="submit" className={isDarkMode ? 'dark-mode' : ''}>Get Score</button>
       </form>
       <div
         role="status"

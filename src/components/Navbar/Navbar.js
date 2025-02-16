@@ -1,10 +1,8 @@
 import React, { useContext } from 'react';
-import './Navbar.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../AuthContext';
 import { ThemeContext } from '../../contexts/ThemeContext';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
+import './Navbar.css';
 
 const Navbar = () => {
   const { isAuthenticated, handleLogout, loading } = useContext(AuthContext);
@@ -51,26 +49,50 @@ const Navbar = () => {
           </div>
           <nav className="navbar-links">
             <ul>
-              <li>
-                <Link to="/">score</Link>
-              </li>
-              <li>
-                <Link to="/compare">compare</Link>
-              </li>
-              <li>
-                <Link to="/alt-text">alt text</Link>
-              </li>
-              <li>
-                <Link to="/about">about</Link>
-              </li>
-              {/* Add more links as needed */}
+              <li><Link to="/">score</Link></li>
+              <li><Link to="/compare">compare</Link></li>
+              <li><Link to="/alt-text">alt text</Link></li>
+              <li><Link to="/about">about</Link></li>
             </ul>
           </nav>
         </div>
         <div className="navbar-actions">
-          <button className="theme-toggle-button" onClick={toggleDarkMode} aria-label="Toggle dark mode">
-            <FontAwesomeIcon icon={isDarkMode ? faSun : faMoon} />
+          {/* Social Links */}
+          <a 
+            href="https://bsky.app/profile/cred.blue" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="nav-icon" 
+            aria-label="Bluesky Profile"
+          >
+            <svg className="icon" fill="currentColor">
+              <use href="/icons/icons-sprite.svg#icon-bluesky" />
+            </svg>
+          </a>
+          <a 
+            href="https://github.com/damedotblog" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="nav-icon" 
+            aria-label="GitHub Profile"
+          >
+            <svg className="icon" fill="currentColor">
+              <use href="/icons/icons-sprite.svg#icon-github" />
+            </svg>
+          </a>
+          
+          {/* Theme Toggle */}
+          <button 
+            className="theme-toggle-button" 
+            onClick={toggleDarkMode} 
+            aria-label="Toggle dark mode"
+          >
+            <svg className="icon" fill="currentColor">
+              <use href={`/icons/icons-sprite.svg#icon-${isDarkMode ? 'sun' : 'moon'}`} />
+            </svg>
           </button>
+
+          {/* Auth Button */}
           <div className="navbar-auth-button">
             <button
               className={`auth-button ${isAuthenticated ? 'logout-button' : 'login-button'}`}
