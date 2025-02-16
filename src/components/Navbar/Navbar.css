@@ -176,7 +176,7 @@
   }
   
   /* Responsive Design: Links display in a row under the logo */
-@media (max-width: 600px) {
+@media (max-width: 665px) {
   .navbar-container {
     flex-direction: column;
     align-items: center;
@@ -297,5 +297,9 @@
 .navbar-actions {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.2em;
+}
+
+.nav-icon:visited {
+  color: inherit;
 }

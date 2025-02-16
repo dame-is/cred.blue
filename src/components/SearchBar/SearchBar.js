@@ -171,15 +171,6 @@ const SearchBar = () => {
         </div>
         <button type="submit" className={isDarkMode ? 'dark-mode' : ''}>Get Score</button>
       </form>
-      <div
-        role="status"
-        aria-live="polite"
-        className="sr-only"
-      >
-        {suggestions.length > 0
-          ? `${suggestions.length} suggestions available.`
-          : "No suggestions available."}
-      </div>
     </div>
   );
 };

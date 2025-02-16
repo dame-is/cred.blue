@@ -149,6 +149,9 @@ const UserProfile = () => {
               <h1>{displayName}</h1>
               <h2>@{resolvedHandle}</h2>
             </div>
+            <div className="user-profile-age">
+              <h2>{Math.floor(selectedAccountData.ageInDays)} days old</h2>
+            </div>
             <div className="user-profile-badges">
               <h3>{selectedAccountData.socialStatus}</h3>
               <h3>{selectedAccountData.postingStyle}</h3>
