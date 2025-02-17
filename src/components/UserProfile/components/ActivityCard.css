@@ -5,13 +5,16 @@
     align-content: center;
     justify-content: center;
     text-align: center;
+    margin-top: 12.5px;
   }
 
   .activity-stat {
-    max-width: 70px;
     align-content: end;
+    max-width: 48px;
+    font-size: 0.8em;
   }
 
   .activity-header {
     font-size: 0.9em;
+    margin: 0px;
   }

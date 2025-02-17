@@ -216,7 +216,7 @@
     align-items: center;
     flex-direction: column;
     justify-content: center;
-    row-gap: 25px;
+    row-gap: 23px;
     margin-top: 27px;
     margin-bottom: 27px;
     display: flex;
@@ -237,6 +237,13 @@
 
   .navbar-logo {
     text-align: center;
+  }
+
+  .beta-badge {
+    font-size: 0.75em;
+    font-weight: 600;
+    margin: 11px;
+    padding: 4px 7px;
   }
 }
 
