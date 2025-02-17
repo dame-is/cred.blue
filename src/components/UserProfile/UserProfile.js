@@ -12,6 +12,7 @@ import NarrativeCard from "./components/NarrativeCard";
 import PostTypeCard from "./components/PostTypeCard";
 import AltTextCard from "./components/AltTextCard";
 import RawDataCard from "./components/RawDataCard";
+import ActivityCard from "./components/ActivityCard";
 
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
@@ -34,7 +35,7 @@ const UserProfile = () => {
   const cardRefs = useRef({});
 
   // Simplified breakpoints - just desktop and mobile
-  const breakpoints = { lg: 992, xs: 0 };
+  const breakpoints = { lg: 850, xs: 0 };
   const cols = { lg: 2, xs: 1 }; // 2 columns for desktop, 1 for mobile
 
   // Base layouts without fixed heights
@@ -45,6 +46,7 @@ const UserProfile = () => {
       { i: "PostTypeCard", x: 0, y: 6, w: 1, h: cardHeights.PostTypeCard || 6, static: true },
       { i: "AltTextCard", x: 1, y: 6, w: 1, h: cardHeights.AltTextCard || 6, static: true },
       { i: "RawDataCard", x: 0, y: 12, w: 2, h: cardHeights.RawDataCard || 8, static: true },
+      { i: "ActivityCard", x: 0, y: 18, w: 2, h: cardHeights.ActivityCard || 8, static: true },
     ],
     xs: [
       { i: "ProfileCard", x: 0, y: 0, w: 1, h: cardHeights.ProfileCard || 6, static: true },
@@ -52,6 +54,7 @@ const UserProfile = () => {
       { i: "PostTypeCard", x: 0, y: 12, w: 1, h: cardHeights.PostTypeCard || 6, static: true },
       { i: "AltTextCard", x: 0, y: 18, w: 1, h: cardHeights.AltTextCard || 6, static: true },
       { i: "RawDataCard", x: 0, y: 24, w: 1, h: cardHeights.RawDataCard || 8, static: true },
+      { i: "ActivityCard", x: 0, y: 32, w: 1, h: cardHeights.ActivityCard || 8, static: true },
     ]
   });
 
@@ -189,6 +192,19 @@ const UserProfile = () => {
               Last 90 Days
             </button>
           </div>
+          <div className="share-button-container">
+          <button
+              className="share-button-profile"
+              type="button"
+              onClick={() => window.open(
+                `https://bsky.app/intent/compose?text=${encodeURIComponent(
+                  `My alt text rating score is \n\n posts analyzed,contain images,\nhave alt text...\n\nGet your Bluesky alt text rating here: dame.is/ratingalttext`
+                )}`, '_blank'
+              )}
+            >
+              Share Results
+            </button>
+          </div>
         </div>
 
         <ResponsiveGridLayout
@@ -226,6 +242,11 @@ const UserProfile = () => {
           <div key="RawDataCard" className="grid-item" ref={el => cardRefs.current.RawDataCard = el}>
             <Card title="Raw Data">
               <RawDataCard />
+            </Card>
+          </div>
+          <div key="ActivityCard" className="grid-item" ref={el => cardRefs.current.ActivityCard = el}>
+            <Card title="Activity Overview">
+              <ActivityCard />
             </Card>
           </div>
         </ResponsiveGridLayout>

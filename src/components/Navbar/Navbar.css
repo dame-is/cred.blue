@@ -303,3 +303,7 @@
 .nav-icon:visited {
   color: inherit;
 }
+
+.auth-button.login-button {
+  padding: 7px 14px;
+}

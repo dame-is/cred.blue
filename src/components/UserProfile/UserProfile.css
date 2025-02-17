@@ -193,3 +193,7 @@
   fill: var(--circular-logo-text, #004f84);
   transition: fill 0.3s ease;
 }
+
+.user-profile .recharts-responsive-container {
+  max-width: 100%;
+}
