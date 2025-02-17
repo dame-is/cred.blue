@@ -43,46 +43,6 @@ class CustomizedContent extends PureComponent {
         return null;
       }
   
-      // Helper function to determine if text should be rendered
-      const renderText = () => {
-        // Check if we have all required values
-        if (!name || !width || !height) return null;
-  
-        // Only show text if the rectangle is large enough
-        if (width < 60 || height < 40) return null;
-        
-        // Calculate font size based on rectangle size
-        const minDimension = Math.min(width, height);
-        const fontSize = Math.min(12, minDimension / 5);
-        
-        // Only show text if name would fit
-        const approxCharWidth = fontSize * 0.6;  // Approximate width per character
-        const availableChars = Math.floor(width / approxCharWidth);
-        
-        if (name.length > availableChars) return null;
-        
-        return (
-          <text
-            x={x + width / 2}
-            y={y + height / 2}
-            textAnchor="middle"
-            dominantBaseline="middle"
-            style={{
-              fill: 'white',
-              fontSize: `${fontSize}px`,
-              strokeWidth: 0,
-              fontFamily: 'articulat-cf',
-              fontWeight: 600
-            }}
-          >
-            {name}
-          </text>
-        );
-      };
-  
-      // Ensure we have the minimum required props
-      if (!x || !y || !width || !height) return null;
-  
       return (
         <g>
           <rect
@@ -91,7 +51,7 @@ class CustomizedContent extends PureComponent {
             width={width}
             height={height}
             style={{
-              fill: colors?.[root?.name] || '#ffffff20',
+              fill: colors[root.name] || '#ffffff20',
               fillOpacity: 0.7,
               stroke: '#fff',
               strokeWidth: 3,
@@ -99,7 +59,24 @@ class CustomizedContent extends PureComponent {
               cursor: 'pointer',
             }}
           />
-          {renderText()}
+          {width > 50 && height > 30 && (
+            <text
+              x={x + width / 2}
+              y={y + height / 2}
+              textAnchor="middle"
+              dominantBaseline="middle"
+              style={{
+                fill: 'white', 
+                fontSize: 12, 
+                strokeWidth: 0, 
+                fontFamily: 'articulat-cf', 
+                fontWeight: 600, 
+                wordWrap: 'anywhere' 
+              }}
+            >
+              {name}
+            </text>
+          )}
         </g>
       );
     }
