@@ -34,7 +34,6 @@ const UserProfile = () => {
   const [cardHeights, setCardHeights] = useState({});
   const cardRefs = useRef({});
 
-  // Simplified breakpoints - just desktop and mobile
   const breakpoints = { lg: 850, xs: 0 };
   const cols = { lg: 2, xs: 1 };
 
@@ -98,23 +97,86 @@ const UserProfile = () => {
           throw new Error(data.error);
         }
 
-        // Add the breakdown structure if it doesn't exist
-        const processAccountData = (data) => ({
-          ...data,
-          breakdown: data.breakdown || {
+        // Transform function to process account data
+        const processAccountData = (data) => {
+          if (!data) return null;
+
+          // Create the new categorical breakdown structure
+          const breakdown = {
             blueskyCategories: {
-              ProfileQuality: { score: data.blueskyScore * 0.25, weight: 0.25 },
-              CommunityEngagement: { score: data.blueskyScore * 0.35, weight: 0.35 },
-              ContentAndActivity: { score: data.blueskyScore * 0.25, weight: 0.25 },
-              RecognitionAndStatus: { score: data.blueskyScore * 0.15, weight: 0.15 }
+              profileQuality: {
+                score: data.blueskyScore * 0.25,
+                weight: 0.25,
+                details: {
+                  profileCompleteness: data.profileCompleteness || 0,
+                  altTextConsistency: data.altTextConsistencyBonus || 0,
+                  customDomain: data.customDomainBonus || 0
+                }
+              },
+              communityEngagement: {
+                score: data.blueskyScore * 0.35,
+                weight: 0.35,
+                details: {
+                  socialGraph: data.socialGraphScore || 0,
+                  engagement: data.engagementScore || 0,
+                  replyActivity: data.activityScore || 0
+                }
+              },
+              contentActivity: {
+                score: data.blueskyScore * 0.25,
+                weight: 0.25,
+                details: {
+                  posts: data.activityDetails?.postsScore || 0,
+                  collections: data.collectionsScore?.bskyCollectionsScore || 0,
+                  labels: (data.labelBonus || 0) + (data.labelPenalty || 0)
+                }
+              },
+              recognitionStatus: {
+                score: data.blueskyScore * 0.15,
+                weight: 0.15,
+                details: {
+                  teamStatus: data.handleBonuses?.teamBonus || 0,
+                  contributorStatus: data.handleBonuses?.contributorBonus || 0,
+                  socialStatus: data.socialStatusBonus || 0
+                }
+              }
             },
             atprotoCategories: {
-              Decentralization: { score: data.atprotoScore * 0.45, weight: 0.45 },
-              ProtocolActivity: { score: data.atprotoScore * 0.35, weight: 0.35 },
-              AccountMaturity: { score: data.atprotoScore * 0.20, weight: 0.20 }
+              decentralization: {
+                score: data.atprotoScore * 0.45,
+                weight: 0.45,
+                details: {
+                  rotationKeys: data.rotationKeyBonus || 0,
+                  didWeb: data.didWebBonus || 0,
+                  thirdPartyPDS: data.thirdPartyPDSBonus || 0,
+                  customDomain: data.customDomainBonus || 0
+                }
+              },
+              protocolActivity: {
+                score: data.atprotoScore * 0.35,
+                weight: 0.35,
+                details: {
+                  nonBskyCollections: data.collectionsScore?.nonBskyCollectionsScore || 0,
+                  atprotoActivity: data.atprotoActivityBonus || 0
+                }
+              },
+              accountMaturity: {
+                score: data.atprotoScore * 0.20,
+                weight: 0.20,
+                details: {
+                  accountAge: data.accountAgeScore || 0,
+                  contributorStatus: data.handleBonuses?.contributorBonus || 0
+                }
+              }
             }
-          }
-        });
+          };
+
+          // Return combined data structure
+          return {
+            ...data,
+            breakdown
+          };
+        };
 
         setAccountData30Days(processAccountData(data.accountData30Days));
         setAccountData90Days(processAccountData(data.accountData90Days));
@@ -180,17 +242,17 @@ const UserProfile = () => {
           </div>
 
           <div className="user-profile-data">
-              <div className="user-profile-score">
-                <p><strong>Combined Score: {selectedAccountData.combinedScore}</strong></p>
-                <p>Bluesky Score: {selectedAccountData.blueskyScore}</p>
-                <p>Atproto Score: {selectedAccountData.atprotoScore}</p>
-              </div>
-              <div className="user-profile-activity">
-                <p><strong>Overall Status: {selectedAccountData.activityAll.activityStatus}</strong></p>
-                <p>Bluesky Status: {selectedAccountData.activityAll.bskyActivityStatus}</p>
-                <p>Atproto Status: {selectedAccountData.activityAll.atprotoActivityStatus}</p>
-              </div>
+            <div className="user-profile-score">
+              <p><strong>Combined Score: {selectedAccountData.combinedScore}</strong></p>
+              <p>Bluesky Score: {selectedAccountData.blueskyScore}</p>
+              <p>Atproto Score: {selectedAccountData.atprotoScore}</p>
             </div>
+            <div className="user-profile-activity">
+              <p><strong>Overall Status: {selectedAccountData.activityAll.activityStatus}</strong></p>
+              <p>Bluesky Status: {selectedAccountData.activityAll.bskyActivityStatus}</p>
+              <p>Atproto Status: {selectedAccountData.activityAll.atprotoActivityStatus}</p>
+            </div>
+          </div>
 
           <div className="toggle-switch">
             <button
@@ -207,7 +269,7 @@ const UserProfile = () => {
             </button>
           </div>
           <div className="share-button-container">
-          <button
+            <button
               className="share-button-profile"
               type="button"
               onClick={() => window.open(
