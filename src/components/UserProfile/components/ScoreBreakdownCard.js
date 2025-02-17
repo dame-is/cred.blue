@@ -1,5 +1,5 @@
 import React, { useContext, PureComponent } from 'react';
-import { Treemap, ResponsiveContainer, Tooltip } from 'recharts';
+import { Treemap, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 import { AccountDataContext } from "../UserProfile";
 
 const COLORS = {
@@ -61,22 +61,14 @@ class CustomizedContent extends PureComponent {
   }
 }
 
-const ScoreLegend = ({ blueskyScore, atprotoScore, combinedScore }) => {
-  const blueskyPercent = ((blueskyScore / combinedScore) * 100).toFixed(1);
-  const atprotoPercent = ((atprotoScore / combinedScore) * 100).toFixed(1);
-
-  return (
-    <div className="flex justify-center items-center gap-8 mt-6 border-t pt-4">
-      <div className="flex items-center">
-        <div className="w-6 h-6 mr-3 rounded" style={{ backgroundColor: COLORS['Bluesky Score'] }}></div>
-        <span className="text-sm font-medium">Bluesky Score: {blueskyPercent}%</span>
-      </div>
-      <div className="flex items-center">
-        <div className="w-6 h-6 mr-3 rounded" style={{ backgroundColor: COLORS['ATProto Score'] }}></div>
-        <span className="text-sm font-medium">ATProto Score: {atprotoPercent}%</span>
-      </div>
-    </div>
-  );
+// Format legend value to include percentage
+const formatLegendValue = (value, entry) => {
+  const { payload } = entry;
+  if (payload && payload.size && entry.color) {
+    const percentage = ((payload.size / (payload.size + payload.parent?.size || 0)) * 100).toFixed(1);
+    return `${value}: ${percentage}%`;
+  }
+  return value;
 };
 
 const getScoreDescriptions = (category) => {
@@ -106,9 +98,17 @@ const ScoreBreakdownCard = () => {
       // First, handle camelCase to space separation
       const spacedName = name.replace(/([A-Z])/g, ' $1').trim();
       // Then capitalize the first letter of each word
-      return spacedName.split(' ')
+      const capitalizedName = spacedName.split(' ')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
+      
+      // Handle special cases with &
+      const specialCases = {
+        'Content Activity': 'Content & Activity',
+        'Recognition Status': 'Recognition & Status'
+      };
+      
+      return specialCases[capitalizedName] || capitalizedName;
     };
 
     const buildCategoryChildren = (categories, parentScore) => {
@@ -197,15 +197,15 @@ const ScoreBreakdownCard = () => {
             )}
           >
             <Tooltip content={<CustomTooltip />} />
+            <Legend
+              verticalAlign="bottom"
+              align="center"
+              height={36}
+              formatter={formatLegendValue}
+            />
           </Treemap>
         </ResponsiveContainer>
       </div>
-      
-      <ScoreLegend 
-        blueskyScore={blueskyScore}
-        atprotoScore={atprotoScore}
-        combinedScore={combinedScore}
-      />
       
       <div className="text-sm text-gray-500 text-center mt-4">
         Hover over sections to see detailed breakdowns
