@@ -88,6 +88,38 @@ const CompareScoresResults = ({ result, loading }) => {
     };
   };
 
+  // Render a breakdown summary from an object of key/value pairs.
+  const renderBreakdownSummary = (breakdownData) => {
+    if (!breakdownData || Object.keys(breakdownData).length === 0) {
+      return <p>No breakdown data available.</p>;
+    }
+    return (
+      <ul>
+        {Object.entries(breakdownData).map(([key, value]) => (
+          <li key={key}>
+            {key}:{" "}
+            {typeof value === "object" ? JSON.stringify(value, null, 2) : value}
+          </li>
+        ))}
+      </ul>
+    );
+  };
+
+  // Render the score breakdown for one identity.
+  const renderScoreBreakdown = (scoreObj, label) => {
+    const { scoreData, breakdownData } = extractData(scoreObj);
+    const { handle = "Unknown Handle" } = scoreData;
+    return (
+      <div className="score-breakdown" key={label}>
+        <h3 className="score-breakdown-header">{handle}</h3>
+        <div className="breakdown-section">
+          <h4>Score Breakdown</h4>
+          {renderBreakdownSummary(breakdownData)}
+        </div>
+      </div>
+    );
+  };
+
   // Render the toggle checkboxes.
   const renderCheckboxes = () => (
     <div className="score-toggle-controls">
@@ -284,6 +316,24 @@ const CompareScoresResults = ({ result, loading }) => {
       return renderSingleChart(result);
     }
   };
+
+  // Render breakdown details for each identity.
+  const renderAllBreakdowns = () => {
+    if (isComparison && Array.isArray(result)) {
+      return result.map((scoreObj, index) =>
+        renderScoreBreakdown(scoreObj, `comparison-${index}`)
+      );
+    } else {
+      return renderScoreBreakdown(result, "single");
+    }
+  };
+
+  return (
+    <div className={`score-result ${isComparison ? "comparison-mode" : ""}`}>
+      {renderChart()}
+      <div className="score-breakdowns">{renderAllBreakdowns()}</div>
+    </div>
+  );
 };
 
 CompareScoresResults.propTypes = {
