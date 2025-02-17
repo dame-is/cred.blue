@@ -474,27 +474,32 @@ function calculatePostingStyle(stats) {
 
 // 1. First, add this new function to calculate engagement rate
 function calculateEngagementMetrics(engagementsReceived, postsCount, followersCount) {
-  const totalEngagements = 
+  // Ensure we have valid numbers, defaulting to 0 if undefined
+  const totalEngagements = (
     (engagementsReceived?.likesReceived || 0) +
     (engagementsReceived?.repostsReceived || 0) +
     (engagementsReceived?.quotesReceived || 0) +
-    (engagementsReceived?.repliesReceived || 0);
+    (engagementsReceived?.repliesReceived || 0)
+  );
+
+  const safePostsCount = Number(postsCount) || 0;
+  const safeFollowersCount = Number(followersCount) || 0;
 
   return {
     totalEngagements: roundToTwo(totalEngagements),
-    engagementsPerPost: postsCount > 0 ? roundToTwo(totalEngagements / postsCount) : 0,
-    engagementRate: (postsCount > 0 && followersCount > 0) 
-      ? roundToTwo((totalEngagements / (postsCount * followersCount)) * 100)
+    engagementsPerPost: safePostsCount > 0 ? roundToTwo(totalEngagements / safePostsCount) : 0,
+    engagementRate: (safePostsCount > 0 && safeFollowersCount > 0) 
+      ? roundToTwo((totalEngagements / (safePostsCount * safeFollowersCount)) * 100)
       : 0
   };
 }
 
-function calculateSocialStatus({ ageInDays, followersCount, followsCount, engagementRate }) {
+function calculateSocialStatus({ ageInDays = 0, followersCount = 0, followsCount = 0, engagementRate = 0 }) {
   if (ageInDays < 30) return "Newcomer";
   
   const followPercentage = followersCount > 0 ? followsCount / followersCount : 0;
   
-  // Define engagement thresholds for different qualities
+  // Define engagement thresholds
   const ENGAGEMENT_THRESHOLDS = {
     high: 0.03,    // 3%
     moderate: 0.01, // 1%
@@ -847,17 +852,18 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
         totalBskyRecordsPerDay,
       });
 
+      // Inside your for loop where periodData is constructed:
       const engagementMetrics = calculateEngagementMetrics(
-        completePostStats.engagementsReceived,
-        postsCount,
-        profile.followersCount
+        completePostStats?.engagementsReceived || {},
+        postsCount || 0,
+        profile?.followersCount || 0
       );
     
       const socialStatus = calculateSocialStatus({
-        ageInDays,
-        followersCount: profile.followersCount || 0,
-        followsCount: profile.followsCount || 0,
-        engagementRate: engagementMetrics.engagementRate
+        ageInDays: ageInDays || 0,
+        followersCount: profile?.followersCount || 0,
+        followsCount: profile?.followsCount || 0,
+        engagementRate: engagementMetrics?.engagementRate || 0
       });
     
       // Build analysis narrative for the period
@@ -900,29 +906,25 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
           ...profile,
           did: profile.did || did,
         },
-        displayName: profile.displayName,
-        handle: profile.handle,
-        did: profile.did || did,
-        profileEditedDate: profile.indexedAt,
-        profileCompletion: calculateProfileCompletion(profile),
-        combinedScore: 250,
-        blueskyScore: 150,
-        atprotoScore: 100,
-        scoreGeneratedAt: new Date().toISOString(),
-        serviceEndpoint,
-        pdsType: serviceEndpoint.includes("bsky.network") ? "Bluesky" : "Third-party",
-        createdAt: profile.createdAt,
-        ageInDays: roundToTwo(ageInDays),
-        agePercentage: roundToTwo(agePercentage),
-        followersCount: roundToTwo(profile.followersCount),
-        followsCount: roundToTwo(profile.followsCount),
-        followPercentage: profile.followersCount ? roundToTwo(profile.followsCount / profile.followersCount) : 0,
-        postsCount: roundToTwo(postsCount),
-        rotationKeys: rotationKeysRounded,
-        era: calculateEra(profile.createdAt),
-        postingStyle,
-        socialStatus,
-        engagementMetrics,
+        displayName: profile?.displayName || '',
+  handle: profile?.handle || '',
+  did: profile?.did || did,
+  profileEditedDate: profile?.indexedAt,
+  profileCompletion: calculateProfileCompletion(profile || {}),
+  serviceEndpoint,
+  pdsType: serviceEndpoint?.includes("bsky.network") ? "Bluesky" : "Third-party",
+  createdAt: profile?.createdAt,
+  ageInDays: roundToTwo(ageInDays || 0),
+  agePercentage: roundToTwo(agePercentage || 0),
+  followersCount: roundToTwo(profile?.followersCount || 0),
+  followsCount: roundToTwo(profile?.followsCount || 0),
+  followPercentage: profile?.followersCount ? roundToTwo(profile.followsCount / profile.followersCount) : 0,
+  postsCount: roundToTwo(postsCount || 0),
+  rotationKeys: rotationKeysRounded || 0,
+  era: calculateEra(profile?.createdAt || new Date().toISOString()),
+  postingStyle,
+  socialStatus,
+  engagementMetrics,
         weeklyActivity: weeklyActivity,
         activityAll: {
           activityStatus,
