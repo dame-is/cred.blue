@@ -11,7 +11,6 @@ import ProfileCard from "./components/ProfileCard";
 import NarrativeCard from "./components/NarrativeCard";
 import PostTypeCard from "./components/PostTypeCard";
 import AltTextCard from "./components/AltTextCard";
-import RawDataCard from "./components/RawDataCard";
 import ActivityCard from "./components/ActivityCard";
 import ScoreBreakdownCard from "./components/ScoreBreakdownCard";
 
@@ -39,22 +38,20 @@ const UserProfile = () => {
 
   const getLayouts = () => ({
     lg: [
-      { i: "NarrativeCard", x: 0, y: 0, w: 1, h: cardHeights.NarrativeCard || 6, static: false },
-      { i: "ScoreBreakdownCard", x: 1, y: 0, w: 1, h: cardHeights.ScoreBreakdownCard || 8, static: false },
-      { i: "ProfileCard", x: 0, y: 6, w: 1, h: cardHeights.ProfileCard || 6, static: false },
-      { i: "PostTypeCard", x: 1, y: 6, w: 1, h: cardHeights.PostTypeCard || 6, static: false },
-      { i: "AltTextCard", x: 0, y: 12, w: 1, h: cardHeights.AltTextCard || 6, static: false },
-      { i: "ActivityCard", x: 1, y: 12, w: 1, h: cardHeights.ActivityCard || 8, static: false },
-      { i: "RawDataCard", x: 0, y: 20, w: 2, h: cardHeights.RawDataCard || 8, static: false },
+      { i: "NarrativeCard", x: 0, y: 0, w: 1, h: 8, static: false },
+      { i: "ScoreBreakdownCard", x: 1, y: 0, w: 1, h: 8, static: false },
+      { i: "ProfileCard", x: 0, y: 8, w: 1, h: 8, static: false },
+      { i: "PostTypeCard", x: 1, y: 8, w: 1, h: 8, static: false },
+      { i: "AltTextCard", x: 0, y: 16, w: 1, h: 8, static: false },
+      { i: "ActivityCard", x: 1, y: 16, w: 1, h: 8, static: false }
     ],
     xs: [
-      { i: "NarrativeCard", x: 0, y: 0, w: 1, h: cardHeights.NarrativeCard || 6, static: false },
-      { i: "ScoreBreakdownCard", x: 0, y: 6, w: 1, h: cardHeights.ScoreBreakdownCard || 8, static: false },
-      { i: "ProfileCard", x: 0, y: 14, w: 1, h: cardHeights.ProfileCard || 6, static: false },
-      { i: "PostTypeCard", x: 0, y: 20, w: 1, h: cardHeights.PostTypeCard || 6, static: false },
-      { i: "AltTextCard", x: 0, y: 26, w: 1, h: cardHeights.AltTextCard || 6, static: false },
-      { i: "ActivityCard", x: 0, y: 32, w: 1, h: cardHeights.ActivityCard || 8, static: false },
-      { i: "RawDataCard", x: 0, y: 40, w: 1, h: cardHeights.RawDataCard || 8, static: false },
+      { i: "NarrativeCard", x: 0, y: 0, w: 1, h: 8, static: false },
+      { i: "ScoreBreakdownCard", x: 0, y: 8, w: 1, h: 8, static: false },
+      { i: "ProfileCard", x: 0, y: 16, w: 1, h: 8, static: false },
+      { i: "PostTypeCard", x: 0, y: 24, w: 1, h: 8, static: false },
+      { i: "AltTextCard", x: 0, y: 32, w: 1, h: 8, static: false },
+      { i: "ActivityCard", x: 0, y: 40, w: 1, h: 8, static: false }
     ]
   });
 
@@ -325,11 +322,6 @@ const UserProfile = () => {
           <div key="ActivityCard" className="grid-item" ref={el => cardRefs.current.ActivityCard = el}>
             <Card title="Activity Overview">
               <ActivityCard />
-            </Card>
-          </div>
-          <div key="RawDataCard" className="grid-item" ref={el => cardRefs.current.RawDataCard = el}>
-            <Card title="Raw Data">
-              <RawDataCard />
             </Card>
           </div>
         </ResponsiveGridLayout>
