@@ -13,7 +13,7 @@ const AltTextRatingTool = () => {
   const [analysis, setAnalysis] = useState(null);
   const [allRecords, setAllRecords] = useState([]);
   const [actorDID, setActorDID] = useState('');
-  const [setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   // Checkboxes state.
   const [useLast90Days, setUseLast90Days] = useState(false);
   const [excludeReplies, setExcludeReplies] = useState(false);
@@ -24,7 +24,7 @@ const AltTextRatingTool = () => {
   // For autocomplete suggestions.
   const [suggestions, setSuggestions] = useState([]);
   const [autocompleteActive, setAutocompleteActive] = useState(false);
-  const [activeSuggestionIndex] = useState(-1);
+  const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
   // New state to store a selected suggestion
   const [selectedSuggestion, setSelectedSuggestion] = useState('');
   // New state: show results div immediately after submission.
@@ -94,7 +94,7 @@ const AltTextRatingTool = () => {
     } while (cursor);
     return records;
   }
-
+  
   // Analyze posts based on checkboxes.
   function analyzePosts(records, useLast90Days, excludeReplies, actor) {
     let dynamicMinDate;
