@@ -40,6 +40,7 @@
     flex-direction: column; /* Default to column for single mode */
     gap: 20px;
     width: 100%;
+    display: none;
 }
 
 /* Adjustments for comparison mode */
