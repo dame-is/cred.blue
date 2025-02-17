@@ -102,9 +102,18 @@ const ScoreBreakdownCard = () => {
   const { blueskyScore, atprotoScore, combinedScore, breakdown } = accountData;
 
   const buildTreemapData = () => {
+    const formatCategoryName = (name) => {
+      // First, handle camelCase to space separation
+      const spacedName = name.replace(/([A-Z])/g, ' $1').trim();
+      // Then capitalize the first letter of each word
+      return spacedName.split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+    };
+
     const buildCategoryChildren = (categories, parentScore) => {
       return Object.entries(categories).map(([name, categoryData]) => {
-        const formattedName = name.replace(/([A-Z])/g, ' $1').trim();
+        const formattedName = formatCategoryName(name);
         const rawScore = categoryData.score || 0;
         
         // Calculate subcategory scores if they exist
@@ -122,7 +131,7 @@ const ScoreBreakdownCard = () => {
             
             if (subScore && subScore > 0) {
               subScores.push({
-                name: subName.replace(/([A-Z])/g, ' $1').trim(),
+                name: formatCategoryName(subName),
                 size: subScore,
                 tooltipInfo: true,
                 parent: { 
@@ -160,7 +169,6 @@ const ScoreBreakdownCard = () => {
       }
     ];
 
-    console.log('Treemap data:', data); // Debug log
     return data;
   };
 
