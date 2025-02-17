@@ -3,8 +3,8 @@ import { Treemap, ResponsiveContainer, Tooltip } from 'recharts';
 import { AccountDataContext } from "../UserProfile";
 
 const COLORS = {
-  bluesky: '#66b2ff',
-  atproto: '#0056b3'
+  blueskyScore: '#66b2ff',
+  atprotoScore: '#0056b3'
 };
 
 const formatScore = (score) => Math.round(score);
@@ -22,16 +22,6 @@ const CustomTooltip = ({ active, payload }) => {
             {data.description && (
               <p className="text-sm text-gray-600 mb-2">{data.description}</p>
             )}
-            {data.details && (
-              <div className="mt-2 border-t pt-2">
-                <p className="font-medium text-sm mb-1">Components:</p>
-                {Object.entries(data.details).map(([key, value]) => (
-                  <p key={key} className="text-sm">
-                    {key.replace(/([A-Z])/g, ' $1').trim()}: {formatScore(value)}
-                  </p>
-                ))}
-              </div>
-            )}
           </>
         )}
       </div>
@@ -42,7 +32,11 @@ const CustomTooltip = ({ active, payload }) => {
 
 class CustomizedContent extends PureComponent {
   render() {
-    const { root, depth, x, y, width, height, index, name, value, colors } = this.props;
+    const { root, depth, x, y, width, height, index, name, colors, totalValue } = this.props;
+    const value = this.props.value;
+    
+    // Calculate percentage based on the total value of its parent
+    const percentage = totalValue ? ((value / totalValue) * 100).toFixed(1) : 0;
 
     return (
       <g>
@@ -52,7 +46,7 @@ class CustomizedContent extends PureComponent {
           width={width}
           height={height}
           style={{
-            fill: depth < 2 ? colors : '#ffffff20',
+            fill: depth < 2 ? colors[name.replace(/\s+/g, '')] : '#ffffff20',
             stroke: '#fff',
             strokeWidth: 1,
             strokeOpacity: 0.5,
@@ -72,7 +66,7 @@ class CustomizedContent extends PureComponent {
               {name}
             </tspan>
             <tspan x={x + width / 2} y={y + height / 2 + 12}>
-              {formatScore(value)}
+              {percentage}%
             </tspan>
           </text>
         )}
@@ -102,47 +96,34 @@ const ScoreBreakdownCard = () => {
   }
 
   const { blueskyScore, atprotoScore, combinedScore, breakdown } = accountData;
-  const blueskyPercent = (blueskyScore / combinedScore * 100).toFixed(1);
-  const atprotoPercent = (atprotoScore / combinedScore * 100).toFixed(1);
 
   const buildTreemapData = () => {
-    // Log the breakdown structure to debug
-    console.log('Breakdown structure:', breakdown);
-    
     const data = [
       {
         name: 'Bluesky Score',
-        colors: COLORS.bluesky,
-        children: Object.entries(breakdown.blueskyCategories).map(([name, category]) => {
-          // Log each category's details to debug
-          console.log(`${name} details:`, category.details);
-          
-          return {
-            name: name.replace(/([A-Z])/g, ' $1').trim(),
-            size: category.score,
-            weight: category.weight * 100,
-            tooltipInfo: true,
-            description: getScoreDescriptions(name.replace(/([A-Z])/g, ' $1').trim()),
-            details: {...category.details} // Create a new object to ensure proper passing
-          };
-        })
+        colors: COLORS,
+        size: blueskyScore,
+        children: Object.entries(breakdown.blueskyCategories).map(([name, category]) => ({
+          name: name.replace(/([A-Z])/g, ' $1').trim(),
+          size: category.score,
+          weight: category.weight * 100,
+          tooltipInfo: true,
+          description: getScoreDescriptions(name.replace(/([A-Z])/g, ' $1').trim()),
+          details: {...category.details}
+        }))
       },
       {
         name: 'ATProto Score',
-        colors: COLORS.atproto,
-        children: Object.entries(breakdown.atprotoCategories).map(([name, category]) => {
-          // Log each category's details to debug
-          console.log(`${name} details:`, category.details);
-          
-          return {
-            name: name.replace(/([A-Z])/g, ' $1').trim(),
-            size: category.score,
-            weight: category.weight * 100,
-            tooltipInfo: true,
-            description: getScoreDescriptions(name.replace(/([A-Z])/g, ' $1').trim()),
-            details: {...category.details} // Create a new object to ensure proper passing
-          };
-        })
+        colors: COLORS,
+        size: atprotoScore,
+        children: Object.entries(breakdown.atprotoCategories).map(([name, category]) => ({
+          name: name.replace(/([A-Z])/g, ' $1').trim(),
+          size: category.score,
+          weight: category.weight * 100,
+          tooltipInfo: true,
+          description: getScoreDescriptions(name.replace(/([A-Z])/g, ' $1').trim()),
+          details: {...category.details}
+        }))
       }
     ];
     return data;
@@ -150,21 +131,6 @@ const ScoreBreakdownCard = () => {
 
   return (
     <div className="w-full h-full min-h-[400px] p-4 bg-white rounded-lg shadow">
-      <div className="flex justify-between items-center mb-4">
-        <div className="text-xl font-semibold">
-          Combined Score: {formatScore(combinedScore)}
-        </div>
-        <div className="flex space-x-6">
-          <div>
-            <span className="font-medium" style={{ color: COLORS.bluesky }}>Bluesky: </span>
-            <span>{formatScore(blueskyScore)} ({blueskyPercent}%)</span>
-          </div>
-          <div>
-            <span className="font-medium" style={{ color: COLORS.atproto }}>ATProto: </span>
-            <span>{formatScore(atprotoScore)} ({atprotoPercent}%)</span>
-          </div>
-        </div>
-      </div>
       <div className="rounded-lg overflow-hidden" style={{ width: '100%', height: 400 }}>
         <ResponsiveContainer>
           <Treemap
@@ -183,7 +149,8 @@ const ScoreBreakdownCard = () => {
                 index={index}
                 name={name}
                 value={value}
-                colors={root.colors || (root.name === 'Bluesky Score' ? COLORS.bluesky : COLORS.atproto)}
+                colors={COLORS}
+                totalValue={combinedScore}
               />
             )}
           >
