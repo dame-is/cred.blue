@@ -100,24 +100,24 @@ const ActivityCard = () => {
       {/* Stats Display */}
       <div className="activity-stat-container">
         <div className="activity-stat">
+        <p className="activity-data">{perDayStats.bskyRecords}</p>
           <h3 className="activity-header">bsky records per day</h3>
-          <p className="activity-data">{perDayStats.bskyRecords}</p>
         </div>
         <div className="activity-stat">
+        <p className="activity-data">{perDayStats.nonBskyRecords}</p>
           <h3 className="activity-header">atproto records per day</h3>
-          <p className="activity-data">{perDayStats.nonBskyRecords}</p>
         </div>
         <div className="activity-stat">
+        <p className="activity-data">{perDayStats.posts}</p>
           <h3 className="activity-header">posts per day</h3>
-          <p className="activity-data">{perDayStats.posts}</p>
         </div>
         <div className="activity-stat">
+        <p className="activity-data">{perDayStats.replies}</p>
           <h3 className="activity-header">replies per day</h3>
-          <p className="activity-data">{perDayStats.replies}</p>
         </div>
         <div className="activity-stat">
+        <p className="activity-data">{perDayStats.likes}</p>
           <h3 className="activity-header">likes per day</h3>
-          <p className="activity-data">{perDayStats.likes}</p>
         </div>
       </div>
     </div>

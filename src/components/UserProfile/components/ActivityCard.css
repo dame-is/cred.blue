@@ -17,4 +17,10 @@
   .activity-header {
     font-size: 0.9em;
     margin: 0px;
+    font-weight: 400;
+  }
+
+  .activity-data {
+    font-size: 1.6em;
+    font-weight: 600;
   }

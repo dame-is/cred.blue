@@ -43,6 +43,40 @@ class CustomizedContent extends PureComponent {
         return null;
       }
   
+      // Helper function to determine if text should be rendered
+      const renderText = () => {
+        // Only show text if the rectangle is large enough
+        if (width < 60 || height < 40) return null;
+        
+        // Calculate font size based on rectangle size
+        const minDimension = Math.min(width, height);
+        const fontSize = Math.min(12, minDimension / 5);
+        
+        // Only show text if name would fit
+        const approxCharWidth = fontSize * 0.6;  // Approximate width per character
+        const availableChars = Math.floor(width / approxCharWidth);
+        
+        if (name.length > availableChars) return null;
+        
+        return (
+          <text
+            x={x + width / 2}
+            y={y + height / 2}
+            textAnchor="middle"
+            dominantBaseline="middle"
+            style={{
+              fill: 'white',
+              fontSize: `${fontSize}px`,
+              strokeWidth: 0,
+              fontFamily: 'articulat-cf',
+              fontWeight: 600
+            }}
+          >
+            {name}
+          </text>
+        );
+      };
+  
       return (
         <g>
           <rect
@@ -59,24 +93,7 @@ class CustomizedContent extends PureComponent {
               cursor: 'pointer',
             }}
           />
-          {width > 50 && height > 30 && (
-            <text
-              x={x + width / 2}
-              y={y + height / 2}
-              textAnchor="middle"
-              dominantBaseline="middle"
-              style={{
-                fill: 'white', 
-                fontSize: 12, 
-                strokeWidth: 0, 
-                fontFamily: 'articulat-cf', 
-                fontWeight: 600, 
-                wordWrap: 'anywhere' 
-              }}
-            >
-              {name}
-            </text>
-          )}
+          {renderText()}
         </g>
       );
     }
@@ -84,12 +101,12 @@ class CustomizedContent extends PureComponent {
 
 const getScoreDescriptions = (category) => {
   const descriptions = {
-    'Profile Quality': 'Profile completeness, alt text usage, and custom domain',
-    'Community Engagement': 'Social graph metrics, engagement rates, and reply activity',
-    'Content & Activity': 'Posts, collections, and content quality including labels',
-    'Recognition & Status': 'Team membership, contributor status, and social standing',
-    'Decentralization': 'PDS choice, rotation keys, DID type, and domain customization',
-    'Protocol Activity': 'Non-Bluesky collections and general protocol usage',
+    'Profile Quality': 'Profile completeness, alt text usage, domain, etc',
+    'Community Engagement': 'Social graph, engagement, reply activity, etc',
+    'Content & Activity': 'Posts, collections, content quality, etc',
+    'Recognition & Status': 'Team membership, contributor status, social standing, etc',
+    'Decentralization': 'PDS, rotation keys, DID type, etc',
+    'Protocol Activity': 'Collections and general protocol usage',
     'Account Maturity': 'Account age and ecosystem contributions'
   };
   return descriptions[category] || '';
@@ -181,7 +198,7 @@ const ScoreBreakdownCard = () => {
 
   return (
     <div className="w-full h-full min-h-[400px] p-4 bg-white rounded-lg shadow">
-      <div className="score-breakdown-card" style={{ width: '100%', height: 400 }}>
+      <div className="score-breakdown-card" style={{ width: '100%', height: 280 }}>
         <ResponsiveContainer>
           <Treemap
             data={buildTreemapData()}
