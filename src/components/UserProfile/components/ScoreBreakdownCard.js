@@ -41,45 +41,46 @@ const CustomTooltip = ({ active, payload }) => {
 };
 
 class CustomizedContent extends PureComponent {
-  render() {
-    const { root, depth, x, y, width, height, index, name, value, colors } = this.props;
-
-    return (
-      <g>
-        <rect
-          x={x}
-          y={y}
-          width={width}
-          height={height}
-          style={{
-            fill: depth < 2 ? colors[Math.floor((index / root.children.length) * colors.length)] : '#ffffff20',
-            stroke: '#fff',
-            strokeWidth: 2 / (depth + 1e-10),
-            strokeOpacity: 1 / (depth + 1e-10),
-            cursor: 'pointer'
-          }}
-        />
-        {depth === 1 && width > 50 && height > 30 && (
-          <text
-            x={x + width / 2}
-            y={y + height / 2}
-            textAnchor="middle"
-            fill="#fff"
-            fontSize={14}
-            style={{ pointerEvents: 'none' }}
-          >
-            <tspan x={x + width / 2} y={y + height / 2 - 8}>
-              {name}
-            </tspan>
-            <tspan x={x + width / 2} y={y + height / 2 + 12}>
-              {formatScore(value)}
-            </tspan>
-          </text>
-        )}
-      </g>
-    );
+    render() {
+      const { root, depth, x, y, width, height, index, name, value, colors } = this.props;
+  
+      return (
+        <g>
+          <rect
+            x={x}
+            y={y}
+            width={width}
+            height={height}
+            style={{
+              fill: depth < 2 ? colors[Math.floor((index / root.children.length) * colors.length)] : '#ffffff20',
+              stroke: depth === 1 ? 'none' : '#fff',
+              strokeWidth: 2 / (depth + 1e-10),
+              strokeOpacity: 1 / (depth + 1e-10),
+              cursor: 'pointer',
+              borderRadius: depth === 1 ? '12px' : '0',
+            }}
+          />
+          {depth === 1 && width > 50 && height > 30 && (
+            <text
+              x={x + width / 2}
+              y={y + height / 2}
+              textAnchor="middle"
+              fill="#fff"
+              fontSize={14}
+              style={{ pointerEvents: 'none' }}
+            >
+              <tspan x={x + width / 2} y={y + height / 2 - 8}>
+                {name}
+              </tspan>
+              <tspan x={x + width / 2} y={y + height / 2 + 12}>
+                {formatScore(value)}
+              </tspan>
+            </text>
+          )}
+        </g>
+      );
+    }
   }
-}
 
 const getScoreDescriptions = (category) => {
   const descriptions = {

@@ -36,9 +36,8 @@ const UserProfile = () => {
 
   // Simplified breakpoints - just desktop and mobile
   const breakpoints = { lg: 850, xs: 0 };
-  const cols = { lg: 2, xs: 1 }; // 2 columns for desktop, 1 for mobile
+  const cols = { lg: 2, xs: 1 };
 
-  // Base layouts without fixed heights
   const getLayouts = () => ({
     lg: [
       { i: "ProfileCard", x: 0, y: 0, w: 1, h: cardHeights.ProfileCard || 6, static: true },
@@ -60,9 +59,8 @@ const UserProfile = () => {
     ]
   });
 
-  // Function to update card heights
   const updateCardHeights = () => {
-    const rowHeight = 50; // Your grid's row height
+    const rowHeight = 50;
     const newHeights = {};
     
     Object.keys(cardRefs.current).forEach(key => {
@@ -70,14 +68,13 @@ const UserProfile = () => {
       if (element) {
         const contentHeight = element.scrollHeight;
         const gridHeight = Math.ceil(contentHeight / rowHeight);
-        newHeights[key] = Math.max(gridHeight, 6); // Minimum height of 6 grid units
+        newHeights[key] = Math.max(gridHeight, 6);
       }
     });
     
     setCardHeights(newHeights);
   };
 
-  // Effect to handle initial load and updates
   useEffect(() => {
     const handleResize = () => {
       updateCardHeights();
@@ -87,24 +84,40 @@ const UserProfile = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Update heights when content changes
   useEffect(() => {
     if (accountData30Days || accountData90Days) {
-      setTimeout(updateCardHeights, 100); // Allow time for content to render
+      setTimeout(updateCardHeights, 100);
     }
   }, [accountData30Days, accountData90Days, selectedPeriod]);
 
-  // Data fetching effect
   useEffect(() => {
     const fetchAccountData = async () => {
       try {
-        const data = await loadAccountData(username, (increment) => {
-        });
+        const data = await loadAccountData(username);
         if (data.error) {
           throw new Error(data.error);
         }
-        setAccountData30Days(data.accountData30Days);
-        setAccountData90Days(data.accountData90Days);
+
+        // Add the breakdown structure if it doesn't exist
+        const processAccountData = (data) => ({
+          ...data,
+          breakdown: data.breakdown || {
+            blueskyCategories: {
+              ProfileQuality: { score: data.blueskyScore * 0.25, weight: 0.25 },
+              CommunityEngagement: { score: data.blueskyScore * 0.35, weight: 0.35 },
+              ContentAndActivity: { score: data.blueskyScore * 0.25, weight: 0.25 },
+              RecognitionAndStatus: { score: data.blueskyScore * 0.15, weight: 0.15 }
+            },
+            atprotoCategories: {
+              Decentralization: { score: data.atprotoScore * 0.45, weight: 0.45 },
+              ProtocolActivity: { score: data.atprotoScore * 0.35, weight: 0.35 },
+              AccountMaturity: { score: data.atprotoScore * 0.20, weight: 0.20 }
+            }
+          }
+        });
+
+        setAccountData30Days(processAccountData(data.accountData30Days));
+        setAccountData90Days(processAccountData(data.accountData90Days));
       } catch (err) {
         console.error("Error fetching account data:", err);
         setError(err.message);
@@ -209,17 +222,17 @@ const UserProfile = () => {
         </div>
 
         <ResponsiveGridLayout
-        className="layout"
-        layouts={getLayouts()}
-        breakpoints={breakpoints}
-        cols={cols}
-        rowHeight={50}
-        margin={[20, 20]}
-        isDraggable={false}
-        isResizable={false}
-        useCSSTransforms={true}
-        onLayoutChange={() => updateCardHeights()}
-      >
+          className="layout"
+          layouts={getLayouts()}
+          breakpoints={breakpoints}
+          cols={cols}
+          rowHeight={50}
+          margin={[20, 20]}
+          isDraggable={false}
+          isResizable={false}
+          useCSSTransforms={true}
+          onLayoutChange={() => updateCardHeights()}
+        >
           <div key="ProfileCard" className="grid-item" ref={el => cardRefs.current.ProfileCard = el}>
             <Card title="Profile">
               <ProfileCard />
