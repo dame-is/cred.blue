@@ -7,17 +7,18 @@ const COLORS = {
   'ATProto Score': '#0056b3'
 };
 
-const formatScore = (score) => Math.round(score);
-
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
+    const root = payload[0].payload.root;
+    const percentage = ((data.size / root.size) * 100).toFixed(1);
+    
     return (
       <div className="custom-tooltip bg-white p-4 rounded shadow-lg border border-gray-200 max-w-md">
         <p className="font-semibold text-lg mb-2">{data.name}</p>
         {data.tooltipInfo && (
           <>
-            <p className="text-sm mb-1">Score: {formatScore(data.size)}</p>
+            <p className="text-sm mb-1">Percentage of {root.name}: {percentage}%</p>
             <p className="text-sm mb-2">Weight: {data.weight}%</p>
             {data.description && (
               <p className="text-sm text-gray-600 mb-2">{data.description}</p>
@@ -32,11 +33,7 @@ const CustomTooltip = ({ active, payload }) => {
 
 class CustomizedContent extends PureComponent {
   render() {
-    const { root, depth, x, y, width, height, index, name, colors, totalValue } = this.props;
-    const value = this.props.value;
-    
-    // Calculate percentage based on the total value of its parent
-    const percentage = totalValue ? ((value / totalValue) * 100).toFixed(1) : 0;
+    const { root, depth, x, y, width, height, name, colors } = this.props;
 
     return (
       <g>
@@ -62,18 +59,31 @@ class CustomizedContent extends PureComponent {
             fontSize={14}
             style={{ pointerEvents: 'none' }}
           >
-            <tspan x={x + width / 2} y={y + height / 2 - 8}>
-              {name}
-            </tspan>
-            <tspan x={x + width / 2} y={y + height / 2 + 12}>
-              {percentage}%
-            </tspan>
+            {name}
           </text>
         )}
       </g>
     );
   }
 }
+
+const ScoreLegend = ({ blueskyScore, atprotoScore, combinedScore }) => {
+  const blueskyPercent = ((blueskyScore / combinedScore) * 100).toFixed(1);
+  const atprotoPercent = ((atprotoScore / combinedScore) * 100).toFixed(1);
+
+  return (
+    <div className="flex justify-center items-center space-x-8 mt-4">
+      <div className="flex items-center">
+        <div className="w-4 h-4 mr-2" style={{ backgroundColor: COLORS['Bluesky Score'] }}></div>
+        <span className="text-sm">Bluesky Score: {blueskyPercent}%</span>
+      </div>
+      <div className="flex items-center">
+        <div className="w-4 h-4 mr-2" style={{ backgroundColor: COLORS['ATProto Score'] }}></div>
+        <span className="text-sm">ATProto Score: {atprotoPercent}%</span>
+      </div>
+    </div>
+  );
+};
 
 const getScoreDescriptions = (category) => {
   const descriptions = {
@@ -109,7 +119,8 @@ const ScoreBreakdownCard = () => {
           weight: category.weight * 100,
           tooltipInfo: true,
           description: getScoreDescriptions(name.replace(/([A-Z])/g, ' $1').trim()),
-          details: {...category.details}
+          details: {...category.details},
+          root: { name: 'Bluesky Score', size: blueskyScore }
         }))
       },
       {
@@ -122,7 +133,8 @@ const ScoreBreakdownCard = () => {
           weight: category.weight * 100,
           tooltipInfo: true,
           description: getScoreDescriptions(name.replace(/([A-Z])/g, ' $1').trim()),
-          details: {...category.details}
+          details: {...category.details},
+          root: { name: 'ATProto Score', size: atprotoScore }
         }))
       }
     ];
@@ -131,7 +143,7 @@ const ScoreBreakdownCard = () => {
 
   return (
     <div className="w-full h-full min-h-[400px] p-4 bg-white rounded-lg shadow">
-      <div className="score-breakdown-card" style={{ width: '100%', height: 400 }}>
+      <div className="score-breakdown-card" style={{ width: '100%', height: 350 }}>
         <ResponsiveContainer>
           <Treemap
             data={buildTreemapData()}
@@ -150,7 +162,6 @@ const ScoreBreakdownCard = () => {
                 name={name}
                 value={value}
                 colors={COLORS}
-                totalValue={combinedScore}
               />
             )}
           >
@@ -158,7 +169,14 @@ const ScoreBreakdownCard = () => {
           </Treemap>
         </ResponsiveContainer>
       </div>
-      <div className="mt-4 text-sm text-gray-500 text-center">
+      
+      <ScoreLegend 
+        blueskyScore={blueskyScore}
+        atprotoScore={atprotoScore}
+        combinedScore={combinedScore}
+      />
+      
+      <div className="text-sm text-gray-500 text-center mt-4">
         Hover over sections to see detailed breakdowns
       </div>
     </div>
