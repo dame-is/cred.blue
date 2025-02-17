@@ -64,4 +64,5 @@
     padding: 1rem 2rem;
     text-align: center;
     border-top: 5px solid var(--card-border);
+    border-bottom: none;
   }

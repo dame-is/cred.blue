@@ -13,6 +13,7 @@ import PostTypeCard from "./components/PostTypeCard";
 import AltTextCard from "./components/AltTextCard";
 import RawDataCard from "./components/RawDataCard";
 import ActivityCard from "./components/ActivityCard";
+import ScoreBreakdownCard from "./components/ScoreBreakdownCard";
 
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
@@ -46,7 +47,8 @@ const UserProfile = () => {
       { i: "PostTypeCard", x: 0, y: 6, w: 1, h: cardHeights.PostTypeCard || 6, static: true },
       { i: "AltTextCard", x: 1, y: 6, w: 1, h: cardHeights.AltTextCard || 6, static: true },
       { i: "ActivityCard", x: 0, y: 12, w: 1, h: cardHeights.ActivityCard || 8, static: true },
-      { i: "RawDataCard", x: 1, y: 12, w: 1, h: cardHeights.RawDataCard || 8, static: true },
+      { i: "ScoreBreakdownCard", x: 1, y: 12, w: 1, h: cardHeights.ScoreBreakdownCard || 8, static: true },
+      { i: "RawDataCard", x: 0, y: 20, w: 2, h: cardHeights.RawDataCard || 8, static: true },
     ],
     xs: [
       { i: "ProfileCard", x: 0, y: 0, w: 1, h: cardHeights.ProfileCard || 6, static: true },
@@ -54,7 +56,8 @@ const UserProfile = () => {
       { i: "PostTypeCard", x: 0, y: 12, w: 1, h: cardHeights.PostTypeCard || 6, static: true },
       { i: "AltTextCard", x: 0, y: 18, w: 1, h: cardHeights.AltTextCard || 6, static: true },
       { i: "ActivityCard", x: 0, y: 24, w: 1, h: cardHeights.ActivityCard || 8, static: true },
-      { i: "RawDataCard", x: 0, y: 32, w: 1, h: cardHeights.RawDataCard || 8, static: true },
+      { i: "ScoreBreakdownCard", x: 0, y: 32, w: 1, h: cardHeights.ScoreBreakdownCard || 8, static: true },
+      { i: "RawDataCard", x: 0, y: 40, w: 1, h: cardHeights.RawDataCard || 8, static: true },
     ]
   });
 
@@ -208,17 +211,17 @@ const UserProfile = () => {
         </div>
 
         <ResponsiveGridLayout
-          className="layout"
-          layouts={getLayouts()}
-          breakpoints={breakpoints}
-          cols={cols}
-          rowHeight={50}
-          margin={[20, 20]}
-          isDraggable={false}
-          isResizable={false}
-          useCSSTransforms={true}
-          onLayoutChange={() => updateCardHeights()}
-        >
+        className="layout"
+        layouts={getLayouts()}
+        breakpoints={breakpoints}
+        cols={cols}
+        rowHeight={50}
+        margin={[20, 20]}
+        isDraggable={false}
+        isResizable={false}
+        useCSSTransforms={true}
+        onLayoutChange={() => updateCardHeights()}
+      >
           <div key="ProfileCard" className="grid-item" ref={el => cardRefs.current.ProfileCard = el}>
             <Card title="Profile">
               <ProfileCard />
@@ -242,6 +245,11 @@ const UserProfile = () => {
           <div key="ActivityCard" className="grid-item" ref={el => cardRefs.current.ActivityCard = el}>
             <Card title="Activity Overview">
               <ActivityCard />
+            </Card>
+          </div>
+          <div key="ScoreBreakdownCard" className="grid-item" ref={el => cardRefs.current.ScoreBreakdownCard = el}>
+            <Card title="Score Breakdown">
+              <ScoreBreakdownCard />
             </Card>
           </div>
           <div key="RawDataCard" className="grid-item" ref={el => cardRefs.current.RawDataCard = el}>
