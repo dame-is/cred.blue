@@ -48,8 +48,8 @@ class CustomizedContent extends PureComponent {
           style={{
             fill: depth < 2 ? colors[name] || '#ffffff20' : '#ffffff20',
             stroke: '#fff',
-            strokeWidth: 1,
-            strokeOpacity: 0.5,
+            strokeWidth: 3,
+            strokeOpacity: 1,
             cursor: 'pointer',
           }}
         />
@@ -131,7 +131,7 @@ const ScoreBreakdownCard = () => {
 
   return (
     <div className="w-full h-full min-h-[400px] p-4 bg-white rounded-lg shadow">
-      <div className="rounded-lg overflow-hidden" style={{ width: '100%', height: 400 }}>
+      <div className="score-breakdown-card" style={{ width: '100%', height: 400 }}>
         <ResponsiveContainer>
           <Treemap
             data={buildTreemapData()}

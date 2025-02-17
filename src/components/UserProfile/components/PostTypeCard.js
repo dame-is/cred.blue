@@ -30,7 +30,7 @@ const PostTypeCard = () => {
   ];
 
   return (
-    <div style={{ marginTop: 10, width: '100%', height: 300 }}>
+    <div className="post-type-card" style={{ marginTop: 10, width: '100%', height: 300 }}>
       <ResponsiveContainer>
         <BarChart
           data={data}

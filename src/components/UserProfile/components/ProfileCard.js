@@ -33,7 +33,7 @@ const ProfileCard = () => {
   };
 
   return (
-    <>
+    <div className="profile-card">
       <p>
         <strong>DID:</strong> {accountData.did}
       </p>
@@ -82,7 +82,7 @@ const ProfileCard = () => {
         <strong>Profile Last Edited:</strong>{" "}
         {formatEditedDate(accountData.profileEditedDate)}
       </p>
-    </>
+    </div>
   );
 };
 

@@ -215,3 +215,7 @@
 .recharts-surface {
   border-radius: 13px;
 }
+
+tspan {
+  font-family: articulat-cf;
+}
