@@ -473,7 +473,7 @@ function calculatePostingStyle(stats) {
 }
 
 // 1. First, add this new function to calculate engagement rate
-function calculateEngagementMetrics(engagementsReceived = {}, postsCount = 0, followersCount = 0) {
+function calculateEngagementMetrics(engagementsReceived = {}, onlyPosts = 0, followersCount = 0) {
   // Ensure we have valid numbers, defaulting to 0 if undefined
   const totalEngagements = (
     (engagementsReceived?.likesReceived || 0) +
@@ -482,7 +482,7 @@ function calculateEngagementMetrics(engagementsReceived = {}, postsCount = 0, fo
     (engagementsReceived?.repliesReceived || 0)
   );
 
-  const safePostsCount = Number(postsCount) || 0;
+  const safePostsCount = Number(onlyPosts) || 0;
   const safeFollowersCount = Number(followersCount) || 0;
 
   return {

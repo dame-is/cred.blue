@@ -307,3 +307,22 @@
 .auth-button.login-button {
   padding: 7px 14px;
 }
+
+.navbar-logo {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.beta-badge {
+  align-content: center;
+  background: gray;
+  border-radius: 4px;
+  margin: 4px;
+  padding: 3px 5px;
+  color: white;
+  text-transform: uppercase;
+  font-size: 0.6em;
+  font-weight: 600;
+}

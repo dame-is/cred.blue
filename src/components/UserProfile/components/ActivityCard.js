@@ -60,7 +60,7 @@ const ActivityCard = () => {
   };
 
   return (
-    <div className="w-full space-y-6">
+    <div className="activity-card">
       {/* Area Chart */}
       <div style={{ width: '100%', height: '300px' }}>
         <ResponsiveContainer>

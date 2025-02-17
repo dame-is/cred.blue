@@ -5,6 +5,7 @@
     display: flex;
     align-content: center;
     justify-content: center;
+    gap: 20px;
   }
 
   .alt-text-card h2 {

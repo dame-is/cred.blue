@@ -26,7 +26,7 @@ const UserProfile = () => {
   const { username } = useParams();
   const [accountData30Days, setAccountData30Days] = useState(null);
   const [accountData90Days, setAccountData90Days] = useState(null);
-  const [selectedPeriod, setSelectedPeriod] = useState('30');
+  const [selectedPeriod, setSelectedPeriod] = useState('90');
   const [circleCount, setCircleCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -145,7 +145,7 @@ const UserProfile = () => {
           <div className="user-profile-header-main">
             <CircularLogo 
               did={selectedAccountData.did}
-              size={230}
+              size={210}
               textColor="#004f84"
             />
             <div className="user-profile-name">
@@ -198,7 +198,7 @@ const UserProfile = () => {
               type="button"
               onClick={() => window.open(
                 `https://bsky.app/intent/compose?text=${encodeURIComponent(
-                  `My alt text rating score is \n\n posts analyzed,contain images,\nhave alt text...\n\nGet your Bluesky alt text rating here: dame.is/ratingalttext`
+                  `My @cred.blue score is ${selectedAccountData.combinedScore}/1000, and my account is ${Math.floor(selectedAccountData.ageInDays)} days old\n\nMy Bluesky Score is ${selectedAccountData.blueskyScore}, my Atproto Score is ${selectedAccountData.atprotoScore}, and I'm ${selectedAccountData.activityAll.activityStatus} on the network overall\n\nMy social status is classified as a "${selectedAccountData.socialStatus}" with a posting style of "{selectedAccountData.postingStyle}"\n\nDiscover your @cred.blue score here: cred.blue`
                 )}`, '_blank'
               )}
             >
