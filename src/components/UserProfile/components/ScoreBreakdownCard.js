@@ -10,15 +10,22 @@ const COLORS = {
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
-    const parentScore = data.parent?.size || 0;
-    const percentage = parentScore > 0 ? ((data.size / parentScore) * 100).toFixed(1) : 0;
+    
+    // Calculate percentage of parent category
+    let percentage;
+    if (data.parent) {
+      percentage = ((data.size / data.parent.size) * 100).toFixed(1);
+    }
     
     return (
       <div className="custom-tooltip bg-white p-4 rounded shadow-lg border border-gray-200 max-w-md">
         <p className="font-semibold text-lg mb-2">{data.name}</p>
         {data.tooltipInfo && (
           <>
-            <p className="text-sm mb-1">Percentage: {percentage}%</p>
+            <p className="text-sm mb-1">Score: {data.size.toFixed(1)}</p>
+            {percentage && (
+              <p className="text-sm mb-1">Percentage of {data.parent.name}: {percentage}%</p>
+            )}
             {data.description && (
               <p className="text-sm text-gray-600 mb-2">{data.description}</p>
             )}
@@ -49,7 +56,6 @@ class CustomizedContent extends PureComponent {
             cursor: 'pointer',
           }}
         />
-        {/* Removed text overlay */}
       </g>
     );
   }
@@ -75,13 +81,13 @@ const ScoreLegend = ({ blueskyScore, atprotoScore, combinedScore }) => {
 
 const getScoreDescriptions = (category) => {
   const descriptions = {
-    'Profile Quality': 'Profile completeness, alt text usage, and custom domain (25% of Bluesky score)',
-    'Community Engagement': 'Social graph metrics, engagement rates, and reply activity (35% of Bluesky score)',
-    'Content & Activity': 'Posts, collections, and content quality including labels (25% of Bluesky score)',
-    'Recognition & Status': 'Team membership, contributor status, and social standing (15% of Bluesky score)',
-    'Decentralization': 'PDS choice, rotation keys, DID type, and domain customization (45% of Atproto score)',
-    'Protocol Activity': 'Non-Bluesky collections and general protocol usage (35% of Atproto score)',
-    'Account Maturity': 'Account age and ecosystem contributions (20% of Atproto score)'
+    'Profile Quality': 'Profile completeness, alt text usage, and custom domain',
+    'Community Engagement': 'Social graph metrics, engagement rates, and reply activity',
+    'Content & Activity': 'Posts, collections, and content quality including labels',
+    'Recognition & Status': 'Team membership, contributor status, and social standing',
+    'Decentralization': 'PDS choice, rotation keys, DID type, and domain customization',
+    'Protocol Activity': 'Non-Bluesky collections and general protocol usage',
+    'Account Maturity': 'Account age and ecosystem contributions'
   };
   return descriptions[category] || '';
 };
@@ -96,36 +102,36 @@ const ScoreBreakdownCard = () => {
   const { blueskyScore, atprotoScore, combinedScore, breakdown } = accountData;
 
   const buildTreemapData = () => {
+    const buildCategoryChildren = (categories, parentScore) => {
+      return Object.entries(categories).map(([name, category]) => {
+        // Get the actual score value from the category
+        const score = category.score || 0;
+        
+        return {
+          name: name.replace(/([A-Z])/g, ' $1').trim(),
+          size: score,
+          tooltipInfo: true,
+          description: getScoreDescriptions(name.replace(/([A-Z])/g, ' $1').trim()),
+          parent: { name: parentScore.name, size: parentScore.size }
+        };
+      });
+    };
+
     const data = [
       {
         name: 'Bluesky Score',
-        colors: COLORS,
         size: blueskyScore,
-        children: Object.entries(breakdown.blueskyCategories).map(([name, category]) => ({
-          name: name.replace(/([A-Z])/g, ' $1').trim(),
-          size: category.score,
-          weight: category.weight * 100,
-          tooltipInfo: true,
-          description: getScoreDescriptions(name.replace(/([A-Z])/g, ' $1').trim()),
-          details: {...category.details},
-          parent: { name: 'Bluesky Score', size: blueskyScore }
-        }))
+        colors: COLORS,
+        children: buildCategoryChildren(breakdown.blueskyCategories, { name: 'Bluesky Score', size: blueskyScore })
       },
       {
         name: 'ATProto Score',
-        colors: COLORS,
         size: atprotoScore,
-        children: Object.entries(breakdown.atprotoCategories).map(([name, category]) => ({
-          name: name.replace(/([A-Z])/g, ' $1').trim(),
-          size: category.score,
-          weight: category.weight * 100,
-          tooltipInfo: true,
-          description: getScoreDescriptions(name.replace(/([A-Z])/g, ' $1').trim()),
-          details: {...category.details},
-          parent: { name: 'ATProto Score', size: atprotoScore }
-        }))
+        colors: COLORS,
+        children: buildCategoryChildren(breakdown.atprotoCategories, { name: 'ATProto Score', size: atprotoScore })
       }
     ];
+
     return data;
   };
 
