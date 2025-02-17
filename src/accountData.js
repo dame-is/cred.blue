@@ -812,7 +812,7 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
     
       // Build the account data object for this period.
       let periodData = {
-        // Basic profile info (unchanged)
+        // Keep all the basic profile info
         profile: {
           ...profile,
           did: profile.did || did,
@@ -820,8 +820,35 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
         displayName: profile.displayName,
         handle: profile.handle,
         did: profile.did || did,
+        profileEditedDate: profile.indexedAt,
+        profileCompletion: calculateProfileCompletion(profile),
         
-        // New organized structure for scoring categories
+        // Maintain the activityAll structure for backward compatibility
+        activityAll: {
+          activityStatus,
+          bskyActivityStatus,
+          atprotoActivityStatus,
+          totalCollections: roundToTwo(totalCollections),
+          totalBskyCollections: roundToTwo(totalBskyCollections),
+          totalNonBskyCollections: roundToTwo(totalNonBskyCollections),
+          totalRecords: roundToTwo(totalRecords),
+          totalRecordsPerDay: roundToTwo(totalRecordsPerDay),
+          totalBskyRecords: roundToTwo(totalBskyRecords),
+          totalBskyRecordsPerDay: roundToTwo(totalBskyRecordsPerDay),
+          totalBskyRecordsPercentage: totalRecords ? roundToTwo(totalBskyRecords / totalRecords) : 0,
+          totalNonBskyRecords: roundToTwo(totalNonBskyRecords),
+          totalNonBskyRecordsPerDay: roundToTwo(totalNonBskyRecords / days),
+          totalNonBskyRecordsPercentage: totalRecords ? roundToTwo(totalNonBskyRecords / totalRecords) : 0,
+          plcOperations: roundToTwo(plcOperations),
+          ...collectionStats,
+          "app.bsky.feed.post": completePostStats,
+          blobsCount: roundToTwo(blobsCountAll),
+          blobsPerDay: ageInDays ? roundToTwo(blobsCountAll / ageInDays) : 0,
+          blobsPerPost: postsCount ? roundToTwo(blobsCountAll / postsCount) : 0,
+          blobsPerImagePost: completePostStats.postsWithImages ? roundToTwo(blobsCountAll / completePostStats.postsWithImages) : 0,
+        },
+      
+        // Add new categorical structure
         blueskyCategories: {
           profileQuality: {
             profileCompleteness: {
@@ -832,9 +859,8 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
             },
             altTextConsistency: completePostStats.altTextPercentage || 0,
             customDomain: !profile.handle.includes("bsky.social"),
-            score: 0, // Will be calculated by backend
+            score: 0,
           },
-          
           communityEngagement: {
             socialGraph: {
               followersCount: profile.followersCount,
@@ -845,9 +871,8 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
               ...engagementMetrics,
               replyRate: completePostStats.replyOtherPercentage || 0
             },
-            score: 0, // Will be calculated by backend
+            score: 0,
           },
-          
           contentActivity: {
             posts: {
               totalBskyRecords: totalBskyRecords,
@@ -858,9 +883,8 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
               labels: profile.labels || [],
               postStats: completePostStats
             },
-            score: 0, // Will be calculated by backend
+            score: 0,
           },
-          
           recognitionStatus: {
             accountAge: {
               ageInDays: ageInDays,
@@ -871,7 +895,7 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
               socialStatus: socialStatus,
               postingStyle: postingStyle
             },
-            score: 0, // Will be calculated by backend
+            score: 0,
           }
         },
         
@@ -888,18 +912,16 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
               rotationKeys: rotationKeysRounded,
               customDomain: !profile.handle.includes("bsky.social")
             },
-            score: 0, // Will be calculated by backend
+            score: 0,
           },
-          
           protocolActivity: {
             collections: {
               totalNonBskyCollections,
               totalNonBskyRecords,
               recordsPerDay: totalNonBskyRecordsPerDay
             },
-            score: 0, // Will be calculated by backend
+            score: 0,
           },
-          
           accountMaturity: {
             age: {
               ageInDays,
@@ -907,17 +929,24 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
               createdAt: profile.createdAt
             },
             plcOperations: plcOperations,
-            score: 0, // Will be calculated by backend
+            score: 0,
           }
         },
-        
-        // Keep existing metadata
-        scoreGeneratedAt: new Date().toISOString(),
-        combinedScore: 0, // Will be calculated by backend
-        blueskyScore: 0, // Will be calculated by backend
-        atprotoScore: 0, // Will be calculated by backend
-        
-        // Additional context (unchanged)
+      
+        // Keep other necessary metadata fields
+        serviceEndpoint,
+        pdsType: serviceEndpoint.includes("bsky.network") ? "Bluesky" : "Third-party",
+        createdAt: profile.createdAt,
+        ageInDays: roundToTwo(ageInDays),
+        agePercentage: roundToTwo(agePercentage),
+        followersCount: roundToTwo(profile.followersCount),
+        followsCount: roundToTwo(profile.followsCount),
+        postsCount: roundToTwo(postsCount),
+        rotationKeys: rotationKeysRounded,
+        era: calculateEra(profile.createdAt),
+        postingStyle,
+        socialStatus,
+        engagementMetrics,
         weeklyActivity,
         analysis: {
           narrative: {
