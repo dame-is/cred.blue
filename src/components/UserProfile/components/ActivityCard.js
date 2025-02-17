@@ -2,52 +2,20 @@ import React, { useContext, useMemo } from "react";
 import { AccountDataContext } from "../UserProfile";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-const toPercent = (decimal, fixed = 0) => `${(decimal * 100).toFixed(fixed)}%`;
-
-const getPercent = (value, total) => {
-  const ratio = total > 0 ? value / total : 0;
-  return toPercent(ratio, 2);
-};
-
-const renderTooltipContent = (o) => {
-  const { payload, label } = o;
-  if (!payload || !payload.length) return null;
-  
-  const total = payload.reduce((result, entry) => result + entry.value, 0);
-
-  return (
-    <div className="bg-white p-4 border rounded shadow-lg">
-      <p className="font-bold">{`${label} (Total: ${total})`}</p>
-      <ul className="list-none p-0">
-        {payload.map((entry, index) => (
-          <li key={`item-${index}`} className="text-sm" style={{ color: entry.color }}>
-            {`${entry.name}: ${entry.value} (${getPercent(entry.value, total)})`}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-};
-
 const ActivityCard = () => {
   const accountData = useContext(AccountDataContext);
 
-  // Generate sample weekly data if weeklyActivity is not available
   const weeklyData = useMemo(() => {
-    if (!accountData) return [];
+    if (!accountData?.weeklyActivity) return [];
     
-    const numberOfWeeks = accountData.ageInDays >= 90 ? 13 : 5;
-    const bskyRecordsPerWeek = accountData.activityAll.totalBskyRecords / numberOfWeeks;
-    const nonBskyRecordsPerWeek = accountData.activityAll.totalNonBskyRecords / numberOfWeeks;
-    
-    return Array.from({ length: numberOfWeeks }, (_, i) => ({
-      week: `Week ${i + 1}`,
-      bskyRecords: Math.round(bskyRecordsPerWeek),
-      nonBskyRecords: Math.round(nonBskyRecordsPerWeek)
+    return accountData.weeklyActivity.map((week, index) => ({
+      name: `Week ${index + 1}`,
+      bskyRecords: week.bskyRecords,
+      nonBskyRecords: week.nonBskyRecords,
+      total: week.bskyRecords + week.nonBskyRecords
     }));
   }, [accountData]);
 
-  // Calculate per day statistics, safely handling null values
   const perDayStats = useMemo(() => {
     if (!accountData) {
       return {
@@ -72,6 +40,24 @@ const ActivityCard = () => {
     return <div>Loading activity data...</div>;
   }
 
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (!active || !payload) return null;
+
+    return (
+      <div className="bg-white p-3 border rounded shadow-lg">
+        <p className="font-semibold">{label}</p>
+        {payload.map((entry, index) => (
+          <p key={index} style={{ color: entry.color }}>
+            {entry.name}: {entry.value}
+          </p>
+        ))}
+        <p className="font-semibold mt-1">
+          Total: {payload[0].payload.total}
+        </p>
+      </div>
+    );
+  };
+
   return (
     <div className="w-full space-y-6">
       {/* Area Chart */}
@@ -87,23 +73,23 @@ const ActivityCard = () => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="week" />
+            <XAxis dataKey="name" />
             <YAxis />
-            <Tooltip content={renderTooltipContent} />
-            <Area 
-              type="monotone" 
-              dataKey="bskyRecords" 
-              stackId="1" 
-              stroke="#8884d8" 
-              fill="#8884d8" 
+            <Tooltip content={<CustomTooltip />} />
+            <Area
+              type="monotone"
+              dataKey="bskyRecords"
+              stackId="1"
+              stroke="#8884d8"
+              fill="#8884d8"
               name="Bluesky Records"
             />
-            <Area 
-              type="monotone" 
-              dataKey="nonBskyRecords" 
-              stackId="1" 
-              stroke="#82ca9d" 
-              fill="#82ca9d" 
+            <Area
+              type="monotone"
+              dataKey="nonBskyRecords"
+              stackId="1"
+              stroke="#82ca9d"
+              fill="#82ca9d"
               name="Non-Bluesky Records"
             />
           </AreaChart>

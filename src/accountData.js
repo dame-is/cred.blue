@@ -1095,56 +1095,46 @@ async function calculateRecordsAggregate(collectionNames, periodDays, cutoffTime
   let totalNonBskyRecords = 0;
   const collectionStats = {};
   
-  // Initialize weekly buckets
-  const weeklyActivity = initializeWeeklyBuckets(periodDays);
+  // Initialize weekly data structure
+  const weeklyData = Array.from({ length: Math.ceil(periodDays / 7) }, (_, index) => ({
+    weekNumber: index,
+    bskyRecords: 0,
+    nonBskyRecords: 0
+  }));
+
+  const getWeekNumber = (date) => {
+    const recordDate = new Date(date);
+    const cutoff = new Date(cutoffTime);
+    const diffTime = Math.abs(recordDate - cutoff);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return Math.floor(diffDays / 7);
+  };
 
   for (const col of collectionNames) {
-    // Fetch records for the specified collection with cutoffTime
     const recs = await fetchRecordsForCollection(col, () => {}, 50, cutoffTime);
     const count = recs.length;
     const perDay = periodDays ? count / periodDays : 0;
     
     // Process each record for weekly stats
-    recs.forEach(record => {
-      let createdAt;
-      if (record.value && record.value.createdAt) {
-        createdAt = record.value.createdAt;
-      } else {
-        createdAt = findFirstCreatedAt(record);
-      }
-      
+    for (const record of recs) {
+      const createdAt = record.value?.createdAt || findFirstCreatedAt(record);
       if (createdAt) {
         const weekNum = getWeekNumber(createdAt);
-        if (weekNum >= 0 && weekNum < weeklyActivity.length) {
-          // Increment appropriate counters
+        if (weekNum >= 0 && weekNum < weeklyData.length) {
           if (col.startsWith("app.bsky")) {
-            weeklyActivity[weekNum].totalBskyRecords++;
-            
-            // Track specific record types
-            if (col === "app.bsky.feed.post") {
-              if (record.value.reply) {
-                weeklyActivity[weekNum].records.replies++;
-              } else {
-                weeklyActivity[weekNum].records.posts++;
-              }
-            } else if (col === "app.bsky.feed.repost") {
-              weeklyActivity[weekNum].records.reposts++;
-            } else if (col === "app.bsky.feed.like") {
-              weeklyActivity[weekNum].records.likes++;
-            } else if (col === "app.bsky.graph.follow") {
-              weeklyActivity[weekNum].records.follows++;
-            }
+            weeklyData[weekNum].bskyRecords++;
           } else {
-            weeklyActivity[weekNum].totalNonBskyRecords++;
+            weeklyData[weekNum].nonBskyRecords++;
           }
         }
       }
-    });
+    }
 
     collectionStats[col] = {
       count: roundToTwo(count),
       perDay: roundToTwo(perDay),
     };
+    
     totalRecords += count;
     if (col.startsWith("app.bsky")) {
       totalBskyRecords += count;
@@ -1153,12 +1143,12 @@ async function calculateRecordsAggregate(collectionNames, periodDays, cutoffTime
     }
   }
 
-  return { 
-    totalRecords, 
-    totalBskyRecords, 
-    totalNonBskyRecords, 
+  return {
+    totalRecords,
+    totalBskyRecords,
+    totalNonBskyRecords,
     collectionStats,
-    weeklyActivity: weeklyActivity
+    weeklyActivity: weeklyData
   };
 }
 
