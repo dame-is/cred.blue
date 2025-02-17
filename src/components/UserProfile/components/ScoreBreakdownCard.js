@@ -65,12 +65,6 @@ class CustomizedContent extends PureComponent {
               y={y + height / 2}
               textAnchor="middle"
               dominantBaseline="middle"
-              style={{
-                fill: '#000',
-                fontSize: 12,
-                fontWeight: 'normal',
-                strokeWidth: 0,
-              }}
             >
               {name}
             </text>

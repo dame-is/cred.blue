@@ -11,7 +11,6 @@ import ProfileCard from "./components/ProfileCard";
 import NarrativeCard from "./components/NarrativeCard";
 import PostTypeCard from "./components/PostTypeCard";
 import AltTextCard from "./components/AltTextCard";
-import RawDataCard from "./components/RawDataCard";
 import ActivityCard from "./components/ActivityCard";
 import ScoreBreakdownCard from "./components/ScoreBreakdownCard";
 
@@ -39,24 +38,25 @@ const UserProfile = () => {
 
   const getLayouts = () => ({
     lg: [
-      { i: "ProfileCard", x: 0, y: 0, w: 1, h: cardHeights.ProfileCard || 6, static: true },
-      { i: "NarrativeCard", x: 1, y: 0, w: 1, h: cardHeights.NarrativeCard || 6, static: true },
-      { i: "PostTypeCard", x: 0, y: 6, w: 1, h: cardHeights.PostTypeCard || 6, static: true },
-      { i: "AltTextCard", x: 1, y: 6, w: 1, h: cardHeights.AltTextCard || 6, static: true },
-      { i: "ActivityCard", x: 0, y: 12, w: 1, h: cardHeights.ActivityCard || 8, static: true },
-      { i: "ScoreBreakdownCard", x: 1, y: 12, w: 1, h: cardHeights.ScoreBreakdownCard || 8, static: true },
-      { i: "RawDataCard", x: 0, y: 20, w: 2, h: cardHeights.RawDataCard || 8, static: true },
+      { i: "NarrativeCard", x: 0, y: 0, w: 1, h: cardHeights.NarrativeCard || 6 },
+      { i: "ScoreBreakdownCard", x: 1, y: 0, w: 1, h: cardHeights.ScoreBreakdownCard || 8 },
+      { i: "ProfileCard", x: 0, y: 6, w: 1, h: cardHeights.ProfileCard || 6 },
+      { i: "PostTypeCard", x: 1, y: 6, w: 1, h: cardHeights.PostTypeCard || 6 },
+      { i: "AltTextCard", x: 0, y: 12, w: 1, h: cardHeights.AltTextCard || 6 },
+      { i: "ActivityCard", x: 1, y: 12, w: 1, h: cardHeights.ActivityCard || 8 },
     ],
     xs: [
-      { i: "ProfileCard", x: 0, y: 0, w: 1, h: cardHeights.ProfileCard || 6, static: true },
-      { i: "NarrativeCard", x: 0, y: 6, w: 1, h: cardHeights.NarrativeCard || 6, static: true },
-      { i: "PostTypeCard", x: 0, y: 12, w: 1, h: cardHeights.PostTypeCard || 6, static: true },
-      { i: "AltTextCard", x: 0, y: 18, w: 1, h: cardHeights.AltTextCard || 6, static: true },
-      { i: "ActivityCard", x: 0, y: 24, w: 1, h: cardHeights.ActivityCard || 8, static: true },
-      { i: "ScoreBreakdownCard", x: 0, y: 32, w: 1, h: cardHeights.ScoreBreakdownCard || 8, static: true },
-      { i: "RawDataCard", x: 0, y: 40, w: 1, h: cardHeights.RawDataCard || 8, static: true },
+      { i: "NarrativeCard", x: 0, y: 0, w: 1, h: cardHeights.NarrativeCard || 6 },
+      { i: "ScoreBreakdownCard", x: 0, y: 6, w: 1, h: cardHeights.ScoreBreakdownCard || 8 },
+      { i: "ProfileCard", x: 0, y: 14, w: 1, h: cardHeights.ProfileCard || 6 },
+      { i: "PostTypeCard", x: 0, y: 20, w: 1, h: cardHeights.PostTypeCard || 6 },
+      { i: "AltTextCard", x: 0, y: 26, w: 1, h: cardHeights.AltTextCard || 6 },
+      { i: "ActivityCard", x: 0, y: 32, w: 1, h: cardHeights.ActivityCard || 8 },
     ]
   });
+
+    // Add drag handle style
+  const dragHandleClass = "drag-handle";
 
   const updateCardHeights = () => {
     const rowHeight = 50;
@@ -290,39 +290,40 @@ const UserProfile = () => {
           cols={cols}
           rowHeight={50}
           margin={[20, 20]}
-          isDraggable={false}
+          isDraggable={true}
           isResizable={false}
           useCSSTransforms={true}
           onLayoutChange={() => updateCardHeights()}
+          draggableHandle={`.${dragHandleClass}`}
         >
-          <div key="ProfileCard" className="grid-item" ref={el => cardRefs.current.ProfileCard = el}>
-            <Card title="Profile">
-              <ProfileCard />
-            </Card>
-          </div>
           <div key="NarrativeCard" className="grid-item" ref={el => cardRefs.current.NarrativeCard = el}>
-            <Card title="Summary">
+            <Card title="Summary" dragHandleClass={dragHandleClass}>
               <NarrativeCard />
             </Card>
           </div>
+          <div key="ScoreBreakdownCard" className="grid-item" ref={el => cardRefs.current.ScoreBreakdownCard = el}>
+            <Card title="Score Breakdown" dragHandleClass={dragHandleClass}>
+              <ScoreBreakdownCard />
+            </Card>
+          </div>
+          <div key="ProfileCard" className="grid-item" ref={el => cardRefs.current.ProfileCard = el}>
+            <Card title="Profile" dragHandleClass={dragHandleClass}>
+              <ProfileCard />
+            </Card>
+          </div>
           <div key="PostTypeCard" className="grid-item" ref={el => cardRefs.current.PostTypeCard = el}>
-            <Card title="Post Type Breakdown">
+            <Card title="Post Type Breakdown" dragHandleClass={dragHandleClass}>
               <PostTypeCard />
             </Card>
           </div>
           <div key="AltTextCard" className="grid-item" ref={el => cardRefs.current.AltTextCard = el}>
-            <Card title="Alt Text Consistency">
+            <Card title="Alt Text Consistency" dragHandleClass={dragHandleClass}>
               <AltTextCard />
             </Card>
           </div>
           <div key="ActivityCard" className="grid-item" ref={el => cardRefs.current.ActivityCard = el}>
-            <Card title="Activity Overview">
+            <Card title="Activity Overview" dragHandleClass={dragHandleClass}>
               <ActivityCard />
-            </Card>
-          </div>
-          <div key="ScoreBreakdownCard" className="grid-item" ref={el => cardRefs.current.ScoreBreakdownCard = el}>
-            <Card title="Score Breakdown">
-              <ScoreBreakdownCard />
             </Card>
           </div>
         </ResponsiveGridLayout>
