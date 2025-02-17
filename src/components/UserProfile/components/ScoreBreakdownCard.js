@@ -2,10 +2,9 @@ import React, { useContext, PureComponent } from 'react';
 import { Treemap, ResponsiveContainer, Tooltip } from 'recharts';
 import { AccountDataContext } from "../UserProfile";
 
-// Updated color schemes
 const COLORS = {
-  bluesky: ['#66b2ff', '#85c2ff', '#a3d1ff', '#c2e0ff'],  // Base: #66b2ff with variations
-  atproto: ['#0056b3', '#0066cc', '#0077e6', '#0088ff']   // Base: #0056b3 with variations
+  bluesky: '#66b2ff',
+  atproto: '#0056b3'
 };
 
 const formatScore = (score) => Math.round(score);
@@ -53,7 +52,7 @@ class CustomizedContent extends PureComponent {
           width={width}
           height={height}
           style={{
-            fill: depth < 2 ? colors[Math.floor((index / root.children.length) * colors.length)] : '#ffffff20',
+            fill: depth < 2 ? colors : '#ffffff20',
             stroke: '#fff',
             strokeWidth: 1,
             strokeOpacity: 0.5,
@@ -107,30 +106,43 @@ const ScoreBreakdownCard = () => {
   const atprotoPercent = (atprotoScore / combinedScore * 100).toFixed(1);
 
   const buildTreemapData = () => {
+    // Log the breakdown structure to debug
+    console.log('Breakdown structure:', breakdown);
+    
     const data = [
       {
         name: 'Bluesky Score',
         colors: COLORS.bluesky,
-        children: Object.entries(breakdown.blueskyCategories).map(([name, category]) => ({
-          name: name.replace(/([A-Z])/g, ' $1').trim(),
-          size: category.score,
-          weight: category.weight * 100,
-          tooltipInfo: true,
-          description: getScoreDescriptions(name.replace(/([A-Z])/g, ' $1').trim()),
-          details: category.details
-        }))
+        children: Object.entries(breakdown.blueskyCategories).map(([name, category]) => {
+          // Log each category's details to debug
+          console.log(`${name} details:`, category.details);
+          
+          return {
+            name: name.replace(/([A-Z])/g, ' $1').trim(),
+            size: category.score,
+            weight: category.weight * 100,
+            tooltipInfo: true,
+            description: getScoreDescriptions(name.replace(/([A-Z])/g, ' $1').trim()),
+            details: {...category.details} // Create a new object to ensure proper passing
+          };
+        })
       },
       {
         name: 'ATProto Score',
         colors: COLORS.atproto,
-        children: Object.entries(breakdown.atprotoCategories).map(([name, category]) => ({
-          name: name.replace(/([A-Z])/g, ' $1').trim(),
-          size: category.score,
-          weight: category.weight * 100,
-          tooltipInfo: true,
-          description: getScoreDescriptions(name.replace(/([A-Z])/g, ' $1').trim()),
-          details: category.details
-        }))
+        children: Object.entries(breakdown.atprotoCategories).map(([name, category]) => {
+          // Log each category's details to debug
+          console.log(`${name} details:`, category.details);
+          
+          return {
+            name: name.replace(/([A-Z])/g, ' $1').trim(),
+            size: category.score,
+            weight: category.weight * 100,
+            tooltipInfo: true,
+            description: getScoreDescriptions(name.replace(/([A-Z])/g, ' $1').trim()),
+            details: {...category.details} // Create a new object to ensure proper passing
+          };
+        })
       }
     ];
     return data;
@@ -144,11 +156,11 @@ const ScoreBreakdownCard = () => {
         </div>
         <div className="flex space-x-6">
           <div>
-            <span className="font-medium" style={{ color: COLORS.bluesky[0] }}>Bluesky: </span>
+            <span className="font-medium" style={{ color: COLORS.bluesky }}>Bluesky: </span>
             <span>{formatScore(blueskyScore)} ({blueskyPercent}%)</span>
           </div>
           <div>
-            <span className="font-medium" style={{ color: COLORS.atproto[0] }}>ATProto: </span>
+            <span className="font-medium" style={{ color: COLORS.atproto }}>ATProto: </span>
             <span>{formatScore(atprotoScore)} ({atprotoPercent}%)</span>
           </div>
         </div>
