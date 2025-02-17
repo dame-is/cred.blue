@@ -11,7 +11,7 @@ const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     
-    // Calculate percentage of parent category
+    // Calculate percentage of the total parent score (Bluesky or ATProto)
     let percentage;
     if (data.parent) {
       percentage = ((data.size / data.parent.size) * 100).toFixed(1);
@@ -20,14 +20,13 @@ const CustomTooltip = ({ active, payload }) => {
     return (
       <div className="custom-tooltip bg-white p-4 rounded shadow-lg border border-gray-200 max-w-md">
         <p className="font-semibold text-lg mb-2">{data.name}</p>
-        {data.tooltipInfo && (
+        {data.tooltipInfo && data.parent && (
           <>
-            <p className="text-sm mb-1">Score: {data.size.toFixed(1)}</p>
-            {percentage && (
-              <p className="text-sm mb-1">Percentage of {data.parent.name}: {percentage}%</p>
-            )}
+            <p className="text-sm text-gray-700 mb-2">
+              {percentage}% of {data.parent.name}
+            </p>
             {data.description && (
-              <p className="text-sm text-gray-600 mb-2">{data.description}</p>
+              <p className="text-sm text-gray-600">{data.description}</p>
             )}
           </>
         )}
