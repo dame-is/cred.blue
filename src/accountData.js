@@ -456,7 +456,7 @@ function calculatePostingStyle(stats) {
       return "Unengaged Text Poster";
     }
     if (imagePercentage > linkPercentage && imagePercentage > textPercentage && imagePercentage > videoPercentage) {
-      return altTextPercentage <= 0.3 ? "Unengaged Image Poster who's bad at alt text" : "Unengaged Image Poster";
+      return altTextPercentage <= 0.3 ? "Unengaged Image Poster who is inconsistent with alt text" : "Unengaged Image Poster";
     }
     if (linkPercentage > imagePercentage && linkPercentage > textPercentage && linkPercentage > videoPercentage) {
       return "Unengaged Link Poster";
@@ -472,22 +472,67 @@ function calculatePostingStyle(stats) {
   return "Unknown";
 }
 
-function calculateSocialStatus({ ageInDays, followersCount, followsCount }) {
+// 1. First, add this new function to calculate engagement rate
+function calculateEngagementMetrics(engagementsReceived, postsCount, followersCount) {
+  const totalEngagements = 
+    (engagementsReceived?.likesReceived || 0) +
+    (engagementsReceived?.repostsReceived || 0) +
+    (engagementsReceived?.quotesReceived || 0) +
+    (engagementsReceived?.repliesReceived || 0);
+
+  return {
+    totalEngagements: roundToTwo(totalEngagements),
+    engagementsPerPost: postsCount > 0 ? roundToTwo(totalEngagements / postsCount) : 0,
+    engagementRate: (postsCount > 0 && followersCount > 0) 
+      ? roundToTwo((totalEngagements / (postsCount * followersCount)) * 100)
+      : 0
+  };
+}
+
+function calculateSocialStatus({ ageInDays, followersCount, followsCount, engagementRate }) {
+  if (ageInDays < 30) return "Newcomer";
+  
   const followPercentage = followersCount > 0 ? followsCount / followersCount : 0;
-  if (ageInDays < 30) return "Newbie";
+  
+  // Define engagement thresholds for different qualities
+  const ENGAGEMENT_THRESHOLDS = {
+    high: 0.03,    // 3%
+    moderate: 0.01, // 1%
+    low: 0.005     // 0.5%
+  };
+
+  // Determine base status based on followers
+  let baseStatus = "Explorer";
   if (followPercentage < 0.5) {
-    if (followersCount >= 500 && followersCount < 10000) return "Micro Influencer";
-    if (followersCount >= 10000 && followersCount < 100000) return "Influencer";
-    if (followersCount >= 100000) return "Celebrity";
+    if (followersCount >= 100000) {
+      baseStatus = "Leader";
+    } else if (followersCount >= 10000) {
+      baseStatus = "Guide";
+    } else if (followersCount >= 500) {
+      baseStatus = "Pathfinder";
+    }
   }
-  return "Community Member";
+
+  // Add engagement qualifier if they have a notable status
+  if (baseStatus !== "Explorer" && baseStatus !== "Newcomer") {
+    if (engagementRate <= ENGAGEMENT_THRESHOLDS.low) {
+      return `Unengaging ${baseStatus}`;
+    } else if (engagementRate <= ENGAGEMENT_THRESHOLDS.moderate) {
+      return `Moderately Engaging ${baseStatus}`;
+    } else if (engagementRate >= ENGAGEMENT_THRESHOLDS.high) {
+      return `Highly Engaging ${baseStatus}`;
+    }
+  }
+
+  return baseStatus;
 }
 
 function calculateActivityStatus(rate) {
   if (rate === 0) return "inactive";
-  if (rate > 0 && rate < 1) return "barely active";
-  if (rate >= 1 && rate < 10) return "active";
-  if (rate >= 10) return "very active";
+  if (rate > 0 && rate < 10) return "barely active";
+  if (rate >= 10 && rate < 25) return "active";
+  if (rate >= 25 && rate < 100) return "very active";
+  if (rate >= 100) return "extremely active";
 }
 
 function calculateProfileCompletion(profile) {
@@ -801,12 +846,18 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
         ...completePostStats,  // Use complete stats here
         totalBskyRecordsPerDay,
       });
+
+      const engagementMetrics = calculateEngagementMetrics(
+        completePostStats.engagementsReceived,
+        postsCount,
+        profile.followersCount
+      );
     
-      // Compute social status for the period
       const socialStatus = calculateSocialStatus({
         ageInDays,
         followersCount: profile.followersCount || 0,
         followsCount: profile.followsCount || 0,
+        engagementRate: engagementMetrics.engagementRate
       });
     
       // Build analysis narrative for the period
@@ -871,6 +922,7 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
         era: calculateEra(profile.createdAt),
         postingStyle,
         socialStatus,
+        engagementMetrics,
         weeklyActivity: weeklyActivity,
         activityAll: {
           activityStatus,
@@ -1035,55 +1087,30 @@ function buildAnalysisNarrative(accountData) {
       `${domainHistoryStatement} which is ${calculateDomainRarity(profile.handle)}. ` +
       `${rotationKeyStatement}, and ${pdsHostStatement}.`;
 
-  const era = calculateEra(profile.createdAt);
-  const postingStyle = accountData.postingStyle;
-  const socialStatus = accountData.socialStatus;
-  const mediaType = "a mix of text, images, and video";
-  const followRatio = profile.followersCount > 0 ? roundToTwo(profile.followsCount / profile.followersCount) : 0;
-
-  // Third Paragraph
-  const narrative3 =
-      `${profile.displayName} first joined Bluesky during the ${era} era. ` +
-      `Their style of posting is "${postingStyle}". ` +
-      `Their posts consist of ${mediaType}. ` +
-      `They are a "${socialStatus}" as is indicated by their follower count of ${profile.followersCount} and their follower/following ratio of ${followRatio}.`;
-
-  return { narrative1, narrative2, narrative3 };
-}
-
-// Helper function to get week number from a date
-function getWeekNumber(date) {
-  const currentDate = new Date(date);
-  const startOfPeriod = new Date();
-  startOfPeriod.setDate(startOfPeriod.getDate() - 90); // Go back 90 days max
-  
-  // Calculate weeks between dates
-  const diffTime = Math.abs(currentDate - startOfPeriod);
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  return Math.floor(diffDays / 7);
-}
-
-// Helper function to initialize weekly buckets
-function initializeWeeklyBuckets(periodDays) {
-  const numberOfWeeks = Math.ceil(periodDays / 7);
-  const buckets = [];
-  
-  for (let i = 0; i < numberOfWeeks; i++) {
-    buckets.push({
-      weekNumber: i,
-      totalBskyRecords: 0,
-      totalNonBskyRecords: 0,
-      records: {
-        posts: 0,
-        replies: 0,
-        reposts: 0,
-        likes: 0,
-        follows: 0
+      const era = calculateEra(profile.createdAt);
+      const postingStyle = accountData.postingStyle;
+      const socialStatus = accountData.socialStatus;
+      const engagementMetrics = accountData.engagementMetrics;
+      
+      let engagementPhrase = "";
+      if (engagementMetrics.engagementRate > 0.03) {
+        engagementPhrase = "with exceptionally high engagement";
+      } else if (engagementMetrics.engagementRate > 0.01) {
+        engagementPhrase = "with strong engagement";
+      } else if (engagementMetrics.engagementRate > 0.005) {
+        engagementPhrase = "with moderate engagement";
+      } else {
+        engagementPhrase = "with relatively low engagement";
       }
-    });
-  }
-  
-  return buckets;
+    
+      const narrative3 =
+        `${profile.displayName} first joined Bluesky during the ${era} era. ` +
+        `Their style of posting is "${postingStyle}". ` +
+        `They are a "${socialStatus}" ${engagementPhrase}, ` +
+        `averaging ${engagementMetrics.engagementsPerPost} engagements per post ` +
+        `across their follower base of ${profile.followersCount}.`;
+    
+      return { narrative1, narrative2, narrative3 };
 }
 
 /***********************************************************************
