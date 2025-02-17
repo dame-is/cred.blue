@@ -214,7 +214,7 @@ const UserProfile = () => {
           cols={cols}
           rowHeight={50}
           margin={[20, 20]}
-          isDraggable={true}
+          isDraggable={false}
           isResizable={false}
           useCSSTransforms={true}
           onLayoutChange={() => updateCardHeights()}

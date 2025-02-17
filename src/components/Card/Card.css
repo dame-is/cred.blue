@@ -79,6 +79,7 @@
   cursor: move;
   max-width: 18px;
   text-align: center;
+  display: none;
 }
 
 /* Drag icon styling */

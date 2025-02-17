@@ -80,17 +80,17 @@ const ActivityCard = () => {
               type="monotone"
               dataKey="bskyRecords"
               stackId="1"
-              stroke="#8884d8"
-              fill="#8884d8"
-              name="Bluesky Records"
+              stroke="none"
+              fill="#66b2ff"
+              name="bsky records"
             />
             <Area
               type="monotone"
               dataKey="nonBskyRecords"
               stackId="1"
-              stroke="#82ca9d"
-              fill="#82ca9d"
-              name="Non-Bluesky Records"
+              stroke="none"
+              fill="#0056b3"
+              name="atproto records"
             />
           </AreaChart>
         </ResponsiveContainer>
@@ -99,23 +99,23 @@ const ActivityCard = () => {
       {/* Stats Display */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         <div className="bg-gray-50 p-4 rounded">
-          <h3 className="text-sm font-semibold text-gray-600">Bluesky Records/Day</h3>
+          <h3 className="text-sm font-semibold text-gray-600">bsky records per day</h3>
           <p className="text-xl font-bold text-blue-600">{perDayStats.bskyRecords}</p>
         </div>
         <div className="bg-gray-50 p-4 rounded">
-          <h3 className="text-sm font-semibold text-gray-600">Non-Bluesky/Day</h3>
+          <h3 className="text-sm font-semibold text-gray-600">atproto records per day</h3>
           <p className="text-xl font-bold text-green-600">{perDayStats.nonBskyRecords}</p>
         </div>
         <div className="bg-gray-50 p-4 rounded">
-          <h3 className="text-sm font-semibold text-gray-600">Posts/Day</h3>
+          <h3 className="text-sm font-semibold text-gray-600">posts per day</h3>
           <p className="text-xl font-bold text-indigo-600">{perDayStats.posts}</p>
         </div>
         <div className="bg-gray-50 p-4 rounded">
-          <h3 className="text-sm font-semibold text-gray-600">Replies/Day</h3>
+          <h3 className="text-sm font-semibold text-gray-600">replies per day</h3>
           <p className="text-xl font-bold text-purple-600">{perDayStats.replies}</p>
         </div>
         <div className="bg-gray-50 p-4 rounded">
-          <h3 className="text-sm font-semibold text-gray-600">Likes/Day</h3>
+          <h3 className="text-sm font-semibold text-gray-600">likes per day</h3>
           <p className="text-xl font-bold text-pink-600">{perDayStats.likes}</p>
         </div>
       </div>
