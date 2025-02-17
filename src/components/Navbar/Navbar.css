@@ -3,10 +3,10 @@
 /* Common Navbar Styles */
 .navbar {
     width: 100%;
-    background-color: #ffffff; /* White background */
+    background-color: var(--navbar-bg);
     transition: background-color 0.3s ease, border-color 0.3s ease;
-    border-bottom: 5px solid #dcdcdc;
-  }
+    border-bottom: 5px solid var(--card-border);
+}
 
   .cred {
     color: #3B9AF8;
@@ -201,6 +201,7 @@
   padding: 0.5rem;
   color: var(--text-color);
   transition: color 0.2s ease;
+  scale: 1.3;
 }
 
 .nav-icon:hover {
@@ -215,6 +216,7 @@
 /* Theme toggle button styles */
 .theme-toggle-button {
   display: inline-flex;
+  scale: 1.3;
   align-items: center;
   justify-content: center;
   padding: 0.5rem;
@@ -233,7 +235,7 @@
 .navbar-actions {
   display: flex;
   align-items: center;
-  gap: 0.2em;
+  gap: 0.3em;
 }
 
 .nav-icon:visited {
@@ -265,7 +267,7 @@
 
 
   /* Responsive Design: Links display in a row under the logo */
-  @media (max-width: 725px) {
+  @media (max-width: 750px) {
     .navbar-container {
       flex-direction: column;
       align-items: center;
