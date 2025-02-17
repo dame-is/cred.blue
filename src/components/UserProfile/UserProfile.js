@@ -36,22 +36,24 @@ const UserProfile = () => {
   const breakpoints = { lg: 850, xs: 0 };
   const cols = { lg: 2, xs: 1 };
 
+  const CARD_HEIGHT = 6;
+  
   const getLayouts = () => ({
     lg: [
-      { i: "NarrativeCard", x: 0, y: 0, w: 1, h: 8, static: false },
-      { i: "ScoreBreakdownCard", x: 1, y: 0, w: 1, h: 8, static: false },
-      { i: "ProfileCard", x: 0, y: 8, w: 1, h: 8, static: false },
-      { i: "PostTypeCard", x: 1, y: 8, w: 1, h: 8, static: false },
-      { i: "AltTextCard", x: 0, y: 16, w: 1, h: 8, static: false },
-      { i: "ActivityCard", x: 1, y: 16, w: 1, h: 8, static: false }
+      { i: "NarrativeCard", x: 0, y: 0, w: 1, h: CARD_HEIGHT, static: false },
+      { i: "ScoreBreakdownCard", x: 1, y: 0, w: 1, h: CARD_HEIGHT, static: false },
+      { i: "ProfileCard", x: 0, y: CARD_HEIGHT, w: 1, h: CARD_HEIGHT, static: false },
+      { i: "PostTypeCard", x: 1, y: CARD_HEIGHT, w: 1, h: CARD_HEIGHT, static: false },
+      { i: "AltTextCard", x: 0, y: CARD_HEIGHT * 2, w: 1, h: CARD_HEIGHT, static: false },
+      { i: "ActivityCard", x: 1, y: CARD_HEIGHT * 2, w: 1, h: CARD_HEIGHT, static: false }
     ],
     xs: [
-      { i: "NarrativeCard", x: 0, y: 0, w: 1, h: 8, static: false },
-      { i: "ScoreBreakdownCard", x: 0, y: 8, w: 1, h: 8, static: false },
-      { i: "ProfileCard", x: 0, y: 16, w: 1, h: 8, static: false },
-      { i: "PostTypeCard", x: 0, y: 24, w: 1, h: 8, static: false },
-      { i: "AltTextCard", x: 0, y: 32, w: 1, h: 8, static: false },
-      { i: "ActivityCard", x: 0, y: 40, w: 1, h: 8, static: false }
+      { i: "NarrativeCard", x: 0, y: 0, w: 1, h: CARD_HEIGHT, static: false },
+      { i: "ScoreBreakdownCard", x: 0, y: CARD_HEIGHT, w: 1, h: CARD_HEIGHT, static: false },
+      { i: "ProfileCard", x: 0, y: CARD_HEIGHT * 2, w: 1, h: CARD_HEIGHT, static: false },
+      { i: "PostTypeCard", x: 0, y: CARD_HEIGHT * 3, w: 1, h: CARD_HEIGHT, static: false },
+      { i: "AltTextCard", x: 0, y: CARD_HEIGHT * 4, w: 1, h: CARD_HEIGHT, static: false },
+      { i: "ActivityCard", x: 0, y: CARD_HEIGHT * 5, w: 1, h: CARD_HEIGHT, static: false }
     ]
   });
 
