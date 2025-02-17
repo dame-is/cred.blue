@@ -2,10 +2,8 @@ import React, { useContext, PureComponent } from 'react';
 import { Treemap, ResponsiveContainer } from 'recharts';
 import { AccountDataContext } from "../UserProfile";
 
-// Custom colors for the two main categories
 const COLORS = ['#0056b3', '#003366'];
 
-// CustomizedContent component for the treemap
 class CustomizedContent extends PureComponent {
   render() {
     const { root, depth, x, y, width, height, index, name, value } = this.props;
@@ -18,31 +16,27 @@ class CustomizedContent extends PureComponent {
           width={width}
           height={height}
           style={{
-            fill: depth < 2 ? COLORS[Math.floor((index / root.children.length) * 2)] : '#ffffff10',
+            fill: depth < 2 ? COLORS[Math.floor((index / root.children.length) * 2)] : '#ffffff20',
             stroke: '#fff',
             strokeWidth: 2 / (depth + 1e-10),
             strokeOpacity: 1 / (depth + 1e-10),
           }}
         />
-        {
-          width > 50 && height > 30 && (
-            <text
-              x={x + width / 2}
-              y={y + height / 2}
-              textAnchor="middle"
-              fill="#fff"
-              fontSize={depth === 1 ? 16 : 14}
-              className="select-none"
-            >
-              {name}
-              {depth === 2 && (
-                <tspan x={x + width / 2} y={y + height / 2 + 20}>
-                  {value}
-                </tspan>
-              )}
-            </text>
-          )
-        }
+        {depth === 1 && (
+          <text
+            x={x + width / 2}
+            y={y + height / 2}
+            textAnchor="middle"
+            fill="#fff"
+            fontSize={14}
+            style={{ pointerEvents: 'none' }}
+          >
+            {name}
+            <tspan x={x + width / 2} y={y + height / 2 + 20}>
+              {Math.round(value)}
+            </tspan>
+          </text>
+        )}
       </g>
     );
   }
@@ -55,7 +49,6 @@ const ScoreBreakdownCard = () => {
     return <div>Loading score breakdown...</div>;
   }
 
-  // Prepare the data for the treemap
   const data = [
     {
       name: 'Bluesky Score',
@@ -94,15 +87,15 @@ const ScoreBreakdownCard = () => {
           </div>
         </div>
       </div>
-      
-      <div className="h-[350px]">
-        <ResponsiveContainer width="100%" height="100%">
+      <div style={{ width: '100%', height: 350 }}>
+        <ResponsiveContainer>
           <Treemap
             data={data}
             dataKey="size"
-            aspectRatio={4 / 3}
+            aspectRatio={4/3}
             stroke="#fff"
-            content={<CustomizedContent colors={COLORS} />}
+            fill="#0056b3"
+            content={<CustomizedContent />}
           />
         </ResponsiveContainer>
       </div>

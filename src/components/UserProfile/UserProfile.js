@@ -28,7 +28,6 @@ const UserProfile = () => {
   const [accountData30Days, setAccountData30Days] = useState(null);
   const [accountData90Days, setAccountData90Days] = useState(null);
   const [selectedPeriod, setSelectedPeriod] = useState('90');
-  const [circleCount, setCircleCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showContent, setShowContent] = useState(false);
@@ -100,7 +99,6 @@ const UserProfile = () => {
     const fetchAccountData = async () => {
       try {
         const data = await loadAccountData(username, (increment) => {
-          setCircleCount((prev) => prev + increment);
         });
         if (data.error) {
           throw new Error(data.error);

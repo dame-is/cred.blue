@@ -13,7 +13,7 @@ const AltTextRatingTool = () => {
   const [analysis, setAnalysis] = useState(null);
   const [allRecords, setAllRecords] = useState([]);
   const [actorDID, setActorDID] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [setLoading] = useState(false);
   // Checkboxes state.
   const [useLast90Days, setUseLast90Days] = useState(false);
   const [excludeReplies, setExcludeReplies] = useState(false);
@@ -24,7 +24,7 @@ const AltTextRatingTool = () => {
   // For autocomplete suggestions.
   const [suggestions, setSuggestions] = useState([]);
   const [autocompleteActive, setAutocompleteActive] = useState(false);
-  const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
+  const [activeSuggestionIndex] = useState(-1);
   // New state to store a selected suggestion
   const [selectedSuggestion, setSelectedSuggestion] = useState('');
   // New state: show results div immediately after submission.
@@ -93,16 +93,6 @@ const AltTextRatingTool = () => {
       cursor = data.cursor || null;
     } while (cursor);
     return records;
-  }
-
-  // Check if a reply is directed to self.
-  function isReplyToSelf(rec, actor) {
-    return (
-      rec.value.reply &&
-      rec.value.reply.parent &&
-      rec.value.reply.parent.author &&
-      rec.value.reply.parent.author.did === actor
-    );
   }
 
   // Analyze posts based on checkboxes.

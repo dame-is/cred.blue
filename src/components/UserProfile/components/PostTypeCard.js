@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { AccountDataContext } from "../UserProfile"; // Adjust the path if needed
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const PostTypeCard = () => {
   const accountData = useContext(AccountDataContext);

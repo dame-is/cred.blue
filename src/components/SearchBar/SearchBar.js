@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback, useContext } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { ThemeContext } from '../../contexts/ThemeContext';
 import "./SearchBar.css";
@@ -10,9 +10,8 @@ const SearchBar = () => {
   const [autocompleteActive, setAutocompleteActive] = useState(false);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
   const [selectedSuggestion, setSelectedSuggestion] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const debounceTimeout = useRef(null);
 
   const debounce = (func, delay) => {
     let timer;

@@ -3,13 +3,6 @@ import React, { useContext } from "react";
 import { AccountDataContext } from "../UserProfile"; // Ensure the path is correct
 import "./RawDataCard.css"; // Optional: For styling
 
-// Helper function to format dates
-const formatDate = (dateString) => {
-  if (!dateString) return "N/A";
-  const options = { year: "numeric", month: "long", day: "numeric" };
-  return new Date(dateString).toLocaleDateString(undefined, options);
-};
-
 // Recursive component to render nested objects and arrays
 const RenderData = ({ data, indentLevel = 0 }) => {
   const indentStyle = {

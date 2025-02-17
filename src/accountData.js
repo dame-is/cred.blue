@@ -932,7 +932,7 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
 // Build the analysis narrative paragraphs.
 function buildAnalysisNarrative(accountData) {
   const { profile, activityAll, alsoKnownAs, engagementMetrics = {} } = accountData;
-  const { ageInDays, agePercentage } = calculateAge(profile.createdAt);
+  const { agePercentage } = calculateAge(profile.createdAt);
   let accountAgeStatement = "";
   if (agePercentage >= 0.97) {
       accountAgeStatement = "since the very beginning and is";

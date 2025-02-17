@@ -14,13 +14,13 @@ const CompareScores = () => {
   const [suggestions1, setSuggestions1] = useState([]);
   const [autocompleteActive1, setAutocompleteActive1] = useState(false);
   const [selectedSuggestion1, setSelectedSuggestion1] = useState("");
-  const [activeSuggestionIndex1, setActiveSuggestionIndex1] = useState(-1);
+  const [activeSuggestionIndex1] = useState(-1);
   
   // Autocomplete state for input2
   const [suggestions2, setSuggestions2] = useState([]);
   const [autocompleteActive2, setAutocompleteActive2] = useState(false);
   const [selectedSuggestion2, setSelectedSuggestion2] = useState("");
-  const [activeSuggestionIndex2, setActiveSuggestionIndex2] = useState(-1);
+  const [activeSuggestionIndex2] = useState(-1);
 
   // Other states
   const [results, setResults] = useState(null);
