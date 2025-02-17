@@ -473,7 +473,7 @@ function calculatePostingStyle(stats) {
 }
 
 // 1. First, add this new function to calculate engagement rate
-function calculateEngagementMetrics(engagementsReceived, postsCount, followersCount) {
+function calculateEngagementMetrics(engagementsReceived = {}, postsCount = 0, followersCount = 0) {
   // Ensure we have valid numbers, defaulting to 0 if undefined
   const totalEngagements = (
     (engagementsReceived?.likesReceived || 0) +
@@ -631,31 +631,6 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
     // Build targetCollections array
     const targetCollections = [...new Set(collections)];
 
-    // Aggregate record counts for all-time data
-    const { totalRecords, totalBskyRecords, totalNonBskyRecords, collectionStats } =
-      await calculateRecordsAggregate(targetCollections, ageInDays, cutoffTimeAll);
-    const totalRecordsPerDay = ageInDays ? totalRecords / ageInDays : 0;
-    const totalBskyRecordsPerDay = ageInDays ? totalBskyRecords / ageInDays : 0;
-    const totalNonBskyRecordsPerDay = ageInDays ? totalNonBskyRecords / ageInDays : 0;
-
-    // Fetch posts and reposts for all-time and merge them
-    const postsRecordsPostsAllTime = await fetchRecordsForCollection(
-      "app.bsky.feed.post",
-      () => {},
-      20,
-      cutoffTimeAll
-    );
-    const postsRecordsRepostsAllTime = await fetchRecordsForCollection(
-      "app.bsky.feed.repost",
-      () => {},
-      20,
-      cutoffTimeAll
-    );
-    const postsRecordsAllTime = postsRecordsPostsAllTime.concat(postsRecordsRepostsAllTime);
-
-    const postsCountAllTime = profile.postsCount || postsRecordsAllTime.length;
-    const postStatsAllTime = computePostStats(postsRecordsAllTime, ageInDays);
-
     // Parse audit log (or use defaults for did:web identities)
     let plcOperations;
     let totalAkas, totalBskyAkas, totalCustomAkas, rotationKeysRounded, activeAkasRounded;
@@ -704,71 +679,6 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
       rotationKeysRounded = roundToTwo(rotationKeys);
       activeAkasRounded = roundToTwo(activeAkas);
     }
-
-
-    // Compute engagements for all-time data
-    const engagementsAllTime = await calculateEngagements(cutoffTimeAll);
-
-    // Compute overall activity statuses for all-time data
-    const overallActivityStatus = calculateActivityStatus(totalRecordsPerDay);
-    const bskyActivityStatus = calculateActivityStatus(totalBskyRecordsPerDay);
-    const atprotoActivityStatus = calculateActivityStatus(totalNonBskyRecordsPerDay);
-
-    // Compute posting style for all-time data
-    const postingStyleCalcAllTime = calculatePostingStyle({
-      ...postStatsAllTime,
-      totalBskyRecordsPerDay,
-    });
-
-    // Compute social status for all-time data
-    const socialStatusCalcAllTime = calculateSocialStatus({
-      ageInDays,
-      followersCount: profile.followersCount || 0,
-      followsCount: profile.followsCount || 0,
-    });
-
-    // Build analysis narrative for all-time data
-    const narrativeAllTime = buildAnalysisNarrative({
-      profile,
-      activityAll: {
-        activityStatus: overallActivityStatus,
-        bskyActivityStatus,
-        atprotoActivityStatus,
-        totalCollections: roundToTwo(totalCollections),
-        totalBskyCollections: roundToTwo(totalBskyCollections),
-        totalNonBskyCollections: roundToTwo(totalNonBskyCollections),
-        totalRecords: roundToTwo(totalRecords),
-        totalRecordsPerDay: roundToTwo(totalRecordsPerDay),
-        totalBskyRecords: roundToTwo(totalBskyRecords),
-        totalBskyRecordsPerDay: roundToTwo(totalBskyRecordsPerDay),
-        totalBskyRecordsPercentage: totalRecords ? roundToTwo(totalBskyRecords / totalRecords) : 0,
-        totalNonBskyRecords: roundToTwo(totalNonBskyRecords),
-        totalNonBskyRecordsPerDay: roundToTwo(totalNonBskyRecords / ageInDays),
-        plcOperations: roundToTwo(plcOperations),
-        ...collectionStats,
-        "app.bsky.feed.post": {
-          ...postStatsAllTime,
-          engagementsReceived: {
-            likesReceived: engagementsAllTime.likesReceived,
-            repostsReceived: engagementsAllTime.repostsReceived,
-            quotesReceived: engagementsAllTime.quotesReceived,
-            repliesReceived: engagementsAllTime.repliesReceived,
-          },
-        },
-        // Move blobs fields under activityAll
-        blobsCount: roundToTwo(blobsCountAll),
-        blobsPerDay: ageInDays ? roundToTwo(blobsCountAll / ageInDays) : 0,
-        blobsPerPost: postsCountAllTime ? roundToTwo(blobsCountAll / postsCountAllTime) : 0,
-        blobsPerImagePost: postStatsAllTime.postsWithImages ? roundToTwo(blobsCountAll / postStatsAllTime.postsWithImages) : 0,
-      },
-      postingStyle: postingStyleCalcAllTime,
-      socialStatus: socialStatusCalcAllTime,
-      alsoKnownAs: {
-        totalAkas: roundToTwo(totalAkas),
-        totalCustomAkas: roundToTwo(totalCustomAkas),
-        totalBskyAkas: roundToTwo(totalBskyAkas),
-      },
-    });
 
     // Define periods for 30 and 90 days
     const periods = [
@@ -852,7 +762,6 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
         totalBskyRecordsPerDay,
       });
 
-      // Inside your for loop where periodData is constructed:
       const engagementMetrics = calculateEngagementMetrics(
         completePostStats?.engagementsReceived || {},
         postsCount || 0,
@@ -893,6 +802,7 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
         },
         postingStyle,
         socialStatus,
+        engagementMetrics, // Make sure this is passed
         alsoKnownAs: {
           totalAkas: roundToTwo(totalAkas),
           totalCustomAkas: roundToTwo(totalCustomAkas),
@@ -906,25 +816,29 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
           ...profile,
           did: profile.did || did,
         },
-        displayName: profile?.displayName || '',
-  handle: profile?.handle || '',
-  did: profile?.did || did,
-  profileEditedDate: profile?.indexedAt,
-  profileCompletion: calculateProfileCompletion(profile || {}),
-  serviceEndpoint,
-  pdsType: serviceEndpoint?.includes("bsky.network") ? "Bluesky" : "Third-party",
-  createdAt: profile?.createdAt,
-  ageInDays: roundToTwo(ageInDays || 0),
-  agePercentage: roundToTwo(agePercentage || 0),
-  followersCount: roundToTwo(profile?.followersCount || 0),
-  followsCount: roundToTwo(profile?.followsCount || 0),
-  followPercentage: profile?.followersCount ? roundToTwo(profile.followsCount / profile.followersCount) : 0,
-  postsCount: roundToTwo(postsCount || 0),
-  rotationKeys: rotationKeysRounded || 0,
-  era: calculateEra(profile?.createdAt || new Date().toISOString()),
-  postingStyle,
-  socialStatus,
-  engagementMetrics,
+        displayName: profile.displayName,
+        handle: profile.handle,
+        did: profile.did || did,
+        profileEditedDate: profile.indexedAt,
+        profileCompletion: calculateProfileCompletion(profile),
+        combinedScore: 250,
+        blueskyScore: 150,
+        atprotoScore: 100,
+        scoreGeneratedAt: new Date().toISOString(),
+        serviceEndpoint,
+        pdsType: serviceEndpoint.includes("bsky.network") ? "Bluesky" : "Third-party",
+        createdAt: profile.createdAt,
+        ageInDays: roundToTwo(ageInDays),
+        agePercentage: roundToTwo(agePercentage),
+        followersCount: roundToTwo(profile.followersCount),
+        followsCount: roundToTwo(profile.followsCount),
+        followPercentage: profile.followersCount ? roundToTwo(profile.followsCount / profile.followersCount) : 0,
+        postsCount: roundToTwo(postsCount),
+        rotationKeys: rotationKeysRounded,
+        era: calculateEra(profile.createdAt),
+        postingStyle,
+        socialStatus,
+        engagementMetrics,
         weeklyActivity: weeklyActivity,
         activityAll: {
           activityStatus,
@@ -1017,7 +931,7 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
 
 // Build the analysis narrative paragraphs.
 function buildAnalysisNarrative(accountData) {
-  const { profile, activityAll, alsoKnownAs } = accountData;
+  const { profile, activityAll, alsoKnownAs, engagementMetrics = {} } = accountData;
   const { ageInDays, agePercentage } = calculateAge(profile.createdAt);
   let accountAgeStatement = "";
   if (agePercentage >= 0.97) {
@@ -1090,27 +1004,32 @@ function buildAnalysisNarrative(accountData) {
       `${rotationKeyStatement}, and ${pdsHostStatement}.`;
 
       const era = calculateEra(profile.createdAt);
-      const postingStyle = accountData.postingStyle;
-      const socialStatus = accountData.socialStatus;
-      const engagementMetrics = accountData.engagementMetrics;
+      const postingStyle = accountData.postingStyle || "Unknown";
+      const socialStatus = accountData.socialStatus || "Community Member";
+      
+      // Safely access engagement metrics with defaults
+      const {
+        engagementRate = 0,
+        engagementsPerPost = 0
+      } = engagementMetrics;
       
       let engagementPhrase = "";
-      if (engagementMetrics.engagementRate > 0.03) {
+      if (engagementRate > 0.03) {
         engagementPhrase = "with exceptionally high engagement";
-      } else if (engagementMetrics.engagementRate > 0.01) {
+      } else if (engagementRate > 0.01) {
         engagementPhrase = "with strong engagement";
-      } else if (engagementMetrics.engagementRate > 0.005) {
+      } else if (engagementRate > 0.005) {
         engagementPhrase = "with moderate engagement";
       } else {
         engagementPhrase = "with relatively low engagement";
       }
     
       const narrative3 =
-        `${profile.displayName} first joined Bluesky during the ${era} era. ` +
+        `${profile.displayName || "This user"} first joined Bluesky during the ${era} era. ` +
         `Their style of posting is "${postingStyle}". ` +
         `They are a "${socialStatus}" ${engagementPhrase}, ` +
-        `averaging ${engagementMetrics.engagementsPerPost} engagements per post ` +
-        `across their follower base of ${profile.followersCount}.`;
+        `averaging ${engagementsPerPost.toFixed(1)} engagements per post ` +
+        `across their follower base of ${profile.followersCount || 0}.`;
     
       return { narrative1, narrative2, narrative3 };
 }
