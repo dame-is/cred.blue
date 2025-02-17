@@ -145,7 +145,7 @@ const UserProfile = () => {
           <div className="user-profile-header-main">
             <CircularLogo 
               did={selectedAccountData.did}
-              size={220}
+              size={230}
               textColor="#004f84"
             />
             <div className="user-profile-name">

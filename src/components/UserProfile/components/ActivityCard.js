@@ -1,5 +1,6 @@
 import React, { useContext, useMemo } from "react";
 import { AccountDataContext } from "../UserProfile";
+import "./ActivityCard.css"; // Optional: For styling
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const ActivityCard = () => {
@@ -78,45 +79,45 @@ const ActivityCard = () => {
             <Tooltip content={<CustomTooltip />} />
             <Area
               type="monotone"
-              dataKey="bskyRecords"
-              stackId="1"
-              stroke="none"
-              fill="#66b2ff"
-              name="bsky records"
-            />
-            <Area
-              type="monotone"
               dataKey="nonBskyRecords"
               stackId="1"
               stroke="none"
               fill="#0056b3"
               name="atproto records"
             />
+            <Area
+              type="monotone"
+              dataKey="bskyRecords"
+              stackId="1"
+              stroke="none"
+              fill="#66b2ff"
+              name="bsky records"
+            />
           </AreaChart>
         </ResponsiveContainer>
       </div>
 
       {/* Stats Display */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <div className="bg-gray-50 p-4 rounded">
-          <h3 className="text-sm font-semibold text-gray-600">bsky records per day</h3>
-          <p className="text-xl font-bold text-blue-600">{perDayStats.bskyRecords}</p>
+      <div className="activity-stat-container">
+        <div className="activity-stat">
+          <h3 className="activity-header">bsky records per day</h3>
+          <p className="activity-data">{perDayStats.bskyRecords}</p>
         </div>
-        <div className="bg-gray-50 p-4 rounded">
-          <h3 className="text-sm font-semibold text-gray-600">atproto records per day</h3>
-          <p className="text-xl font-bold text-green-600">{perDayStats.nonBskyRecords}</p>
+        <div className="activity-stat">
+          <h3 className="activity-header">atproto records per day</h3>
+          <p className="activity-data">{perDayStats.nonBskyRecords}</p>
         </div>
-        <div className="bg-gray-50 p-4 rounded">
-          <h3 className="text-sm font-semibold text-gray-600">posts per day</h3>
-          <p className="text-xl font-bold text-indigo-600">{perDayStats.posts}</p>
+        <div className="activity-stat">
+          <h3 className="activity-header">posts per day</h3>
+          <p className="activity-data">{perDayStats.posts}</p>
         </div>
-        <div className="bg-gray-50 p-4 rounded">
-          <h3 className="text-sm font-semibold text-gray-600">replies per day</h3>
-          <p className="text-xl font-bold text-purple-600">{perDayStats.replies}</p>
+        <div className="activity-stat">
+          <h3 className="activity-header">replies per day</h3>
+          <p className="activity-data">{perDayStats.replies}</p>
         </div>
-        <div className="bg-gray-50 p-4 rounded">
-          <h3 className="text-sm font-semibold text-gray-600">likes per day</h3>
-          <p className="text-xl font-bold text-pink-600">{perDayStats.likes}</p>
+        <div className="activity-stat">
+          <h3 className="activity-header">likes per day</h3>
+          <p className="activity-data">{perDayStats.likes}</p>
         </div>
       </div>
     </div>

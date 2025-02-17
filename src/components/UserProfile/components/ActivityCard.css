@@ -1,0 +1,17 @@
+.activity-stat-container {
+    display: flex;
+    gap: 34.5px;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .activity-stat {
+    max-width: 70px;
+    align-content: end;
+  }
+
+  .activity-header {
+    font-size: 0.9em;
+  }
