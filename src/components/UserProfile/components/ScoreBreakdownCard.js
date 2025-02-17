@@ -2,9 +2,10 @@ import React, { useContext, PureComponent } from 'react';
 import { Treemap, ResponsiveContainer, Tooltip } from 'recharts';
 import { AccountDataContext } from "../UserProfile";
 
+// Updated color schemes
 const COLORS = {
-  bluesky: ['#0066cc', '#0077ee', '#0088ff', '#0099ff'],
-  atproto: ['#006633', '#007744', '#008855', '#009966']
+  bluesky: ['#66b2ff', '#85c2ff', '#a3d1ff', '#c2e0ff'],  // Base: #66b2ff with variations
+  atproto: ['#0056b3', '#0066cc', '#0077e6', '#0088ff']   // Base: #0056b3 with variations
 };
 
 const formatScore = (score) => Math.round(score);
@@ -12,35 +13,6 @@ const formatScore = (score) => Math.round(score);
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
-    
-    // Helper function to format object details
-    const formatDetails = (details) => {
-      if (!details) return null;
-      return Object.entries(details).map(([key, value]) => {
-        // Handle nested objects
-        if (typeof value === 'object' && value !== null) {
-          return Object.entries(value).map(([subKey, subValue]) => (
-            <p key={`${key}-${subKey}`} className="text-sm">
-              {subKey.replace(/([A-Z])/g, ' $1').trim()}: {
-                typeof subValue === 'number' ? 
-                  subValue.toFixed(1) : 
-                  subValue.toString()
-              }
-            </p>
-          ));
-        }
-        return (
-          <p key={key} className="text-sm">
-            {key.replace(/([A-Z])/g, ' $1').trim()}: {
-              typeof value === 'number' ? 
-                value.toFixed(1) : 
-                value.toString()
-            }
-          </p>
-        );
-      });
-    };
-
     return (
       <div className="custom-tooltip bg-white p-4 rounded shadow-lg border border-gray-200 max-w-md">
         <p className="font-semibold text-lg mb-2">{data.name}</p>
@@ -54,7 +26,11 @@ const CustomTooltip = ({ active, payload }) => {
             {data.details && (
               <div className="mt-2 border-t pt-2">
                 <p className="font-medium text-sm mb-1">Components:</p>
-                {formatDetails(data.details)}
+                {Object.entries(data.details).map(([key, value]) => (
+                  <p key={key} className="text-sm">
+                    {key.replace(/([A-Z])/g, ' $1').trim()}: {formatScore(value)}
+                  </p>
+                ))}
               </div>
             )}
           </>
@@ -78,10 +54,10 @@ class CustomizedContent extends PureComponent {
           height={height}
           style={{
             fill: depth < 2 ? colors[Math.floor((index / root.children.length) * colors.length)] : '#ffffff20',
-            stroke: depth === 1 ? 'none' : '#fff',
-            strokeWidth: 2 / (depth + 1e-10),
-            strokeOpacity: 1 / (depth + 1e-10),
-            cursor: 'pointer'
+            stroke: '#fff',
+            strokeWidth: 1,
+            strokeOpacity: 0.5,
+            cursor: 'pointer',
           }}
         />
         {depth === 1 && width > 50 && height > 30 && (
@@ -108,14 +84,13 @@ class CustomizedContent extends PureComponent {
 
 const getScoreDescriptions = (category) => {
   const descriptions = {
-    'Profile Quality': 'Score based on profile completeness, alt text usage, and custom domain (25% of Bluesky score)',
-    'Community Engagement': 'Score based on social graph metrics and engagement rates (35% of Bluesky score)',
-    'Content & Activity': 'Score based on posting frequency and content diversity (25% of Bluesky score)',
-    'Recognition & Status': 'Score based on account age and social standing (15% of Bluesky score)',
-    
-    'Decentralization': 'Score based on PDS choice and identity management (45% of Atproto score)',
-    'Protocol Activity': 'Score based on non-Bluesky protocol usage (35% of Atproto score)',
-    'Account Maturity': 'Score based on account age and ecosystem contributions (20% of Atproto score)'
+    'Profile Quality': 'Profile completeness, alt text usage, and custom domain (25% of Bluesky score)',
+    'Community Engagement': 'Social graph metrics, engagement rates, and reply activity (35% of Bluesky score)',
+    'Content & Activity': 'Posts, collections, and content quality including labels (25% of Bluesky score)',
+    'Recognition & Status': 'Team membership, contributor status, and social standing (15% of Bluesky score)',
+    'Decentralization': 'PDS choice, rotation keys, DID type, and domain customization (45% of Atproto score)',
+    'Protocol Activity': 'Non-Bluesky collections and general protocol usage (35% of Atproto score)',
+    'Account Maturity': 'Account age and ecosystem contributions (20% of Atproto score)'
   };
   return descriptions[category] || '';
 };
@@ -123,11 +98,11 @@ const getScoreDescriptions = (category) => {
 const ScoreBreakdownCard = () => {
   const accountData = useContext(AccountDataContext);
 
-  if (!accountData) {
+  if (!accountData || !accountData.breakdown) {
     return <div>Loading score breakdown...</div>;
   }
 
-  const { blueskyCategories, atprotoCategories, blueskyScore, atprotoScore, combinedScore } = accountData;
+  const { blueskyScore, atprotoScore, combinedScore, breakdown } = accountData;
   const blueskyPercent = (blueskyScore / combinedScore * 100).toFixed(1);
   const atprotoPercent = (atprotoScore / combinedScore * 100).toFixed(1);
 
@@ -135,27 +110,27 @@ const ScoreBreakdownCard = () => {
     const data = [
       {
         name: 'Bluesky Score',
-        children: Object.entries(blueskyCategories || {}).map(([name, category]) => ({
+        colors: COLORS.bluesky,
+        children: Object.entries(breakdown.blueskyCategories).map(([name, category]) => ({
           name: name.replace(/([A-Z])/g, ' $1').trim(),
-          size: category.score || 0,
-          weight: (category.weight || 0) * 100,
+          size: category.score,
+          weight: category.weight * 100,
           tooltipInfo: true,
           description: getScoreDescriptions(name.replace(/([A-Z])/g, ' $1').trim()),
-          details: category
-        })),
-        colors: COLORS.bluesky
+          details: category.details
+        }))
       },
       {
         name: 'ATProto Score',
-        children: Object.entries(atprotoCategories || {}).map(([name, category]) => ({
+        colors: COLORS.atproto,
+        children: Object.entries(breakdown.atprotoCategories).map(([name, category]) => ({
           name: name.replace(/([A-Z])/g, ' $1').trim(),
-          size: category.score || 0,
-          weight: (category.weight || 0) * 100,
+          size: category.score,
+          weight: category.weight * 100,
           tooltipInfo: true,
           description: getScoreDescriptions(name.replace(/([A-Z])/g, ' $1').trim()),
-          details: category
-        })),
-        colors: COLORS.atproto
+          details: category.details
+        }))
       }
     ];
     return data;
@@ -169,23 +144,23 @@ const ScoreBreakdownCard = () => {
         </div>
         <div className="flex space-x-6">
           <div>
-            <span className="font-medium text-blue-600">Bluesky: </span>
+            <span className="font-medium" style={{ color: COLORS.bluesky[0] }}>Bluesky: </span>
             <span>{formatScore(blueskyScore)} ({blueskyPercent}%)</span>
           </div>
           <div>
-            <span className="font-medium text-green-600">ATProto: </span>
+            <span className="font-medium" style={{ color: COLORS.atproto[0] }}>ATProto: </span>
             <span>{formatScore(atprotoScore)} ({atprotoPercent}%)</span>
           </div>
         </div>
       </div>
-      <div style={{ width: '100%', height: 400 }}>
+      <div className="rounded-lg overflow-hidden" style={{ width: '100%', height: 400 }}>
         <ResponsiveContainer>
           <Treemap
             data={buildTreemapData()}
             dataKey="size"
             aspectRatio={4/3}
             stroke="#fff"
-            content={<CustomizedContent colors={COLORS.bluesky} />}
+            content={<CustomizedContent />}
           >
             <Tooltip content={<CustomTooltip />} />
           </Treemap>
