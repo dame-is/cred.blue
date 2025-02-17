@@ -145,7 +145,7 @@ const UserProfile = () => {
           <div className="user-profile-header-main">
             <CircularLogo 
               did={selectedAccountData.did}
-              size={210}
+              size={205}
               textColor="#004f84"
             />
             <div className="user-profile-name">
@@ -198,7 +198,7 @@ const UserProfile = () => {
               type="button"
               onClick={() => window.open(
                 `https://bsky.app/intent/compose?text=${encodeURIComponent(
-                  `My @cred.blue score is ${selectedAccountData.combinedScore}/1000, and my account is ${Math.floor(selectedAccountData.ageInDays)} days old\n\nMy Bluesky Score is ${selectedAccountData.blueskyScore}, my Atproto Score is ${selectedAccountData.atprotoScore}, and I'm ${selectedAccountData.activityAll.activityStatus} on the network overall\n\nMy social status is classified as a "${selectedAccountData.socialStatus}" with a posting style of "{selectedAccountData.postingStyle}"\n\nDiscover your @cred.blue score here: cred.blue`
+                  `My @cred.blue score is ${selectedAccountData.combinedScore}/1000, and my account is ${Math.floor(selectedAccountData.ageInDays)} days old\n\nOverall I'm ${selectedAccountData.activityAll.activityStatus} on the network\n\nMy social status is classified as a "${selectedAccountData.socialStatus}" with a posting style of "${selectedAccountData.postingStyle}"\n\nDiscover your score here: cred.blue`
                 )}`, '_blank'
               )}
             >
