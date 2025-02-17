@@ -45,6 +45,9 @@ class CustomizedContent extends PureComponent {
   
       // Helper function to determine if text should be rendered
       const renderText = () => {
+        // Check if we have all required values
+        if (!name || !width || !height) return null;
+  
         // Only show text if the rectangle is large enough
         if (width < 60 || height < 40) return null;
         
@@ -77,6 +80,9 @@ class CustomizedContent extends PureComponent {
         );
       };
   
+      // Ensure we have the minimum required props
+      if (!x || !y || !width || !height) return null;
+  
       return (
         <g>
           <rect
@@ -85,7 +91,7 @@ class CustomizedContent extends PureComponent {
             width={width}
             height={height}
             style={{
-              fill: colors[root.name] || '#ffffff20',
+              fill: colors?.[root?.name] || '#ffffff20',
               fillOpacity: 0.7,
               stroke: '#fff',
               strokeWidth: 3,
