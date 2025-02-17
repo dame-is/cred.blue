@@ -49,6 +49,9 @@ const Navbar = () => {
               <span className="period">.</span>
               <span className="blue">blue</span>
             </Link>
+            <div className="beta-badge">
+                beta
+              </div>
           </div>
           <nav className="navbar-links">
             <ul>
