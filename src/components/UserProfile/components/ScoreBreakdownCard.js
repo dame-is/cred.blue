@@ -49,7 +49,9 @@ class CustomizedContent extends PureComponent {
           width={width}
           height={height}
           style={{
-            fill: depth < 2 ? colors[name] || '#ffffff20' : '#ffffff20',
+            fill: depth === 1 ? colors[name] || '#ffffff20' : 
+                  depth === 2 ? colors[root.name] || '#ffffff20' : '#ffffff20',
+            fillOpacity: depth === 2 ? 0.7 : 1,
             stroke: '#fff',
             strokeWidth: 3,
             strokeOpacity: 1,
@@ -103,16 +105,46 @@ const ScoreBreakdownCard = () => {
 
   const buildTreemapData = () => {
     const buildCategoryChildren = (categories, parentScore) => {
-      return Object.entries(categories).map(([name, category]) => {
-        // Get the actual score value from the category
-        const score = category.score || 0;
+      return Object.entries(categories).map(([name, categoryData]) => {
+        // Get the raw score from the category
+        const rawScore = categoryData.score || 0;
+        
+        // Calculate subcategory scores if they exist
+        let subScores = [];
+        if (categoryData.details) {
+          Object.entries(categoryData.details).forEach(([subName, subValue]) => {
+            // Handle different types of subValues
+            let subScore;
+            if (typeof subValue === 'number') {
+              subScore = subValue;
+            } else if (typeof subValue === 'object') {
+              // Sum up numeric values in the object
+              subScore = Object.values(subValue)
+                .filter(val => typeof val === 'number')
+                .reduce((sum, val) => sum + val, 0);
+            }
+            
+            if (subScore && subScore > 0) {
+              subScores.push({
+                name: subName.replace(/([A-Z])/g, ' $1').trim(),
+                size: subScore,
+                tooltipInfo: true,
+                parent: { 
+                  name: name.replace(/([A-Z])/g, ' $1').trim(), 
+                  size: rawScore 
+                }
+              });
+            }
+          });
+        }
         
         return {
           name: name.replace(/([A-Z])/g, ' $1').trim(),
-          size: score,
+          size: rawScore,
           tooltipInfo: true,
           description: getScoreDescriptions(name.replace(/([A-Z])/g, ' $1').trim()),
-          parent: { name: parentScore.name, size: parentScore.size }
+          parent: { name: parentScore.name, size: parentScore.size },
+          children: subScores.length > 0 ? subScores : undefined
         };
       });
     };
