@@ -160,7 +160,20 @@ const ScoreBreakdownCard = () => {
             dataKey="size"
             aspectRatio={4/3}
             stroke="#fff"
-            content={<CustomizedContent />}
+            content={({ root, depth, x, y, width, height, index, name, value }) => (
+              <CustomizedContent
+                root={root}
+                depth={depth}
+                x={x}
+                y={y}
+                width={width}
+                height={height}
+                index={index}
+                name={name}
+                value={value}
+                colors={root.colors || (root.name === 'Bluesky Score' ? COLORS.bluesky : COLORS.atproto)}
+              />
+            )}
           >
             <Tooltip content={<CustomTooltip />} />
           </Treemap>
