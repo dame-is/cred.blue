@@ -10,7 +10,6 @@ const COLORS = {
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
-    console.log('Tooltip data:', data); // Debug log
     
     // Calculate percentage of the total parent score (Bluesky or ATProto)
     let percentage;
@@ -56,20 +55,26 @@ class CustomizedContent extends PureComponent {
             cursor: 'pointer',
           }}
         />
+        {/* Add text label for larger sections */}
+        {width > 50 && height > 30 && (
+          <text
+            x={x + width / 2}
+            y={y + height / 2}
+            textAnchor="middle"
+            dominantBaseline="middle"
+            style={{
+              fill: depth === 2 ? '#000' : '#fff',
+              fontSize: 12,
+              fontWeight: depth === 1 ? 'bold' : 'normal',
+            }}
+          >
+            {name}
+          </text>
+        )}
       </g>
     );
   }
 }
-
-// Format legend value to include percentage
-const formatLegendValue = (value, entry) => {
-  const { payload } = entry;
-  if (payload && payload.size && entry.color) {
-    const percentage = ((payload.size / (payload.size + payload.parent?.size || 0)) * 100).toFixed(1);
-    return `${value}: ${percentage}%`;
-  }
-  return value;
-};
 
 const getScoreDescriptions = (category) => {
   const descriptions = {
@@ -91,18 +96,15 @@ const ScoreBreakdownCard = () => {
     return <div>Loading score breakdown...</div>;
   }
 
-  const { blueskyScore, atprotoScore, combinedScore, breakdown } = accountData;
+  const { blueskyScore, atprotoScore, breakdown } = accountData;
 
   const buildTreemapData = () => {
     const formatCategoryName = (name) => {
-      // First, handle camelCase to space separation
       const spacedName = name.replace(/([A-Z])/g, ' $1').trim();
-      // Then capitalize the first letter of each word
       const capitalizedName = spacedName.split(' ')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
       
-      // Handle special cases with &
       const specialCases = {
         'Content Activity': 'Content & Activity',
         'Recognition Status': 'Recognition & Status'
@@ -116,7 +118,6 @@ const ScoreBreakdownCard = () => {
         const formattedName = formatCategoryName(name);
         const rawScore = categoryData.score || 0;
         
-        // Calculate subcategory scores if they exist
         let subScores = [];
         if (categoryData.details) {
           Object.entries(categoryData.details).forEach(([subName, subValue]) => {
@@ -134,6 +135,7 @@ const ScoreBreakdownCard = () => {
                 name: formatCategoryName(subName),
                 size: subScore,
                 tooltipInfo: true,
+                fill: COLORS[parentScore.name],
                 parent: { 
                   name: formattedName, 
                   size: rawScore 
@@ -147,6 +149,7 @@ const ScoreBreakdownCard = () => {
           name: formattedName,
           size: rawScore,
           tooltipInfo: true,
+          fill: COLORS[parentScore.name],
           description: getScoreDescriptions(formattedName),
           parent: { name: parentScore.name, size: parentScore.size },
           children: subScores.length > 0 ? subScores : undefined
@@ -154,27 +157,25 @@ const ScoreBreakdownCard = () => {
       });
     };
 
-    const data = [
+    return [
       {
         name: 'Bluesky Score',
         size: blueskyScore,
-        colors: COLORS,
+        fill: COLORS['Bluesky Score'],
         children: buildCategoryChildren(breakdown.blueskyCategories, { name: 'Bluesky Score', size: blueskyScore })
       },
       {
         name: 'ATProto Score',
         size: atprotoScore,
-        colors: COLORS,
+        fill: COLORS['ATProto Score'],
         children: buildCategoryChildren(breakdown.atprotoCategories, { name: 'ATProto Score', size: atprotoScore })
       }
     ];
-
-    return data;
   };
 
   return (
     <div className="w-full h-full min-h-[400px] p-4 bg-white rounded-lg shadow">
-      <div className="score-breakdown-card" style={{ width: '100%', height: 350 }}>
+      <div className="score-breakdown-card" style={{ width: '100%', height: 400 }}>
         <ResponsiveContainer>
           <Treemap
             data={buildTreemapData()}
@@ -197,11 +198,15 @@ const ScoreBreakdownCard = () => {
             )}
           >
             <Tooltip content={<CustomTooltip />} />
-            <Legend
+            <Legend 
+              iconType="rect"
+              iconSize={10}
+              layout="horizontal"
               verticalAlign="bottom"
               align="center"
-              height={36}
-              formatter={formatLegendValue}
+              wrapperStyle={{
+                paddingTop: '20px'
+              }}
             />
           </Treemap>
         </ResponsiveContainer>
