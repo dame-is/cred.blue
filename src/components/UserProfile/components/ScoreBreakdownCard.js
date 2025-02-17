@@ -10,6 +10,7 @@ const COLORS = {
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
+    console.log('Tooltip data:', data); // Debug log
     
     // Calculate percentage of the total parent score (Bluesky or ATProto)
     let percentage;
@@ -20,15 +21,13 @@ const CustomTooltip = ({ active, payload }) => {
     return (
       <div className="custom-tooltip bg-white p-4 rounded shadow-lg border border-gray-200 max-w-md">
         <p className="font-semibold text-lg mb-2">{data.name}</p>
-        {data.tooltipInfo && data.parent && (
-          <>
-            <p className="text-sm text-gray-700 mb-2">
-              {percentage}% of {data.parent.name}
-            </p>
-            {data.description && (
-              <p className="text-sm text-gray-600">{data.description}</p>
-            )}
-          </>
+        {percentage && (
+          <p className="text-sm text-gray-700 mb-2">
+            {percentage}% of {data.parent.name}
+          </p>
+        )}
+        {data.description && (
+          <p className="text-sm text-gray-600">{data.description}</p>
         )}
       </div>
     );
@@ -105,19 +104,17 @@ const ScoreBreakdownCard = () => {
   const buildTreemapData = () => {
     const buildCategoryChildren = (categories, parentScore) => {
       return Object.entries(categories).map(([name, categoryData]) => {
-        // Get the raw score from the category
+        const formattedName = name.replace(/([A-Z])/g, ' $1').trim();
         const rawScore = categoryData.score || 0;
         
         // Calculate subcategory scores if they exist
         let subScores = [];
         if (categoryData.details) {
           Object.entries(categoryData.details).forEach(([subName, subValue]) => {
-            // Handle different types of subValues
             let subScore;
             if (typeof subValue === 'number') {
               subScore = subValue;
             } else if (typeof subValue === 'object') {
-              // Sum up numeric values in the object
               subScore = Object.values(subValue)
                 .filter(val => typeof val === 'number')
                 .reduce((sum, val) => sum + val, 0);
@@ -129,7 +126,7 @@ const ScoreBreakdownCard = () => {
                 size: subScore,
                 tooltipInfo: true,
                 parent: { 
-                  name: name.replace(/([A-Z])/g, ' $1').trim(), 
+                  name: formattedName, 
                   size: rawScore 
                 }
               });
@@ -138,10 +135,10 @@ const ScoreBreakdownCard = () => {
         }
         
         return {
-          name: name.replace(/([A-Z])/g, ' $1').trim(),
+          name: formattedName,
           size: rawScore,
           tooltipInfo: true,
-          description: getScoreDescriptions(name.replace(/([A-Z])/g, ' $1').trim()),
+          description: getScoreDescriptions(formattedName),
           parent: { name: parentScore.name, size: parentScore.size },
           children: subScores.length > 0 ? subScores : undefined
         };
@@ -163,6 +160,7 @@ const ScoreBreakdownCard = () => {
       }
     ];
 
+    console.log('Treemap data:', data); // Debug log
     return data;
   };
 
