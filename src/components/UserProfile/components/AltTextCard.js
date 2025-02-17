@@ -71,9 +71,9 @@ const AltTextCard = () => {
           <RadialBarChart 
             cx="50%" 
             cy="50%" 
-            innerRadius="20%" 
+            innerRadius="30%" 
             outerRadius="100%" 
-            barSize={40} 
+            barSize={30} 
             data={data}
             startAngle={180}
             endAngle={-180}
