@@ -734,8 +734,8 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
       const cutoffTime = Date.now() - days * 24 * 60 * 60 * 1000;
     
       // Aggregate record counts for the period
-      const { totalRecords, totalBskyRecords, totalNonBskyRecords, collectionStats } =
-        await calculateRecordsAggregate(targetCollections, days, cutoffTime);
+      const { totalRecords, totalBskyRecords, totalNonBskyRecords, collectionStats, weeklyActivity } =
+      await calculateRecordsAggregate(targetCollections, days, cutoffTime);
       const totalRecordsPerDay = days ? totalRecords / days : 0;
       const totalBskyRecordsPerDay = days ? totalBskyRecords / days : 0;
       const totalNonBskyRecordsPerDay = days ? totalNonBskyRecords / days : 0;
@@ -871,6 +871,7 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
         era: calculateEra(profile.createdAt),
         postingStyle,
         socialStatus,
+        weeklyActivity: weeklyActivity,
         activityAll: {
           activityStatus,
           bskyActivityStatus,
@@ -1050,6 +1051,41 @@ function buildAnalysisNarrative(accountData) {
   return { narrative1, narrative2, narrative3 };
 }
 
+// Helper function to get week number from a date
+function getWeekNumber(date) {
+  const currentDate = new Date(date);
+  const startOfPeriod = new Date();
+  startOfPeriod.setDate(startOfPeriod.getDate() - 90); // Go back 90 days max
+  
+  // Calculate weeks between dates
+  const diffTime = Math.abs(currentDate - startOfPeriod);
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  return Math.floor(diffDays / 7);
+}
+
+// Helper function to initialize weekly buckets
+function initializeWeeklyBuckets(periodDays) {
+  const numberOfWeeks = Math.ceil(periodDays / 7);
+  const buckets = [];
+  
+  for (let i = 0; i < numberOfWeeks; i++) {
+    buckets.push({
+      weekNumber: i,
+      totalBskyRecords: 0,
+      totalNonBskyRecords: 0,
+      records: {
+        posts: 0,
+        replies: 0,
+        reposts: 0,
+        likes: 0,
+        follows: 0
+      }
+    });
+  }
+  
+  return buckets;
+}
+
 /***********************************************************************
  * Function to calculate aggregate records for the account by iterating over each collection.
  ***********************************************************************/
@@ -1058,11 +1094,53 @@ async function calculateRecordsAggregate(collectionNames, periodDays, cutoffTime
   let totalBskyRecords = 0;
   let totalNonBskyRecords = 0;
   const collectionStats = {};
+  
+  // Initialize weekly buckets
+  const weeklyActivity = initializeWeeklyBuckets(periodDays);
+
   for (const col of collectionNames) {
     // Fetch records for the specified collection with cutoffTime
     const recs = await fetchRecordsForCollection(col, () => {}, 50, cutoffTime);
     const count = recs.length;
     const perDay = periodDays ? count / periodDays : 0;
+    
+    // Process each record for weekly stats
+    recs.forEach(record => {
+      let createdAt;
+      if (record.value && record.value.createdAt) {
+        createdAt = record.value.createdAt;
+      } else {
+        createdAt = findFirstCreatedAt(record);
+      }
+      
+      if (createdAt) {
+        const weekNum = getWeekNumber(createdAt);
+        if (weekNum >= 0 && weekNum < weeklyActivity.length) {
+          // Increment appropriate counters
+          if (col.startsWith("app.bsky")) {
+            weeklyActivity[weekNum].totalBskyRecords++;
+            
+            // Track specific record types
+            if (col === "app.bsky.feed.post") {
+              if (record.value.reply) {
+                weeklyActivity[weekNum].records.replies++;
+              } else {
+                weeklyActivity[weekNum].records.posts++;
+              }
+            } else if (col === "app.bsky.feed.repost") {
+              weeklyActivity[weekNum].records.reposts++;
+            } else if (col === "app.bsky.feed.like") {
+              weeklyActivity[weekNum].records.likes++;
+            } else if (col === "app.bsky.graph.follow") {
+              weeklyActivity[weekNum].records.follows++;
+            }
+          } else {
+            weeklyActivity[weekNum].totalNonBskyRecords++;
+          }
+        }
+      }
+    });
+
     collectionStats[col] = {
       count: roundToTwo(count),
       perDay: roundToTwo(perDay),
@@ -1074,7 +1152,14 @@ async function calculateRecordsAggregate(collectionNames, periodDays, cutoffTime
       totalNonBskyRecords += count;
     }
   }
-  return { totalRecords, totalBskyRecords, totalNonBskyRecords, collectionStats };
+
+  return { 
+    totalRecords, 
+    totalBskyRecords, 
+    totalNonBskyRecords, 
+    collectionStats,
+    weeklyActivity: weeklyActivity
+  };
 }
 
 /***********************************************************************

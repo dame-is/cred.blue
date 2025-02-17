@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useMemo } from "react";
 import { AccountDataContext } from "../UserProfile";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
@@ -32,36 +32,43 @@ const renderTooltipContent = (o) => {
 const ActivityCard = () => {
   const accountData = useContext(AccountDataContext);
 
+  // Always call useMemo, but handle null data inside
+  const weeklyData = useMemo(() => {
+    if (!accountData?.weeklyActivity) {
+      return [];
+    }
+    
+    return accountData.weeklyActivity.map((week, index) => ({
+      week: `Week ${index + 1}`,
+      bskyRecords: week.totalBskyRecords || 0,
+      nonBskyRecords: week.totalNonBskyRecords || 0
+    }));
+  }, [accountData]);
+
+  // Calculate per day statistics, safely handling null values
+  const perDayStats = useMemo(() => {
+    if (!accountData) {
+      return {
+        bskyRecords: 0,
+        nonBskyRecords: 0,
+        posts: 0,
+        replies: 0,
+        likes: 0,
+      };
+    }
+
+    return {
+      bskyRecords: accountData.activityAll?.totalBskyRecordsPerDay || 0,
+      nonBskyRecords: accountData.activityAll?.totalNonBskyRecordsPerDay || 0,
+      posts: accountData.activityAll?.["app.bsky.feed.post"]?.onlyPostsPerDay || 0,
+      replies: accountData.activityAll?.["app.bsky.feed.post"]?.onlyRepliesPerDay || 0,
+      likes: accountData.activityAll?.["app.bsky.feed.like"]?.perDay || 0,
+    };
+  }, [accountData]);
+
   if (!accountData) {
     return <div>Loading activity data...</div>;
   }
-
-  // Calculate weekly data for the area chart
-  const calculateWeeklyData = () => {
-    const weeklyData = [];
-    const weeksInPeriod = accountData.ageInDays >= 90 ? 13 : 5; // 90 days = 13 weeks, 30 days ≈ 5 weeks
-    
-    for (let i = 0; i < weeksInPeriod; i++) {
-      weeklyData.push({
-        week: `Week ${i + 1}`,
-        bskyRecords: accountData.weeklyActivity[i]?.totalBskyRecords || 0,
-        nonBskyRecords: accountData.weeklyActivity[i]?.totalNonBskyRecords || 0,
-      });
-    }
-    
-    return weeklyData;
-  };
-
-  const weeklyData = calculateWeeklyData();
-
-  // Calculate per day statistics
-  const perDayStats = {
-    bskyRecords: (accountData.activityAll.totalBskyRecords / accountData.ageInDays).toFixed(1),
-    nonBskyRecords: (accountData.activityAll.totalNonBskyRecords / accountData.ageInDays).toFixed(1),
-    posts: (accountData.activityAll["app.bsky.feed.post"].onlyPosts / accountData.ageInDays).toFixed(1),
-    replies: (accountData.activityAll["app.bsky.feed.post"].onlyReplies / accountData.ageInDays).toFixed(1),
-    likes: (accountData.activityAll["app.bsky.feed.like"] / accountData.ageInDays).toFixed(1),
-  };
 
   return (
     <div className="w-full space-y-6">
