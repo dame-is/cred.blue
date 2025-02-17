@@ -211,3 +211,7 @@
 .user-profile-activity {
   text-transform: capitalize;
 }
+
+.recharts-surface {
+  border-radius: 13px;
+}

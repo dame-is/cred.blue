@@ -3,8 +3,8 @@ import { Treemap, ResponsiveContainer, Tooltip } from 'recharts';
 import { AccountDataContext } from "../UserProfile";
 
 const COLORS = {
-  blueskyScore: '#66b2ff',
-  atprotoScore: '#0056b3'
+  'Bluesky Score': '#66b2ff',
+  'ATProto Score': '#0056b3'
 };
 
 const formatScore = (score) => Math.round(score);
@@ -46,7 +46,7 @@ class CustomizedContent extends PureComponent {
           width={width}
           height={height}
           style={{
-            fill: depth < 2 ? colors[name.replace(/\s+/g, '')] : '#ffffff20',
+            fill: depth < 2 ? colors[name] || '#ffffff20' : '#ffffff20',
             stroke: '#fff',
             strokeWidth: 1,
             strokeOpacity: 0.5,
