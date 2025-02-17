@@ -10,16 +10,15 @@ const COLORS = {
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
-    const root = payload[0].payload.root;
-    const percentage = ((data.size / root.size) * 100).toFixed(1);
+    const parentScore = data.parent?.size || 0;
+    const percentage = parentScore > 0 ? ((data.size / parentScore) * 100).toFixed(1) : 0;
     
     return (
       <div className="custom-tooltip bg-white p-4 rounded shadow-lg border border-gray-200 max-w-md">
         <p className="font-semibold text-lg mb-2">{data.name}</p>
         {data.tooltipInfo && (
           <>
-            <p className="text-sm mb-1">Percentage of {root.name}: {percentage}%</p>
-            <p className="text-sm mb-2">Weight: {data.weight}%</p>
+            <p className="text-sm mb-1">Percentage: {percentage}%</p>
             {data.description && (
               <p className="text-sm text-gray-600 mb-2">{data.description}</p>
             )}
@@ -50,18 +49,7 @@ class CustomizedContent extends PureComponent {
             cursor: 'pointer',
           }}
         />
-        {depth === 1 && width > 50 && height > 30 && (
-          <text
-            x={x + width / 2}
-            y={y + height / 2}
-            textAnchor="middle"
-            fill="#fff"
-            fontSize={14}
-            style={{ pointerEvents: 'none' }}
-          >
-            {name}
-          </text>
-        )}
+        {/* Removed text overlay */}
       </g>
     );
   }
@@ -72,14 +60,14 @@ const ScoreLegend = ({ blueskyScore, atprotoScore, combinedScore }) => {
   const atprotoPercent = ((atprotoScore / combinedScore) * 100).toFixed(1);
 
   return (
-    <div className="flex justify-center items-center space-x-8 mt-4">
+    <div className="flex justify-center items-center gap-8 mt-6 border-t pt-4">
       <div className="flex items-center">
-        <div className="w-4 h-4 mr-2" style={{ backgroundColor: COLORS['Bluesky Score'] }}></div>
-        <span className="text-sm">Bluesky Score: {blueskyPercent}%</span>
+        <div className="w-6 h-6 mr-3 rounded" style={{ backgroundColor: COLORS['Bluesky Score'] }}></div>
+        <span className="text-sm font-medium">Bluesky Score: {blueskyPercent}%</span>
       </div>
       <div className="flex items-center">
-        <div className="w-4 h-4 mr-2" style={{ backgroundColor: COLORS['ATProto Score'] }}></div>
-        <span className="text-sm">ATProto Score: {atprotoPercent}%</span>
+        <div className="w-6 h-6 mr-3 rounded" style={{ backgroundColor: COLORS['ATProto Score'] }}></div>
+        <span className="text-sm font-medium">ATProto Score: {atprotoPercent}%</span>
       </div>
     </div>
   );
@@ -120,7 +108,7 @@ const ScoreBreakdownCard = () => {
           tooltipInfo: true,
           description: getScoreDescriptions(name.replace(/([A-Z])/g, ' $1').trim()),
           details: {...category.details},
-          root: { name: 'Bluesky Score', size: blueskyScore }
+          parent: { name: 'Bluesky Score', size: blueskyScore }
         }))
       },
       {
@@ -134,7 +122,7 @@ const ScoreBreakdownCard = () => {
           tooltipInfo: true,
           description: getScoreDescriptions(name.replace(/([A-Z])/g, ' $1').trim()),
           details: {...category.details},
-          root: { name: 'ATProto Score', size: atprotoScore }
+          parent: { name: 'ATProto Score', size: atprotoScore }
         }))
       }
     ];
