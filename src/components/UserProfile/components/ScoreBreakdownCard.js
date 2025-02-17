@@ -12,6 +12,35 @@ const formatScore = (score) => Math.round(score);
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
+    
+    // Helper function to format object details
+    const formatDetails = (details) => {
+      if (!details) return null;
+      return Object.entries(details).map(([key, value]) => {
+        // Handle nested objects
+        if (typeof value === 'object' && value !== null) {
+          return Object.entries(value).map(([subKey, subValue]) => (
+            <p key={`${key}-${subKey}`} className="text-sm">
+              {subKey.replace(/([A-Z])/g, ' $1').trim()}: {
+                typeof subValue === 'number' ? 
+                  subValue.toFixed(1) : 
+                  subValue.toString()
+              }
+            </p>
+          ));
+        }
+        return (
+          <p key={key} className="text-sm">
+            {key.replace(/([A-Z])/g, ' $1').trim()}: {
+              typeof value === 'number' ? 
+                value.toFixed(1) : 
+                value.toString()
+            }
+          </p>
+        );
+      });
+    };
+
     return (
       <div className="custom-tooltip bg-white p-4 rounded shadow-lg border border-gray-200 max-w-md">
         <p className="font-semibold text-lg mb-2">{data.name}</p>
@@ -25,11 +54,7 @@ const CustomTooltip = ({ active, payload }) => {
             {data.details && (
               <div className="mt-2 border-t pt-2">
                 <p className="font-medium text-sm mb-1">Components:</p>
-                {Object.entries(data.details).map(([key, value]) => (
-                  <p key={key} className="text-sm">
-                    {key.replace(/([A-Z])/g, ' $1').trim()}: {formatScore(value)}
-                  </p>
-                ))}
+                {formatDetails(data.details)}
               </div>
             )}
           </>
@@ -41,59 +66,56 @@ const CustomTooltip = ({ active, payload }) => {
 };
 
 class CustomizedContent extends PureComponent {
-    render() {
-      const { root, depth, x, y, width, height, index, name, value, colors } = this.props;
-  
-      return (
-        <g>
-          <rect
-            x={x}
-            y={y}
-            width={width}
-            height={height}
-            style={{
-              fill: depth < 2 ? colors[Math.floor((index / root.children.length) * colors.length)] : '#ffffff20',
-              stroke: depth === 1 ? 'none' : '#fff',
-              strokeWidth: 2 / (depth + 1e-10),
-              strokeOpacity: 1 / (depth + 1e-10),
-              cursor: 'pointer',
-              borderRadius: depth === 1 ? '12px' : '0',
-            }}
-          />
-          {depth === 1 && width > 50 && height > 30 && (
-            <text
-              x={x + width / 2}
-              y={y + height / 2}
-              textAnchor="middle"
-              fill="#fff"
-              fontSize={14}
-              style={{ pointerEvents: 'none' }}
-            >
-              <tspan x={x + width / 2} y={y + height / 2 - 8}>
-                {name}
-              </tspan>
-              <tspan x={x + width / 2} y={y + height / 2 + 12}>
-                {formatScore(value)}
-              </tspan>
-            </text>
-          )}
-        </g>
-      );
-    }
+  render() {
+    const { root, depth, x, y, width, height, index, name, value, colors } = this.props;
+
+    return (
+      <g>
+        <rect
+          x={x}
+          y={y}
+          width={width}
+          height={height}
+          style={{
+            fill: depth < 2 ? colors[Math.floor((index / root.children.length) * colors.length)] : '#ffffff20',
+            stroke: depth === 1 ? 'none' : '#fff',
+            strokeWidth: 2 / (depth + 1e-10),
+            strokeOpacity: 1 / (depth + 1e-10),
+            cursor: 'pointer'
+          }}
+        />
+        {depth === 1 && width > 50 && height > 30 && (
+          <text
+            x={x + width / 2}
+            y={y + height / 2}
+            textAnchor="middle"
+            fill="#fff"
+            fontSize={14}
+            style={{ pointerEvents: 'none' }}
+          >
+            <tspan x={x + width / 2} y={y + height / 2 - 8}>
+              {name}
+            </tspan>
+            <tspan x={x + width / 2} y={y + height / 2 + 12}>
+              {formatScore(value)}
+            </tspan>
+          </text>
+        )}
+      </g>
+    );
   }
+}
 
 const getScoreDescriptions = (category) => {
   const descriptions = {
-    // Bluesky Score Categories
-    'Profile Quality': 'Profile completeness, alt text usage, and custom domain (25% of Bluesky score)',
-    'Community Engagement': 'Social graph metrics, engagement rates, and reply activity (35% of Bluesky score)',
-    'Content & Activity': 'Posts, collections, and content quality including labels (25% of Bluesky score)',
-    'Recognition & Status': 'Team membership, contributor status, and social standing (15% of Bluesky score)',
+    'Profile Quality': 'Score based on profile completeness, alt text usage, and custom domain (25% of Bluesky score)',
+    'Community Engagement': 'Score based on social graph metrics and engagement rates (35% of Bluesky score)',
+    'Content & Activity': 'Score based on posting frequency and content diversity (25% of Bluesky score)',
+    'Recognition & Status': 'Score based on account age and social standing (15% of Bluesky score)',
     
-    // Atproto Score Categories
-    'Decentralization': 'PDS choice, rotation keys, DID type, and domain customization (45% of Atproto score)',
-    'Protocol Activity': 'Non-Bluesky collections and general protocol usage (35% of Atproto score)',
-    'Account Maturity': 'Account age and ecosystem contributions (20% of Atproto score)'
+    'Decentralization': 'Score based on PDS choice and identity management (45% of Atproto score)',
+    'Protocol Activity': 'Score based on non-Bluesky protocol usage (35% of Atproto score)',
+    'Account Maturity': 'Score based on account age and ecosystem contributions (20% of Atproto score)'
   };
   return descriptions[category] || '';
 };
@@ -101,11 +123,11 @@ const getScoreDescriptions = (category) => {
 const ScoreBreakdownCard = () => {
   const accountData = useContext(AccountDataContext);
 
-  if (!accountData || !accountData.breakdown) {
+  if (!accountData) {
     return <div>Loading score breakdown...</div>;
   }
 
-  const { blueskyScore, atprotoScore, combinedScore, breakdown } = accountData;
+  const { blueskyCategories, atprotoCategories, blueskyScore, atprotoScore, combinedScore } = accountData;
   const blueskyPercent = (blueskyScore / combinedScore * 100).toFixed(1);
   const atprotoPercent = (atprotoScore / combinedScore * 100).toFixed(1);
 
@@ -113,25 +135,25 @@ const ScoreBreakdownCard = () => {
     const data = [
       {
         name: 'Bluesky Score',
-        children: Object.entries(breakdown.blueskyCategories).map(([name, category]) => ({
+        children: Object.entries(blueskyCategories || {}).map(([name, category]) => ({
           name: name.replace(/([A-Z])/g, ' $1').trim(),
-          size: category.score,
-          weight: category.weight * 100,
+          size: category.score || 0,
+          weight: (category.weight || 0) * 100,
           tooltipInfo: true,
           description: getScoreDescriptions(name.replace(/([A-Z])/g, ' $1').trim()),
-          details: category.details
+          details: category
         })),
         colors: COLORS.bluesky
       },
       {
         name: 'ATProto Score',
-        children: Object.entries(breakdown.atprotoCategories).map(([name, category]) => ({
+        children: Object.entries(atprotoCategories || {}).map(([name, category]) => ({
           name: name.replace(/([A-Z])/g, ' $1').trim(),
-          size: category.score,
-          weight: category.weight * 100,
+          size: category.score || 0,
+          weight: (category.weight || 0) * 100,
           tooltipInfo: true,
           description: getScoreDescriptions(name.replace(/([A-Z])/g, ' $1').trim()),
-          details: category.details
+          details: category
         })),
         colors: COLORS.atproto
       }
