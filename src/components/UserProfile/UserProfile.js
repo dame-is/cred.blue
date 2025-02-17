@@ -45,8 +45,8 @@ const UserProfile = () => {
       { i: "NarrativeCard", x: 1, y: 0, w: 1, h: cardHeights.NarrativeCard || 6, static: true },
       { i: "PostTypeCard", x: 0, y: 6, w: 1, h: cardHeights.PostTypeCard || 6, static: true },
       { i: "AltTextCard", x: 1, y: 6, w: 1, h: cardHeights.AltTextCard || 6, static: true },
-      { i: "RawDataCard", x: 0, y: 12, w: 2, h: cardHeights.RawDataCard || 8, static: true },
-      { i: "ActivityCard", x: 0, y: 18, w: 2, h: cardHeights.ActivityCard || 8, static: true },
+      { i: "RawDataCard", x: 0, y: 12, w: 1, h: cardHeights.RawDataCard || 8, static: true },
+      { i: "ActivityCard", x: 1, y: 12, w: 1, h: cardHeights.ActivityCard || 8, static: true },
     ],
     xs: [
       { i: "ProfileCard", x: 0, y: 0, w: 1, h: cardHeights.ProfileCard || 6, static: true },
