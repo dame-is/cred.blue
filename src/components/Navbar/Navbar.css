@@ -255,7 +255,7 @@
 
 .beta-badge {
   align-content: center;
-  background: gray;
+  background: var(--card-border);
   border-radius: 4px;
   margin: 4px;
   padding: 3px 5px;
