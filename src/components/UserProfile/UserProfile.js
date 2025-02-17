@@ -325,11 +325,6 @@ const UserProfile = () => {
               <ScoreBreakdownCard />
             </Card>
           </div>
-          <div key="RawDataCard" className="grid-item" ref={el => cardRefs.current.RawDataCard = el}>
-            <Card title="Raw Data">
-              <RawDataCard />
-            </Card>
-          </div>
         </ResponsiveGridLayout>
       </div>
     </AccountDataContext.Provider>

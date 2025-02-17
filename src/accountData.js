@@ -721,7 +721,6 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
       // Compute engagements for the period and merge with postStats
       // First, calculate engagements
       const engagements = await calculateEngagements(cutoffTime);
-      console.log("Raw engagements calculated:", engagements);
 
       // Create complete post stats
       const completePostStats = {
@@ -737,19 +736,6 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
           repliesReceived: engagements.repliesReceived,
         }
       };
-    
-        // Verify engagement data is properly structured
-  console.log("Verification - engagements in completePostStats:", {
-    direct: {
-      likesReceived: completePostStats.likesReceived,
-      repostsReceived: completePostStats.repostsReceived,
-      quotesReceived: completePostStats.quotesReceived,
-      repliesReceived: completePostStats.repliesReceived
-    },
-    nested: completePostStats.engagementsReceived
-  });
-
-      console.log("Complete post stats before period data:", completePostStats);  // Debug log
     
       // Compute activity statuses for the period
       const activityStatus = calculateActivityStatus(totalRecordsPerDay);
@@ -957,24 +943,6 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
         }
       };
 
-      console.log("Final post stats in period data:", periodData.activityAll["app.bsky.feed.post"]);
-    
-      // Debug log before API call
-      console.log("Period data before API call:", JSON.stringify({
-        activityAll: periodData.activityAll["app.bsky.feed.post"],
-      }, null, 2));
-
-      // Right before the fetchScores call:
-      console.log("Final verification - post stats in period data:", {
-        direct: {
-          likesReceived: periodData.activityAll["app.bsky.feed.post"].likesReceived,
-          repostsReceived: periodData.activityAll["app.bsky.feed.post"].repostsReceived,
-          quotesReceived: periodData.activityAll["app.bsky.feed.post"].quotesReceived,
-          repliesReceived: periodData.activityAll["app.bsky.feed.post"].repliesReceived
-        },
-        nested: periodData.activityAll["app.bsky.feed.post"].engagementsReceived
-      });
-    
       // Send the account data object to the backend scoring API
       periodData = await fetchScores(periodData);
       accountDataPerPeriod[`accountData${label}`] = periodData;
@@ -1187,18 +1155,6 @@ async function calculateEngagements(cutoffTime = null) {
   for (const item of feed) {
     // Only consider posts from this author
     if (item && item.post && item.post.author && item.post.author.did === did) {
-      // Debug log entire post structure to verify what we're accessing
-      console.log("Processing post structure:", JSON.stringify({
-        uri: item.post.uri,
-        author: item.post.author.did,
-        metrics: {
-          likeCount: item.post.likeCount,
-          repostCount: item.post.repostCount,
-          quoteCount: item.post.quoteCount,
-          replyCount: item.post.replyCount
-        }
-      }, null, 2));
-      
       // Only add the direct post metrics, ignoring any nested metrics
       if (item.post.likeCount !== undefined) likesReceived += item.post.likeCount;
       if (item.post.repostCount !== undefined) repostsReceived += item.post.repostCount;
@@ -1214,7 +1170,6 @@ async function calculateEngagements(cutoffTime = null) {
     repliesReceived: roundToTwo(repliesReceived),
   };
 
-  console.log("Final engagement counts (top-level only):", results);
   return results;
 }
 
