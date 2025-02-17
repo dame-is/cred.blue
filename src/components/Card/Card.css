@@ -39,6 +39,10 @@
   padding-bottom: 10px;
 }
 
+.card-header {
+  cursor: move;
+}
+
 /* Card title styles */
 .card-title {
   margin: 0;
