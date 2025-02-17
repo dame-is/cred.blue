@@ -35,46 +35,50 @@ const CustomTooltip = ({ active, payload }) => {
 };
 
 class CustomizedContent extends PureComponent {
-  render() {
-    const { root, depth, x, y, width, height, name, colors } = this.props;
-
-    return (
-      <g>
-        <rect
-          x={x}
-          y={y}
-          width={width}
-          height={height}
-          style={{
-            fill: depth === 1 ? colors[name] || '#ffffff20' : 
-                  depth === 2 ? colors[root.name] || '#ffffff20' : '#ffffff20',
-            fillOpacity: depth === 2 ? 0.7 : 1,
-            stroke: '#fff',
-            strokeWidth: 3,
-            strokeOpacity: 1,
-            cursor: 'pointer',
-          }}
-        />
-        {/* Add text label for larger sections */}
-        {width > 50 && height > 30 && (
-          <text
-            x={x + width / 2}
-            y={y + height / 2}
-            textAnchor="middle"
-            dominantBaseline="middle"
+    render() {
+      const { root, depth, x, y, width, height, name, colors } = this.props;
+  
+      // Don't render anything for depth 1 (parent nodes)
+      if (depth === 1) {
+        return null;
+      }
+  
+      return (
+        <g>
+          <rect
+            x={x}
+            y={y}
+            width={width}
+            height={height}
             style={{
-              fill: depth === 2 ? '#000' : '#fff',
-              fontSize: 12,
-              fontWeight: depth === 1 ? 'bold' : 'normal',
+              fill: colors[root.name] || '#ffffff20',
+              fillOpacity: 0.7,
+              stroke: '#fff',
+              strokeWidth: 3,
+              strokeOpacity: 1,
+              cursor: 'pointer',
             }}
-          >
-            {name}
-          </text>
-        )}
-      </g>
-    );
+          />
+          {width > 50 && height > 30 && (
+            <text
+              x={x + width / 2}
+              y={y + height / 2}
+              textAnchor="middle"
+              dominantBaseline="middle"
+              style={{
+                fill: '#000',
+                fontSize: 12,
+                fontWeight: 'normal',
+                strokeWidth: 0,
+              }}
+            >
+              {name}
+            </text>
+          )}
+        </g>
+      );
+    }
   }
-}
 
 const getScoreDescriptions = (category) => {
   const descriptions = {
@@ -182,6 +186,7 @@ const ScoreBreakdownCard = () => {
             dataKey="size"
             aspectRatio={4/3}
             stroke="#fff"
+            isAnimationActive={false}  // Turn off animation
             content={({ root, depth, x, y, width, height, index, name, value }) => (
               <CustomizedContent
                 root={root}
@@ -199,15 +204,27 @@ const ScoreBreakdownCard = () => {
           >
             <Tooltip content={<CustomTooltip />} />
             <Legend 
-              iconType="rect"
-              iconSize={10}
-              layout="horizontal"
-              verticalAlign="bottom"
-              align="center"
-              wrapperStyle={{
-                paddingTop: '20px'
-              }}
-            />
+                iconType="rect"
+                iconSize={10}
+                layout="horizontal"
+                verticalAlign="bottom"
+                align="center"
+                wrapperStyle={{
+                    paddingTop: '20px'
+                }}
+                formatter={(value) => (
+                    <span style={{ 
+                    fill: 'white', 
+                    fontSize: 12, 
+                    strokeWidth: 0, 
+                    fontFamily: 'articulat-cf', 
+                    fontWeight: 600, 
+                    wordWrap: 'anywhere' 
+                    }}>
+                    {value}
+                    </span>
+                )}
+                />
           </Treemap>
         </ResponsiveContainer>
       </div>
