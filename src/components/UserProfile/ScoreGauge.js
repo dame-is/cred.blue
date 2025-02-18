@@ -6,10 +6,10 @@ const MAX_SCORE = 1000;
 
 const ScoreGauge = ({ score, shadowColor = 'rgba(150,127,0,0.74)' }) => {
   const data = [
-    { name: 'Q1', value: 25, color: '#0056b3' },
-    { name: 'Q2', value: 25, color: '#0066cc' },
-    { name: 'Q3', value: 25, color: '#3399ff' },
-    { name: 'Q4', value: 25, color: '#66b2ff' },
+    { name: 'Q1', value: 10, color: '#004F84' },
+    { name: 'Q2', value: 20, color: '#0066cc' },
+    { name: 'Q3', value: 40, color: '#3399ff' },
+    { name: 'Q4', value: 30, color: '#3B9AF8' },
   ];
 
   const cx = 200;

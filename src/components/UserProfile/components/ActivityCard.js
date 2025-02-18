@@ -82,7 +82,7 @@ const ActivityCard = () => {
               dataKey="nonBskyRecords"
               stackId="1"
               stroke="none"
-              fill="#0056b3"
+              fill="#004F84"
               fillOpacity={1}
               name="atproto records"
             />
@@ -91,7 +91,7 @@ const ActivityCard = () => {
               dataKey="bskyRecords"
               stackId="1"
               stroke="none"
-              fill="#66b2ff"
+              fill="#3b9af8"
               fillOpacity={1}
               name="bsky records"
             />

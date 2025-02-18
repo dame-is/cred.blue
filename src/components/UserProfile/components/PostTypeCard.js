@@ -49,7 +49,7 @@ const PostTypeCard = () => {
           />
           <Bar 
             dataKey="value" 
-            fill="#0056b3" 
+            fill="#004f84" 
             background={{ fill: '#eee' }}
           />
         </BarChart>

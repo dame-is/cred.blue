@@ -4,7 +4,7 @@ import { AccountDataContext } from "../UserProfile";
 
 const COLORS = {
   'Bluesky Score': '#66b2ff',
-  'ATProto Score': '#0056b3'
+  'ATProto Score': '#004f84'
 };
 
 const CustomTooltip = ({ active, payload }) => {
@@ -119,6 +119,8 @@ class CustomizedContent extends PureComponent {
                       strokeWidth: 0,
                       fontFamily: 'articulat-cf',
                       fontWeight: 600,
+                      paddingLeft: 5,
+                      paddingRight: 5,
                     }}
                   >
                     {line}

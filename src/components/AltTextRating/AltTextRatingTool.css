@@ -116,8 +116,8 @@ body.dark-mode .alt-card {
 }
 
 .custom-checkbox input[type="checkbox"]:checked:hover + .checkbox-indicator {
-    background-color: #0056b3;
-    border-color: #0056b3;
+    background-color: #004F84;
+    border-color: #004F84;
 }
 
 .custom-checkbox input[type="checkbox"]:hover + .checkbox-indicator {
