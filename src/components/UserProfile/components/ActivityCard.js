@@ -62,7 +62,7 @@ const ActivityCard = () => {
   return (
     <div className="activity-card">
       {/* Area Chart */}
-      <div style={{ width: '100%', height: '200px' }}>
+      <div style={{ width: '100%', height: '100%' }}>
         <ResponsiveContainer>
           <AreaChart
             data={weeklyData}

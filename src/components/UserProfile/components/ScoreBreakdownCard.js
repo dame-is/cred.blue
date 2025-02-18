@@ -3,7 +3,7 @@ import { Treemap, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 import { AccountDataContext } from "../UserProfile";
 
 const COLORS = {
-  'Bluesky Score': '#66b2ff',
+  'Bluesky Score': '#3B9AF8',
   'ATProto Score': '#004f84'
 };
 
@@ -89,7 +89,7 @@ class CustomizedContent extends PureComponent {
             height={height}
             style={{
               fill: colors[root.name] || '#ffffff20',
-              fillOpacity: 0.7,
+              fillOpacity: 1,
               stroke: '#fff',
               strokeWidth: 6,
               strokeOpacity: 1,

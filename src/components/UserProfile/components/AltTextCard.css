@@ -41,6 +41,7 @@
 
   .dark-mode .recharts-sector.recharts-radial-bar-background-sector {
     fill: #676767;
+    opacity: 0.6;
   }
 
   .dark-mode .recharts-rectangle.recharts-bar-background-rectangle {
