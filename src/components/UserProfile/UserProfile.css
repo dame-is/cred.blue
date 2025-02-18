@@ -257,13 +257,6 @@ tspan {
   padding: 1rem;
 }
 
-.score-gauge {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-}
-
 /* Responsive Adjustments for Cards */
 @media (max-width: 470px) {
   .user-profile-data {
