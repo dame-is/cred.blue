@@ -33,7 +33,7 @@ const UserProfile = () => {
   const [cardHeights, setCardHeights] = useState({});
   const cardRefs = useRef({});
 
-  const breakpoints = { lg: 850, xs: 0 };
+  const breakpoints = { lg: 850, sm: 450, xs: 0 };
   const cols = { lg: 2, xs: 1 };
 
   const CARD_HEIGHT = 6;
@@ -47,13 +47,21 @@ const UserProfile = () => {
       { i: "AltTextCard", x: 0, y: CARD_HEIGHT * 2, w: 1, h: CARD_HEIGHT, static: false },
       { i: "ActivityCard", x: 1, y: CARD_HEIGHT * 2, w: 1, h: CARD_HEIGHT, static: false }
     ],
-    xs: [
-      { i: "NarrativeCard", x: 0, y: 0, w: 1, h: 6, static: false },
+    sm: [
+      { i: "NarrativeCard", x: 0, y: 0, w: 1, h: 4, static: false },
       { i: "ScoreBreakdownCard", x: 0, y: 8, w: 1, h: 6, static: false },
-      { i: "ProfileCard", x: 0, y: 14, w: 1, h: 7, static: false },
+      { i: "ProfileCard", x: 0, y: 14, w: 1, h: 5, static: false },
       { i: "PostTypeCard", x: 0, y: 22, w: 1, h: 6, static: false },
-      { i: "AltTextCard", x: 0, y: 26, w: 1, h: 6, static: false },
+      { i: "AltTextCard", x: 0, y: 26, w: 1, h: 5, static: false },
       { i: "ActivityCard", x: 0, y: 30, w: 1, h: 6, static: false }
+    ],
+    xs: [
+      { i: "NarrativeCard", x: 0, y: 0, w: 1, h: 7, static: false },
+      { i: "ScoreBreakdownCard", x: 0, y: 8, w: 1, h: 6, static: false },
+      { i: "ProfileCard", x: 0, y: 14, w: 1, h: 6, static: false },
+      { i: "PostTypeCard", x: 0, y: 22, w: 1, h: 5, static: false },
+      { i: "AltTextCard", x: 0, y: 26, w: 1, h: 5, static: false },
+      { i: "ActivityCard", x: 0, y: 30, w: 1, h: 7, static: false }
     ]
   });
 
