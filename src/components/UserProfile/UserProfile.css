@@ -146,6 +146,8 @@
   gap: 35px;
   margin-top: 111px;
   margin-bottom: 30px;
+  margin-left: 25px;
+  margin-right: 25px;
 }
 
 .circular-badge {
@@ -244,4 +246,11 @@ tspan {
   padding-top: 10px;
   font-size: 0.8em;
   opacity: 0.5;
+}
+
+/* Responsive Adjustments for Cards */
+@media (max-width: 470px) {
+  .user-profile-data {
+
+  }
 }

@@ -49,7 +49,7 @@ class CustomizedContent extends PureComponent {
       // Calculate font size based on container dimensions
       const calculateFontSize = () => {
         const baseSize = Math.min(width, height) / 8; // Adjust divisor to tune base font size
-        return Math.min(Math.max(baseSize, 8), 14); // Clamp between 8px and 14px
+        return Math.min(Math.max(baseSize, 7), 14); // Clamp between 8px and 14px
       };
   
       // Function to split text into lines that fit

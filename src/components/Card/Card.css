@@ -12,7 +12,7 @@
 /* Paragraph margins inside grid-item */
 .grid-item p {
   margin-bottom: 0;
-  margin-top: 10px;
+  margin-top: 7px;
 }
 
 /* Ensure grid items don’t overflow */

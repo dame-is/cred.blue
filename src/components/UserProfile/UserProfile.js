@@ -48,12 +48,12 @@ const UserProfile = () => {
       { i: "ActivityCard", x: 1, y: CARD_HEIGHT * 2, w: 1, h: CARD_HEIGHT, static: false }
     ],
     xs: [
-      { i: "NarrativeCard", x: 0, y: 0, w: 1, h: 8, static: false },
+      { i: "NarrativeCard", x: 0, y: 0, w: 1, h: 6, static: false },
       { i: "ScoreBreakdownCard", x: 0, y: 8, w: 1, h: 6, static: false },
-      { i: "ProfileCard", x: 0, y: 14, w: 1, h: 8, static: false },
-      { i: "PostTypeCard", x: 0, y: 22, w: 1, h: 4, static: false },
-      { i: "AltTextCard", x: 0, y: 26, w: 1, h: 4, static: false },
-      { i: "ActivityCard", x: 0, y: 30, w: 1, h: 4, static: false }
+      { i: "ProfileCard", x: 0, y: 14, w: 1, h: 7, static: false },
+      { i: "PostTypeCard", x: 0, y: 22, w: 1, h: 6, static: false },
+      { i: "AltTextCard", x: 0, y: 26, w: 1, h: 6, static: false },
+      { i: "ActivityCard", x: 0, y: 30, w: 1, h: 6, static: false }
     ]
   });
 
