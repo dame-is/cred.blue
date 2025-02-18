@@ -101,7 +101,7 @@
 
 .user-profile-header p {
   margin-top: 0px;
-  margin-bottom: 2px;
+  margin-bottom: 9px;
 }
 
 .user-profile-header h2 {
@@ -224,7 +224,6 @@ tspan {
 }
 
 .user-profile-score {
-  margin: 0px 25px;
   align-content: center;
 }
 
@@ -246,6 +245,26 @@ tspan {
   padding-top: 10px;
   font-size: 0.8em;
   opacity: 0.5;
+}
+
+
+.user-profile-header-rechart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.score-gauge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
 }
 
 /* Responsive Adjustments for Cards */

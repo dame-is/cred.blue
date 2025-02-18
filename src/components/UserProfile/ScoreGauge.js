@@ -5,17 +5,18 @@ const RADIAN = Math.PI / 180;
 const MAX_SCORE = 1000;
 
 const ScoreGauge = ({ score, shadowColor = 'rgba(150,127,0,0.74)' }) => {
-const data = [
+  const data = [
     { name: 'Q1', value: 10, color: '#004F84' },
     { name: 'Q2', value: 20, color: '#1368AA' },
     { name: 'Q3', value: 40, color: '#2881D2' },
     { name: 'Q4', value: 30, color: '#3B9AF8' },
-    ];
+  ];
 
-  const cx = 200;
-  const cy = 200;
-  const iR = 50;
-  const oR = 100;
+  // Define dimensions relative to container
+  const cx = 150;
+  const cy = 100;
+  const iR = 40;
+  const oR = 80;
 
   const needle = (value, data, cx, cy, iR, oR, color) => {
     const total = MAX_SCORE;
@@ -59,53 +60,54 @@ const data = [
 
   return (
     <div 
-      className="score-gauge" 
-      style={{ width: '100%', height: 250 }}
+      className="score-gauge flex flex-col items-center justify-center w-full h-full"
       role="img"
       aria-label={`Score gauge showing ${score} out of ${MAX_SCORE}`}
     >
-      <ResponsiveContainer>
-        <PieChart>
-          <defs>
-            <filter id="dropShadow">
-              <feDropShadow
-                dx="1"
-                dy="2"
-                stdDeviation="0"
-                floodColor={shadowColor}
-                floodOpacity="1"
-              />
-            </filter>
-          </defs>
-          <Pie
-            dataKey="value"
-            startAngle={180}
-            endAngle={0}
-            data={data}
-            cx={cx}
-            cy={cy}
-            innerRadius={iR}
-            outerRadius={oR}
-            fill="#8884d8"
-            stroke="none"
-            pointerEvents="none"
-            tabIndex="-1"
-            isAnimationActive={false}
-            active={false}
-          >
-            {data.map((entry, index) => (
-              <Cell 
-                key={`cell-${index}`} 
-                fill={entry.color}
-                pointerEvents="none"
-                tabIndex="-1"
-                aria-hidden="true"
-              />
-            ))}
-          </Pie>
-          {needle(score, data, cx, cy, iR, oR, '#FFD700')}
-        </PieChart>
-      </ResponsiveContainer>
+      <div className="w-full h-48">
+        <ResponsiveContainer>
+          <PieChart>
+            <defs>
+              <filter id="dropShadow">
+                <feDropShadow
+                  dx="1"
+                  dy="2"
+                  stdDeviation="0"
+                  floodColor={shadowColor}
+                  floodOpacity="1"
+                />
+              </filter>
+            </defs>
+            <Pie
+              dataKey="value"
+              startAngle={180}
+              endAngle={0}
+              data={data}
+              cx={cx}
+              cy={cy}
+              innerRadius={iR}
+              outerRadius={oR}
+              fill="#8884d8"
+              stroke="none"
+              pointerEvents="none"
+              tabIndex="-1"
+              isAnimationActive={false}
+              active={false}
+            >
+              {data.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={entry.color}
+                  pointerEvents="none"
+                  tabIndex="-1"
+                  aria-hidden="true"
+                />
+              ))}
+            </Pie>
+            {needle(score, data, cx, cy, iR, oR, '#FFD700')}
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
       <div className="text-center font-semibold mt-2">
         {score} / {MAX_SCORE}
       </div>
