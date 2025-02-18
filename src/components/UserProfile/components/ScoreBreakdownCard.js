@@ -43,6 +43,41 @@ class CustomizedContent extends PureComponent {
         return null;
       }
   
+      // Calculate text metrics and determine if we should show text
+      const shouldShowText = width > 40 && height > 25;
+      
+      // Calculate font size based on container dimensions
+      const calculateFontSize = () => {
+        const baseSize = Math.min(width, height) / 8; // Adjust divisor to tune base font size
+        return Math.min(Math.max(baseSize, 8), 14); // Clamp between 8px and 14px
+      };
+  
+      // Function to split text into lines that fit
+      const getWrappedText = () => {
+        const words = name.split(' ');
+        const fontSize = calculateFontSize();
+        const maxWidth = width - 10; // Leave some padding
+        const charWidth = fontSize * 0.6; // Approximate character width
+        const maxCharsPerLine = Math.floor(maxWidth / charWidth);
+        
+        let lines = [];
+        let currentLine = '';
+        
+        words.forEach(word => {
+          const testLine = currentLine ? `${currentLine} ${word}` : word;
+          if (testLine.length * charWidth <= maxWidth) {
+            currentLine = testLine;
+          } else {
+            if (currentLine) lines.push(currentLine);
+            currentLine = word;
+          }
+        });
+        if (currentLine) lines.push(currentLine);
+        
+        // Limit to 2 lines maximum
+        return lines.slice(0, 2);
+      };
+  
       return (
         <g>
           <rect
@@ -59,23 +94,34 @@ class CustomizedContent extends PureComponent {
               cursor: 'pointer',
             }}
           />
-          {width > 50 && height > 30 && (
-            <text
-              x={x + width / 2}
-              y={y + height / 2}
-              textAnchor="middle"
-              dominantBaseline="middle"
-              style={{
-                fill: 'white', 
-                fontSize: 12, 
-                strokeWidth: 0, 
-                fontFamily: 'articulat-cf', 
-                fontWeight: 600, 
-                wordWrap: 'anywhere' 
-              }}
-            >
-              {name}
-            </text>
+          {shouldShowText && (
+            <g>
+              {getWrappedText().map((line, index, array) => {
+                const fontSize = calculateFontSize();
+                const lineHeight = fontSize * 1.2;
+                const totalHeight = array.length * lineHeight;
+                const startY = y + (height - totalHeight) / 2 + lineHeight / 2;
+                
+                return (
+                  <text
+                    key={index}
+                    x={x + width / 2}
+                    y={startY + index * lineHeight}
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    style={{
+                      fill: 'white',
+                      fontSize: `${fontSize}px`,
+                      strokeWidth: 0,
+                      fontFamily: 'articulat-cf',
+                      fontWeight: 600,
+                    }}
+                  >
+                    {line}
+                  </text>
+                );
+              })}
+            </g>
           )}
         </g>
       );

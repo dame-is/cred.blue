@@ -49,27 +49,34 @@ const ScoreGauge = ({ score, shadowColor = 'rgba(150,127,0,0.74)' }) => {
           `}
           fill={color}
           stroke="none"
+          pointerEvents="none"
+          tabIndex="-1"
+          aria-hidden="true"
         />
       </g>
     );
   };
 
   return (
-    <div className="score-gauge" style={{ width: '100%', height: 250 }}>
+    <div 
+      className="score-gauge" 
+      style={{ width: '100%', height: 250 }}
+      role="img"
+      aria-label={`Score gauge showing ${score} out of ${MAX_SCORE}`}
+    >
       <ResponsiveContainer>
         <PieChart>
           <defs>
             <filter id="dropShadow">
-              <feDropShadow 
-                dx="1" 
-                dy="2" 
-                stdDeviation="0" 
+              <feDropShadow
+                dx="1"
+                dy="2"
+                stdDeviation="0"
                 floodColor={shadowColor}
                 floodOpacity="1"
               />
             </filter>
           </defs>
-          
           <Pie
             dataKey="value"
             startAngle={180}
@@ -81,9 +88,19 @@ const ScoreGauge = ({ score, shadowColor = 'rgba(150,127,0,0.74)' }) => {
             outerRadius={oR}
             fill="#8884d8"
             stroke="none"
+            pointerEvents="none"
+            tabIndex="-1"
+            isAnimationActive={false}
+            active={false}
           >
             {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.color} />
+              <Cell 
+                key={`cell-${index}`} 
+                fill={entry.color}
+                pointerEvents="none"
+                tabIndex="-1"
+                aria-hidden="true"
+              />
             ))}
           </Pie>
           {needle(score, data, cx, cy, iR, oR, '#FFD700')}
