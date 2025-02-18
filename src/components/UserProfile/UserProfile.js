@@ -33,13 +33,21 @@ const UserProfile = () => {
   const [cardHeights, setCardHeights] = useState({});
   const cardRefs = useRef({});
 
-  const breakpoints = { lg: 850, sm: 450, xs: 0 };
-  const cols = { lg: 2, sm: 1, xs: 1 };
+  const breakpoints = { lg: 850, md: 600, sm: 450, xs: 0, xxs: 0 };
+  const cols = { lg: 2, md: 2, sm: 1, xs: 1, xxs: 1 };
 
   const CARD_HEIGHT = 6;
   
   const getLayouts = () => ({
     lg: [
+      { i: "NarrativeCard", x: 0, y: 0, w: 1, h: CARD_HEIGHT, static: false },
+      { i: "ScoreBreakdownCard", x: 1, y: 0, w: 1, h: CARD_HEIGHT, static: false },
+      { i: "ProfileCard", x: 0, y: CARD_HEIGHT, w: 1, h: CARD_HEIGHT, static: false },
+      { i: "PostTypeCard", x: 1, y: CARD_HEIGHT, w: 1, h: CARD_HEIGHT, static: false },
+      { i: "AltTextCard", x: 0, y: CARD_HEIGHT * 2, w: 1, h: CARD_HEIGHT, static: false },
+      { i: "ActivityCard", x: 1, y: CARD_HEIGHT * 2, w: 1, h: CARD_HEIGHT, static: false }
+    ],
+    md: [
       { i: "NarrativeCard", x: 0, y: 0, w: 1, h: CARD_HEIGHT, static: false },
       { i: "ScoreBreakdownCard", x: 1, y: 0, w: 1, h: CARD_HEIGHT, static: false },
       { i: "ProfileCard", x: 0, y: CARD_HEIGHT, w: 1, h: CARD_HEIGHT, static: false },
@@ -56,11 +64,19 @@ const UserProfile = () => {
       { i: "ActivityCard", x: 0, y: 30, w: 1, h: 6, static: false }
     ],
     xs: [
-      { i: "NarrativeCard", x: 0, y: 0, w: 1, h: 7, static: false },
+      { i: "NarrativeCard", x: 0, y: 0, w: 1, h: 6, static: false },
       { i: "ScoreBreakdownCard", x: 0, y: 8, w: 1, h: 6, static: false },
       { i: "ProfileCard", x: 0, y: 14, w: 1, h: 6, static: false },
-      { i: "PostTypeCard", x: 0, y: 22, w: 1, h: 5, static: false },
-      { i: "AltTextCard", x: 0, y: 26, w: 1, h: 5, static: false },
+      { i: "PostTypeCard", x: 0, y: 22, w: 1, h: 6, static: false },
+      { i: "AltTextCard", x: 0, y: 26, w: 1, h: 6, static: false },
+      { i: "ActivityCard", x: 0, y: 30, w: 1, h: 7, static: false }
+    ],
+    xxs: [
+      { i: "NarrativeCard", x: 0, y: 0, w: 1, h: 8, static: false },
+      { i: "ScoreBreakdownCard", x: 0, y: 8, w: 1, h: 6, static: false },
+      { i: "ProfileCard", x: 0, y: 14, w: 1, h: 7, static: false },
+      { i: "PostTypeCard", x: 0, y: 22, w: 1, h: 6, static: false },
+      { i: "AltTextCard", x: 0, y: 26, w: 1, h: 7, static: false },
       { i: "ActivityCard", x: 0, y: 30, w: 1, h: 7, static: false }
     ]
   });
