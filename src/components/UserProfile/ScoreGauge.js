@@ -14,7 +14,7 @@ const ScoreGauge = ({ score, shadowColor = 'rgba(150,127,0,0.74)' }) => {
 
   // Fixed dimensions
   const width = 400;
-  const height = 250;
+  const height = 100;
   const cx = width / 2;
   const cy = height / 2;
   const iR = 50;

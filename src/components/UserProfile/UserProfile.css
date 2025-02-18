@@ -250,7 +250,6 @@ tspan {
 
 .user-profile-header-rechart {
   display: flex;
-  justify-content: center;
   align-items: center;
   width: 100%;
   max-width: 300px;
@@ -260,11 +259,9 @@ tspan {
 
 .score-gauge {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 100%;
 }
 
 /* Responsive Adjustments for Cards */
