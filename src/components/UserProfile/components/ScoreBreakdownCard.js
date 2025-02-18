@@ -91,8 +91,10 @@ class CustomizedContent extends PureComponent {
               fill: colors[root.name] || '#ffffff20',
               fillOpacity: 0.7,
               stroke: '#fff',
-              strokeWidth: 3,
+              strokeWidth: 6,
               strokeOpacity: 1,
+              rx: 10,
+              ry: 10,
               cursor: 'pointer',
             }}
           />
@@ -236,6 +238,7 @@ const ScoreBreakdownCard = () => {
             dataKey="size"
             aspectRatio={4/3}
             stroke="#fff"
+            radius={20}
             isAnimationActive={false}  // Turn off animation
             content={({ root, depth, x, y, width, height, index, name, value }) => (
               <CustomizedContent

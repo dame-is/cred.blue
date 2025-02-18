@@ -83,6 +83,7 @@ const ActivityCard = () => {
               stackId="1"
               stroke="none"
               fill="#0056b3"
+              fillOpacity={1}
               name="atproto records"
             />
             <Area
@@ -91,6 +92,7 @@ const ActivityCard = () => {
               stackId="1"
               stroke="none"
               fill="#66b2ff"
+              fillOpacity={1}
               name="bsky records"
             />
           </AreaChart>

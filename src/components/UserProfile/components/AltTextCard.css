@@ -39,4 +39,10 @@
     overflow: hidden;
   }
 
-  
+  .dark-mode .recharts-sector.recharts-radial-bar-background-sector {
+    fill: #676767;
+  }
+
+  .dark-mode .recharts-rectangle.recharts-bar-background-rectangle {
+    fill: #676767;
+  }

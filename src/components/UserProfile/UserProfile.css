@@ -215,3 +215,33 @@
 tspan {
   font-family: articulat-cf;
 }
+
+.dark-mode tspan {
+  fill: white;
+  opacity: 0.5;
+}
+
+.user-profile-score {
+  margin: 0px 25px;
+  align-content: center;
+}
+
+.dark-mode rect {
+  stroke: #333 !important;
+  stroke-width: 5px !important;
+}
+
+.recharts-surface {
+  stroke-width: 0.3px;
+}
+
+.recharts-cartesian-axis-ticks {
+  font-size: 0.7em;
+}
+
+.text-sm.text-gray-500.text-center.mt-4 {
+  text-align: center;
+  padding-top: 10px;
+  font-size: 0.8em;
+  opacity: 0.5;
+}
