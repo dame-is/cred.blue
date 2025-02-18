@@ -34,7 +34,7 @@ const UserProfile = () => {
   const cardRefs = useRef({});
 
   const breakpoints = { lg: 850, sm: 450, xs: 0 };
-  const cols = { lg: 2, xs: 1 };
+  const cols = { lg: 2, sm: 1, xs: 1 };
 
   const CARD_HEIGHT = 6;
   
