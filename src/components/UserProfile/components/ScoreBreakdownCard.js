@@ -36,7 +36,7 @@ const CustomTooltip = ({ active, payload }) => {
 
 class CustomizedContent extends PureComponent {
     render() {
-      const { root, depth, x, y, width, height, name, colors } = this.props;
+      const { root, depth, x, y, width, height, name = '', colors } = this.props;
   
       // Don't render anything for depth 1 (parent nodes)
       if (depth === 1) {
@@ -44,7 +44,7 @@ class CustomizedContent extends PureComponent {
       }
   
       // Calculate text metrics and determine if we should show text
-      const shouldShowText = width > 40 && height > 25;
+      const shouldShowText = width > 40 && height > 25 && name;
       
       // Calculate font size based on container dimensions
       const calculateFontSize = () => {
@@ -54,6 +54,8 @@ class CustomizedContent extends PureComponent {
   
       // Function to split text into lines that fit
       const getWrappedText = () => {
+        if (!name) return [];
+        
         const words = name.split(' ');
         const fontSize = calculateFontSize();
         const maxWidth = width - 10; // Leave some padding
