@@ -9,20 +9,20 @@
   }
 
   .alt-text-card h2 {
-    margin-bottom: 20px;
+    margin-bottom: 0px;
+    margin-top: 16px;
   }
   
   .alt-text-card ul {
     list-style-type: none;
     padding: 0;
     margin: 0px;
-    margin-top: 10px;
     align-content: center;
   }
   
   .alt-text-card li {
-    margin-bottom: 10px;
-    font-size: 16px;
+    font-size: 1em;
+    margin-bottom: 4px;
   }
   
   .gauge-svg {
