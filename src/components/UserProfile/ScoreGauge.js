@@ -12,11 +12,11 @@ const ScoreGauge = ({ score, shadowColor = 'rgba(150,127,0,0.74)' }) => {
     { name: 'Q4', value: 30, color: '#3B9AF8' },
   ];
 
-  // Fixed dimensions
-  const width = 400;
-  const height = 100;
+  // Adjusted dimensions to match actual gauge size
+  const width = 300;
+  const height = 150;
   const cx = width / 2;
-  const cy = height / 2;
+  const cy = height - 45; // Adjust center point to bottom half
   const iR = 50;
   const oR = 100;
 
@@ -61,11 +61,11 @@ const ScoreGauge = ({ score, shadowColor = 'rgba(150,127,0,0.74)' }) => {
   };
 
   return (
-    <div 
+    <div
       className="score-gauge"
       style={{
         width: '100%',
-        maxWidth: '400px',
+        maxWidth: '300px',
         margin: '0 auto',
         display: 'flex',
         flexDirection: 'column',
@@ -74,7 +74,11 @@ const ScoreGauge = ({ score, shadowColor = 'rgba(150,127,0,0.74)' }) => {
       role="img"
       aria-label={`Score gauge showing ${score} out of ${MAX_SCORE}`}
     >
-      <PieChart width={width} height={height}>
+      <PieChart 
+        width={width} 
+        height={height}
+        style={{ overflow: 'visible' }}
+      >
         <defs>
           <filter id="dropShadow">
             <feDropShadow
