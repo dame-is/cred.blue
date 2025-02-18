@@ -311,6 +311,10 @@
     color: #333;
 }
 
+.dark-mode .comparison-summary p {
+    color: white;
+}
+
 .comparison-summary-text {
     padding-bottom: 15px;
 }
