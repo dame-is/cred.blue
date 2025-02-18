@@ -41,7 +41,7 @@ const AltTextCard = () => {
     {
       name: "With Alt Text",
       images: Number(imagePostsAltText) || 0,
-      fill: '#004f84', // Blue color for alt text images
+      fill: '#3B9AF8', // Blue color for alt text images
     }
   ].filter(item => item.images > 0);
   
