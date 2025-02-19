@@ -12,10 +12,15 @@ const NarrativeCard = () => {
   const { narrative1, narrative2, narrative3 } = accountData.analysis.narrative;
 
   return (
-    <div className="narrative-card">
-      {narrative1 && <p>{narrative1}</p>}
-      {narrative2 && <p>{narrative2}</p>}
-      {narrative3 && <p>{narrative3}</p>}
+    <div className="narrative-card-container">
+      <div className="narrative-card">
+        {narrative1 && <p>{narrative1}</p>}
+        {narrative2 && <p>{narrative2}</p>}
+        {narrative3 && <p>{narrative3}</p>}
+      </div>
+      <div className="narrative-disclaimer">
+        <p><strong>NOTE:</strong>This summary was <strong>not</strong> generated using AI.</p>
+      </div>
     </div>
   );
 };

@@ -75,8 +75,8 @@
 
   .user-profile-header {
     display: inline-grid;
-    gap: 38px;
-      column-gap: 38px;
+    column-gap: 26.5px;
+    row-gap: 22px;
     justify-content: center;
     text-align: center;
     grid-auto-flow: column;
@@ -203,6 +203,7 @@
   grid-row: 2;
   display: flex;
   flex-direction: column;
+  gap: 5px;
 }
 
 .toggle-switch {
@@ -215,6 +216,7 @@
   justify-content: center;
   display: flex;
   flex-direction: column;
+  padding: 8px 0px;
 }
 
 tspan {
@@ -306,4 +308,12 @@ tspan {
 .compare-button-container {
   align-content: center;
   grid-row: 3;
+}
+
+.share-button-profile {
+  margin-top: 11px;
+}
+
+.user-profile-score {
+  padding: 12px 0px;
 }
