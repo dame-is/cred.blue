@@ -276,23 +276,6 @@ const UserProfile = () => {
                   <p>Atproto Status: {selectedAccountData.activityAll.atprotoActivityStatus}</p>
                 </div>
             </div>
-
-            {/* <div className="toggle-switch">
-              <button
-                className={`toggle-button ${selectedPeriod === '30' ? 'active' : ''}`}
-                onClick={() => setSelectedPeriod('30')}
-              >
-                Last 30 Days
-              </button>
-              <button
-                className={`toggle-button ${selectedPeriod === '90' ? 'active' : ''}`}
-                onClick={() => setSelectedPeriod('90')}
-              >
-                Last 90 Days
-              </button>
-            </div> */}
-
-            </div>
             <div className="share-button-container">
               <button
                 className="share-button-profile"
@@ -316,6 +299,21 @@ const UserProfile = () => {
               >
                 Compare Scores
               </button>
+            </div>
+            {/* <div className="toggle-switch">
+              <button
+                className={`toggle-button ${selectedPeriod === '30' ? 'active' : ''}`}
+                onClick={() => setSelectedPeriod('30')}
+              >
+                Last 30 Days
+              </button>
+              <button
+                className={`toggle-button ${selectedPeriod === '90' ? 'active' : ''}`}
+                onClick={() => setSelectedPeriod('90')}
+              >
+                Last 90 Days
+              </button>
+            </div> */}
             </div>
         </div>
 
