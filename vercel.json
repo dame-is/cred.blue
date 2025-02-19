@@ -2,15 +2,6 @@
     "version": 2,
     "routes": [
       {
-        "src": "/middleware/(.*)",
-        "dest": "/middleware/$1"
-      },
-      {
-        "src": "/(.*)",
-        "middlewarePath": "/middleware/edge.js",
-        "continue": true
-      },
-      {
         "src": "/(.*)",
         "dest": "/index.html"
       }
