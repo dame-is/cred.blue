@@ -232,13 +232,15 @@ const CompareScoresResults = ({ result, loading }) => {
             >
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="handle" />
-              <YAxis />
+              <YAxis 
+                  domain={[0, 1000]} 
+              />
               <Tooltip content={<CustomTooltip />} />
               <Legend 
                iconType="circle"
               />
-              {showBluesky && <Bar dataKey="Bluesky" stackId="a" fill="#3B9AF8" radius={[10, 10, 0, 0]} background={{ fill: '#eee', radius:[10, 10, 0, 0] }}/>}
-              {showAtproto && <Bar dataKey="Atproto" stackId="a" fill="#004f84" radius={[10, 10, 0, 0]} background={{ fill: '#eee', radius:[10, 10, 0, 0] }}/>}
+              {showBluesky && <Bar dataKey="Bluesky" stackId="a" fill="#3B9AF8" radius={[10, 10, 0, 0]}/>}
+              {showAtproto && <Bar dataKey="Atproto" stackId="a" fill="#004f84" radius={[10, 10, 0, 0]}/>}
             </BarChart>
           </ResponsiveContainer>
         </div>
