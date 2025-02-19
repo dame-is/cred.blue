@@ -5,7 +5,9 @@
     align-content: center;
     justify-content: center;
     text-align: center;
-    margin-top: 12.5px;
+    margin: auto;
+    margin-top: 6.5px;
+    row-gap: 14.5px;
   }
 
   .activity-stat {

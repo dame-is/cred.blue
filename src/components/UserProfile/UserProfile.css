@@ -250,7 +250,7 @@ tspan {
 }
 
 .dark-mode rect {
-  stroke: #333 !important;
+  stroke: #2c2c2c !important;
   stroke-width: 5px !important;
 }
 
