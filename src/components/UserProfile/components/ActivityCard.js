@@ -75,15 +75,15 @@ const ActivityCard = () => {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" />
-            <YAxis yAxisId="left" />
-            <YAxis yAxisId="right" orientation="right" />
+            <YAxis yAxisId="left" type="number" domain={[0, dataMax => (dataMax * 1.2)]}/>
+            <YAxis yAxisId="right" orientation="right" type="number" domain={[0, dataMax => (dataMax * 2)]}/>
             <Tooltip content={<CustomTooltip />} />
             <Legend />
             <Area
               type="monotone"
               yAxisId="right"
               dataKey="nonBskyRecords"
-              stackId="1"
+              stackId="2"
               stroke="none"
               fill="#004F84"
               fillOpacity={0.9}
