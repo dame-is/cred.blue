@@ -376,7 +376,7 @@ tspan {
 }
 
 /* Responsive Adjustments for Cards */
-@media (max-width: 630px) {
+@media (max-width: 750px) {
   .circular-badge {
     grid-column: 1;
     grid-row: 1;
