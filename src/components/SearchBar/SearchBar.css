@@ -21,7 +21,6 @@
 .search-bar input {
   border: 2px solid var(--button-bg);
   border-radius: 6px;
-  max-width: 200px;
   padding: 9px;
   text-align: center;
   margin: auto;

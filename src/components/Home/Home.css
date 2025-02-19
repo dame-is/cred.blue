@@ -23,3 +23,22 @@
     flex-direction: column;
     transition: background-color 0.3s ease, border-color 0.3s ease;
   }
+
+  .home-context-text {
+    max-width: 320px;
+    margin: auto;
+  }
+
+  /* Responsive Adjustments for Cards */
+@media (max-width: 440px) {
+  .home-context-text p {
+    font-size: 0.8em;
+    line-height: 1.2em;
+  }
+  .disclaimer {
+    font-size: 0.7em !important;
+    max-width: 165.5px;
+    margin: auto;
+    margin-bottom: 11.5px;
+  }
+}

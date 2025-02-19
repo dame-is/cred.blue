@@ -93,6 +93,10 @@ canvas {
     color: #004f84e6;
   }
 
+  .dark-mode .counter-item-regular {
+    color: #3498db;
+  }
+
   .counter-item-special {
     color: orange;
   }
