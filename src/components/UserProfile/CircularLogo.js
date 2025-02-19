@@ -7,9 +7,15 @@ const CircularLogo = ({
   textGap = 10,
   fontSize = 21,
   viewBoxPadding = 20,
-  gapDegrees = 3 // Gap in degrees between text start/end
+  gapDegrees = 3, // Gap in degrees between text start/end
+  webDidRepetitions = 2 // Number of times to repeat did:web text
 }) => {
-  const text = `${did}`;
+  // Determine if it's a web DID and create repeated text if necessary
+  const isWebDid = did.startsWith('did:web');
+  const text = isWebDid 
+    ? Array(webDidRepetitions).fill(did).join(' ') 
+    : did;
+
   const textGroupRef = useRef(null);
 
   // Calculate dimensions based on content
