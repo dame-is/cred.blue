@@ -262,8 +262,7 @@ const UserProfile = () => {
                   <h3>{selectedAccountData.postingStyle}</h3>
                 </div>
               </div>
-            
-              <div className="user-profile-data">
+          
               <div className="user-profile-header-rechart">
                 <ScoreGauge score={selectedAccountData.combinedScore} />
               </div>
@@ -276,7 +275,6 @@ const UserProfile = () => {
                   <p>Bluesky Status: {selectedAccountData.activityAll.bskyActivityStatus}</p>
                   <p>Atproto Status: {selectedAccountData.activityAll.atprotoActivityStatus}</p>
                 </div>
-              </div>
             </div>
 
             {/* <div className="toggle-switch">
