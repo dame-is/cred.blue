@@ -75,10 +75,12 @@ const ActivityCard = () => {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" />
-            <YAxis />
+            <YAxis yAxisId="left" />
+            <YAxis yAxisId="right" orientation="right" />
             <Tooltip content={<CustomTooltip />} />
             <Area
               type="monotone"
+              yAxisId="right"
               dataKey="nonBskyRecords"
               stackId="1"
               stroke="none"
@@ -88,6 +90,7 @@ const ActivityCard = () => {
             />
             <Area
               type="monotone"
+              yAxisId="left"
               dataKey="bskyRecords"
               stackId="1"
               stroke="none"

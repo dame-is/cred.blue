@@ -114,6 +114,7 @@
 
 .user-profile-header h1 {
   margin-bottom: 0px;
+  line-height: 0.9em;
 }
 
 .text-center.font-semibold.mt-2 {
@@ -293,6 +294,7 @@ tspan {
   justify-content: space-evenly;
   padding-top: 5px;
   grid-column: 2;
+  max-width: 240px;
 }
 
 .user-profile-container {
