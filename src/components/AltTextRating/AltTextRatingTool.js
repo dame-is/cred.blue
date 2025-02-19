@@ -410,7 +410,15 @@ const AltTextRatingTool = () => {
               Exclude Replies
             </label>
           </div>
-          <button className="full-analysis-button" type="submit">View Full Analysis</button>
+          <button 
+            className="full-analysis-button" 
+            type="button"
+            onClick={() => window.open(
+                `https://cred.blue/${username}`, '_blank'
+              )}
+            >
+                View Full Analysis
+          </button>
           <p>
             <a href="https://bsky.app/settings/accessibility" target="_blank" rel="noreferrer">
               Change your Bluesky alt text settings

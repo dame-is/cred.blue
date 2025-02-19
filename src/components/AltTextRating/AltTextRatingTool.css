@@ -303,6 +303,10 @@ body.dark-mode .alt-card {
     background: gray !important;
   }
 
+  .full-analysis-button {
+    margin-bottom: 24px;
+  }
+
 
 @media (max-width: 450px) {
     .gauge-container {
