@@ -7,7 +7,7 @@
       },
       {
         "src": "/(.*)",
-        "middlewarePath": "middleware/edge.js",
+        "middlewarePath": "/middleware/edge.js",
         "continue": true
       },
       {
