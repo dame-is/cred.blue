@@ -15,6 +15,7 @@
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
     "matter-js": "^0.20.0",
+    "next": "^15.1.7",
     "prop-types": "^15.8.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -26,10 +27,9 @@
     "web-vitals": "^4.2.4"
   },
   "scripts": {
-    "start": "cross-env NODE_OPTIONS=--openssl-legacy-provider react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
   },
   "eslintConfig": {
     "extends": [
@@ -52,6 +52,6 @@
   "proxy": "http://localhost:5001",
   "devDependencies": {
     "cross-env": "^7.0.3",
-    "vite": "^6.0.3"
+    "vite": "^6.1.1"
   }
 }
