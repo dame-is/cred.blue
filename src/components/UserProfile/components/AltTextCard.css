@@ -47,3 +47,9 @@
   .dark-mode .recharts-rectangle.recharts-bar-background-rectangle {
     fill: #676767;
   }
+
+  .recharts-layer.recharts-label-list {
+    font-size: 0.9em;
+    font-weight: 900;
+    filter: drop-shadow(1px 1px 0.5px #6b6b6bb5);
+  }

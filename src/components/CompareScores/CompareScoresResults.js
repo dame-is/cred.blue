@@ -11,15 +11,13 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import PropTypes from "prop-types";
-import "./CompareScores.css"; // Adjust the CSS path as needed
+import "./CompareScores.css";
 
 const CompareScoresResults = ({ result, loading }) => {
-  // State for toggling which scores to display
   const [showBluesky, setShowBluesky] = useState(true);
   const [showAtproto, setShowAtproto] = useState(true);
   const [, setActiveHandle] = useState(null);
 
-  // Keep track of whether the component is mounted
   const isMounted = useRef(true);
   useEffect(() => {
     return () => {
@@ -33,26 +31,12 @@ const CompareScoresResults = ({ result, loading }) => {
     }
   }, []);
 
-  useEffect(() => {
-    console.log("CompareScoresResults received:", result);
-  }, [result]);
-
   if (loading) {
     return (
       <div className="score-result">
-        {/* Loading Skeleton */}
         <div className="loading-skeleton">
           <div className="skeleton-title"></div>
           <div className="skeleton-bar"></div>
-          <div className="skeleton-paragraph"></div>
-          <div className="skeleton-paragraph"></div>
-          <div className="skeleton-paragraph"></div>
-        </div>
-        <div className="loading-skeleton">
-          <div className="skeleton-title"></div>
-          <div className="skeleton-bar"></div>
-          <div className="skeleton-paragraph"></div>
-          <div className="skeleton-paragraph"></div>
           <div className="skeleton-paragraph"></div>
         </div>
       </div>
@@ -67,14 +51,8 @@ const CompareScoresResults = ({ result, loading }) => {
     return <div className="error">Error: {result.error}</div>;
   }
 
-  // Determine if we are in comparison mode
   const isComparison = Array.isArray(result);
 
-  /**
-   * Extracts the actual score data from the object.
-   * If the object contains an "accountData90Days" property, we use that.
-   * Otherwise, we assume the object itself is the score data.
-   */
   const extractData = (scoreObj) => {
     if (scoreObj.accountData90Days) {
       return {
@@ -271,26 +249,47 @@ const CompareScoresResults = ({ result, loading }) => {
       const [first, second] = result.map((scoreObj) => extractData(scoreObj).scoreData);
       const firstScore = first.combinedScore || 0;
       const secondScore = second.combinedScore || 0;
+      
       return (
         <div className="comparison-summary">
+          <div className="profile-button-container">
+            <button
+              className="profile-1-button"
+              type="button"
+              onClick={() => window.open(
+                `https://cred.blue/${first.handle}`, '_blank'
+              )}
+            >
+              View {first.handle}'s Profile
+            </button>
+            <button
+              className="profile-2-button"
+              type="button"
+              onClick={() => window.open(
+                `https://cred.blue/${second.handle}`, '_blank'
+              )}
+            >
+              View {second.handle}'s Profile
+            </button>
+          </div>
           <div className="comparison-summary-text">
             <h3>High-Level Comparison</h3>
             <p>
-              <strong>{first.handle || "Unknown Handle"}</strong> has a combined score of{" "}
+              <strong>{first.handle}</strong> has a combined score of{" "}
               <strong>{Math.ceil(firstScore)}</strong>.
             </p>
             <p>
-              <strong>{second.handle || "Unknown Handle"}</strong> has a combined score of{" "}
+              <strong>{second.handle}</strong> has a combined score of{" "}
               <strong>{Math.ceil(secondScore)}</strong>.
             </p>
             <p>
               {firstScore > secondScore ? (
                 <span>
-                  <strong>{first.handle || "First User"}</strong> is ranked higher.
+                  <strong>{first.handle}</strong> is ranked higher.
                 </span>
               ) : firstScore < secondScore ? (
                 <span>
-                  <strong>{second.handle || "Second User"}</strong> is ranked higher.
+                  <strong>{second.handle}</strong> is ranked higher.
                 </span>
               ) : (
                 <span>Both scores are equal!</span>

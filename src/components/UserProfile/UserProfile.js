@@ -285,7 +285,7 @@ const UserProfile = () => {
                 type="button"
                 onClick={() => window.open(
                   `https://bsky.app/intent/compose?text=${encodeURIComponent(
-                    `My @cred.blue score is ${selectedAccountData.combinedScore}/1000, and my account is ${Math.floor(selectedAccountData.ageInDays)} days old.\n\nI'm ${selectedAccountData.activityAll.activityStatus} on the network.\n\nMy social status is "${selectedAccountData.socialStatus}" with a posting style of "${selectedAccountData.postingStyle}".\n\nCheck your score: cred.blue`
+                    `My @cred.blue score is ${selectedAccountData.combinedScore}/1000! 🦋\n\n I've been on Bluesky for ${Math.floor(selectedAccountData.ageInDays)} days, and I'm ${selectedAccountData.activityAll.activityStatus} on the network.\n\n👤 Social Status: "${selectedAccountData.socialStatus}"\n✍️ Posting Style: "${selectedAccountData.postingStyle}".\n\nCheck your score: cred.blue 🍥`
                   )}`, '_blank'
                 )}
               >
