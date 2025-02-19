@@ -21,11 +21,12 @@
     margin: 0;
     color: var(--navbar-text);
     transition: color 0.3s ease;
+    margin-top: 10px;
   }
   
   .error-message {
-    margin: 20px 0;
-    text-align: left;
+    margin-top: 20px;
+    margin-bottom: 0px;
   }
   
   .error-message p {
@@ -41,10 +42,7 @@
   .error-message li {
     margin: 5px 0;
   }
-  
-  .search-section {
-    margin-top: 20px;
-  }
+
   
   .try-another {
     margin-bottom: 15px;

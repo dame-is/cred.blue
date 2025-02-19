@@ -40,10 +40,6 @@ const ErrorPage = ({ title = "Page Not Found", message = "We couldn't find what 
             <p className="try-another">Try searching for another account:</p>
             <SearchBar />
           </div>
-          
-          <p className="disclaimer">
-            <strong>Note:</strong> If you believe this is an error, please try again later.
-          </p>
         </div>
       </main>
     </>
