@@ -8,6 +8,7 @@ import {
   YAxis,
   Tooltip,
   Legend,
+  CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
 import PropTypes from "prop-types";
@@ -229,12 +230,15 @@ const CompareScoresResults = ({ result, loading }) => {
               }}
               onMouseLeave={() => safeSetActiveHandle(null)}
             >
+              <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="handle" />
               <YAxis />
               <Tooltip content={<CustomTooltip />} />
-              <Legend />
-              {showBluesky && <Bar dataKey="Bluesky" stackId="a" fill="#3B9AF8" />}
-              {showAtproto && <Bar dataKey="Atproto" stackId="a" fill="#004f84" />}
+              <Legend 
+               iconType="circle"
+              />
+              {showBluesky && <Bar dataKey="Bluesky" stackId="a" fill="#3B9AF8" radius={[10, 10, 0, 0]} background={{ fill: '#eee', radius:[10, 10, 0, 0] }}/>}
+              {showAtproto && <Bar dataKey="Atproto" stackId="a" fill="#004f84" radius={[10, 10, 0, 0]} background={{ fill: '#eee', radius:[10, 10, 0, 0] }}/>}
             </BarChart>
           </ResponsiveContainer>
         </div>
