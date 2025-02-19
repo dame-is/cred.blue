@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Navbar from './components/Navbar/Navbar';
 import Footer from './components/Footer/Footer';
 import Newsletter from './components/Newsletter/Newsletter';
-import MainApp from '../../MainApp/MainApp';
 import About from './components/About/About';
 import Home from './components/Home/Home';
 import Terms from './components/PrivacyTerms/Terms';
@@ -23,7 +22,6 @@ const App = () => {
         <div className="main-container" style={{ flex: 1 }}>
           <Routes>
             {/* All routes are now public */}
-            <Route path="/app" element={<MainApp />} />
             <Route path="/home" element={<Home />} />
             <Route path="/compare" element={<CompareScores />} />
             <Route path="/alt-text" element={<AltTextRatingTool />} />
