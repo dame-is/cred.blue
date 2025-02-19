@@ -477,7 +477,7 @@
 
   .compare-scores-page {
     text-align: center;
-    margin: 30px auto 20px;
+    margin: 20px auto 20px;
     text-align: center;
     padding: 20px;
   }
@@ -505,9 +505,9 @@
 
   .compare-scores-page form {
     padding: 30px 20px;
-    max-width: 291px;
+    max-width: 400px;
     margin-top: 0px;
-  margin-bottom: 0px;
+    margin-bottom: 0px;
   }
 
   .recharts-responsive-container {

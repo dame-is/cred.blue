@@ -144,6 +144,7 @@ ul {
   margin: 10px 0px;
   text-align: left;
   color: var(--text);
+  font-family: articulat-cf;
 }
 
 .main-container {
