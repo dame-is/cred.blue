@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, navigate } from 'react';
 import { Link } from 'react-router-dom';
 import { ThemeContext } from '../../contexts/ThemeContext';
 import './Navbar.css';
@@ -64,13 +64,13 @@ const Navbar = () => {
             </svg>
           </button>
           <div className="navbar-newsletter-button-container">
-            <button
-              className="navbar-newsletter-button"
-              type="button"
-              onClick={() => window.open('https://cred.blue/newsletter')}
-            >
-              newsletter
-            </button>
+          <button
+            className="navbar-newsletter-button"
+            type="button"
+            onClick={() => navigate('/newsletter')}
+          >
+            newsletter
+          </button>
           </div>
         </div>
       </div>
