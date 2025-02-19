@@ -8,7 +8,7 @@ const Newsletter = () => {
     <>
       <main className="newsletter-page">
       <div className="alt-card">
-        <h1>About cred.blue</h1>
+        <h1>Subscribe to the Newsletter</h1>
         <p>
           Lorem ipsum...
         </p>

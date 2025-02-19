@@ -1,6 +1,6 @@
 import React, { useContext, useMemo } from "react";
 import { AccountDataContext } from "../UserProfile";
-import "./ActivityCard.css"; // Optional: For styling
+import "./ActivityCard.css";
 import { AreaChart, Area, Legend, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const ActivityCard = () => {
@@ -9,12 +9,26 @@ const ActivityCard = () => {
   const weeklyData = useMemo(() => {
     if (!accountData?.weeklyActivity) return [];
     
-    return accountData.weeklyActivity.map((week, index) => ({
-      name: `Week ${index + 1}`,
-      bskyRecords: week.bskyRecords,
-      nonBskyRecords: week.nonBskyRecords,
-      total: week.bskyRecords + week.nonBskyRecords
-    }));
+    // Calculate dates for each week
+    // Start from current date and work backwards
+    const currentDate = new Date();
+    const weeklyDataWithDates = accountData.weeklyActivity.map((week, index) => {
+      // Calculate the start date for this week by subtracting weeks from current date
+      const weekStartDate = new Date(currentDate);
+      weekStartDate.setDate(currentDate.getDate() - ((accountData.weeklyActivity.length - 1 - index) * 7));
+      
+      // Format date as M/D
+      const dateLabel = `${weekStartDate.getMonth() + 1}/${weekStartDate.getDate()}`;
+      
+      return {
+        date: dateLabel,
+        bskyRecords: week.bskyRecords,
+        nonBskyRecords: week.nonBskyRecords,
+        total: week.bskyRecords + week.nonBskyRecords
+      };
+    });
+
+    return weeklyDataWithDates;
   }, [accountData]);
 
   const perDayStats = useMemo(() => {
@@ -46,7 +60,7 @@ const ActivityCard = () => {
 
     return (
       <div className="bg-white p-3 border rounded shadow-lg">
-        <p className="font-semibold">{label}</p>
+        <p className="font-semibold">Week of {label}</p>
         {payload.map((entry, index) => (
           <p key={index} style={{ color: entry.color }}>
             {entry.name}: {entry.value}
@@ -61,7 +75,6 @@ const ActivityCard = () => {
 
   return (
     <div className="activity-card">
-      {/* Area Chart */}
       <div style={{ width: '100%', height: '200px' }}>
         <ResponsiveContainer>
           <AreaChart
@@ -74,17 +87,17 @@ const ActivityCard = () => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
+            <XAxis dataKey="date" />
             <YAxis 
-            yAxisId="left" 
-            type="number" 
-            domain={[0, dataMax => Math.ceil(dataMax * 1.2 / 5) * 5]} 
+              yAxisId="left" 
+              type="number" 
+              domain={[0, dataMax => Math.ceil(dataMax * 1.2 / 5) * 5]} 
             />
             <YAxis 
-            yAxisId="right" 
-            orientation="right" 
-            type="number" 
-            domain={[0, dataMax => Math.ceil(dataMax * 2 / 5) * 5]} 
+              yAxisId="right" 
+              orientation="right" 
+              type="number" 
+              domain={[0, dataMax => Math.ceil(dataMax * 2 / 5) * 5]} 
             />
             <Tooltip content={<CustomTooltip />} />
             <Legend />
@@ -112,29 +125,28 @@ const ActivityCard = () => {
         </ResponsiveContainer>
       </div>
 
-      {/* Stats Display */}
       <div className="activity-stat-container">
         <div className="activity-stat">
-            <p className="activity-data">{perDayStats.bskyRecords.toFixed(1)}</p>
-            <h3 className="activity-header">bsky records per day</h3>
+          <p className="activity-data">{perDayStats.bskyRecords.toFixed(1)}</p>
+          <h3 className="activity-header">bsky records per day</h3>
         </div>
         <div className="activity-stat">
-            <p className="activity-data">{perDayStats.nonBskyRecords.toFixed(1)}</p>
-            <h3 className="activity-header">atproto records per day</h3>
+          <p className="activity-data">{perDayStats.nonBskyRecords.toFixed(1)}</p>
+          <h3 className="activity-header">atproto records per day</h3>
         </div>
         <div className="activity-stat">
-            <p className="activity-data">{perDayStats.posts.toFixed(1)}</p>
-            <h3 className="activity-header">posts per day</h3>
+          <p className="activity-data">{perDayStats.posts.toFixed(1)}</p>
+          <h3 className="activity-header">posts per day</h3>
         </div>
         <div className="activity-stat">
-            <p className="activity-data">{perDayStats.replies.toFixed(1)}</p>
-            <h3 className="activity-header">replies per day</h3>
+          <p className="activity-data">{perDayStats.replies.toFixed(1)}</p>
+          <h3 className="activity-header">replies per day</h3>
         </div>
         <div className="activity-stat">
-            <p className="activity-data">{perDayStats.likes.toFixed(1)}</p>
-            <h3 className="activity-header">likes per day</h3>
+          <p className="activity-data">{perDayStats.likes.toFixed(1)}</p>
+          <h3 className="activity-header">likes per day</h3>
         </div>
-        </div>
+      </div>
     </div>
   );
 };

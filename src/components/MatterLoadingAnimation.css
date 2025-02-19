@@ -49,3 +49,27 @@ canvas {
   .dark-mode .circle-counters {
     opacity: 50%;
   }
+
+  .counter-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .legend-circle {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border-width: 3px;
+    border-style: solid;
+  }
+  
+  .regular-circle {
+    background-color: #004f84e6;
+    border-color: #3498db;
+  }
+  
+  .special-circle {
+    background-color: #FFD700;
+    border-color: #FFA500;
+  }

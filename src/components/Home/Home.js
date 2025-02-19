@@ -15,10 +15,11 @@ const Home = () => {
       />
       <h1>Welcome</h1>
       <p>
-        {/* Your home content here */}
         Generate a Bluesky credibility score. Understand your Atproto data footprint. Vibe check strangers and new accounts.
       </p>
-      {/* Include the SearchBar */}
+      <p className="disclaimer">
+        <strong>Note:</strong> this tool is currently in beta and things will change.
+      </p>
       <SearchBar />
       </div>
     </main>

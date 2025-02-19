@@ -327,8 +327,17 @@ const messages = useMemo(
     {message}<span className="dots"></span>
     </p>
     <div className="circle-counters">
+      <div className="counter-item">
+        <div className="legend-circle regular-circle" />
         <p>{circleCount}</p>
+      </div>
+      <div className="counter-item">
+        <div className="legend-circle special-circle" />
         <p>{specialCircleCount}</p>
+      </div>
+    </div>
+      <div className="version-number">
+        <p>cred.blue v1.0</p>
       </div>
     </div>
   );
