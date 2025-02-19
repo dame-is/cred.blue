@@ -284,7 +284,7 @@ const ScoreBreakdownCard = () => {
         </ResponsiveContainer>
       </div>
       
-      <div className="text-sm text-gray-500 text-center mt-4">
+      <div className="disclaimer">
         Hover over sections to see detailed breakdowns
       </div>
     </div>

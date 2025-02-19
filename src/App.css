@@ -228,6 +228,11 @@ ul {
   text-align: center;
 }
 
+.disclaimer {
+  opacity: 0.6;
+  font-size: 0.8em;
+}
+
 /* Dark mode overrides */
 .dark-mode .App,
 .dark-mode body,

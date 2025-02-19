@@ -6,7 +6,7 @@
     justify-content: center;
     text-align: center;
     margin: auto;
-    margin-top: 6.5px;
+    margin-top: 25px;
     row-gap: 14.5px;
   }
 
@@ -19,9 +19,43 @@
     font-size: 0.9em;
     margin: 0px;
     font-weight: 400;
+    max-width: 56px;
   }
 
   .activity-data {
     font-size: 1.6em;
     font-weight: 600;
   }
+
+  .recharts-legend-item-text {
+    font-size: 0.9em;
+  }
+
+  .activity-card .recharts-surface {
+    margin-left: 16px;
+  }
+
+  .activity-card .recharts-wrapper {
+    margin-top: 10px;
+    scale: 1.1;
+  }
+
+  /* Responsive Adjustments for Cards */
+@media (max-width: 930px) {
+  .activity-stat-container {
+    font-size: 0.8em;
+    gap: 4.5px
+  }
+
+  .recharts-legend-item.legend-item-0 {
+    margin-left: 10px;
+  }
+
+  .recharts-default-legend {
+    scale: 0.9;
+  }
+
+  .activity-header {
+    max-width: 40px;
+  }
+}

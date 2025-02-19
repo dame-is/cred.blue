@@ -53,3 +53,8 @@
     font-weight: 900;
     filter: drop-shadow(1px 1px 0.5px #6b6b6bb5);
   }
+
+  .alt-text-card .recharts-surface {
+    margin-left: 7.5px;
+    scale: 1.1;
+  }
