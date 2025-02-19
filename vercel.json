@@ -2,6 +2,19 @@
     "version": 2,
     "routes": [
       {
+        "src": "/static/(.*)",
+        "headers": { "cache-control": "public, max-age=31536000, immutable" },
+        "continue": true
+      },
+      {
+        "src": "/(.*)\\.(css|js|json|ico|png|jpg|jpeg|svg|gif)",
+        "headers": { "cache-control": "public, max-age=31536000, immutable" },
+        "continue": true
+      },
+      {
+        "handle": "filesystem"
+      },
+      {
         "src": "/(.*)",
         "dest": "/index.html"
       }
