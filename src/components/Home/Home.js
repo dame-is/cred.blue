@@ -10,7 +10,6 @@ const Home = () => {
   useDocumentMeta({
     title: 'cred.blue',
     description: 'Welcome to cred.blue - a trusted source for Bluesky credibility scores and data analysis.',
-    image: `${window.location.origin}/cred-blue-banner.jpg`
   });
   return (
     <main className="home-page">

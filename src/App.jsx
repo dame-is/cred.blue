@@ -23,8 +23,6 @@ const App = () => {
   useDocumentMeta({
     title: 'cred.blue',
     description: 'Generate a Bluesky credibility score. Understand your Atproto data footprint. Vibe check strangers and new accounts.',
-    image: `${window.location.origin}/cred-blue-banner.jpg`,
-    url: window.location.href
   });
 
   return (

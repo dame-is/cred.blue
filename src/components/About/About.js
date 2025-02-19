@@ -8,7 +8,6 @@ const About = () => {
   useDocumentMeta({
     title: `About cred.blue`,
     description: `Learn more about the cred.blue scoring methodology and mission.`,
-    image: `${window.location.origin}/cred-blue-banner.jpg`
   });
   return (
     <>

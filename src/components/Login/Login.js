@@ -10,7 +10,6 @@ const Login = () => {
     title: 'Login',
     description: 'Login to cred.blue to get your analysis and score.',
     // This will reference an image from your public folder
-    image: `${window.location.origin}/cred-blue-banner.jpg`
   });
   const { isDarkMode } = useContext(ThemeContext);
   const [appPassword, setAppPassword] = useState('');
