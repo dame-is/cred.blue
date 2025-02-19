@@ -263,6 +263,12 @@ const UserProfile = () => {
               <div className="user-profile-header-rechart">
                 <ScoreGauge score={selectedAccountData.combinedScore} />
               </div>
+              <div className="user-profile-emoji-group">
+                <p className="emoji-1">🐛</p>
+                <p className="emoji-2">🦋</p>
+                <p className="emoji-3">🪼</p>
+                <p className="emoji-4">🔥</p>
+              </div>
               <div className="user-profile-data-group">
                 <div className="user-profile-score">
                   <p><strong>Bluesky Score:</strong> {selectedAccountData.blueskyScore}</p>
@@ -272,8 +278,8 @@ const UserProfile = () => {
                   <p><strong>Bluesky Status:</strong> {selectedAccountData.activityAll.bskyActivityStatus}</p>
                   <p><strong>Atproto Status:</strong> {selectedAccountData.activityAll.atprotoActivityStatus}</p>
                 </div>
-            </div>
-            <div className="share-button-container">
+              </div>
+              <div className="share-button-container">
               <button
                 className="share-button-profile"
                 type="button"
@@ -294,7 +300,7 @@ const UserProfile = () => {
               >
                 Compare Scores
               </button>
-            </div>
+              </div>
 
             {/* <div className="toggle-switch">
               <button
@@ -337,14 +343,14 @@ const UserProfile = () => {
               <NarrativeCard />
             </Card>
           </div>
-          <div key="ProfileCard" className="grid-item" ref={el => cardRefs.current.ProfileCard = el}>
-            <Card title="Profile">
-              <ProfileCard />
-            </Card>
-          </div>
           <div key="PostTypeCard" className="grid-item" ref={el => cardRefs.current.PostTypeCard = el}>
             <Card title="Post Type Breakdown">
               <PostTypeCard />
+            </Card>
+          </div>
+          <div key="ProfileCard" className="grid-item" ref={el => cardRefs.current.ProfileCard = el}>
+            <Card title="Profile">
+              <ProfileCard />
             </Card>
           </div>
           <div key="AltTextCard" className="grid-item" ref={el => cardRefs.current.AltTextCard = el}>
