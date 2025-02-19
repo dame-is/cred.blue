@@ -9,21 +9,9 @@ export const AuthProvider = ({ children }) => {
   const [userHandle, setUserHandle] = useState(null);
   const [userDid, setUserDid] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isBot, setIsBot] = useState(false);
 
   useEffect(() => {
-    // Check if the request is from a bot
-    const userAgent = navigator.userAgent.toLowerCase();
-    const isSocialMediaBot = /facebookexternalhit|twitterbot|linkedinbot|whatsapp|telegram/i.test(userAgent);
-    setIsBot(isSocialMediaBot);
-
     const checkAuth = async () => {
-      // If it's a bot, don't check authentication
-      if (isSocialMediaBot) {
-        setLoading(false);
-        return;
-      }
-
       try {
         const response = await fetch(`${backendUrl}/api/authenticated`, {
           method: 'GET',
@@ -86,8 +74,7 @@ export const AuthProvider = ({ children }) => {
       userDid, 
       handleLoginSuccess, 
       handleLogout, 
-      loading,
-      isBot 
+      loading 
     }}>
       {children}
     </AuthContext.Provider>
