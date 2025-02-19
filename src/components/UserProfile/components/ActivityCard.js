@@ -75,8 +75,17 @@ const ActivityCard = () => {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" />
-            <YAxis yAxisId="left" type="number" domain={[0, dataMax => (dataMax * 1.2)]}/>
-            <YAxis yAxisId="right" orientation="right" type="number" domain={[0, dataMax => (dataMax * 2)]}/>
+            <YAxis 
+            yAxisId="left" 
+            type="number" 
+            domain={[0, dataMax => Math.ceil(dataMax * 1.2 / 5) * 5]} 
+            />
+            <YAxis 
+            yAxisId="right" 
+            orientation="right" 
+            type="number" 
+            domain={[0, dataMax => Math.ceil(dataMax * 2 / 5) * 5]} 
+            />
             <Tooltip content={<CustomTooltip />} />
             <Legend />
             <Area
