@@ -14,10 +14,15 @@ import AltTextRatingTool from './components/AltTextRating/AltTextRatingTool';
 import UserProfile from './components/UserProfile/UserProfile';
 import TestMatterPage from './components/TestMatterPage';  // New import for test page
 import CompareScores from './components/CompareScores/CompareScores';  // New import for compare page
+import useDocumentMeta from '././hooks/useDocumentMeta';
 import "./App.css";
 import { AuthContext } from './AuthContext';
 
 const App = () => {
+  useDocumentMeta({
+    title: 'About cred.blue',
+    description: 'Generate a Bluesky credibility score. Understand your Atproto data footprint. Vibe check strangers and new accounts.',
+  });
   const { isAuthenticated, handleLoginSuccess } = useContext(AuthContext);
 
   return (
