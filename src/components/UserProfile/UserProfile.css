@@ -73,16 +73,14 @@
 
   /* src/components/UserProfile/UserProfile.css */
 
-.user-profile-header {
-  text-align: center;
-  margin-bottom: 40px;
-  margin-top: 55px;
-  display: flex;
-  margin-left: 20px;
-  margin-right: 20px;
-  gap: 60px;
-  justify-content: center;
-}
+  .user-profile-header {
+    display: inline-grid;
+    gap: 38px;
+      column-gap: 38px;
+    justify-content: center;
+    text-align: center;
+    grid-auto-flow: column;
+  }
 
 
 .toggle-button {
@@ -119,9 +117,9 @@
 }
 
 .text-center.font-semibold.mt-2 {
-  font-size: 1.4em;
+  font-size: 1.2em;
   font-weight: 600;
-  color: #004f84;
+  color: var(--text);
   margin-top: -10.5px;
   margin-left: 11.5px;
 }
@@ -145,8 +143,8 @@
 }
 
 .circular-badge {
-  margin-top: -22px;
-  margin-bottom: -8px;
+  margin-bottom: -10px;
+  margin-top: -10px;
 }
 
 .user-profile-name {
@@ -185,6 +183,7 @@
 .circular-badge {
   position: relative;
   display: inline-block;
+  grid-row: 1;
 }
 
 /* Light mode styles */
@@ -199,7 +198,8 @@
 
 .share-button-container {
   align-content: center;
-  margin: 25px;
+  grid-row: 3;
+  grid-column: 1;
 }
 
 .toggle-switch {
@@ -236,6 +236,7 @@ tspan {
   gap: 14px;
   align-content: center;
   justify-content: center;
+  grid-row: 2;
 }
 
 .dark-mode rect {
@@ -267,6 +268,7 @@ tspan {
   max-width: 200px;
   justify-content: center;
   max-height: 130px;
+  grid-row: 1;
 }
 
 .score-gauge {
@@ -274,11 +276,12 @@ tspan {
 }
 
 .user-profile-main {
+  align-content: center;
   display: flex;
   flex-direction: column;
-  align-content: center;
-  justify-content: center;
   gap: 10px;
+  justify-content: center;
+  grid-row: 2;
 }
 
 /* Responsive Adjustments for Cards */
@@ -291,4 +294,13 @@ tspan {
 .user-profile-container {
   text-align: center;
   margin: 55px 20px 40px;
+}
+
+.user-profile-age h2 {
+  font-size: 0.8em;
+}
+
+.compare-button-container {
+  align-content: center;
+  grid-row: 3;
 }

@@ -242,7 +242,6 @@ const UserProfile = () => {
       <div className={`user-profile ${showContent ? "fade-in" : "hidden"}`}>
         <div className="user-profile-container">
           <div className="user-profile-header">
-            <div className="user-profile-header-main">
               <CircularLogo 
                 did={selectedAccountData.did}
                 size={205}
@@ -306,8 +305,18 @@ const UserProfile = () => {
               >
                 Share Results
               </button>
-          </div>
-          </div>
+            </div>
+            <div className="compare-button-container">
+              <button
+                className="comparea-button-profile"
+                type="button"
+                onClick={() => window.open(
+                  `https://cred.blue/compare`, '_blank'
+                )}
+              >
+                Compare Scores
+              </button>
+            </div>
 
         <ResponsiveGridLayout
           className="layout"

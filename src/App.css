@@ -123,7 +123,7 @@ button {
   color: var(--button-text);
   cursor: pointer;
   margin: auto;
-  max-width: 150px;
+  max-width: 175px;
   padding: 10px 15px;
   font-weight: 700;
   font-size: 1em;
