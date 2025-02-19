@@ -1,4 +1,3 @@
-// src/App.jsx
 import React, { useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar/Navbar';
@@ -11,16 +10,17 @@ import Terms from './components/PrivacyTerms/Terms';
 import Privacy from './components/PrivacyTerms/Privacy';
 import AltTextRatingTool from './components/AltTextRating/AltTextRatingTool';
 import UserProfile from './components/UserProfile/UserProfile';
-import TestMatterPage from './components/TestMatterPage';
-import CompareScores from './components/CompareScores/CompareScores';
+import TestMatterPage from './components/TestMatterPage';  // New import for test page
+import CompareScores from './components/CompareScores/CompareScores';  // New import for compare page
+import "./App.css";
 import { AuthContext } from './AuthContext';
-import useDocumentMeta from './hooks/useDocumentMeta';
+import useDocumentMeta from '././hooks/useDocumentMeta';
 
 const App = () => {
   const { isAuthenticated, handleLoginSuccess } = useContext(AuthContext);
 
   // Set default meta tags for the entire app
- useDocumentMeta({
+  useDocumentMeta({
     title: 'cred.blue',
     description: 'Generate a Bluesky credibility score. Understand your Atproto data footprint. Vibe check strangers and new accounts.',
     image: `${window.location.origin}/cred-blue-banner.jpg`,
