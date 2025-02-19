@@ -1,23 +1,17 @@
 // frontend/.vercel/middleware.js
 export const config = {
     matcher: [
-      // Match all paths that don't have a file extension
-      '/((?!_next|api|static|.*\\.).*)',
-      // Also match the root path
       '/',
+      '/((?!api|static|assets|_next|favicon.ico|robots.txt).*)',
     ]
   };
   
   export default function middleware(request) {
-    // Check if the request is for a static file
     const url = new URL(request.url);
-    const path = url.pathname;
     
-    // Skip middleware for static files and API routes
-    if (path.match(/\.(css|js|jpg|png|gif|ico|json|svg)$/) || 
-        path.startsWith('/static/') || 
-        path.startsWith('/api/')) {
-      return new Response(null, { status: 404 });
+    // Ignore static file requests completely
+    if (url.pathname.includes('.')) {
+      return;
     }
   
     // Check if the request is from a bot
@@ -28,8 +22,10 @@ export const config = {
                   userAgent.includes('preview');
   
     if (!isBot) {
-      return new Response(null, { status: 404 });
+      return;
     }
+  
+    const path = url.pathname;
   
     // Define meta tags for different routes
     const metaTags = {
@@ -104,7 +100,6 @@ export const config = {
   </head>
   <body>
       <div id="root"></div>
-      <script src="/static/js/main.js"></script>
   </body>
   </html>`;
   
