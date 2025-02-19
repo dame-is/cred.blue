@@ -240,72 +240,75 @@ const UserProfile = () => {
   return (
     <AccountDataContext.Provider value={selectedAccountData}>
       <div className={`user-profile ${showContent ? "fade-in" : "hidden"}`}>
-        <div className="user-profile-header">
-          <div className="user-profile-header-main">
-            <CircularLogo 
-              did={selectedAccountData.did}
-              size={205}
-              textColor="#004f84"
-            />
-            <div classname="user-profile-main">
-              <div className="user-profile-name">
-                <h1>{displayName}</h1>
-                <h2>@{resolvedHandle}</h2>
+        <div className="user-profile-container">
+          <div className="user-profile-header">
+            <div className="user-profile-header-main">
+              <CircularLogo 
+                did={selectedAccountData.did}
+                size={205}
+                textColor="#004f84"
+              />
+              <div className="user-profile-main">
+                <div className="user-profile-name">
+                  <h1>{displayName}</h1>
+                  <h2>@{resolvedHandle}</h2>
+                </div>
+                <div className="user-profile-age">
+                  <h2>{Math.floor(selectedAccountData.ageInDays)} days old</h2>
+                </div>
+                <div className="user-profile-badges">
+                  <h3>{selectedAccountData.socialStatus}</h3>
+                  <h3>{selectedAccountData.postingStyle}</h3>
+                </div>
               </div>
-              <div className="user-profile-age">
-                <h2>{Math.floor(selectedAccountData.ageInDays)} days old</h2>
+            </div>
+
+            <div className="user-profile-data">
+              <div className="user-profile-header-rechart">
+                <ScoreGauge score={selectedAccountData.combinedScore} />
               </div>
-              <div className="user-profile-badges">
-                <h3>{selectedAccountData.socialStatus}</h3>
-                <h3>{selectedAccountData.postingStyle}</h3>
+              <div className="user-profile-data-group">
+                <div className="user-profile-score">
+                  <p>Bluesky Score: {selectedAccountData.blueskyScore}</p>
+                  <p>Atproto Score: {selectedAccountData.atprotoScore}</p>
+                </div>
+                <div className="user-profile-activity">
+                  <p>Bluesky Status: {selectedAccountData.activityAll.bskyActivityStatus}</p>
+                  <p>Atproto Status: {selectedAccountData.activityAll.atprotoActivityStatus}</p>
+                </div>
               </div>
+            </div>
+
+            {/* <div className="toggle-switch">
+              <button
+                className={`toggle-button ${selectedPeriod === '30' ? 'active' : ''}`}
+                onClick={() => setSelectedPeriod('30')}
+              >
+                Last 30 Days
+              </button>
+              <button
+                className={`toggle-button ${selectedPeriod === '90' ? 'active' : ''}`}
+                onClick={() => setSelectedPeriod('90')}
+              >
+                Last 90 Days
+              </button>
+            </div> */}
             </div>
           </div>
-
-          <div className="user-profile-data">
-            <div className="user-profile-header-rechart">
-              <ScoreGauge score={selectedAccountData.combinedScore} />
-            </div>
-            <div className="user-profile-data-group">
-              <div className="user-profile-score">
-                <p>Bluesky Score: {selectedAccountData.blueskyScore}</p>
-                <p>Atproto Score: {selectedAccountData.atprotoScore}</p>
-              </div>
-              <div className="user-profile-activity">
-                <p>Bluesky Status: {selectedAccountData.activityAll.bskyActivityStatus}</p>
-                <p>Atproto Status: {selectedAccountData.activityAll.atprotoActivityStatus}</p>
-              </div>
-            </div>
-          </div>
-
-          {/* <div className="toggle-switch">
-            <button
-              className={`toggle-button ${selectedPeriod === '30' ? 'active' : ''}`}
-              onClick={() => setSelectedPeriod('30')}
-            >
-              Last 30 Days
-            </button>
-            <button
-              className={`toggle-button ${selectedPeriod === '90' ? 'active' : ''}`}
-              onClick={() => setSelectedPeriod('90')}
-            >
-              Last 90 Days
-            </button>
-          </div> */}
 
           <div className="share-button-container">
-            <button
-              className="share-button-profile"
-              type="button"
-              onClick={() => window.open(
-                `https://bsky.app/intent/compose?text=${encodeURIComponent(
-                  `My @cred.blue score is ${selectedAccountData.combinedScore}/1000, and my account is ${Math.floor(selectedAccountData.ageInDays)} days old.\n\nI'm ${selectedAccountData.activityAll.activityStatus} on the network.\n\nMy social status is "${selectedAccountData.socialStatus}" with a posting style of "${selectedAccountData.postingStyle}".\n\nCheck your score: cred.blue`
-                )}`, '_blank'
-              )}
-            >
-              Share Results
-            </button>
-          </div>
+              <button
+                className="share-button-profile"
+                type="button"
+                onClick={() => window.open(
+                  `https://bsky.app/intent/compose?text=${encodeURIComponent(
+                    `My @cred.blue score is ${selectedAccountData.combinedScore}/1000, and my account is ${Math.floor(selectedAccountData.ageInDays)} days old.\n\nI'm ${selectedAccountData.activityAll.activityStatus} on the network.\n\nMy social status is "${selectedAccountData.socialStatus}" with a posting style of "${selectedAccountData.postingStyle}".\n\nCheck your score: cred.blue`
+                  )}`, '_blank'
+                )}
+              >
+                Share Results
+              </button>
+              
         </div>
 
         <ResponsiveGridLayout

@@ -80,7 +80,8 @@
   display: flex;
   margin-left: 20px;
   margin-right: 20px;
-  gap: 60px
+  gap: 60px;
+  justify-content: center;
 }
 
 
@@ -104,8 +105,8 @@
 }
 
 .user-profile-header p {
+  margin-bottom: 0px;
   margin-top: 0px;
-  margin-bottom: 9px;
 }
 
 .user-profile-header h2 {
@@ -129,6 +130,8 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  align-content: center;
+  justify-content: center;
 }
 
 .user-profile-data {
@@ -204,6 +207,10 @@
 
 .user-profile-activity {
   text-transform: capitalize;
+  align-content: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
 }
 
 tspan {
@@ -217,6 +224,17 @@ tspan {
 
 .user-profile-score {
   align-content: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.user-profile-data-group {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-content: center;
+  justify-content: center;
 }
 
 .dark-mode rect {
@@ -240,20 +258,14 @@ tspan {
 }
 
 .user-profile-header-rechart {
-  max-width: 416.5px;
-  margin: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.user-profile-header-rechart {
   display: flex;
   align-items: center;
   width: 100%;
   margin: 0 auto;
   padding: 1rem;
   max-width: 200px;
+  justify-content: center;
+  max-height: 130px;
 }
 
 .score-gauge {

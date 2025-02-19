@@ -39,10 +39,6 @@
   padding-bottom: 10px;
 }
 
-.card-header {
-  cursor: move;
-}
-
 /* Card title styles */
 .card-title {
   margin: 0;
@@ -83,6 +79,7 @@
   cursor: move;
   max-width: 18px;
   text-align: center;
+  display: none;
 }
 
 /* Drag icon styling */
