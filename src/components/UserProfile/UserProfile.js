@@ -1,5 +1,5 @@
 import React, { useEffect, useState, createContext, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Responsive, WidthProvider } from "react-grid-layout";
 import { loadAccountData } from "../../accountData";
 import Card from "../Card/Card";
@@ -13,6 +13,7 @@ import PostTypeCard from "./components/PostTypeCard";
 import AltTextCard from "./components/AltTextCard";
 import ActivityCard from "./components/ActivityCard";
 import ScoreBreakdownCard from "./components/ScoreBreakdownCard";
+import ErrorPage from "../ErrorPage/ErrorPage";
 
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
@@ -24,6 +25,7 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const UserProfile = () => {
   const { username } = useParams();
+  const navigate = useNavigate(); // Add this line to get the navigate function
   const [accountData30Days, setAccountData30Days] = useState(null);
   const [accountData90Days, setAccountData90Days] = useState(null);
   const [selectedPeriod, setSelectedPeriod] = useState('90');
@@ -118,6 +120,10 @@ const UserProfile = () => {
         const data = await loadAccountData(username);
         if (data.error) {
           throw new Error(data.error);
+        }
+
+        if (data.error || data.message === "Error retrieving accountData") {
+          throw new Error(data.error || "Failed to load account data");
         }
 
         // Transform function to process account data
@@ -226,12 +232,13 @@ const UserProfile = () => {
     );
   }
 
-  if (error) {
-    return <div className="user-profile error">Error: {error}</div>;
-  }
-
-  if (!accountData30Days || !accountData90Days) {
-    return <div className="user-profile">No profile information available.</div>;
+  if (error || !accountData30Days || !accountData90Days) {
+    return (
+      <ErrorPage 
+        username={username}
+        onNavigate={navigate}
+      />
+    );
   }
 
   const selectedAccountData = selectedPeriod === '90' ? accountData90Days : accountData30Days;

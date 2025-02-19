@@ -180,6 +180,8 @@ ul {
   padding: 10px;
   text-align: left;
   transition: all 0.3s ease;
+  max-width: 200px;
+  margin: auto;
 }
 
 .autocomplete-item {
