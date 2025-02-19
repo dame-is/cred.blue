@@ -25,6 +25,8 @@ const About = () => {
         <li>Authenticated data analysis</li>
         <li>Lexicon and tracking</li>
         <li>Badges and rewards</li>
+        <li>In-app labeler</li>
+        <li>Developer API</li>
         </ul>
       </div> 
       </main>

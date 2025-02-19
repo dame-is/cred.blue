@@ -1040,7 +1040,7 @@ function buildAnalysisNarrative(accountData) {
 
   // Second Paragraph
   const narrative2 =
-      `${domainHistoryStatement} which is ${calculateDomainRarity(profile.handle)}. ` +
+      `${domainHistoryStatement} which has a rarity level of ${calculateDomainRarity(profile.handle)}. ` +
       `${rotationKeyStatement}, and ${pdsHostStatement}.`;
 
       const era = calculateEra(profile.createdAt);

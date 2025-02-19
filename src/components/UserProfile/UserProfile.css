@@ -75,7 +75,7 @@
 
   .user-profile-header {
     display: inline-grid;
-    column-gap: 26.5px;
+    column-gap: 50px;
     row-gap: 22px;
     justify-content: center;
     text-align: center;

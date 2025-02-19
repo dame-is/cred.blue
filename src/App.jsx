@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'r
 import Navbar from './components/Navbar/Navbar';
 import Footer from './components/Footer/Footer';
 import Login from './components/Login/Login';
+import Newsletter from './components/Newsletter/Newsletter';
 import MainApp from './components/MainApp/MainApp';
 import About from './components/About/About';
 import Home from './components/Home/Home';
@@ -41,6 +42,7 @@ const App = () => {
             <Route path="/about" element={<About />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
+            <Route path="/newsletter" element={<Newsletter />} />
             <Route path="/:username" element={<UserProfile />} />
             <Route path="/test-matter" element={<TestMatterPage />} />
             {/* Default redirect */}

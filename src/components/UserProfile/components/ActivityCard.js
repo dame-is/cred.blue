@@ -92,7 +92,7 @@ const ActivityCard = () => {
               type="monotone"
               yAxisId="right"
               dataKey="nonBskyRecords"
-              stackId="1"
+              stackId="2"
               stroke="none"
               fill="#004F84"
               fillOpacity={0.9}
@@ -102,7 +102,7 @@ const ActivityCard = () => {
               type="monotone"
               yAxisId="left"
               dataKey="bskyRecords"
-              stackId="2"
+              stackId="1"
               stroke="none"
               fill="#3b9af8"
               fillOpacity={0.9}

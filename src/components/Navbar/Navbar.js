@@ -108,6 +108,17 @@ const Navbar = () => {
               {isAuthenticated ? 'logout' : 'login'}
             </button>
           </div>
+
+          <div className="navbar-newsletter-button-container">
+            <button
+              className="navbar-newsletter-button"
+              type="button"
+              onClick={() => window.open(
+                `https://cred.blue/newsletter`, '_blank'
+              )}
+            >
+            </button>
+          </div>
         </div>
       </div>
     </header>
