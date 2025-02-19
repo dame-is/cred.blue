@@ -1,4 +1,5 @@
-import React, { useContext, useEffect } from 'react';
+// App.jsx
+import React, { useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar/Navbar';
 import Footer from './components/Footer/Footer';
@@ -30,12 +31,14 @@ const App = () => {
               path="/app/*"
               element={isAuthenticated ? <MainApp /> : <Navigate to="/login" replace />}
             />
+            
             {/* Login route with redirect if already authenticated */}
             <Route
               path="/login"
               element={!isAuthenticated ? <Login onLoginSuccess={handleLoginSuccess} /> : <Navigate to="/app" replace />}
             />
-            {/* Public routes */}
+            
+            {/* Public routes - no authentication required */}
             <Route path="/home" element={<Home />} />
             <Route path="/compare" element={<CompareScores />} />
             <Route path="/alt-text" element={<AltTextRatingTool />} />
@@ -45,7 +48,6 @@ const App = () => {
             <Route path="/newsletter" element={<Newsletter />} />
             <Route path="/:username" element={<UserProfile />} />
             <Route path="/zen" element={<ZenPage />} />
-            {/* Default redirect */}
             <Route path="/" element={<Navigate to="/home" replace />} />
             <Route path="*" element={<Navigate to="/home" replace />} />
           </Routes>
