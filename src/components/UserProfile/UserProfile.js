@@ -294,9 +294,7 @@ const UserProfile = () => {
               </button>
             </div> */}
             </div>
-          </div>
-
-          <div className="share-button-container">
+            <div className="share-button-container">
               <button
                 className="share-button-profile"
                 type="button"
@@ -308,8 +306,8 @@ const UserProfile = () => {
               >
                 Share Results
               </button>
-              
-        </div>
+          </div>
+          </div>
 
         <ResponsiveGridLayout
           className="layout"

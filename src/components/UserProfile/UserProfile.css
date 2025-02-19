@@ -199,6 +199,7 @@
 
 .share-button-container {
   align-content: center;
+  margin: 25px;
 }
 
 .toggle-switch {
@@ -272,9 +273,22 @@ tspan {
   margin-right: 10px !important;
 }
 
+.user-profile-main {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+  gap: 10px;
+}
+
 /* Responsive Adjustments for Cards */
 @media (max-width: 470px) {
   .user-profile-data {
 
   }
+}
+
+.user-profile-container {
+  text-align: center;
+  margin: 55px 20px 40px;
 }
