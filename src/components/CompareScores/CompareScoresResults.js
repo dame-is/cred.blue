@@ -239,7 +239,7 @@ const CompareScoresResults = ({ result, loading }) => {
               <Legend 
                iconType="circle"
               />
-              {showBluesky && <Bar dataKey="Bluesky" stackId="a" fill="#3B9AF8" radius={[10, 10, 0, 0]}/>}
+              {showBluesky && <Bar dataKey="Bluesky" stackId="a" fill="#3B9AF8"/>}
               {showAtproto && <Bar dataKey="Atproto" stackId="a" fill="#004f84" radius={[10, 10, 0, 0]}/>}
             </BarChart>
           </ResponsiveContainer>
