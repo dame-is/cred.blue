@@ -16,8 +16,12 @@ import TestMatterPage from './components/TestMatterPage';  // New import for tes
 import CompareScores from './components/CompareScores/CompareScores';  // New import for compare page
 import "./App.css";
 import { AuthContext } from './AuthContext';
+import useDocumentMeta from '././hooks/useDocumentMeta';
 
 const App = () => {
+  useDocumentMeta({
+    image: `${window.location.origin}/cred-blue-banner.jpg`
+  });
   const { isAuthenticated, handleLoginSuccess } = useContext(AuthContext);
 
   return (
