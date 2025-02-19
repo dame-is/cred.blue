@@ -251,6 +251,10 @@
   font-weight: 600;
 }
 
+.navbar-auth-button {
+  display: none;
+}
+
 
   /* Responsive Design: Links display in a row under the logo */
   @media (max-width: 750px) {
@@ -324,3 +328,4 @@
       padding: 4px 7px;
     }
   }
+

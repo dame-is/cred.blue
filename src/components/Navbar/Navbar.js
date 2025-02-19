@@ -117,6 +117,7 @@ const Navbar = () => {
                 `https://cred.blue/newsletter`, '_blank'
               )}
             >
+              newsletter
             </button>
           </div>
         </div>
