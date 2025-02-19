@@ -11,6 +11,7 @@ const CompareScores = () => {
     useDocumentMeta({
         title: `Compare cred.blue scores`,
         description: `Compare two different Bluesky accounts to see which has a higher cred.blue score.`,
+        image: `${window.location.origin}/cred-blue-banner.jpg`
       });
 
   // Input states

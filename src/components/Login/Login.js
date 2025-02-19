@@ -3,8 +3,15 @@ import React, { useState, useContext } from 'react';
 import { AuthContext } from '../../AuthContext';
 import { ThemeContext } from '../../contexts/ThemeContext';
 import './Login.css';
+import useDocumentMeta from '../../hooks/useDocumentMeta';
 
 const Login = () => {
+  useDocumentMeta({
+    title: 'Login',
+    description: 'Login to cred.blue to get your analysis and score.',
+    // This will reference an image from your public folder
+    image: `${window.location.origin}/cred-blue-banner.jpg`
+  });
   const { isDarkMode } = useContext(ThemeContext);
   const [appPassword, setAppPassword] = useState('');
   const [handle, setHandle] = useState('');

@@ -43,6 +43,7 @@ const UserProfile = () => {
   useDocumentMeta({
     title: `${username}'s cred.blue analysis`,
     description: `View ${username}'s credibility score and Bluesky activity analysis on cred.blue`,
+    image: `${window.location.origin}/cred-blue-banner.jpg`
   });
   
   const getLayouts = () => ({

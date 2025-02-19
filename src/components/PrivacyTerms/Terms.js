@@ -2,8 +2,14 @@
 
 import React from 'react';
 import './PrivacyTerms.css';
+import useDocumentMeta from '../../hooks/useDocumentMeta';
 
 const Terms = () => {
+    useDocumentMeta({
+        title: `Terms`,
+        description: `Learn more about the Terms of Use for cred.blue`,
+        image: `${window.location.origin}/cred-blue-banner.jpg`
+      });
   return (
     <>
       <main className="privacy-terms-page">

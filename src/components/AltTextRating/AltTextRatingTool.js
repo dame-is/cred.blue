@@ -12,6 +12,7 @@ const AltTextRatingTool = () => {
     useDocumentMeta({
         title: `Bluesky Alt Text Rating Tool by cred.blue`,
         description: `How consistently do you use alt text when posting on Bluesky?`,
+        image: `${window.location.origin}/cred-blue-banner.jpg`
       });
   // Form state and analysis data.
   const [username, setUsername] = useState('');
