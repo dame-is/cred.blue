@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Navbar from './components/Navbar/Navbar';
 import Footer from './components/Footer/Footer';
 import Newsletter from './components/Newsletter/Newsletter';
-import MainApp from './components/MainApp/MainApp';
+import MainApp from '../../MainApp/MainApp';
 import About from './components/About/About';
 import Home from './components/Home/Home';
 import Terms from './components/PrivacyTerms/Terms';
