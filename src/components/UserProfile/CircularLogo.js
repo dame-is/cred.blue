@@ -13,7 +13,7 @@ const CircularLogo = ({
   // Determine if it's a web DID and create repeated text if necessary
   const isWebDid = did.startsWith('did:web');
   const text = isWebDid 
-    ? Array(webDidRepetitions).fill(did).join(' ') 
+    ? Array(webDidRepetitions).fill(did).join('  ') 
     : did;
 
   const textGroupRef = useRef(null);

@@ -317,10 +317,6 @@
     margin: 10px 0;
 }
 
-.comparison-summary-text {
-    padding-bottom: 15px;
-}
-
 /* Container for elements below the score breakdowns */
 .comparison-extras {
     flex: 1 1 100%;
@@ -543,4 +539,6 @@
     align-content: center;
     font-size: 0.8em;
     gap: 20px;
+    margin-bottom: 23px;
+    margin-top: -10px;
   }
