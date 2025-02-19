@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useRef, useCallback, useContext } from "react";
+// SearchBar.jsx
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { ThemeContext } from '../../contexts/ThemeContext';
 import "./SearchBar.css";
 
 const SearchBar = () => {
-  const { isDarkMode } = useContext(ThemeContext);
   const [username, setUsername] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [autocompleteActive, setAutocompleteActive] = useState(false);
@@ -12,8 +11,8 @@ const SearchBar = () => {
   const [selectedSuggestion, setSelectedSuggestion] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const debounceTimeout = useRef(null);
 
+  // Debounce function (similar to AltTextRatingTool)
   const debounce = (func, delay) => {
     let timer;
     const debounced = (...args) => {
@@ -26,6 +25,7 @@ const SearchBar = () => {
     return debounced;
   };
 
+  // Fetch suggestions from the API
   const fetchSuggestions = async (query) => {
     if (!query) {
       setSuggestions([]);
@@ -49,7 +49,7 @@ const SearchBar = () => {
     }
   };
 
-  const debouncedFetchSuggestions = useRef(debounce(fetchSuggestions, 300)).current;
+  const debouncedFetchSuggestions = useCallback(debounce(fetchSuggestions, 300), []);
 
   useEffect(() => {
     if (!selectedSuggestion) {
@@ -60,11 +60,19 @@ const SearchBar = () => {
     };
   }, [username, debouncedFetchSuggestions, selectedSuggestion]);
 
+  const handleNavigation = (handle) => {
+    // First, navigate to home to reset any error states
+    navigate("/home");
+    // Then, after a brief timeout, navigate to the profile
+    setTimeout(() => {
+      navigate(`/${encodeURIComponent(handle)}`);
+    }, 0);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (username.trim() !== "") {
-      const encodedUsername = encodeURIComponent(username.trim());
-      navigate(`/${encodedUsername}`);
+      handleNavigation(username.trim());
       setUsername("");
       setSuggestions([]);
       setAutocompleteActive(false);
@@ -103,7 +111,7 @@ const SearchBar = () => {
           setSelectedSuggestion(selectedHandle);
           setSuggestions([]);
           setAutocompleteActive(false);
-          navigate(`/${encodeURIComponent(selectedHandle)}`);
+          handleNavigation(selectedHandle);
         }
         break;
       case "Escape":
@@ -116,12 +124,12 @@ const SearchBar = () => {
   };
 
   return (
-    <div className={`search-bar-container ${isDarkMode ? 'dark-mode' : ''}`}>
+    <div className="search-bar-container">
       <form className="search-bar" onSubmit={handleSubmit} role="search">
         <div style={{ position: 'relative' }}>
           <input
             type="text"
-            placeholder="(e.g. user.bsky.social)"
+            placeholder="(e.g. dame.bsky.social)"
             value={username}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
@@ -136,23 +144,20 @@ const SearchBar = () => {
                 ? `suggestion-${activeSuggestionIndex}`
                 : undefined
             }
-            className={isDarkMode ? 'dark-mode' : ''}
           />
           {autocompleteActive && suggestions.length > 0 && (
-            <div className={`autocomplete-items ${isDarkMode ? 'dark-mode' : ''}`} 
-                 id="autocomplete-items">
+            <div className="autocomplete-items" id="autocomplete-items">
               {suggestions.map((actor, index) => (
                 <div
                   key={actor.handle}
-                  className={`autocomplete-item ${index === activeSuggestionIndex ? 'active' : ''} 
-                             ${isDarkMode ? 'dark-mode' : ''}`}
+                  className={`autocomplete-item ${index === activeSuggestionIndex ? 'active' : ''}`}
                   onClick={() => {
                     setUsername(actor.handle);
                     setSelectedSuggestion(actor.handle);
                     setSuggestions([]);
                     setAutocompleteActive(false);
                     debouncedFetchSuggestions.cancel();
-                    navigate(`/${encodeURIComponent(actor.handle)}`);
+                    handleNavigation(actor.handle);
                   }}
                 >
                   <img 
@@ -169,8 +174,18 @@ const SearchBar = () => {
             </div>
           )}
         </div>
-        <button type="submit" className={isDarkMode ? 'dark-mode' : ''}>Get Score</button>
+        <button type="submit">Search</button>
       </form>
+      {isLoading && <div className="loading">Loading...</div>}
+      <div
+        role="status"
+        aria-live="polite"
+        className="sr-only"
+      >
+        {suggestions.length > 0
+          ? `${suggestions.length} suggestions available.`
+          : "No suggestions available."}
+      </div>
     </div>
   );
 };

@@ -247,7 +247,7 @@ const UserProfile = () => {
   return (
     <AccountDataContext.Provider value={selectedAccountData}>
         <Helmet>
-        <title>{`${username} - cred.blue Score`}</title>
+        <title>{`${username}'s cred.blue Score`}</title>
         <meta name="description" content={`Check ${username}'s Bluesky credibility score and data footprint on cred.blue`} />
         
         {/* OpenGraph Meta Tags */}
