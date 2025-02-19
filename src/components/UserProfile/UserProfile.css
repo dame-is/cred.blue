@@ -361,6 +361,16 @@ tspan {
   grid-row: 2;
 }
 
+.narrative-card {
+  font-size: 0.9em;
+}
+
+.narrative-disclaimer {
+  font-size: 0.8em;
+  margin-top: 13.5px;
+  opacity: 0.5;
+}
+
 /* Responsive Adjustments for Cards */
 @media (max-width: 630px) {
   .circular-badge {
@@ -392,11 +402,20 @@ tspan {
   }
 
   .share-button-container {
+    gap: 10px;
+  }
+
+  .user-profile-score {
+    padding: 0px;
+  }
+
+  .share-button-container {
     grid-row: 5;
     grid-column: 1;
   }
 
   .user-profile-header {
     margin-left: 0px;
+    row-gap: 10px;
   }
 }

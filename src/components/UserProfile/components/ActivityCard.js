@@ -100,26 +100,28 @@ const ActivityCard = () => {
               domain={[0, dataMax => Math.ceil(dataMax * 2 / 5) * 5]} 
             />
             <Tooltip content={<CustomTooltip />} />
-            <Legend />
-            <Area
-              type="monotone"
-              yAxisId="right"
-              dataKey="nonBskyRecords"
-              stackId="2"
-              stroke="none"
-              fill="#004F84"
-              fillOpacity={0.9}
-              name="atproto records"
+            <Legend 
+              iconType="circle"
             />
             <Area
               type="monotone"
               yAxisId="left"
               dataKey="bskyRecords"
-              stackId="1"
+              stackId="2"
               stroke="none"
               fill="#3b9af8"
               fillOpacity={0.9}
               name="bsky records"
+            />
+            <Area
+              type="monotone"
+              yAxisId="right"
+              dataKey="nonBskyRecords"
+              stackId="1"
+              stroke="none"
+              fill="#004F84"
+              fillOpacity={0.9}
+              name="atproto records"
             />
           </AreaChart>
         </ResponsiveContainer>

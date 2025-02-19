@@ -65,6 +65,7 @@ const AltTextCard = () => {
           {(altTextPercentage * 100).toFixed(0)}% {emoji}
         </strong>
       </h2>
+      <p className="disclaimer">Last 90 Days</p>
       </ul>
       <div style={{ width: '50%', height: 300 }}>
         <ResponsiveContainer>
