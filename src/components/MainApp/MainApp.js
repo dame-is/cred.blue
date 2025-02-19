@@ -4,7 +4,7 @@ import React, { useState, useContext } from "react";
 import ScoreForm from "../ScoreForm";
 import ScoreResult from "../ScoreResult";
 import "./MainApp.css";
-import { AuthContext } from "../../AuthContext";
+import { AuthContext } from "../../../../AuthContext";
 
 const MainApp = () => {
   const { isAuthenticated, userHandle, loading } = useContext(AuthContext);
