@@ -14,6 +14,8 @@ import AltTextCard from "./components/AltTextCard";
 import ActivityCard from "./components/ActivityCard";
 import ScoreBreakdownCard from "./components/ScoreBreakdownCard";
 
+import useDocumentMeta from '../../hooks/useDocumentMeta';
+
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import "./UserProfile.css";
@@ -37,6 +39,11 @@ const UserProfile = () => {
   const cols = { lg: 2, md: 2, sm: 1, xs: 1, xxs: 1 };
 
   const CARD_HEIGHT = 6;
+
+  useDocumentMeta({
+    title: `${username}'s cred.blue analysis`,
+    description: `View ${username}'s credibility score and Bluesky activity analysis on cred.blue`,
+  });
   
   const getLayouts = () => ({
     lg: [
