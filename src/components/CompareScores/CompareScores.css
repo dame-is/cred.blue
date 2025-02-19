@@ -522,3 +522,25 @@
   .score-toggle-controls input {
     margin-top: 0px;
   }
+
+  .profile-1-button {
+    margin: 0px;
+    word-break: break-all;
+    word-wrap: break-word;
+    max-width: 145px;
+  }
+
+  .profile-2-button {
+    margin: 0px;
+    word-break: break-all;
+    word-wrap: break-word;
+    max-width: 145px;
+  }
+
+  .profile-button-container {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    font-size: 0.8em;
+    gap: 20px;
+  }

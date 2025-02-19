@@ -94,7 +94,7 @@ const AltTextRatingTool = () => {
     } while (cursor);
     return records;
   }
-  
+
   // Analyze posts based on checkboxes.
   function analyzePosts(records, useLast90Days, excludeReplies, actor) {
     let dynamicMinDate;
@@ -410,6 +410,7 @@ const AltTextRatingTool = () => {
               Exclude Replies
             </label>
           </div>
+          <button className="full-analysis-button" type="submit">View Full Analysis</button>
           <p>
             <a href="https://bsky.app/settings/accessibility" target="_blank" rel="noreferrer">
               Change your Bluesky alt text settings

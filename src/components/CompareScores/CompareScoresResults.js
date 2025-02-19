@@ -252,26 +252,6 @@ const CompareScoresResults = ({ result, loading }) => {
       
       return (
         <div className="comparison-summary">
-          <div className="profile-button-container">
-            <button
-              className="profile-1-button"
-              type="button"
-              onClick={() => window.open(
-                `https://cred.blue/${first.handle}`, '_blank'
-              )}
-            >
-              View {first.handle}'s Profile
-            </button>
-            <button
-              className="profile-2-button"
-              type="button"
-              onClick={() => window.open(
-                `https://cred.blue/${second.handle}`, '_blank'
-              )}
-            >
-              View {second.handle}'s Profile
-            </button>
-          </div>
           <div className="comparison-summary-text">
             <h3>High-Level Comparison</h3>
             <p>
@@ -295,6 +275,26 @@ const CompareScoresResults = ({ result, loading }) => {
                 <span>Both scores are equal!</span>
               )}
             </p>
+          </div>
+          <div className="profile-button-container">
+            <button
+              className="profile-1-button"
+              type="button"
+              onClick={() => window.open(
+                `https://cred.blue/${first.handle}`, '_blank'
+              )}
+            >
+              View {first.handle}'s Full Analysis
+            </button>
+            <button
+              className="profile-2-button"
+              type="button"
+              onClick={() => window.open(
+                `https://cred.blue/${second.handle}`, '_blank'
+              )}
+            >
+              View {second.handle}'s Full Analysis
+            </button>
           </div>
         </div>
       );
