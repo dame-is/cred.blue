@@ -184,6 +184,7 @@
   position: relative;
   display: inline-block;
   grid-row: 1;
+  grid-column: 1;
 }
 
 /* Light mode styles */
@@ -198,8 +199,10 @@
 
 .share-button-container {
   align-content: center;
-  grid-row: 3;
-  grid-column: 1;
+  grid-column: 3;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
 }
 
 .toggle-switch {
@@ -233,10 +236,9 @@ tspan {
 .user-profile-data-group {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  align-content: center;
   justify-content: center;
   grid-row: 2;
+  grid-column: 2;
 }
 
 .dark-mode rect {
@@ -260,15 +262,16 @@ tspan {
 }
 
 .user-profile-header-rechart {
-  display: flex;
   align-items: center;
-  width: 100%;
-  margin: 0 auto;
-  padding: 1rem;
-  max-width: 200px;
-  justify-content: center;
-  max-height: 130px;
+  display: flex;
   grid-row: 1;
+  justify-content: center;
+  margin: 0 auto;
+  max-height: 130px;
+  max-width: 200px;
+  padding: 1rem;
+  width: 100%;
+  grid-column: 3;
 }
 
 .score-gauge {
@@ -276,12 +279,12 @@ tspan {
 }
 
 .user-profile-main {
-  align-content: center;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  justify-content: center;
-  grid-row: 2;
+  grid-row: 1;
+  justify-content: space-evenly;
+  padding-top: 5px;
+  grid-column: 2;
 }
 
 /* Responsive Adjustments for Cards */
