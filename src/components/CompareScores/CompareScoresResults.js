@@ -115,7 +115,7 @@ const CompareScoresResults = ({ result, loading }) => {
           checked={showAtproto}
           onChange={() => setShowAtproto((prev) => !prev)}
         />
-        Show Atproto Score
+        Show AT Proto Score
       </label>
     </div>
   );

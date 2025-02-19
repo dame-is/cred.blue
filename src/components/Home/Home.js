@@ -15,7 +15,7 @@ const Home = () => {
       />
       <h1>Welcome</h1>
       <p>
-        Generate a Bluesky credibility score. Understand your Atproto data footprint. Vibe check strangers and new accounts.
+        Generate a Bluesky credibility score. Understand your AT Proto data footprint. Vibe check strangers and new accounts.
       </p>
       <p className="disclaimer">
         <strong>Note:</strong> this tool is currently in beta and things will change.

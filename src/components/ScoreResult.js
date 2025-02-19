@@ -146,7 +146,7 @@ const ScoreResult = ({ result, loading }) => {
 
         {/* Atproto Score Breakdown */}
         <div className="breakdown-section">
-          <h4>Atproto Score Breakdown</h4>
+          <h4>AT Proto Score Breakdown</h4>
           {atprotoBreakdown.length > 0 ? (
             <ul>
               {atprotoBreakdown.map((item, index) => (
@@ -168,7 +168,7 @@ const ScoreResult = ({ result, loading }) => {
               ))}
             </ul>
           ) : (
-            <p>No Atproto score breakdown available.</p>
+            <p>No AT Proto score breakdown available.</p>
           )}
         </div>
       </div>
@@ -194,7 +194,7 @@ const ScoreResult = ({ result, loading }) => {
           checked={showAtproto}
           onChange={() => setShowAtproto((prev) => !prev)}
         />
-        Show Atproto Score
+        Show AT Proto Score
       </label>
     </div>
   );
@@ -214,7 +214,7 @@ const ScoreResult = ({ result, loading }) => {
             <p>{`Bluesky Score: ${dataPoint.Bluesky || 0}`}</p>
           )}
           {showAtproto && (
-            <p>{`Atproto Score: ${dataPoint.Atproto || 0}`}</p>
+            <p>{`AT Proto Score: ${dataPoint.Atproto || 0}`}</p>
           )}
           <p>{`Combined Score: ${dataPoint.Combined || 0}`}</p>
         </div>

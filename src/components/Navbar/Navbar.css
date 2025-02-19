@@ -279,7 +279,7 @@
     .navbar-actions {
       align-items: center;
       display: flex;
-      gap: 20px;
+      gap: 5px;
       justify-content: center;
       margin-right: 10px;
     }

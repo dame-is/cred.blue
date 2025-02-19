@@ -23,7 +23,7 @@ const Privacy = () => {
 
         <h3>Information We Access</h3>
         <ul>
-            <li>Public Bluesky/Atproto PDS data associated with searched user accounts</li>
+            <li>Public Bluesky/AT Protocol PDS data associated with searched user accounts</li>
             <li>This includes publicly available posts, follows, likes, and other public account information</li>
         </ul>
 
@@ -61,7 +61,7 @@ const Privacy = () => {
         <h2>Third-Party Services</h2>
         <ul>
             <li>We use Bluesky's authentication system for user login</li>
-            <li>We access public data through Atproto/Bluesky PDSs</li>
+            <li>We access public data through AT Protocol/Bluesky PDSs</li>
             <li>We do not share any collected information with third parties</li>
         </ul>
 

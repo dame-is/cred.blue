@@ -15,7 +15,8 @@ canvas {
   
   .loading-text {
     font-size: 1em;
-    margin-top: 20px;
+    margin-top: 0px;
+    margin-bottom: 0px;
     color: #004f84e6;
     opacity: 1;
     transition: opacity 0.5s ease-in-out;
@@ -37,7 +38,6 @@ canvas {
   .circle-counters {
     display: flex;
     gap:  24.5px;;
-    margin-top: 10px;
     font-size: 1.2em;
     align-content: center;
     justify-content: center;
@@ -47,14 +47,14 @@ canvas {
     margin: 0px;
   }
 
-  .dark-mode .circle-counters {
-    opacity: 50%;
-  }
-
   .counter-item {
     display: flex;
     align-items: center;
     gap: 8px;
+  }
+
+  .version-number p {
+    margin: 0px;
   }
   
   .legend-circle {
@@ -74,4 +74,30 @@ canvas {
   .special-circle {
     background-color: #FFD700;
     border-color: #FFA500;
+  }
+
+  .loading-text-container {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    text-align: center;
+    gap: 17px;
+  }
+
+  .loading-container-1 {
+    gap: 17px;
+  }
+
+  .counter-item-regular {
+    color: #004f84e6;
+  }
+
+  .counter-item-special {
+    color: orange;
+  }
+
+  .version-number {
+    font-size: 0.7em;
+    opacity: 0.5;
   }
