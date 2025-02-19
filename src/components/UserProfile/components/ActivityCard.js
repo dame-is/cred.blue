@@ -1,7 +1,7 @@
 import React, { useContext, useMemo } from "react";
 import { AccountDataContext } from "../UserProfile";
 import "./ActivityCard.css"; // Optional: For styling
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, Legend, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const ActivityCard = () => {
   const accountData = useContext(AccountDataContext);
@@ -78,6 +78,7 @@ const ActivityCard = () => {
             <YAxis yAxisId="left" />
             <YAxis yAxisId="right" orientation="right" />
             <Tooltip content={<CustomTooltip />} />
+            <Legend />
             <Area
               type="monotone"
               yAxisId="right"
@@ -85,7 +86,7 @@ const ActivityCard = () => {
               stackId="1"
               stroke="none"
               fill="#004F84"
-              fillOpacity={1}
+              fillOpacity={0.9}
               name="atproto records"
             />
             <Area
@@ -95,7 +96,7 @@ const ActivityCard = () => {
               stackId="1"
               stroke="none"
               fill="#3b9af8"
-              fillOpacity={1}
+              fillOpacity={0.9}
               name="bsky records"
             />
           </AreaChart>
