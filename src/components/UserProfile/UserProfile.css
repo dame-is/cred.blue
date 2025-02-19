@@ -364,7 +364,7 @@ tspan {
 /* Responsive Adjustments for Cards */
 @media (max-width: 630px) {
   .circular-badge {
-    grid-column: 2;
+    grid-column: 1;
     grid-row: 1;
     margin-left: 0;
     margin-right: 30px;
@@ -372,23 +372,28 @@ tspan {
   .user-profile-emoji-group {
     grid-row: 1;
     grid-column: 1;
+    display: none;
   }
   .user-profile-main {
     grid-row: 2;
+    grid-column: 1;
     margin-left: -16.5px;
   }
   .user-profile-header-rechart {
-    grid-row: 2;
+    grid-row: 3;
+    grid-column: 1;
     scale: 0.9;
     margin-bottom: 5px;
   }
 
   .user-profile-data-group {
-    grid-row: 3;
+    grid-row: 4;
+    grid-column: 1;
     margin-left: -16.5px;
   }
 
   .share-button-container {
-    grid-row: 3;
+    grid-row: 5;
+    grid-column: 1;
   }
 }
