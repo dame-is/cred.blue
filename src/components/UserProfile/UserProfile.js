@@ -242,11 +242,13 @@ const UserProfile = () => {
       <div className={`user-profile ${showContent ? "fade-in" : "hidden"}`}>
         <div className="user-profile-container">
           <div className="user-profile-header">
+
               <CircularLogo 
                 did={selectedAccountData.did}
                 size={205}
                 textColor="#004f84"
               />
+
               <div className="user-profile-main">
                 <div className="user-profile-name">
                   <h1>{displayName}</h1>
@@ -260,9 +262,8 @@ const UserProfile = () => {
                   <h3>{selectedAccountData.postingStyle}</h3>
                 </div>
               </div>
-            </div>
-
-            <div className="user-profile-data">
+            
+              <div className="user-profile-data">
               <div className="user-profile-header-rechart">
                 <ScoreGauge score={selectedAccountData.combinedScore} />
               </div>
@@ -292,6 +293,7 @@ const UserProfile = () => {
                 Last 90 Days
               </button>
             </div> */}
+
             </div>
             <div className="share-button-container">
               <button
@@ -317,6 +319,7 @@ const UserProfile = () => {
                 Compare Scores
               </button>
             </div>
+        </div>
 
         <ResponsiveGridLayout
           className="layout"
