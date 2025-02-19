@@ -113,7 +113,7 @@ const ScoreGauge = ({ score, shadowColor = 'rgba(150,127,0,0.74)' }) => {
         {needle(score, data, cx, cy, iR, oR, '#FFD700')}
       </PieChart>
       <div className="text-center font-semibold mt-2">
-        {score} / {MAX_SCORE}
+        <strong>{score}</strong> <div className="max-score">/ {MAX_SCORE}</div>
       </div>
     </div>
   );
