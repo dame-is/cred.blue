@@ -2,13 +2,8 @@
 
 import React from 'react';
 import './About.css';
-import useDocumentMeta from '../../hooks/useDocumentMeta';
 
 const About = () => {
-  useDocumentMeta({
-    title: `About cred.blue`,
-    description: `Learn more about the cred.blue scoring methodology and mission.`,
-  });
   return (
     <>
       <main className="about-page">

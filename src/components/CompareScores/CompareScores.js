@@ -4,14 +4,8 @@ import React, { useState, useEffect, useRef } from "react";
 import CompareScoresResults from "./CompareScoresResults";
 import { loadAccountData } from "../../accountData";
 import MatterLoadingAnimation from "../MatterLoadingAnimation"; // Adjust the path as needed
-import useDocumentMeta from '../../hooks/useDocumentMeta';
 
 const CompareScores = () => {
-
-    useDocumentMeta({
-        title: `Compare cred.blue scores`,
-        description: `Compare two different Bluesky accounts to see which has a higher cred.blue score.`,
-      });
 
   // Input states
   const [username1, setUsername1] = useState("");

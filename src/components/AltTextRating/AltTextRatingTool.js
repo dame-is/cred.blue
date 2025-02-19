@@ -2,17 +2,12 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import './AltTextRatingTool.css';
-import useDocumentMeta from '../../hooks/useDocumentMeta';
 
 const PUBLIC_API_URL = "https://public.api.bsky.app";
 // Define the static minimum date from your original script.
 const STATIC_MIN_DATE = new Date("2023-04-22T12:01:00Z");
 
 const AltTextRatingTool = () => {
-    useDocumentMeta({
-        title: `Bluesky Alt Text Rating Tool by cred.blue`,
-        description: `How consistently do you use alt text when posting on Bluesky?`,
-      });
   // Form state and analysis data.
   const [username, setUsername] = useState('');
   const [analysis, setAnalysis] = useState(null);
