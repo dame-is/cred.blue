@@ -367,7 +367,7 @@ tspan {
     grid-column: 1;
     grid-row: 1;
     margin-left: 0;
-    margin-right: 30px;
+    margin-right: 1.5px;
   }
   .user-profile-emoji-group {
     grid-row: 1;
@@ -377,7 +377,7 @@ tspan {
   .user-profile-main {
     grid-row: 2;
     grid-column: 1;
-    margin-left: -16.5px;
+    gap: 10px;
   }
   .user-profile-header-rechart {
     grid-row: 3;
@@ -389,11 +389,14 @@ tspan {
   .user-profile-data-group {
     grid-row: 4;
     grid-column: 1;
-    margin-left: -16.5px;
   }
 
   .share-button-container {
     grid-row: 5;
     grid-column: 1;
+  }
+
+  .user-profile-header {
+    margin-left: 0px;
   }
 }
