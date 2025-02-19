@@ -77,6 +77,10 @@
   text-align: center;
   margin-bottom: 40px;
   margin-top: 55px;
+  display: flex;
+  margin-left: 20px;
+  margin-right: 20px;
+  gap: 60px
 }
 
 
@@ -133,11 +137,8 @@
 }
 
 .user-profile-data {
-  flex-direction: row;
   justify-content: center;
   gap: 35px;
-  margin-top: 9.5px;
-  margin-bottom: 16px;
 }
 
 .circular-badge {
@@ -175,6 +176,7 @@
 .user-profile-badges h3 {
   margin: 0px;
   font-size: 0.8em;
+  font-weight: 500;
 }
 
 .circular-badge {
@@ -193,7 +195,7 @@
 }
 
 .share-button-container {
-  margin-top: 10px;
+  align-content: center;
 }
 
 .toggle-switch {
@@ -249,9 +251,9 @@ tspan {
   display: flex;
   align-items: center;
   width: 100%;
-  max-width: 300px;
   margin: 0 auto;
   padding: 1rem;
+  max-width: 200px;
 }
 
 .score-gauge {

@@ -40,40 +40,40 @@ const UserProfile = () => {
   
   const getLayouts = () => ({
     lg: [
-      { i: "NarrativeCard", x: 0, y: 0, w: 1, h: CARD_HEIGHT, static: false },
-      { i: "ScoreBreakdownCard", x: 1, y: 0, w: 1, h: CARD_HEIGHT, static: false },
+      { i: "ScoreBreakdownCard", x: 0, y: 0, w: 1, h: CARD_HEIGHT, static: false },
+      { i: "NarrativeCard", x: 1, y: 0, w: 1, h: CARD_HEIGHT, static: false },
       { i: "ProfileCard", x: 0, y: CARD_HEIGHT, w: 1, h: CARD_HEIGHT, static: false },
       { i: "PostTypeCard", x: 1, y: CARD_HEIGHT, w: 1, h: CARD_HEIGHT, static: false },
       { i: "AltTextCard", x: 0, y: CARD_HEIGHT * 2, w: 1, h: CARD_HEIGHT, static: false },
       { i: "ActivityCard", x: 1, y: CARD_HEIGHT * 2, w: 1, h: CARD_HEIGHT, static: false }
     ],
     md: [
-      { i: "NarrativeCard", x: 0, y: 0, w: 1, h: CARD_HEIGHT, static: false },
-      { i: "ScoreBreakdownCard", x: 1, y: 0, w: 1, h: CARD_HEIGHT, static: false },
+      { i: "ScoreBreakdownCard", x: 0, y: 0, w: 1, h: CARD_HEIGHT, static: false },
+      { i: "NarrativeCard", x: 1, y: 0, w: 1, h: CARD_HEIGHT, static: false },
       { i: "ProfileCard", x: 0, y: CARD_HEIGHT, w: 1, h: CARD_HEIGHT, static: false },
       { i: "PostTypeCard", x: 1, y: CARD_HEIGHT, w: 1, h: CARD_HEIGHT, static: false },
       { i: "AltTextCard", x: 0, y: CARD_HEIGHT * 2, w: 1, h: CARD_HEIGHT, static: false },
       { i: "ActivityCard", x: 1, y: CARD_HEIGHT * 2, w: 1, h: CARD_HEIGHT, static: false }
     ],
     sm: [
-      { i: "NarrativeCard", x: 0, y: 0, w: 1, h: 4, static: false },
       { i: "ScoreBreakdownCard", x: 0, y: 8, w: 1, h: 6, static: false },
+      { i: "NarrativeCard", x: 0, y: 0, w: 1, h: 4, static: false },
       { i: "ProfileCard", x: 0, y: 14, w: 1, h: 5, static: false },
       { i: "PostTypeCard", x: 0, y: 22, w: 1, h: 6, static: false },
       { i: "AltTextCard", x: 0, y: 26, w: 1, h: 5, static: false },
       { i: "ActivityCard", x: 0, y: 30, w: 1, h: 6, static: false }
     ],
     xs: [
-      { i: "NarrativeCard", x: 0, y: 0, w: 1, h: 6, static: false },
       { i: "ScoreBreakdownCard", x: 0, y: 8, w: 1, h: 6, static: false },
+      { i: "NarrativeCard", x: 0, y: 0, w: 1, h: 6, static: false },
       { i: "ProfileCard", x: 0, y: 14, w: 1, h: 6, static: false },
       { i: "PostTypeCard", x: 0, y: 22, w: 1, h: 6, static: false },
       { i: "AltTextCard", x: 0, y: 26, w: 1, h: 6, static: false },
       { i: "ActivityCard", x: 0, y: 30, w: 1, h: 7, static: false }
     ],
     xxs: [
-      { i: "NarrativeCard", x: 0, y: 0, w: 1, h: 8, static: false },
       { i: "ScoreBreakdownCard", x: 0, y: 8, w: 1, h: 6, static: false },
+      { i: "NarrativeCard", x: 0, y: 0, w: 1, h: 8, static: false },
       { i: "ProfileCard", x: 0, y: 14, w: 1, h: 7, static: false },
       { i: "PostTypeCard", x: 0, y: 22, w: 1, h: 6, static: false },
       { i: "AltTextCard", x: 0, y: 26, w: 1, h: 5, static: false },
@@ -247,37 +247,38 @@ const UserProfile = () => {
               size={205}
               textColor="#004f84"
             />
-            <div className="user-profile-name">
-              <h1>{displayName}</h1>
-              <h2>@{resolvedHandle}</h2>
+            <div classname="user-profile-main">
+              <div className="user-profile-name">
+                <h1>{displayName}</h1>
+                <h2>@{resolvedHandle}</h2>
+              </div>
+              <div className="user-profile-age">
+                <h2>{Math.floor(selectedAccountData.ageInDays)} days old</h2>
+              </div>
+              <div className="user-profile-badges">
+                <h3>{selectedAccountData.socialStatus}</h3>
+                <h3>{selectedAccountData.postingStyle}</h3>
+              </div>
             </div>
-            <div className="user-profile-age">
-              <h2>{Math.floor(selectedAccountData.ageInDays)} days old</h2>
-            </div>
-            <div className="user-profile-badges">
-              <h3>{selectedAccountData.socialStatus}</h3>
-              <h3>{selectedAccountData.postingStyle}</h3>
-            </div>
-          </div>
-
-          <div className="user-profile-header-rechart">
-            <ScoreGauge score={selectedAccountData.combinedScore} />
           </div>
 
           <div className="user-profile-data">
-            <div className="user-profile-score">
-              <p><strong>Combined Score: {selectedAccountData.combinedScore}</strong></p>
-              <p>Bluesky Score: {selectedAccountData.blueskyScore}</p>
-              <p>Atproto Score: {selectedAccountData.atprotoScore}</p>
+            <div className="user-profile-header-rechart">
+              <ScoreGauge score={selectedAccountData.combinedScore} />
             </div>
-            <div className="user-profile-activity">
-              <p><strong>Overall Status: {selectedAccountData.activityAll.activityStatus}</strong></p>
-              <p>Bluesky Status: {selectedAccountData.activityAll.bskyActivityStatus}</p>
-              <p>Atproto Status: {selectedAccountData.activityAll.atprotoActivityStatus}</p>
+            <div className="user-profile-data-group">
+              <div className="user-profile-score">
+                <p>Bluesky Score: {selectedAccountData.blueskyScore}</p>
+                <p>Atproto Score: {selectedAccountData.atprotoScore}</p>
+              </div>
+              <div className="user-profile-activity">
+                <p>Bluesky Status: {selectedAccountData.activityAll.bskyActivityStatus}</p>
+                <p>Atproto Status: {selectedAccountData.activityAll.atprotoActivityStatus}</p>
+              </div>
             </div>
           </div>
 
-          <div className="toggle-switch">
+          {/* <div className="toggle-switch">
             <button
               className={`toggle-button ${selectedPeriod === '30' ? 'active' : ''}`}
               onClick={() => setSelectedPeriod('30')}
@@ -290,14 +291,15 @@ const UserProfile = () => {
             >
               Last 90 Days
             </button>
-          </div>
+          </div> */}
+
           <div className="share-button-container">
             <button
               className="share-button-profile"
               type="button"
               onClick={() => window.open(
                 `https://bsky.app/intent/compose?text=${encodeURIComponent(
-                  `My @cred.blue score is ${selectedAccountData.combinedScore}/1000, and my account is ${Math.floor(selectedAccountData.ageInDays)} days old.\n\nOverall I'm ${selectedAccountData.activityAll.activityStatus} on the network.\n\nMy social status is classified as a "${selectedAccountData.socialStatus}" with a posting style of "${selectedAccountData.postingStyle}".\n\nDiscover your score here: cred.blue`
+                  `My @cred.blue score is ${selectedAccountData.combinedScore}/1000, and my account is ${Math.floor(selectedAccountData.ageInDays)} days old.\n\nI'm ${selectedAccountData.activityAll.activityStatus} on the network.\n\nMy social status is "${selectedAccountData.socialStatus}" with a posting style of "${selectedAccountData.postingStyle}".\n\nCheck your score: cred.blue`
                 )}`, '_blank'
               )}
             >
@@ -313,21 +315,21 @@ const UserProfile = () => {
           cols={cols}
           rowHeight={50}
           margin={[20, 20]}
-          isDraggable={true}
+          isDraggable={false}
           isResizable={false}
           useCSSTransforms={true}
           onLayoutChange={() => updateCardHeights()}
           draggableHandle=".card-header" // Add this line to enable drag by header only
         >
           {/* Update your grid items to include a drag handle class in the Card component */}
-          <div key="NarrativeCard" className="grid-item" ref={el => cardRefs.current.NarrativeCard = el}>
-            <Card title="Summary">
-              <NarrativeCard />
-            </Card>
-          </div>
           <div key="ScoreBreakdownCard" className="grid-item" ref={el => cardRefs.current.ScoreBreakdownCard = el}>
             <Card title="Score Breakdown">
               <ScoreBreakdownCard />
+            </Card>
+          </div>
+          <div key="NarrativeCard" className="grid-item" ref={el => cardRefs.current.NarrativeCard = el}>
+            <Card title="Summary">
+              <NarrativeCard />
             </Card>
           </div>
           <div key="ProfileCard" className="grid-item" ref={el => cardRefs.current.ProfileCard = el}>
