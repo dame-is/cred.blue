@@ -36,10 +36,11 @@ canvas {
 
   .circle-counters {
     display: flex;
-    gap: 10px;
+    gap:  24.5px;;
     margin-top: 10px;
     font-size: 1.2em;
-    opacity: 25%;
+    align-content: center;
+    justify-content: center;
   }
 
   .circle-counters p {
@@ -62,6 +63,7 @@ canvas {
     border-radius: 50%;
     border-width: 3px;
     border-style: solid;
+    margin-bottom: 3px;
   }
   
   .regular-circle {

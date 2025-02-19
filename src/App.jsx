@@ -11,7 +11,7 @@ import Terms from './components/PrivacyTerms/Terms';
 import Privacy from './components/PrivacyTerms/Privacy';
 import AltTextRatingTool from './components/AltTextRating/AltTextRatingTool';
 import UserProfile from './components/UserProfile/UserProfile';
-import TestMatterPage from './components/TestMatterPage';
+import ZenPage from './components/ZenPage';
 import CompareScores from './components/CompareScores/CompareScores';
 import "./App.css";
 import { AuthContext } from './AuthContext';
@@ -44,7 +44,7 @@ const App = () => {
             <Route path="/terms" element={<Terms />} />
             <Route path="/newsletter" element={<Newsletter />} />
             <Route path="/:username" element={<UserProfile />} />
-            <Route path="/test-matter" element={<TestMatterPage />} />
+            <Route path="/zen" element={<ZenPage />} />
             {/* Default redirect */}
             <Route path="/" element={<Navigate to="/home" replace />} />
             <Route path="*" element={<Navigate to="/home" replace />} />

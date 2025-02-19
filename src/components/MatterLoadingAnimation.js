@@ -323,21 +323,23 @@ const messages = useMemo(
           boxSizing: "border-box",
         }}
       />
-    <p className={`loading-text ${fade ? "fade" : ""}`} style={{ marginTop: "20px", fontSize: "1em" }}>
-    {message}<span className="dots"></span>
-    </p>
-    <div className="circle-counters">
-      <div className="counter-item">
-        <div className="legend-circle regular-circle" />
-        <p>{circleCount}</p>
+    <div className="loading-text-container">
+      <p className={`loading-text ${fade ? "fade" : ""}`} style={{ marginTop: "20px", fontSize: "1em" }}>
+      {message}<span className="dots"></span>
+      </p>
+      <div className="circle-counters">
+        <div className="counter-item">
+          <div className="legend-circle regular-circle" />
+          <p className="counter-item-regular">{circleCount}</p>
+        </div>
+        <div className="counter-item">
+          <div className="legend-circle special-circle" />
+          <p className="counter-item-special">{specialCircleCount}</p>
+        </div>
       </div>
-      <div className="counter-item">
-        <div className="legend-circle special-circle" />
-        <p>{specialCircleCount}</p>
-      </div>
-    </div>
-      <div className="version-number">
-        <p>cred.blue v1.0</p>
+        <div className="version-number">
+          <p>cred.blue v1.0</p>
+        </div>
       </div>
     </div>
   );

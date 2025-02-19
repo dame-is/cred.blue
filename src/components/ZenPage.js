@@ -1,9 +1,9 @@
-// src/pages/TestMatterPage.jsx
+// src/pages/ZenPage.jsx
 import React from "react";
 import "./MatterLoadingAnimation.css";
-import MatterLoadingAnimation from "../components/MatterLoadingAnimation";
+import MatterLoadingAnimation from "./MatterLoadingAnimation";
 
-const TestMatterPage = () => {
+const ZenPage = () => {
   return (
     <div style={{
       display: "flex",
@@ -18,4 +18,4 @@ const TestMatterPage = () => {
   );
 };
 
-export default TestMatterPage;
+export default ZenPage;
