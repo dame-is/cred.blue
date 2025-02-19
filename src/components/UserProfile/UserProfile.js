@@ -6,7 +6,7 @@ import Card from "../Card/Card";
 import MatterLoadingAnimation from "../MatterLoadingAnimation";
 import ScoreGauge from './ScoreGauge';
 import CircularLogo from './CircularLogo';
-
+import { Helmet } from 'react-helmet';
 import ProfileCard from "./components/ProfileCard";
 import NarrativeCard from "./components/NarrativeCard";
 import PostTypeCard from "./components/PostTypeCard";
@@ -239,6 +239,19 @@ const UserProfile = () => {
 
   return (
     <AccountDataContext.Provider value={selectedAccountData}>
+        <Helmet>
+        <title>{`${username} - cred.blue Score`}</title>
+        <meta name="description" content={`Check ${username}'s Bluesky credibility score and data footprint on cred.blue`} />
+        
+        {/* OpenGraph Meta Tags */}
+        <meta property="og:title" content={`${username} - cred.blue Score`} />
+        <meta property="og:description" content={`Check ${username}'s Bluesky credibility score and data footprint on cred.blue`} />
+        <meta property="og:url" content={`https://cred.blue/${username}`} />
+        
+        {/* Twitter Card Meta Tags */}
+        <meta name="twitter:title" content={`${username} - cred.blue Score`} />
+        <meta name="twitter:description" content={`Check ${username}'s Bluesky credibility score and data footprint on cred.blue`} />
+      </Helmet>
       <div className={`user-profile ${showContent ? "fade-in" : "hidden"}`}>
         <div className="user-profile-container">
           <div className="user-profile-header">

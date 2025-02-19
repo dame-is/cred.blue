@@ -16,26 +16,46 @@ import ZenPage from './components/ZenPage';
 import CompareScores from './components/CompareScores/CompareScores';
 import "./App.css";
 import { AuthContext } from './AuthContext';
+import { Helmet } from 'react-helmet';
 
 // Create AuthCheck component to handle route changes
 const AuthCheck = () => {
- const location = useLocation();
- const { checkAuth } = useContext(AuthContext);
+  const location = useLocation();
+  const { checkAuth } = useContext(AuthContext);
 
- useEffect(() => {
-   checkAuth(location.pathname);
- }, [location.pathname, checkAuth]);
+  useEffect(() => {
+    checkAuth(location.pathname);
+  }, [location.pathname, checkAuth]);
 
- return null;
+  return null;
 };
 
 const App = () => {
- const { isAuthenticated, handleLoginSuccess } = useContext(AuthContext);
+  const { isAuthenticated, handleLoginSuccess } = useContext(AuthContext);
 
- return (
-   <Router>
-     <div className="app-container" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-       <AuthCheck />
+  return (
+    <Router>
+      <div className="app-container" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+        <Helmet>
+          {/* Default meta tags */}
+          <title>cred.blue</title>
+          <meta name="description" content="Generate a Bluesky credibility score. Understand your Atproto data footprint. Vibe check strangers and new accounts." />
+          
+          {/* OpenGraph Meta Tags */}
+          <meta property="og:title" content="cred.blue" />
+          <meta property="og:description" content="Generate a Bluesky credibility score. Understand your Atproto data footprint. Vibe check strangers and new accounts." />
+          <meta property="og:image" content="https://cred.blue/cred-blue-banner.jpg" />
+          <meta property="og:url" content="https://cred.blue" />
+          <meta property="og:type" content="website" />
+          
+          {/* Twitter Card Meta Tags */}
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:title" content="cred.blue" />
+          <meta name="twitter:description" content="Generate a Bluesky credibility score. Understand your Atproto data footprint. Vibe check strangers and new accounts." />
+          <meta name="twitter:image" content="https://cred.blue/cred-blue-banner.jpg" />
+        </Helmet>
+        
+        <AuthCheck />
        <Navbar />
        <div className="main-container" style={{ flex: 1 }}>
          <Routes>
