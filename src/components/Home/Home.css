@@ -24,6 +24,10 @@
     transition: background-color 0.3s ease, border-color 0.3s ease;
   }
 
+  .home-content .circular-badge{
+    margin-left: -21.5px;
+  }
+
   .home-context-text {
     max-width: 320px;
     margin: auto;

@@ -497,6 +497,7 @@
 
   .compare-scores-page input {
     margin-top: 10px;
+    border: 2px solid var(--button-bg);
   }
 
   .compare-scores-page h1 {

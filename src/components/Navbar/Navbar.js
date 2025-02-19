@@ -67,7 +67,7 @@ const Navbar = () => {
             <button
               className="navbar-newsletter-button"
               type="button"
-              onClick={() => window.open('https://cred.blue/newsletter', '_blank')}
+              onClick={() => window.open('https://cred.blue/newsletter')}
             >
               newsletter
             </button>
