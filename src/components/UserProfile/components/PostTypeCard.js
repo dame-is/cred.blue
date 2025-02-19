@@ -50,8 +50,8 @@ const PostTypeCard = () => {
           <Bar 
             dataKey="value" 
             fill="#3B9AF8" 
-            background={{ fill: '#eee' }}
-            radius={[10, 0, 0, 10]}
+            background={{ fill: '#eee', radius:[10, 10, 0, 0] }}
+            radius={[10, 10, 0, 0]}
           />
         </BarChart>
       </ResponsiveContainer>

@@ -33,7 +33,7 @@ const UserProfile = () => {
   const [cardHeights, setCardHeights] = useState({});
   const cardRefs = useRef({});
 
-  const breakpoints = { lg: 850, md: 680, sm: 450, xs: 0, xxs: 0 };
+  const breakpoints = { lg: 850, md: 560, sm: 450, xs: 0, xxs: 0 };
   const cols = { lg: 2, md: 2, sm: 1, xs: 1, xxs: 1 };
 
   const CARD_HEIGHT = 6;

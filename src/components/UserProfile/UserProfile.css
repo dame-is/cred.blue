@@ -122,6 +122,8 @@
   color: var(--text);
   margin-top: -10.5px;
   margin-left: 11.5px;
+  display: flex;
+  gap: 8.5px;
 }
 
 .user-profile-header-main {
@@ -185,6 +187,8 @@
   display: inline-block;
   grid-row: 1;
   grid-column: 1;
+  margin-left: -9px;
+  margin-right: -18px;
 }
 
 /* Light mode styles */
@@ -204,6 +208,7 @@
   display: flex;
   flex-direction: column;
   gap: 5px;
+  font-size: 0.8em;
 }
 
 .toggle-switch {
@@ -290,13 +295,6 @@ tspan {
   grid-column: 2;
 }
 
-/* Responsive Adjustments for Cards */
-@media (max-width: 470px) {
-  .user-profile-data {
-
-  }
-}
-
 .user-profile-container {
   text-align: center;
   margin: 55px 20px 40px;
@@ -320,5 +318,36 @@ tspan {
 }
 
 .max-score {
-  opacity: 0.7;
+  opacity: 0.5;
+}
+
+.comparea-button-profile {
+  background: gray;
+}
+
+/* Responsive Adjustments for Cards */
+@media (max-width: 630px) {
+  .circular-badge {
+    grid-column: col / span 2;
+    margin-left: 0;
+    margin-right: 30px;
+  }
+  .user-profile-main {
+    grid-row: 2;
+    margin-left: -16.5px;
+  }
+  .user-profile-header-rechart {
+    grid-row: 2;
+    scale: 0.9;
+    margin-bottom: 5px;
+  }
+
+  .user-profile-data-group {
+    grid-row: 3;
+    margin-left: -16.5px;
+  }
+
+  .share-button-container {
+    grid-row: 3;
+  }
 }
