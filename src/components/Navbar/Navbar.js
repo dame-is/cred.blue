@@ -1,10 +1,11 @@
-import React, { useContext, navigate } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { ThemeContext } from '../../contexts/ThemeContext';
 import './Navbar.css';
 
 const Navbar = () => {
   const { isDarkMode, toggleDarkMode } = useContext(ThemeContext);
+  const navigate = useNavigate();
 
   return (
     <header className="navbar">
