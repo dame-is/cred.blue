@@ -16,7 +16,7 @@ const About = () => {
             <li>Vibe check strangers and new accounts.</li>
           </ul>
           <h2>Intro</h2>
-          <p>The <strong>cred.blue</strong> platform allows anyone to better understand the data footprint that an <strong>AT Protocol</strong> or <strong>Bluesky</strong> identity is creating. During its beta launch, <strong>cred.blue</strong> provides an early version of its custom scoring algorithm that generates a "credibility" score based on an identity's activity in the ecosystem. Additionally, there is an <strong>Alt Text Rating Tool</strong> that allows you to see how consistently an account includes accessibility alt-text when posting images on Bluesky.</p>
+          <p>The <strong>cred.blue</strong> platform allows anyone to better understand the data footprint that an <strong>AT Protocol</strong> or <strong>Bluesky</strong> identity is making. During its beta launch, <strong>cred.blue</strong> provides an early version of its custom scoring algorithm that generates a "credibility" score based on an identity's activity in the ecosystem. Additionally, there is an <strong>Alt Text Rating Tool</strong> that allows you to see how consistently an account includes accessibility alt-text when posting images on Bluesky.</p>
           
           <p>The <strong>cred.blue</strong> scoring methodology is intended to provide a helpful contextual analysis of the public data associated with an AT Protocol or Bluesky identity. The hope is that the scoring system might help incentivize healthier behaviors and activity patterns on the network.</p>
 
@@ -31,7 +31,7 @@ const About = () => {
           <h2>FAQs</h2>
           
           <h3>Who created cred.blue?</h3>
-          <p>It was created by <a href="https://bsky.app/profile/dame.is" target="_blank" rel="noreferrer">@dame.is</a>! Dame has been a part of the Bluesky community from almost the very beginning and is passionate about the AT Protocol. Dame was user number Bluesky user #1,216 and is building cred.blue independently.</p>
+          <p>It was created by <a href="https://bsky.app/profile/dame.is" target="_blank" rel="noreferrer">@dame.is</a>! Dame has been a part of the Bluesky community from almost the very beginning and is passionate about the AT Protocol. Dame was Bluesky user #1,216 and is building cred.blue independently.</p>
           
           <h3>Why was cred.blue created?</h3>
           <p>Since its inception, Bluesky has relied upon an innovative domain verification system to help identities establish their credibility and authority. This system is powerful and should be taken advantage of, but it can only do so much in its current form. The cred.blue platform is just one experiment among many that is attempting to help people understand which social media accounts are more (or less) trustworthy.</p>
