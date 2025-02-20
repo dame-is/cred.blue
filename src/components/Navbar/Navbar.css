@@ -185,7 +185,7 @@
   align-items: center;
   justify-content: center;
   padding: 0.5rem;
-  color: var(--text);
+  color: #004f84;;
   transition: color 0.2s ease;
   scale: 1.3;
 }
@@ -209,7 +209,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--text-color);
+  color: #004f84;;
   transition: color 0.2s ease;
 }
 
@@ -222,10 +222,6 @@
   display: flex;
   align-items: center;
   gap: 0.3em;
-}
-
-.nav-icon:visited {
-  color: inherit;
 }
 
 .auth-button.login-button {
@@ -257,6 +253,7 @@
 
 .navbar-support-button-container {
   font-size: 0.9em;
+  margin-left: 10.2px;
 }
 
   /* Responsive Design: Links display in a row under the logo */
@@ -264,6 +261,10 @@
     .navbar-container {
       flex-direction: column;
       align-items: center;
+    }
+
+    .navbar-support-button-container {
+      margin-left: 0px;
     }
   
     .navbar-links ul {
@@ -337,6 +338,7 @@
     .navbar-support-button {
       max-width: 135.5px;
       font-size: 0.8em;
+      margin-left: 0px;
     }
     .navbar-links {
       font-weight: 700;

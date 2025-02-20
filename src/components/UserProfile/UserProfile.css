@@ -384,8 +384,8 @@ tspan {
     margin-top: auto;
     margin-bottom: auto;
   width: 100%;
-  margin-bottom: 30px;
-  margin-top: 49.5px;
+  margin-top: 60px;
+  margin-bottom: 60px;
 }
 
 .profile-sections-wrapper {
@@ -400,6 +400,7 @@ tspan {
 /* Left Section */
 .profile-section.left-section {
   justify-self: start;
+  margin-right: -9.3px;
 }
 
 /* Middle Section */
@@ -506,6 +507,10 @@ tspan {
     scale: .7;
     grid-column: 1;
     grid-row: 1;
+  }
+
+  .profile-section.left-section {
+    margin-right: 0px;
   }
 
   .profile-section.right-section {
