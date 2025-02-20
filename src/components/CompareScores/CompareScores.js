@@ -32,10 +32,14 @@ const CompareScores = () => {
   const [error, setError] = useState("");
 
   // Effect to handle URL parameters
+  // Flag to track if usernames came from URL
+  const [fromUrl, setFromUrl] = useState(false);
+
   useEffect(() => {
     if (urlUsername1 && urlUsername2) {
       setUsername1(urlUsername1);
       setUsername2(urlUsername2);
+      setFromUrl(true);
       handleComparison(urlUsername1, urlUsername2);
     }
   }, [urlUsername1, urlUsername2]);
@@ -95,13 +99,13 @@ const CompareScores = () => {
   const debouncedFetchSuggestions1 = useRef(debounce(fetchSuggestions1, 300)).current;
 
   useEffect(() => {
-    if (!selectedSuggestion1) {
+    if (!selectedSuggestion1 && !fromUrl) {
       debouncedFetchSuggestions1(username1);
     }
     return () => {
       debouncedFetchSuggestions1.cancel();
     };
-  }, [username1, debouncedFetchSuggestions1, selectedSuggestion1]);
+  }, [username1, debouncedFetchSuggestions1, selectedSuggestion1, fromUrl]);
 
   // Autocomplete: Fetch Suggestions for Input2
   const fetchSuggestions2 = async (query) => {
@@ -126,13 +130,13 @@ const CompareScores = () => {
   const debouncedFetchSuggestions2 = useRef(debounce(fetchSuggestions2, 300)).current;
 
   useEffect(() => {
-    if (!selectedSuggestion2) {
+    if (!selectedSuggestion2 && !fromUrl) {
       debouncedFetchSuggestions2(username2);
     }
     return () => {
       debouncedFetchSuggestions2.cancel();
     };
-  }, [username2, debouncedFetchSuggestions2, selectedSuggestion2]);
+  }, [username2, debouncedFetchSuggestions2, selectedSuggestion2, fromUrl]);
 
   // Input change handlers
   const handleInputChange1 = (e) => {
@@ -140,12 +144,20 @@ const CompareScores = () => {
     if (selectedSuggestion1 && e.target.value !== selectedSuggestion1) {
       setSelectedSuggestion1("");
     }
+    // Reset fromUrl flag when user starts typing
+    if (fromUrl) {
+      setFromUrl(false);
+    }
   };
 
   const handleInputChange2 = (e) => {
     setUsername2(e.target.value);
     if (selectedSuggestion2 && e.target.value !== selectedSuggestion2) {
       setSelectedSuggestion2("");
+    }
+    // Reset fromUrl flag when user starts typing
+    if (fromUrl) {
+      setFromUrl(false);
     }
   };
 
