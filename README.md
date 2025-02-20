@@ -14,7 +14,27 @@ Future versions of cred.blue may include authenticated data analysis (for your p
 
 ## The Scoring Methodology
 
+Your cred.blue score is generated based on two major categories...
 
+1. Bluesky Data
+- Profile content (avatar, description, etc)
+- Posts, likes, lists, etc
+- Social graph
+- Labelers and moderation
+- etc.
+
+2. AT Protocol Data
+- Personal Data Server (PDS)
+- Third-party lexicon usage
+- Domain name
+- PLC logs
+- etc.
+
+Seperate scores are generated for each category and then combined to produce your final cred.blue score, allowing you to easily see which major category (Bluesky vs AT Proto) has the most impact on your score.
+
+For Version 1 of the scoring algorithm, there is a max score of 1,000 points. This may change in the future, or it could theoritically even be scaled down depending on feedback and usage.
+
+A score between 0 - 250 likely indicates that an account is either very new to the network or isn't very active. A score between 250 - 
 
 ### How do I increase my score?
 
