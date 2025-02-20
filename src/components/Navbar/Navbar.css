@@ -243,6 +243,7 @@
   align-content: center;
   justify-content: center;
   gap: 4px;
+  margin-top: 3.5px;
 }
 
 .beta-badge {

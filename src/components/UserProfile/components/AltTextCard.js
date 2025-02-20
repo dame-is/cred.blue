@@ -21,16 +21,6 @@ const AltTextCard = () => {
     imagePostsReplies,
   } = postStats;
 
-  // If there are no images, display the "No images found!" message
-  if (postsWithImages === 0) {
-    return (
-      <div className="alt-text-card">
-        <h2>No images found!</h2>
-        <p className="disclaimer">Last 90 Days</p>
-      </div>
-    );
-  }
-
   // Calculate emoji based on percentage
   let emoji = emojis[0];
   if (altTextPercentage >= 0.75) {
@@ -70,39 +60,49 @@ const AltTextCard = () => {
         <li>
           <strong>{imagePostsAltText}</strong> posts have alt text
         </li>
-        <h2>
-          <strong>
-            {(altTextPercentage * 100).toFixed(0)}% {emoji}
-          </strong>
-        </h2>
-        <p className="disclaimer">Last 90 Days</p>
+        {postsWithImages > 0 ? (
+          <>
+            <h2>
+              <strong>
+                {(altTextPercentage * 100).toFixed(0)}% {emoji}
+              </strong>
+            </h2>
+            <p className="disclaimer">Last 90 Days</p>
+          </>
+        ) : (
+          <h2>
+            <strong>No images found!</strong>
+          </h2>
+        )}
       </ul>
-      <div style={{ width: '50%', height: 300 }}>
-        <ResponsiveContainer>
-          <RadialBarChart
-            cx="50%"
-            cy="50%"
-            innerRadius="30%"
-            outerRadius="100%"
-            barSize={30}
-            data={data}
-            startAngle={180}
-            endAngle={-180}
-          >
-            <RadialBar
-              minAngle={15}
-              label={{
-                position: 'insideStart',
-                fill: '#fff',
-                formatter: (value) => value ? `${value}` : ''
-              }}
-              background={{ fill: '#eee' }}
-              clockWise
-              dataKey="images"
-            />
-          </RadialBarChart>
-        </ResponsiveContainer>
-      </div>
+      {postsWithImages > 0 && (
+        <div style={{ width: '50%', height: 300 }}>
+          <ResponsiveContainer>
+            <RadialBarChart
+              cx="50%"
+              cy="50%"
+              innerRadius="30%"
+              outerRadius="100%"
+              barSize={30}
+              data={data}
+              startAngle={180}
+              endAngle={-180}
+            >
+              <RadialBar
+                minAngle={15}
+                label={{
+                  position: 'insideStart',
+                  fill: '#fff',
+                  formatter: (value) => value ? `${value}` : ''
+                }}
+                background={{ fill: '#eee' }}
+                clockWise
+                dataKey="images"
+              />
+            </RadialBarChart>
+          </ResponsiveContainer>
+        </div>
+      )}
     </div>
   );
 };

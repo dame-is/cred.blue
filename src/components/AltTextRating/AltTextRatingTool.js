@@ -260,7 +260,11 @@ const AltTextRatingTool = () => {
       <p><strong>{analysisResult.postsWithImages}</strong> contain images</p>
       <p><strong>{analysisResult.repliesWithImages}</strong> are replies</p>
       <p><strong>{analysisResult.postsWithAltText}</strong> posts have alt text</p>
-      <h2>Score: {analysisResult.altTextPercentage.toFixed(2)}% {analysisResult.emoji}</h2>
+      {analysisResult.postsWithImages > 0 ? (
+        <h2>Score: {analysisResult.altTextPercentage.toFixed(2)}% {analysisResult.emoji}</h2>
+      ) : (
+        <h2>No images found!</h2>
+      )}
     </div>
   );
 
