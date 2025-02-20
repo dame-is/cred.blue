@@ -7,24 +7,18 @@ const COLORS = {
   'ATProto Score': '#004f84'
 };
 
+// Modified CustomTooltip component for ScoreBreakdownCard
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     
-    // Calculate percentage of the total parent score (Bluesky or ATProto)
-    let percentage;
-    if (data.parent) {
-      percentage = ((data.size / data.parent.size) * 100).toFixed(1);
-    }
-    
     return (
       <div className="custom-tooltip bg-white p-4 rounded shadow-lg border border-gray-200 max-w-md">
         <p className="font-semibold text-lg mb-2">{data.name}</p>
-        {percentage && (
-          <p className="text-sm text-gray-700 mb-2">
-            {percentage}% of {data.parent.name}
-          </p>
-        )}
+        <p className="text-sm text-gray-700 mb-2">
+          {/* Display the weight as a percentage */}
+          {(data.weight * 100).toFixed(1)}% of {data.parent?.name || 'Total Score'}
+        </p>
         {data.description && (
           <p className="text-sm text-gray-600">{data.description}</p>
         )}
@@ -170,63 +164,44 @@ const ScoreBreakdownCard = () => {
       
       return specialCases[capitalizedName] || capitalizedName;
     };
-
+  
     const buildCategoryChildren = (categories, parentScore) => {
       return Object.entries(categories).map(([name, categoryData]) => {
         const formattedName = formatCategoryName(name);
-        const rawScore = categoryData.score || 0;
-        
-        let subScores = [];
-        if (categoryData.details) {
-          Object.entries(categoryData.details).forEach(([subName, subValue]) => {
-            let subScore;
-            if (typeof subValue === 'number') {
-              subScore = subValue;
-            } else if (typeof subValue === 'object') {
-              subScore = Object.values(subValue)
-                .filter(val => typeof val === 'number')
-                .reduce((sum, val) => sum + val, 0);
-            }
-            
-            if (subScore && subScore > 0) {
-              subScores.push({
-                name: formatCategoryName(subName),
-                size: subScore,
-                tooltipInfo: true,
-                fill: COLORS[parentScore.name],
-                parent: { 
-                  name: formattedName, 
-                  size: rawScore 
-                }
-              });
-            }
-          });
-        }
         
         return {
           name: formattedName,
-          size: rawScore,
+          size: categoryData.size, // Use size for treemap proportions
+          weight: categoryData.weight,
           tooltipInfo: true,
           fill: COLORS[parentScore.name],
           description: getScoreDescriptions(formattedName),
-          parent: { name: parentScore.name, size: parentScore.size },
-          children: subScores.length > 0 ? subScores : undefined
+          parent: { 
+            name: parentScore.name,
+            size: parentScore.size 
+          }
         };
       });
     };
-
+  
     return [
       {
         name: 'Bluesky Score',
         size: blueskyScore,
         fill: COLORS['Bluesky Score'],
-        children: buildCategoryChildren(breakdown.blueskyCategories, { name: 'Bluesky Score', size: blueskyScore })
+        children: buildCategoryChildren(breakdown.blueskyCategories, { 
+          name: 'Bluesky Score', 
+          size: blueskyScore 
+        })
       },
       {
         name: 'ATProto Score',
         size: atprotoScore,
         fill: COLORS['ATProto Score'],
-        children: buildCategoryChildren(breakdown.atprotoCategories, { name: 'ATProto Score', size: atprotoScore })
+        children: buildCategoryChildren(breakdown.atprotoCategories, { 
+          name: 'ATProto Score', 
+          size: atprotoScore 
+        })
       }
     ];
   };
