@@ -43,3 +43,9 @@
   .social-status-list li {
     margin-bottom: 5px;
   }
+
+  .methodology-page-chart .score-gauge {
+    margin: auto !important;
+    padding-right: 11px;
+    padding-bottom: 10.5px;
+  }
