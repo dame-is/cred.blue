@@ -32,6 +32,8 @@ const About = () => {
           
           <h3>Who created cred.blue?</h3>
           <p>It was created by <a href="https://bsky.app/profile/dame.is" target="_blank" rel="noreferrer">@dame.is</a>! Dame has been a part of the Bluesky community from almost the very beginning and is passionate about the AT Protocol. Dame was user number Bluesky user #1,216 and is building cred.blue independently.</p>
+
+          <p>Consider becoming a paid supporter of Dame <a href="https://bsky.app/profile/dame.is" target="_blank" rel="noreferrer">@dame.is</a>! Dame has been a part of the Bluesky community from almost the very beginning and is passionate about the AT Protocol. Dame was user number Bluesky user #1,216 and is building cred.blue independently.</p>
           
           <h3>Why was cred.blue created?</h3>
           <p>Since its inception, Bluesky has relied upon an innovative domain verification system to help identities establish their credibility and authority. This system is powerful and should be taken advantage of, but it can only do so much in its current form. The cred.blue platform is just one experiment among many that is attempting to help people understand which social media accounts are more (or less) trustworthy.</p>

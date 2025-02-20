@@ -329,3 +329,19 @@
     }
   }
 
+  /* Responsive Design: Links display in a row under the logo */
+  @media (max-width: 350px) {
+    .navbar-support-button {
+      max-width: 135.5px;
+      font-size: 0.8em;
+    }
+    .navbar-links {
+      font-weight: 700;
+      text-align: center;
+      max-width: 205.5px;
+      margin: auto;
+      margin-top: auto;
+      margin-top: 15px;
+      line-height: 1.5em;
+    }
+  }
