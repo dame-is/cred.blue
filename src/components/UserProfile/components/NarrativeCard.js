@@ -1,5 +1,6 @@
 // frontend/src/components/UserProfile/components/NarrativeCard.js
 import React, { useContext } from "react";
+import { Link } from 'react-router-dom';
 import { AccountDataContext } from "../UserProfile"; // Adjust the path if needed
 
 const NarrativeCard = () => {
@@ -18,6 +19,7 @@ const NarrativeCard = () => {
         {narrative2 && <p>{narrative2}</p>}
         {narrative3 && <p>{narrative3}</p>}
       </div>
+      <p><Link to="/methodology" className="narrative-methodology-link">Learn more about the scoring methodology and definitions contained in this summary.</Link></p>
       <div className="disclaimer">
         <p><strong>NOTE: </strong>This summary was <strong>not</strong> generated using AI.</p>
       </div>
