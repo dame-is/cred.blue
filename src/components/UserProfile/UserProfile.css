@@ -426,6 +426,22 @@ tspan {
     margin-left: 0px;
     row-gap: 10px;
   }
+  .user-profile-data-group {
+    text-align: center;
+  }
+
+  .share-button-container {
+    text-align: center;
+  }
+
+  .profile-section.left-section {
+    scale: 0.7;
+    margin-top: -39px;
+  }
+
+  .profile-section.middle-section {
+    margin-top: -47.5px;
+  }
 }
 
 @media (max-width: 440px) {
