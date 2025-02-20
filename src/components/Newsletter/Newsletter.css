@@ -11,3 +11,13 @@
 .newsletter-page ul {
     margin-top: -5px;
 }
+
+.newsletter-form {
+    display: flex;
+    flex-direction: column;
+    max-width: 300px;
+  }
+  
+  .newsletter-form input {
+    margin-bottom: 15px;
+  }
