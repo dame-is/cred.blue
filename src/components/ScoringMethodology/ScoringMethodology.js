@@ -1,4 +1,5 @@
 import React from 'react';
+import './ScoringMethodology.css';
 
 const ScoringMethodology = () => {
   return (
