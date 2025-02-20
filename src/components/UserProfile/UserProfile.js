@@ -14,10 +14,43 @@ import AltTextCard from "./components/AltTextCard";
 import ActivityCard from "./components/ActivityCard";
 import ScoreBreakdownCard from "./components/ScoreBreakdownCard";
 import ErrorPage from "../ErrorPage/ErrorPage";
+import { supabase } from '../../lib/supabase';
 
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import "./UserProfile.css";
+
+// Add this function to save user data to Supabase
+const saveUserData = async (userData) => {
+  try {
+    const { data, error } = await supabase
+      .from('user_scores')
+      .upsert({
+        handle: userData.handle,
+        did: userData.did,
+        display_name: userData.displayName,
+        age_in_days: Math.floor(userData.ageInDays),
+        combined_score: userData.combinedScore,
+        bluesky_score: userData.blueskyScore,
+        atproto_score: userData.atprotoScore,
+        social_status: userData.socialStatus,
+        posting_style: userData.postingStyle,
+        profile_completeness: userData.profileCompleteness,
+        alt_text_consistency: userData.altTextConsistencyBonus,
+        engagement_score: userData.engagementScore,
+        activity_score: userData.activityScore
+      }, {
+        onConflict: 'handle',
+        returning: true
+      });
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error('Error saving user data:', error);
+    return null;
+  }
+};
 
 export const AccountDataContext = createContext(null);
 
@@ -209,6 +242,12 @@ const UserProfile = () => {
 
         setAccountData30Days(processAccountData(data.accountData30Days));
         setAccountData90Days(processAccountData(data.accountData90Days));
+
+        const processed30DaysData = processAccountData(data.accountData30Days);
+        const processed90DaysData = processAccountData(data.accountData90Days);
+
+        await saveUserData(processed90DaysData);
+
       } catch (err) {
         console.error("Error fetching account data:", err);
         setError(err.message);
