@@ -7,7 +7,6 @@ const COLORS = {
   'ATProto Score': '#004f84'
 };
 
-// Modified CustomTooltip component for ScoreBreakdownCard
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
@@ -16,7 +15,6 @@ const CustomTooltip = ({ active, payload }) => {
       <div className="custom-tooltip bg-white p-4 rounded shadow-lg border border-gray-200 max-w-md">
         <p className="font-semibold text-lg mb-2">{data.name}</p>
         <p className="text-sm text-gray-700 mb-2">
-          {/* Display percentage directly */}
           {data.percentage?.toFixed(1)}% of {data.parent?.name || 'Total Score'}
         </p>
         {data.description && (
@@ -165,48 +163,39 @@ const ScoreBreakdownCard = () => {
       return specialCases[capitalizedName] || capitalizedName;
     };
   
-    const buildCategoryChildren = (categories, parentScore, parentName) => {
-      return Object.entries(categories).map(([name, categoryData]) => {
+    const buildCategoryChildren = (categories, parentName) => {
+      return Object.entries(categories).map(([name, data]) => {
         const formattedName = formatCategoryName(name);
         
         return {
           name: formattedName,
-          // Use percentage directly for size
-          size: categoryData.percentage,
-          percentage: categoryData.percentage,
-          tooltipInfo: true,
-          fill: COLORS[parentName],
+          // Use the percentage directly for size
+          size: data.percentage,
+          percentage: data.percentage,
           description: getScoreDescriptions(formattedName),
-          parent: { 
-            name: parentName,
-            // Parent size is always 100 for percentage calculation
-            size: 100
+          fill: COLORS[parentName],
+          parent: {
+            name: parentName
           }
         };
       });
     };
   
+    // Calculate total score for relative sizing
+    const totalScore = blueskyScore + atprotoScore;
+    
     return [
       {
         name: 'Bluesky Score',
-        // Total size for parent is the relative score proportion
-        size: (blueskyScore / (blueskyScore + atprotoScore)) * 100,
+        size: (blueskyScore / totalScore) * 100,
         fill: COLORS['Bluesky Score'],
-        children: buildCategoryChildren(
-          breakdown.blueskyCategories, 
-          blueskyScore,
-          'Bluesky Score'
-        )
+        children: buildCategoryChildren(breakdown.blueskyCategories, 'Bluesky Score')
       },
       {
         name: 'ATProto Score',
-        size: (atprotoScore / (blueskyScore + atprotoScore)) * 100,
+        size: (atprotoScore / totalScore) * 100,
         fill: COLORS['ATProto Score'],
-        children: buildCategoryChildren(
-          breakdown.atprotoCategories, 
-          atprotoScore,
-          'ATProto Score'
-        )
+        children: buildCategoryChildren(breakdown.atprotoCategories, 'ATProto Score')
       }
     ];
   };
@@ -215,52 +204,52 @@ const ScoreBreakdownCard = () => {
     <div className="w-full h-full min-h-[400px] p-4 bg-white rounded-lg shadow">
       <div className="score-breakdown-card" style={{ width: '100%', height: 280 }}>
         <ResponsiveContainer>
-          <Treemap
-            data={buildTreemapData()}
-            dataKey="size"
-            aspectRatio={4/3}
-            stroke="#fff"
-            radius={20}
-            isAnimationActive={false}  // Turn off animation
-            content={({ root, depth, x, y, width, height, index, name, value }) => (
-              <CustomizedContent
-                root={root}
-                depth={depth}
-                x={x}
-                y={y}
-                width={width}
-                height={height}
-                index={index}
-                name={name}
-                value={value}
-                colors={COLORS}
-              />
-            )}
-          >
-            <Tooltip content={<CustomTooltip />} />
-            <Legend 
-                iconType="rect"
-                iconSize={10}
-                layout="horizontal"
-                verticalAlign="bottom"
-                align="center"
-                wrapperStyle={{
-                    paddingTop: '20px'
-                }}
-                formatter={(value) => (
-                    <span style={{ 
-                    fill: 'white', 
-                    fontSize: 12, 
-                    strokeWidth: 0, 
-                    fontFamily: 'articulat-cf', 
-                    fontWeight: 600, 
-                    wordWrap: 'anywhere' 
-                    }}>
-                    {value}
-                    </span>
-                )}
-                />
-          </Treemap>
+              <Treemap
+        data={buildTreemapData()}
+        dataKey="size"
+        aspectRatio={4/3}
+        stroke="#fff"
+        radius={20}
+        isAnimationActive={false}
+        content={({ root, depth, x, y, width, height, index, name, value }) => (
+          <CustomizedContent
+            root={root}
+            depth={depth}
+            x={x}
+            y={y}
+            width={width}
+            height={height}
+            index={index}
+            name={name}
+            value={value}
+            colors={COLORS}
+          />
+        )}
+      >
+        <Tooltip content={<CustomTooltip />} />
+        <Legend 
+          iconType="rect"
+          iconSize={10}
+          layout="horizontal"
+          verticalAlign="bottom"
+          align="center"
+          wrapperStyle={{
+            paddingTop: '20px'
+          }}
+          formatter={(value) => (
+            <span style={{ 
+              fill: 'white', 
+              fontSize: 12, 
+              strokeWidth: 0, 
+              fontFamily: 'articulat-cf', 
+              fontWeight: 600, 
+              wordWrap: 'anywhere' 
+            }}>
+              {value}
+            </span>
+          )}
+        />
+      </Treemap>
         </ResponsiveContainer>
       </div>
       
