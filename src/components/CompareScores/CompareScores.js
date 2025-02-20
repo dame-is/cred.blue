@@ -1,15 +1,18 @@
 // frontend/src/components/CompareScores/CompareScores.js
 
 import React, { useState, useEffect, useRef } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import CompareScoresResults from "./CompareScoresResults";
 import { loadAccountData } from "../../accountData";
-import MatterLoadingAnimation from "../MatterLoadingAnimation"; // Adjust the path as needed
+import MatterLoadingAnimation from "../MatterLoadingAnimation";
 
 const CompareScores = () => {
+  const { username1: urlUsername1, username2: urlUsername2 } = useParams();
+  const navigate = useNavigate();
 
   // Input states
-  const [username1, setUsername1] = useState("");
-  const [username2, setUsername2] = useState("");
+  const [username1, setUsername1] = useState(urlUsername1 || "");
+  const [username2, setUsername2] = useState(urlUsername2 || "");
   
   // Autocomplete state for input1
   const [suggestions1, setSuggestions1] = useState([]);
@@ -28,9 +31,16 @@ const CompareScores = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // ----------------------------
+  // Effect to handle URL parameters
+  useEffect(() => {
+    if (urlUsername1 && urlUsername2) {
+      setUsername1(urlUsername1);
+      setUsername2(urlUsername2);
+      handleComparison(urlUsername1, urlUsername2);
+    }
+  }, [urlUsername1, urlUsername2]);
+
   // Debounce Helper Function
-  // ----------------------------
   const debounce = (func, delay) => {
     let timer;
     const debounced = (...args) => {
@@ -43,9 +53,26 @@ const CompareScores = () => {
     return debounced;
   };
 
-  // ----------------------------
+  // Comparison logic
+  const handleComparison = async (user1, user2) => {
+    if (!user1 || !user2) {
+      setError("Please enter both usernames.");
+      return;
+    }
+    setError("");
+    setLoading(true);
+    try {
+      const data1 = await loadAccountData(user1);
+      const data2 = await loadAccountData(user2);
+      setResults([data1, data2]);
+    } catch (err) {
+      console.error("Error fetching account data:", err);
+      setError("Error fetching account data. Please try again.");
+    }
+    setLoading(false);
+  };
+
   // Autocomplete: Fetch Suggestions for Input1
-  // ----------------------------
   const fetchSuggestions1 = async (query) => {
     if (!query) {
       setSuggestions1([]);
@@ -71,18 +98,12 @@ const CompareScores = () => {
     if (!selectedSuggestion1) {
       debouncedFetchSuggestions1(username1);
     }
+    return () => {
+      debouncedFetchSuggestions1.cancel();
+    };
   }, [username1, debouncedFetchSuggestions1, selectedSuggestion1]);
 
-  const handleInputChange1 = (e) => {
-    setUsername1(e.target.value);
-    if (selectedSuggestion1 && e.target.value !== selectedSuggestion1) {
-      setSelectedSuggestion1("");
-    }
-  };
-
-  // ----------------------------
   // Autocomplete: Fetch Suggestions for Input2
-  // ----------------------------
   const fetchSuggestions2 = async (query) => {
     if (!query) {
       setSuggestions2([]);
@@ -108,7 +129,18 @@ const CompareScores = () => {
     if (!selectedSuggestion2) {
       debouncedFetchSuggestions2(username2);
     }
+    return () => {
+      debouncedFetchSuggestions2.cancel();
+    };
   }, [username2, debouncedFetchSuggestions2, selectedSuggestion2]);
+
+  // Input change handlers
+  const handleInputChange1 = (e) => {
+    setUsername1(e.target.value);
+    if (selectedSuggestion1 && e.target.value !== selectedSuggestion1) {
+      setSelectedSuggestion1("");
+    }
+  };
 
   const handleInputChange2 = (e) => {
     setUsername2(e.target.value);
@@ -117,34 +149,52 @@ const CompareScores = () => {
     }
   };
 
-  // ----------------------------
-  // Form Submission
-  // ----------------------------
+  // Suggestion selection handlers
+  const handleSuggestionSelect1 = (handle) => {
+    setUsername1(handle);
+    setSelectedSuggestion1(handle);
+    setSuggestions1([]);
+    setAutocompleteActive1(false);
+    debouncedFetchSuggestions1.cancel();
+    
+    if (username2) {
+      navigate(`/compare/${encodeURIComponent(handle)}/${encodeURIComponent(username2)}`, { replace: true });
+      handleComparison(handle, username2);
+    }
+  };
+
+  const handleSuggestionSelect2 = (handle) => {
+    setUsername2(handle);
+    setSelectedSuggestion2(handle);
+    setSuggestions2([]);
+    setAutocompleteActive2(false);
+    debouncedFetchSuggestions2.cancel();
+    
+    if (username1) {
+      navigate(`/compare/${encodeURIComponent(username1)}/${encodeURIComponent(handle)}`, { replace: true });
+      handleComparison(username1, handle);
+    }
+  };
+
+  // Form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!username1 || !username2) {
       setError("Please enter both usernames.");
       return;
     }
-    setError("");
-    setLoading(true);
-    try {
-      // Fetch the account data for both usernames
-      const data1 = await loadAccountData(username1);
-      const data2 = await loadAccountData(username2);
-      // Pass the two results as an array for comparison mode
-      setResults([data1, data2]);
-    } catch (err) {
-      console.error("Error fetching account data:", err);
-      setError("Error fetching account data. Please try again.");
-    }
-    setLoading(false);
+    
+    // Update URL without triggering a page reload
+    navigate(`/compare/${encodeURIComponent(username1)}/${encodeURIComponent(username2)}`, { replace: true });
+    
+    // Trigger comparison
+    await handleComparison(username1, username2);
   };
 
   return (
     <div className="compare-scores-page">
       <form onSubmit={handleSubmit}>
-      <h1>Compare Scores</h1>
+        <h1>Compare Scores</h1>
         <div>
           <label>
             Username 1:
@@ -161,15 +211,16 @@ const CompareScores = () => {
                     <div
                       key={actor.handle}
                       className={`autocomplete-item ${index === activeSuggestionIndex1 ? 'active' : ''}`}
-                      onClick={() => {
-                        setUsername1(actor.handle);
-                        setSelectedSuggestion1(actor.handle);
-                        setSuggestions1([]);
-                        setAutocompleteActive1(false);
-                        debouncedFetchSuggestions1.cancel();
-                      }}
+                      onClick={() => handleSuggestionSelect1(actor.handle)}
                     >
-                      <img src={actor.avatar} alt={`${actor.handle}'s avatar`} />
+                      <img 
+                        src={actor.avatar} 
+                        alt={`${actor.handle}'s avatar`}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = "/default-avatar.png";
+                        }}
+                      />
                       <span>{actor.handle}</span>
                     </div>
                   ))}
@@ -194,15 +245,16 @@ const CompareScores = () => {
                     <div
                       key={actor.handle}
                       className={`autocomplete-item ${index === activeSuggestionIndex2 ? 'active' : ''}`}
-                      onClick={() => {
-                        setUsername2(actor.handle);
-                        setSelectedSuggestion2(actor.handle);
-                        setSuggestions2([]);
-                        setAutocompleteActive2(false);
-                        debouncedFetchSuggestions2.cancel();
-                      }}
+                      onClick={() => handleSuggestionSelect2(actor.handle)}
                     >
-                      <img src={actor.avatar} alt={`${actor.handle}'s avatar`} />
+                      <img 
+                        src={actor.avatar} 
+                        alt={`${actor.handle}'s avatar`}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = "/default-avatar.png";
+                        }}
+                      />
                       <span>{actor.handle}</span>
                     </div>
                   ))}
@@ -213,6 +265,7 @@ const CompareScores = () => {
         </div>
         <button type="submit">Compare</button>
       </form>
+      
       {error && <div className="error" style={{ color: "red" }}>{error}</div>}
       {loading ? (
         <div className="compare-scores loading-container">

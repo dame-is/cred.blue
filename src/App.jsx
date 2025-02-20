@@ -25,6 +25,7 @@ const App = () => {
             <Routes>
               {/* All routes are now public */}
               <Route path="/home" element={<Home />} />
+              <Route path="/compare/:username1/:username2" element={<CompareScores />} />
               <Route path="/compare" element={<CompareScores />} />
               <Route path="/alt-text" element={<AltTextRatingTool />} />
               <Route path="/about" element={<About />} />
