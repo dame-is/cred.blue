@@ -398,7 +398,7 @@ tspan {
 /* Left Section */
 .profile-section.left-section {
   justify-self: start;
-  margin-right: -9.3px;
+  margin-right: 10.9px;
 }
 
 /* Middle Section */
@@ -408,6 +408,7 @@ tspan {
   align-items: center;
   gap: 20px;
   justify-self: center;
+  margin-right: -31.3px;
 }
 
 .user-profile-header-rechart {
@@ -419,7 +420,7 @@ tspan {
 }
 
 .user-profile-data-group {
-  text-align: left;
+  text-align: center;
   width: 100%;
   max-width: 300px;
   gap: 10px;
@@ -427,7 +428,7 @@ tspan {
 
 .share-button-container {
   width: 100%;
-  text-align: left;
+  text-align: center;
   display: block;
 }
 
@@ -439,10 +440,11 @@ tspan {
 .profile-section.right-section {
   justify-self: end;
   padding-left: 20px;
+  scale: 0.9;
 }
 
 .user-profile-main {
-  text-align: left;
+  text-align: center;
   gap: 22.5px;
 }
 
@@ -586,6 +588,7 @@ tspan {
     gap: 13.5px;
     grid-column: 1;
     grid-row: 2;
+    margin-right: 0px;
   }
 
   .user-profile-badges {
