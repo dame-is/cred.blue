@@ -2,6 +2,7 @@
 
 import React from 'react';
 import './About.css';
+import { Link } from 'react-router-dom';
 
 const About = () => {
   return (
@@ -18,6 +19,10 @@ const About = () => {
           <p>The <strong>cred.blue</strong> platform allows anyone to better understand the data footprint that an <strong>AT Protocol</strong> or <strong>Bluesky</strong> identity is creating. During its beta launch, <strong>cred.blue</strong> provides an early version of its custom scoring algorithm that generates a "credibility" score based on an identity's activity in the ecosystem. Additionally, there is an <strong>Alt Text Rating Tool</strong> that allows you to see how consistently an account includes accessibility alt-text when posting images on Bluesky.</p>
           
           <p>The <strong>cred.blue</strong> scoring methodology is intended to provide a helpful contextual analysis of the public data associated with an AT Protocol or Bluesky identity. The hope is that the scoring system might help incentivize healthier behaviors and activity patterns on the network.</p>
+
+          <div className="scoring-info">
+          <p><Link to="/methodology" className="methodology-link">Learn more about the scoring methodology</Link> and how to increase your score.</p>
+          </div>
           
           <p>Future versions of cred.blue may include authenticated data analysis (for your personal AT Proto data that isn't public), a custom score/credibility tracking lexicon, and an in-app labeler for the Bluesky platform.</p>
 

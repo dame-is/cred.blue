@@ -38,6 +38,19 @@ A score between 0 - 250 likely indicates that an account is either very new to t
 
 ### How do I increase my score?
 
+The scoring methodology is fairly complex and not all of the variables can be easily changed (for instance, an account's age), but there are some specific actions you can take that can help give you a boost.
+
+1. Fully complete your Bluesky profile
+2. Focus on posting things people will enjoy or find helpful.
+3. Use more of Bluesky's features
+4. Add a custom domain name
+5. Use a third-party PDS
+6. Remember to add alt text to images
+7. Add your own rotation key
+8. Set your pronouns
+
+This is not an exhaustive list by any means, but it should get you started. The goal of the cred.blue score isn't to attempt to max it out... rather, the point is to foster healthy behavior andn activity that benefits the entire community.
+
 ## FAQs
 
 ### Who created cred.blue?

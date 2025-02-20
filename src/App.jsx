@@ -6,6 +6,7 @@ import Footer from './components/Footer/Footer';
 import Newsletter from './components/Newsletter/Newsletter';
 import About from './components/About/About';
 import Home from './components/Home/Home';
+import ScoringMethodology from './components/ScoringMethodology/ScoringMethodology';
 import Terms from './components/PrivacyTerms/Terms';
 import Privacy from './components/PrivacyTerms/Privacy';
 import AltTextRatingTool from './components/AltTextRating/AltTextRatingTool';
@@ -32,6 +33,7 @@ const App = () => {
               <Route path="/newsletter" element={<Newsletter />} />
               <Route path="/:username" element={<UserProfile />} />
               <Route path="/zen" element={<ZenPage />} />
+              <Route path="/methodology" element={<ScoringMethodology />} />
               {/* Default routes */}
               <Route path="/" element={<Navigate to="/home" replace />} />
               <Route path="*" element={<Navigate to="/home" replace />} />
