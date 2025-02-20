@@ -44,7 +44,6 @@
     align-items: center;
     justify-content: space-between; /* Distribute space between left and right sections */
     height: 84px;
-    justify-content: center;
     box-sizing: border-box;
   }
   

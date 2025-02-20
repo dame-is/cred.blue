@@ -50,6 +50,7 @@ p {
   font-style: normal;
   color: var(--text);
   transition: color 0.3s ease;
+  line-height: 1.1em;
 }
 
 a {
