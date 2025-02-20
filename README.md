@@ -65,7 +65,7 @@ This is not an exhaustive list by any means, but it should get you started. The 
 
 ### Who created cred.blue?
 
-It was created by [@dame.is](https://bsky.app/profile/dame.is)! Dame has been a part of the Bluesky community from almost the very beginning and is passionate about the AT Protocol. Dame was user number Bluesky user #1,216 and is building cred.blue independently.
+It was created by [@dame.is](https://bsky.app/profile/dame.is)! Dame has been a part of the Bluesky community from almost the very beginning and is passionate about the AT Protocol. Dame was Bluesky user #1,216 and is building cred.blue independently.
 
 ### Why was cred.blue created?
 
