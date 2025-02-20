@@ -317,10 +317,6 @@ tspan {
   margin-top: 5px;
 }
 
-.user-profile-score {
-  padding: 12px 0px;
-}
-
 .max-score {
   opacity: 0.5;
 }
@@ -442,8 +438,10 @@ tspan {
 }
 
 .user-profile-container {
-  margin: 55px 20px 40px;
   width: 100%;
+  margin: auto;
+    margin-top: auto;
+  margin-top: 35px;
 }
 
 .profile-sections-wrapper {
@@ -458,7 +456,6 @@ tspan {
 /* Left Section */
 .profile-section.left-section {
   justify-self: start;
-  padding-left: 20px;
 }
 
 /* Middle Section */
@@ -482,17 +479,15 @@ tspan {
   max-width: 300px;
 }
 
-.user-profile-score,
-.user-profile-activity {
-  margin: 10px 0;
+.share-button-container {
+  max-width: 200px;
+  width: 100%;
+  text-align: right;
+  margin-top: 20px;
 }
 
-.share-button-container {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
-  max-width: 200px;
+.comparea-button-profile {
+  margin-top: 10px;
 }
 
 /* Right Section */
@@ -503,6 +498,22 @@ tspan {
 
 .user-profile-main {
   text-align: right;
+}
+
+.user-profile-data-group p {
+  margin: 2px;
+}
+
+.user-profile-name h2 {
+  font-size: 1em;
+  margin: 0px;
+}
+
+.circular-badge {
+  margin-bottom: -10px;
+  margin-top: -24.5px;
+  margin-left: -6px;
+  margin-right: 0px;
 }
 
 /* Responsive adjustments */
