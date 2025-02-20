@@ -495,6 +495,13 @@ tspan {
 /* Responsive Adjustments for Cards */
 @media (max-width: 835px) {
 
+  .user-profile-container {
+    margin: 30px auto;
+      margin-top: 30px;
+    width: 100%;
+    margin-top: 40px;
+  }
+
   .profile-sections-wrapper {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto auto;
@@ -518,6 +525,7 @@ tspan {
     padding-left: 0;
     grid-column: 1;
     grid-row: 3;
+    margin-top: -10px;
   }
 
   .user-profile-main {
