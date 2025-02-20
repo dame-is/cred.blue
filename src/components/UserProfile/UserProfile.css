@@ -474,6 +474,7 @@ tspan {
   max-width: 200px;
   width: 100%;
   scale: 1.07;
+  margin-top: 4px;
 }
 
 .user-profile-data-group {
@@ -486,7 +487,7 @@ tspan {
   max-width: 200px;
   width: 100%;
   text-align: right;
-  margin-top: 29.5px;
+  margin-top: 7px;
   display: block;
 }
 
@@ -502,6 +503,13 @@ tspan {
 
 .user-profile-main {
   text-align: right;
+  gap: 22.5px;
+}
+
+.user-profile-badges {
+  margin-top: 10px;
+  font-size: 1.2em;
+  line-height: 1.2em;
 }
 
 .user-profile-data-group p {
@@ -510,6 +518,11 @@ tspan {
 
 .user-profile-name h2 {
   font-size: 1em;
+  margin: 0px;
+}
+
+.user-profile-age h2 {
+  font-size: .8em;
   margin: 0px;
 }
 

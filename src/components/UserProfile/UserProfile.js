@@ -360,16 +360,13 @@ const UserProfile = () => {
             <div className="user-profile-header-rechart">
               <ScoreGauge score={accountData.combinedScore} />
             </div>
-            <div className="user-profile-data-group">
-              <div className="user-profile-score">
-                <p><strong>Bluesky Score:</strong> {accountData.blueskyScore}</p>
-                <p><strong>AT Proto Score:</strong> {accountData.atprotoScore}</p>
+            <div className="user-profile-age">
+                <h2>{Math.floor(accountData.ageInDays)} days old</h2>
               </div>
-              <div className="user-profile-activity">
-                <p><strong>Bluesky Status:</strong> {accountData.activityAll.bskyActivityStatus}</p>
-                <p><strong>AT Proto Status:</strong> {accountData.activityAll.atprotoActivityStatus}</p>
+              <div className="user-profile-badges">
+                <h3>{accountData.socialStatus}</h3>
+                <h3>{accountData.postingStyle}</h3>
               </div>
-            </div>
           </div>
 
           {/* Right Section */}
@@ -379,15 +376,17 @@ const UserProfile = () => {
                 <h1>{displayName}</h1>
                 <h2>@{resolvedHandle}</h2>
               </div>
-              <div className="user-profile-age">
-                <h2>{Math.floor(accountData.ageInDays)} days old</h2>
+              <div className="user-profile-data-group">
+              <div className="user-profile-score">
+                <p><strong>Bluesky Score:</strong> {accountData.blueskyScore}</p>
+                <p><strong>AT Proto Score:</strong> {accountData.atprotoScore}</p>
               </div>
-              <div className="user-profile-badges">
-                <h3>{accountData.socialStatus}</h3>
-                <h3>{accountData.postingStyle}</h3>
+              <div className="user-profile-activity">
+                <p><strong>Bluesky Status:</strong> {accountData.activityAll.bskyActivityStatus}</p>
+                <p><strong>AT Proto Status:</strong> {accountData.activityAll.atprotoActivityStatus}</p>
               </div>
             </div>
-            <div className="share-button-container">
+              <div className="share-button-container">
               <button
                 className="share-button-profile"
                 type="button"
@@ -406,6 +405,7 @@ const UserProfile = () => {
               >
                 Compare Scores
               </button>
+            </div>
             </div>
           </div>
         </div>
