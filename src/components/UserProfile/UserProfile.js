@@ -350,6 +350,7 @@ const UserProfile = () => {
             <CircularLogo
               did={accountData.did}
               size={350}
+              fontSize={27}
               textColor="#004f84"
             />
           </div>

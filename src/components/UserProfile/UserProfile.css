@@ -438,10 +438,12 @@ tspan {
 }
 
 .user-profile-container {
-  width: 100%;
   margin: auto;
     margin-top: auto;
-  margin-top: 35px;
+    margin-bottom: auto;
+  width: 84.5%;
+  margin-bottom: 30px;
+  margin-top: 49.5px;
 }
 
 .profile-sections-wrapper {
@@ -456,6 +458,7 @@ tspan {
 /* Left Section */
 .profile-section.left-section {
   justify-self: start;
+  margin-top: 23.5px;
 }
 
 /* Middle Section */
@@ -468,9 +471,10 @@ tspan {
 }
 
 .user-profile-header-rechart {
+  margin: 0 auto;
   max-width: 200px;
   width: 100%;
-  margin: 0 auto;
+  scale: 1.07;
 }
 
 .user-profile-data-group {
@@ -483,7 +487,8 @@ tspan {
   max-width: 200px;
   width: 100%;
   text-align: right;
-  margin-top: 20px;
+  margin-top: 29.5px;
+  display: block;
 }
 
 .comparea-button-profile {
@@ -510,10 +515,7 @@ tspan {
 }
 
 .circular-badge {
-  margin-bottom: -10px;
-  margin-top: -24.5px;
-  margin-left: -6px;
-  margin-right: 0px;
+  margin: 0px
 }
 
 /* Responsive adjustments */
