@@ -25,22 +25,55 @@ const saveUserData = async (userData) => {
     const { data, error } = await supabase
       .from('user_scores')
       .upsert({
+        // Basic profile info
         handle: userData.handle,
-        did: userData.did,
         display_name: userData.displayName,
-        age_in_days: Math.floor(userData.ageInDays),
-        combined_score: userData.combinedScore,
-        bluesky_score: userData.blueskyScore,
-        atproto_score: userData.atprotoScore,
-        social_status: userData.socialStatus,
+        did: userData.did,
+        profile_edited_date: userData.profileEditedDate,
+        profile_completion: userData.profileCompletion,
+        
+        // Activity metrics
+        activity_status: userData.activityAll.activityStatus,
+        bsky_activity_status: userData.activityAll.bskyActivityStatus,
+        atproto_activity_status: userData.activityAll.atprotoActivityStatus,
+        total_collections: userData.activityAll.totalCollections,
+        total_bsky_collections: userData.activityAll.totalBskyCollections,
+        total_non_bsky_collections: userData.activityAll.totalNonBskyCollections,
+        total_records: userData.activityAll.totalRecords,
+        total_bsky_records: userData.activityAll.totalBskyRecords,
+        total_non_bsky_records: userData.activityAll.totalNonBskyRecords,
+        plc_operations: userData.activityAll.plcOperations,
+        blobs_count: userData.activityAll.blobsCount,
+        
+        // Store category data as JSONB
+        blueskycategories: userData.blueskyCategories,
+        atprotocategories: userData.atprotoCategories,
+        
+        // Metadata fields
+        service_endpoint: userData.serviceEndpoint,
+        pds_type: userData.pdsType,
+        created_at: userData.createdAt,
+        age_in_days: userData.ageInDays,
+        age_percentage: userData.agePercentage,
+        followers_count: userData.followersCount,
+        follows_count: userData.followsCount,
+        posts_count: userData.postsCount,
+        rotation_keys: userData.rotationKeys,
+        era: userData.era,
         posting_style: userData.postingStyle,
-        profile_completeness: userData.profileCompleteness,
-        alt_text_consistency: userData.altTextConsistencyBonus,
-        engagement_score: userData.engagementScore,
-        activity_score: userData.activityScore
+        social_status: userData.socialStatus,
+        
+        // Store complex metrics as JSONB
+        engagement_metrics: userData.engagementMetrics,
+        weekly_activity: userData.weeklyActivity,
+        
+        // Store full profile data
+        profile_data: userData.profile,
+        
+        // Update timestamp
+        last_checked_at: new Date()
       }, {
-        onConflict: 'handle',
-        ignoreDuplicates: false
+        onConflict: 'handle'
       });
 
     if (error) {
