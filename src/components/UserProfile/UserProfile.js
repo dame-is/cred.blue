@@ -344,33 +344,20 @@ const UserProfile = () => {
       </Helmet>
       <div className={`user-profile ${showContent ? "fade-in" : "hidden"}`}>
         <div className="user-profile-container">
-          <div className="user-profile-header">
-            <CircularLogo 
+        <div className="profile-sections-wrapper">
+          {/* Left Section */}
+          <div className="profile-section left-section">
+            <CircularLogo
               did={accountData.did}
               size={205}
               textColor="#004f84"
             />
-            <div className="user-profile-main">
-              <div className="user-profile-name">
-                <h1>{displayName}</h1>
-                <h2>@{resolvedHandle}</h2>
-              </div>
-              <div className="user-profile-age">
-                <h2>{Math.floor(accountData.ageInDays)} days old</h2>
-              </div>
-              <div className="user-profile-badges">
-                <h3>{accountData.socialStatus}</h3>
-                <h3>{accountData.postingStyle}</h3>
-              </div>
-            </div>
+          </div>
+
+          {/* Middle Section */}
+          <div className="profile-section middle-section">
             <div className="user-profile-header-rechart">
               <ScoreGauge score={accountData.combinedScore} />
-            </div>
-            <div className="user-profile-emoji-group">
-              <p className="emoji-1">🐛</p>
-              <p className="emoji-2">🦋</p>
-              <p className="emoji-3">🪼</p>
-              <p className="emoji-4">🔥</p>
             </div>
             <div className="user-profile-data-group">
               <div className="user-profile-score">
@@ -397,15 +384,31 @@ const UserProfile = () => {
               <button
                 className="comparea-button-profile"
                 type="button"
-                onClick={() => window.open(
-                  `https://cred.blue/compare`, '_blank'
-                )}
+                onClick={() => window.open(`https://cred.blue/compare`, '_blank')}
               >
                 Compare Scores
               </button>
             </div>
           </div>
+
+          {/* Right Section */}
+          <div className="profile-section right-section">
+            <div className="user-profile-main">
+              <div className="user-profile-name">
+                <h1>{displayName}</h1>
+                <h2>@{resolvedHandle}</h2>
+              </div>
+              <div className="user-profile-age">
+                <h2>{Math.floor(accountData.ageInDays)} days old</h2>
+              </div>
+              <div className="user-profile-badges">
+                <h3>{accountData.socialStatus}</h3>
+                <h3>{accountData.postingStyle}</h3>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
 
         <ResponsiveGridLayout
           className="layout"

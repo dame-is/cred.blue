@@ -440,3 +440,97 @@ tspan {
     max-width: 300px;
   }
 }
+
+.user-profile-container {
+  margin: 55px 20px 40px;
+  width: 100%;
+}
+
+.profile-sections-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 20px;
+  align-items: start;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Left Section */
+.profile-section.left-section {
+  justify-self: start;
+  padding-left: 20px;
+}
+
+/* Middle Section */
+.profile-section.middle-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  justify-self: center;
+}
+
+.user-profile-header-rechart {
+  max-width: 200px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.user-profile-data-group {
+  text-align: center;
+  width: 100%;
+  max-width: 300px;
+}
+
+.user-profile-score,
+.user-profile-activity {
+  margin: 10px 0;
+}
+
+.share-button-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 200px;
+}
+
+/* Right Section */
+.profile-section.right-section {
+  justify-self: end;
+  padding-right: 20px;
+}
+
+.user-profile-main {
+  text-align: right;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .profile-sections-wrapper {
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-sections-wrapper {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 30px;
+  }
+
+  .profile-section.left-section {
+    justify-self: center;
+    padding-left: 0;
+  }
+
+  .profile-section.right-section {
+    justify-self: center;
+    padding-right: 0;
+  }
+
+  .user-profile-main {
+    text-align: center;
+  }
+}
