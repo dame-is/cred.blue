@@ -1,39 +1,25 @@
-// frontend/src/pages/AltTextRatingTool.js
-
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AltTextRatingTool.css';
 
 const PUBLIC_API_URL = "https://public.api.bsky.app";
-// Define the static minimum date from your original script.
-const STATIC_MIN_DATE = new Date("2023-04-22T12:01:00Z");
 
 const AltTextRatingTool = () => {
-  // Form state and analysis data.
   const [username, setUsername] = useState('');
   const [analysis, setAnalysis] = useState(null);
   const [allRecords, setAllRecords] = useState([]);
   const [actorDID, setActorDID] = useState('');
   const [loading, setLoading] = useState(false);
-  // Checkboxes state.
-  const [useLast90Days, setUseLast90Days] = useState(false);
   const [excludeReplies, setExcludeReplies] = useState(false);
-  // For the share button.
   const [shareButtonVisible, setShareButtonVisible] = useState(false);
-  // For text results display.
   const [textResults, setTextResults] = useState(null);
-  // For autocomplete suggestions.
   const [suggestions, setSuggestions] = useState([]);
   const [autocompleteActive, setAutocompleteActive] = useState(false);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
-  // New state to store a selected suggestion
   const [selectedSuggestion, setSelectedSuggestion] = useState('');
-  // New state: show results div immediately after submission.
   const [showResults, setShowResults] = useState(false);
 
-  // Ref for the gauge needle (SVG group).
   const needleGroupRef = useRef(null);
-  // Refs for animation.
   const animFrameIdRef = useRef(null);
   const lastTimestampRef = useRef(null);
   const currentOscillationRef = useRef(0);
@@ -41,11 +27,6 @@ const AltTextRatingTool = () => {
 
   const navigate = useNavigate();
 
-  // ----------------------------
-  // Helper functions (converted from inline script)
-  // ----------------------------
-
-  // Update the gauge needle based on the given percentage.
   const updateGauge = (percentage) => {
     const angleDeg = (percentage / 100) * 180;
     if (needleGroupRef.current) {
@@ -53,7 +34,6 @@ const AltTextRatingTool = () => {
     }
   };
 
-  // Resolve handle to DID (with cleaning of directional characters).
   async function resolveHandleToDID(handle) {
     const cleanedHandle = handle.replace(/[\u200E\u200F\u202A-\u202E]/g, '');
     const res = await fetch(`${PUBLIC_API_URL}/xrpc/com.atproto.identity.resolveHandle?handle=${encodeURIComponent(cleanedHandle)}`);
@@ -62,7 +42,6 @@ const AltTextRatingTool = () => {
     throw new Error("Invalid username. Please try again without including the '@' symbol before the domain.");
   }
 
-  // Fetch the service endpoint for a given DID.
   async function fetchServiceEndpoint(did) {
     let url;
     if (did.startsWith("did:web:")) {
@@ -81,36 +60,55 @@ const AltTextRatingTool = () => {
     throw new Error(`Service endpoint not found for DID: ${did}`);
   }
 
-  // Fetch all records for a given collection.
   async function fetchRecordsForCollection(serviceEndpoint, did, collectionName) {
-    let urlBase = `${serviceEndpoint}/xrpc/com.atproto.repo.listRecords?repo=${encodeURIComponent(did)}&collection=${encodeURIComponent(collectionName)}&limit=100`;
+    // Calculate cutoff time for 90 days
+    const cutoffTime = Date.now() - 90 * 24 * 60 * 60 * 1000;
+    
+    const urlBase = `${serviceEndpoint}/xrpc/com.atproto.repo.listRecords?repo=${encodeURIComponent(did)}&collection=${encodeURIComponent(collectionName)}&limit=100`;
     let records = [];
     let cursor = null;
-    do {
+
+    while (true) {
       const url = cursor ? `${urlBase}&cursor=${encodeURIComponent(cursor)}` : urlBase;
       const res = await fetch(url);
       const data = await res.json();
-      if (Array.isArray(data.records)) {
-        records = records.concat(data.records);
+
+      if (!data || !Array.isArray(data.records) || data.records.length === 0) {
+        break;
       }
-      cursor = data.cursor || null;
-    } while (cursor);
+
+      let minCreatedAt = Infinity;
+      const pageRecords = [];
+
+      for (const rec of data.records) {
+        const createdAt = rec.value?.createdAt;
+        if (!createdAt) continue;
+
+        const recordTime = new Date(createdAt).getTime();
+        minCreatedAt = Math.min(minCreatedAt, recordTime);
+
+        if (recordTime >= cutoffTime) {
+          pageRecords.push(rec);
+        }
+      }
+
+      records.push(...pageRecords);
+
+      if (minCreatedAt < cutoffTime) {
+        break;
+      }
+
+      if (!data.cursor) {
+        break;
+      }
+      
+      cursor = data.cursor;
+    }
+
     return records;
   }
 
-  // Analyze posts based on checkboxes.
-  function analyzePosts(records, useLast90Days, excludeReplies, actor) {
-    let dynamicMinDate;
-    if (useLast90Days) {
-      dynamicMinDate = new Date();
-      dynamicMinDate.setDate(dynamicMinDate.getDate() - 90);
-    } else {
-      dynamicMinDate = new Date("1970-01-01T00:00:00Z");
-    }
-    const minDate = useLast90Days
-      ? (dynamicMinDate > STATIC_MIN_DATE ? dynamicMinDate : STATIC_MIN_DATE)
-      : STATIC_MIN_DATE;
-
+  function analyzePosts(records, excludeReplies, actor) {
     let totalPosts = 0;
     let postsWithImages = 0;
     let repliesWithImages = 0;
@@ -118,37 +116,36 @@ const AltTextRatingTool = () => {
 
     records.forEach(rec => {
       if (!rec.value.createdAt) return;
-      const postDate = new Date(rec.value.createdAt);
-      if (postDate < minDate) return;
+      
       const isReply = !!rec.value.reply;
       let isReplyToSelfFlag = false;
-      if (isReply && rec.value.reply && rec.value.reply.parent && rec.value.reply.parent.author) {
+      
+      if (isReply && rec.value.reply?.parent?.author) {
         isReplyToSelfFlag = rec.value.reply.parent.author.did === actor;
       }
+
       if (isReply) {
         if (isReplyToSelfFlag) {
           totalPosts += 1;
-          if (rec.value.embed && rec.value.embed["$type"] === "app.bsky.embed.images") {
+          if (rec.value.embed?.["$type"] === "app.bsky.embed.images") {
             postsWithImages += 1;
-            const hasAltText = rec.value.embed.images.some(img => img.alt && img.alt.trim());
+            const hasAltText = rec.value.embed.images.some(img => img.alt?.trim());
             if (hasAltText) postsWithAltText += 1;
           }
-        } else {
-          if (!excludeReplies) {
-            totalPosts += 1;
-            if (rec.value.embed && rec.value.embed["$type"] === "app.bsky.embed.images") {
-              postsWithImages += 1;
-              repliesWithImages += 1;
-              const hasAltText = rec.value.embed.images.some(img => img.alt && img.alt.trim());
-              if (hasAltText) postsWithAltText += 1;
-            }
+        } else if (!excludeReplies) {
+          totalPosts += 1;
+          if (rec.value.embed?.["$type"] === "app.bsky.embed.images") {
+            postsWithImages += 1;
+            repliesWithImages += 1;
+            const hasAltText = rec.value.embed.images.some(img => img.alt?.trim());
+            if (hasAltText) postsWithAltText += 1;
           }
         }
       } else {
         totalPosts += 1;
-        if (rec.value.embed && rec.value.embed["$type"] === "app.bsky.embed.images") {
+        if (rec.value.embed?.["$type"] === "app.bsky.embed.images") {
           postsWithImages += 1;
-          const hasAltText = rec.value.embed.images.some(img => img.alt && img.alt.trim());
+          const hasAltText = rec.value.embed.images.some(img => img.alt?.trim());
           if (hasAltText) postsWithAltText += 1;
         }
       }
@@ -171,13 +168,11 @@ const AltTextRatingTool = () => {
     };
   }
 
-  // ----------------------------
-  // Gauge Needle Animation (using requestAnimationFrame)
-  // ----------------------------
-  const baseSpeed = 0.10; // base speed per millisecond
-  const oscillationMin = 0; // minimum percentage
-  const oscillationMax = 100; // maximum percentage
-  const bounceRange = 10;   // bounce offset
+  // Animation code remains the same
+  const baseSpeed = 0.10;
+  const oscillationMin = 0;
+  const oscillationMax = 100;
+  const bounceRange = 10;
 
   const animateNeedle = (timestamp) => {
     if (!lastTimestampRef.current) {
@@ -186,7 +181,7 @@ const AltTextRatingTool = () => {
     const deltaTime = timestamp - lastTimestampRef.current;
     lastTimestampRef.current = timestamp;
 
-    const randomFactor = 0.8 + Math.random() * 0.4; // between 0.8 and 1.2
+    const randomFactor = 0.8 + Math.random() * 0.4;
     const increment = baseSpeed * deltaTime * randomFactor;
     currentOscillationRef.current += oscillationDirectionRef.current * increment;
 
@@ -219,9 +214,7 @@ const AltTextRatingTool = () => {
     }
   };
 
-  // ----------------------------
-  // Autocomplete Functions (with debounce and cancel)
-  // ----------------------------
+  // Autocomplete functions remain the same
   const debounce = (func, delay) => {
     let timer;
     const debounced = (...args) => {
@@ -256,15 +249,11 @@ const AltTextRatingTool = () => {
   const debouncedFetchSuggestions = useRef(debounce(fetchSuggestions, 300)).current;
 
   useEffect(() => {
-    // Only fetch suggestions if the username does NOT match a selected suggestion.
     if (!selectedSuggestion) {
       debouncedFetchSuggestions(username);
     }
   }, [username, debouncedFetchSuggestions, selectedSuggestion]);
 
-  // ----------------------------
-  // Render text analysis results.
-  // ----------------------------
   const renderTextResults = (analysisResult) => (
     <div>
       <p><strong>{analysisResult.totalPosts}</strong> posts analyzed</p>
@@ -275,9 +264,6 @@ const AltTextRatingTool = () => {
     </div>
   );
 
-  // ----------------------------
-  // Form Handler
-  // ----------------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
     setShowResults(true);
@@ -295,7 +281,7 @@ const AltTextRatingTool = () => {
       const records = await fetchRecordsForCollection(serviceEndpoint, did, "app.bsky.feed.post");
       setAllRecords(records);
 
-      const analysisResult = analyzePosts(records, useLast90Days, excludeReplies, did);
+      const analysisResult = analyzePosts(records, excludeReplies, did);
       setAnalysis(analysisResult);
       setTextResults(renderTextResults(analysisResult));
       updateGauge(analysisResult.altTextPercentage);
@@ -311,16 +297,13 @@ const AltTextRatingTool = () => {
 
   useEffect(() => {
     if (allRecords.length > 0 && actorDID) {
-      const newAnalysis = analyzePosts(allRecords, useLast90Days, excludeReplies, actorDID);
+      const newAnalysis = analyzePosts(allRecords, excludeReplies, actorDID);
       setAnalysis(newAnalysis);
       setTextResults(renderTextResults(newAnalysis));
       updateGauge(newAnalysis.altTextPercentage);
     }
-  }, [useLast90Days, excludeReplies]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [excludeReplies, allRecords, actorDID]);
 
-  // ----------------------------
-  // Input onChange: clear selectedSuggestion if user types manually.
-  // ----------------------------
   const handleInputChange = (e) => {
     setUsername(e.target.value);
     if (selectedSuggestion && e.target.value !== selectedSuggestion) {
@@ -366,7 +349,7 @@ const AltTextRatingTool = () => {
           <div className="action-row">
             <button className="analyze-button" type="submit">Analyze</button>
             <button
-                className="share-button"
+              className="share-button"
               type="button"
               onClick={() => window.open(
                 `https://bsky.app/intent/compose?text=${encodeURIComponent(
@@ -397,15 +380,6 @@ const AltTextRatingTool = () => {
             <label className="checkbox-container">
               <input
                 type="checkbox"
-                checked={useLast90Days}
-                onChange={(e) => setUseLast90Days(e.target.checked)}
-              />
-              <span className="checkbox-indicator"></span>
-              Last 90 Days
-            </label>
-            <label className="checkbox-container">
-              <input
-                type="checkbox"
                 checked={excludeReplies}
                 onChange={(e) => setExcludeReplies(e.target.checked)}
               />
@@ -416,11 +390,9 @@ const AltTextRatingTool = () => {
           <button 
             className="full-analysis-button" 
             type="button"
-            onClick={() => navigate(
-                `https://cred.blue/${username}`
-              )}
-            >
-                View Full Analysis
+            onClick={() => navigate(`/${username}`)}
+          >
+            View Full Analysis
           </button>
           <p>
             <a href="https://bsky.app/settings/accessibility" target="_blank" rel="noreferrer">
