@@ -7,9 +7,11 @@ const Newsletter = () => {
     <main className="newsletter-page">
       <div className="alt-card">
         <h1>Subscribe to the Newsletter</h1>
-        <p>Hi, my name is Dame! I'm the creator of cred.blue.</p>
-        <p>If you'd like to stay up-to-date with cred.blue and the other things I'm making, sign up with your email below.</p>
-        
+        <div className="intro-paragraph">
+          <p>Hi, my name is Dame!</p>
+          <p>I'm the creator of cred.blue.</p>
+          <p>If you'd like to stay up-to-date with cred.blue and the other things I'm making, sign up with your email below.</p>
+        </div>
         <form 
           className="newsletter-form embeddable-buttondown-form"
           action="https://buttondown.com/api/emails/embed-subscribe/dame"
