@@ -1,5 +1,5 @@
-// App.jsx
 import React from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar/Navbar';
 import Footer from './components/Footer/Footer';
@@ -16,30 +16,32 @@ import "./App.css";
 
 const App = () => {
   return (
-    <Router>
-      <div className="app-container" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-        <Navbar />
-        <div className="main-container" style={{ flex: 1 }}>
-          <Routes>
-            {/* All routes are now public */}
-            <Route path="/home" element={<Home />} />
-            <Route path="/compare" element={<CompareScores />} />
-            <Route path="/alt-text" element={<AltTextRatingTool />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/privacy" element={<Privacy />} />
-            <Route path="/terms" element={<Terms />} />
-            <Route path="/newsletter" element={<Newsletter />} />
-            <Route path="/:username" element={<UserProfile />} />
-            <Route path="/zen" element={<ZenPage />} />
-            
-            {/* Default routes */}
-            <Route path="/" element={<Navigate to="/home" replace />} />
-            <Route path="*" element={<Navigate to="/home" replace />} />
-          </Routes>
+    <>
+      <Router>
+        <div className="app-container" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+          <Navbar />
+          <div className="main-container" style={{ flex: 1 }}>
+            <Routes>
+              {/* All routes are now public */}
+              <Route path="/home" element={<Home />} />
+              <Route path="/compare" element={<CompareScores />} />
+              <Route path="/alt-text" element={<AltTextRatingTool />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/newsletter" element={<Newsletter />} />
+              <Route path="/:username" element={<UserProfile />} />
+              <Route path="/zen" element={<ZenPage />} />
+              {/* Default routes */}
+              <Route path="/" element={<Navigate to="/home" replace />} />
+              <Route path="*" element={<Navigate to="/home" replace />} />
+            </Routes>
+          </div>
+          <Footer />
         </div>
-        <Footer />
-      </div>
-    </Router>
+      </Router>
+      <Analytics />
+    </>
   );
 };
 
