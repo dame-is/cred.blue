@@ -172,48 +172,43 @@ const ScoreBreakdownCard = () => {
     };
   
     const buildCategoryChildren = (categories, parentScore) => {
-      return Object.entries(categories).map(([name, data]) => {
+      return Object.entries(categories).map(([name, categoryData]) => {
         const formattedName = formatCategoryName(name);
+        
+        // Use the percentage value directly for size
+        const size = categoryData.percentage;
         
         return {
           name: formattedName,
-          // Use the percentage value for size
-          size: data.percentage,
+          size: size,
           tooltipInfo: true,
           fill: COLORS[parentScore.name],
           description: getScoreDescriptions(formattedName),
           parent: { 
             name: parentScore.name, 
-            size: parentScore.totalScore 
+            size: 100  // Since we're using percentages, parent size is 100
           }
         };
       });
     };
   
-    // Calculate total scores for proportions
-    const totalScore = blueskyScore + atprotoScore;
-    const blueskyProportion = (blueskyScore / totalScore) * 100;
-    const atprotoProportion = (atprotoScore / totalScore) * 100;
-  
     return [
       {
         name: 'Bluesky Score',
-        size: blueskyProportion,
-        totalScore: blueskyScore,
+        size: blueskyScore,
         fill: COLORS['Bluesky Score'],
         children: buildCategoryChildren(breakdown.blueskyCategories, { 
           name: 'Bluesky Score', 
-          totalScore: blueskyScore 
+          size: blueskyScore 
         })
       },
       {
         name: 'ATProto Score',
-        size: atprotoProportion,
-        totalScore: atprotoScore,
+        size: atprotoScore,
         fill: COLORS['ATProto Score'],
         children: buildCategoryChildren(breakdown.atprotoCategories, { 
           name: 'ATProto Score', 
-          totalScore: atprotoScore 
+          size: atprotoScore 
         })
       }
     ];
