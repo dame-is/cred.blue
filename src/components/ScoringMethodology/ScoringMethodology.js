@@ -46,8 +46,7 @@ const ScoringMethodology = () => {
         </p>
 
         <p>
-          A score between 0-300 likely indicates that an account is either very new 
-          to the network or isn't very active. A score of 300-700 is within a "healthy" range. Scores that are 700+ typically indicate accounts that have been around awhile and are very active. The different score ranges are still in early development along with the algorithm, so these details are likely to change.
+          A score between 0-300 likely indicates that an account is either very new to the network or isn't very active. A score of 300-700 is within a "healthy" range. Scores that are 700+ typically indicate accounts that have been around awhile and are very active. The different score ranges are still in early development along with the algorithm, so these details are likely to change.
         </p>
 
         <h2>What are the different social statuses?</h2>

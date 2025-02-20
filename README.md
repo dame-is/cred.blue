@@ -34,7 +34,17 @@ Seperate scores are generated for each category and then combined to produce you
 
 For Version 1 of the scoring algorithm, there is a max score of 1,000 points. This may change in the future, or it could theoritically even be scaled down depending on feedback and usage.
 
-A score between 0 - 250 likely indicates that an account is either very new to the network or isn't very active. A score between 250 - 
+A score between 0-300 likely indicates that an account is either very new to the network or isn't very active. A score of 300-700 is within a "healthy" range. Scores that are 700+ typically indicate accounts that have been around awhile and are very active. The different score ranges are still in early development along with the algorithm, so these details are likely to change.
+
+### What are the different social statuses?
+
+Rather than displaying follower counts on profiles, the cred.blue analysis categorizes each identity into one of four social statuses base on its follower count, social graph ratio, engagement rate, and age. There are additional labels placed before the social status to indicate how engaging the account actually is.
+
+1. Newcomer
+2. Explorer
+3. Pathfinder
+4. Guide
+5. Leader
 
 ### How do I increase my score?
 
