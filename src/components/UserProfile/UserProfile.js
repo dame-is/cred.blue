@@ -20,7 +20,6 @@ import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import "./UserProfile.css";
 
-// Add this function to save user data to Supabase
 const saveUserData = async (userData) => {
   try {
     const { data, error } = await supabase
@@ -41,10 +40,13 @@ const saveUserData = async (userData) => {
         activity_score: userData.activityScore
       }, {
         onConflict: 'handle',
-        returning: true
+        ignoreDuplicates: false
       });
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase error:', error);
+      throw error;
+    }
     return data;
   } catch (error) {
     console.error('Error saving user data:', error);
