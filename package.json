@@ -9,6 +9,7 @@
     "@atproto/oauth-client-node": "^0.2.4",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
+    "@vercel/analytics": "^1.5.0",
     "@vercel/edge": "^1.2.1",
     "axios": "^1.7.9",
     "cra-template": "1.2.0",
@@ -26,6 +27,7 @@
     "react-router-dom": "^6.28.1",
     "react-scripts": "^5.0.1",
     "recharts": "^2.15.0",
+    "typescript": "^5.7.3",
     "web-vitals": "^4.2.4"
   },
   "scripts": {
