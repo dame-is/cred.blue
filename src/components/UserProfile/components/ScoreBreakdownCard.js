@@ -170,33 +170,37 @@ const ScoreBreakdownCard = () => {
       
       return specialCases[capitalizedName] || capitalizedName;
     };
-
-    const buildCategoryChildren = (categories, parentScore) => {
+  
+    // Calculate total score for proportions
+    const totalScore = blueskyScore + atprotoScore;
+  
+    const buildCategoryChildren = (categories) => {
       return Object.entries(categories).map(([name, categoryData]) => {
         const formattedName = formatCategoryName(name);
         
         return {
           name: formattedName,
-          size: categoryData.percentage,  // Use percentage directly
+          size: categoryData.percentage, // Use percentage directly for child sizing
           tooltipInfo: true,
-          fill: COLORS[parentScore.name],
-          description: getScoreDescriptions(formattedName),
-          parent: { name: parentScore.name, size: 100 }  // Parent size is 100 since we're using percentages
+          fill: COLORS[name.includes('Score') ? name : (blueskyScore ? 'Bluesky Score' : 'ATProto Score')],
+          description: getScoreDescriptions(formattedName)
         };
       });
     };
+  
+    // Create the hierarchical structure with proper proportions
     return [
       {
         name: 'Bluesky Score',
-        size: blueskyScore,
+        size: (blueskyScore / totalScore) * 100, // Parent proportion
         fill: COLORS['Bluesky Score'],
-        children: buildCategoryChildren(breakdown.blueskyCategories, { name: 'Bluesky Score', size: blueskyScore })
+        children: buildCategoryChildren(breakdown.blueskyCategories)
       },
       {
         name: 'ATProto Score',
-        size: atprotoScore,
+        size: (atprotoScore / totalScore) * 100, // Parent proportion
         fill: COLORS['ATProto Score'],
-        children: buildCategoryChildren(breakdown.atprotoCategories, { name: 'ATProto Score', size: atprotoScore })
+        children: buildCategoryChildren(breakdown.atprotoCategories)
       }
     ];
   };
