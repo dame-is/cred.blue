@@ -6,7 +6,7 @@ import MatterLoadingAnimation from "./MatterLoadingAnimation";
 
 const ZenPage = () => {
   return (
-    <div style={{
+    <div className="zen-container" style={{
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
