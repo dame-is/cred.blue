@@ -849,6 +849,7 @@ export async function loadAccountData(inputHandle, onProgress = () => {}) {
         },
         postingStyle,
         socialStatus,
+        rotationKeys: rotationKeysRounded,
         engagementMetrics, // Make sure this is passed
         alsoKnownAs: {
           totalAkas: roundToTwo(totalAkas),
