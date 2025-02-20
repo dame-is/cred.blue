@@ -232,7 +232,7 @@ const ScoreBreakdownCard = () => {
   };
 
   return (
-    <div className="w-full h-full min-h-[400px] p-4 bg-white rounded-lg shadow">
+    <div className="score-breakdown-container">
       <div className="score-breakdown-card" style={{ width: '100%', height: 280 }}>
         <ResponsiveContainer>
           <Treemap
@@ -282,9 +282,9 @@ const ScoreBreakdownCard = () => {
                 />
           </Treemap>
         </ResponsiveContainer>
-        <div className="disclaimer">
-        Hover over sections to see detailed breakdowns
       </div>
+      <div className="disclaimer">
+        Hover over sections to see detailed breakdowns
       </div>
     </div>
   );

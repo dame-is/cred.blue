@@ -603,12 +603,3 @@ tspan {
     max-width: 300px;
   }
 }
-
-
-/* Responsive adjustments */
-@media (max-width: 1024px) {
-  .profile-sections-wrapper {
-    grid-template-columns: 1fr 2fr 1fr;
-    gap: 10px;
-  }
-}
