@@ -420,7 +420,7 @@ tspan {
 }
 
 .user-profile-data-group {
-  text-align: right;
+  text-align: left;
   width: 100%;
   max-width: 300px;
   gap: 10px;
@@ -428,7 +428,7 @@ tspan {
 
 .share-button-container {
   width: 100%;
-  text-align: right;
+  text-align: left;
   display: block;
 }
 
@@ -439,11 +439,11 @@ tspan {
 /* Right Section */
 .profile-section.right-section {
   justify-self: end;
-  padding-right: 20px;
+  padding-left: 20px;
 }
 
 .user-profile-main {
-  text-align: right;
+  text-align: left;
   gap: 22.5px;
 }
 
@@ -493,6 +493,32 @@ tspan {
 
 /* Responsive Adjustments for Cards */
 @media (max-width: 750px) {
+
+  .profile-sections-wrapper {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 37.7px;
+  }
+
+  .profile-section.left-section {
+    justify-self: center;
+    padding-left: 0;
+    scale: .7;
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .profile-section.right-section {
+    justify-self: center;
+    padding-left: 0;
+    grid-column: 1;
+    grid-row: 3;
+  }
+
+  .user-profile-main {
+    text-align: center;
+  }
+
   .circular-badge {
     grid-column: 1;
     grid-row: 1;
@@ -555,6 +581,8 @@ tspan {
   .profile-section.middle-section {
     margin-top: -91.3px;
     gap: 13.5px;
+    grid-column: 1;
+    grid-row: 2;
   }
 
   .user-profile-badges {
@@ -582,28 +610,5 @@ tspan {
   .profile-sections-wrapper {
     grid-template-columns: 1fr 2fr 1fr;
     gap: 10px;
-  }
-}
-
-@media (max-width: 768px) {
-  .profile-sections-wrapper {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto;
-    gap: 30px;
-  }
-
-  .profile-section.left-section {
-    justify-self: center;
-    padding-left: 0;
-    scale: .7;
-  }
-
-  .profile-section.right-section {
-    justify-self: center;
-    padding-right: 0;
-  }
-
-  .user-profile-main {
-    text-align: center;
   }
 }
