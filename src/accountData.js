@@ -1024,7 +1024,7 @@ function buildAnalysisNarrative(accountData) {
       domainHistoryStatement = "They still have a default Bluesky handle";
   }
 
-  let rotationKeyStatement = accountData.rotationKeys === 2 
+  let rotationKeyStatement = accountData.rotationKeys === 3 
       ? "They don't have their own rotation key set" 
       : "They have their own rotation key set";
 
