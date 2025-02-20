@@ -170,43 +170,33 @@ const ScoreBreakdownCard = () => {
       
       return specialCases[capitalizedName] || capitalizedName;
     };
-  
+
     const buildCategoryChildren = (categories, parentScore) => {
       return Object.entries(categories).map(([name, categoryData]) => {
         const formattedName = formatCategoryName(name);
         
-        // Calculate the actual size based on the percentage of parent score
-        const sizeValue = (categoryData.percentage / 100) * parentScore.size;
-        
         return {
           name: formattedName,
-          size: sizeValue,
+          size: categoryData.percentage,  // Use percentage directly
           tooltipInfo: true,
           fill: COLORS[parentScore.name],
           description: getScoreDescriptions(formattedName),
-          parent: { name: parentScore.name, size: parentScore.size }
+          parent: { name: parentScore.name, size: 100 }  // Parent size is 100 since we're using percentages
         };
       });
     };
-  
     return [
       {
         name: 'Bluesky Score',
         size: blueskyScore,
         fill: COLORS['Bluesky Score'],
-        children: buildCategoryChildren(breakdown.blueskyCategories, { 
-          name: 'Bluesky Score', 
-          size: blueskyScore 
-        })
+        children: buildCategoryChildren(breakdown.blueskyCategories, { name: 'Bluesky Score', size: blueskyScore })
       },
       {
         name: 'ATProto Score',
         size: atprotoScore,
         fill: COLORS['ATProto Score'],
-        children: buildCategoryChildren(breakdown.atprotoCategories, { 
-          name: 'ATProto Score', 
-          size: atprotoScore 
-        })
+        children: buildCategoryChildren(breakdown.atprotoCategories, { name: 'ATProto Score', size: atprotoScore })
       }
     ];
   };
