@@ -493,7 +493,7 @@ tspan {
 }
 
 /* Responsive Adjustments for Cards */
-@media (max-width: 750px) {
+@media (max-width: 835px) {
 
   .profile-sections-wrapper {
     grid-template-columns: 1fr;
