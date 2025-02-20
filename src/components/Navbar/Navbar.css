@@ -37,13 +37,13 @@
   }
   
   .navbar-container {
-    max-width: 1200px; /* Max width of the content */
+    max-width: 1000px;
     margin: 0 auto; /* Center the content */
     padding: 0 20px; /* Horizontal padding */
     display: flex;
     align-items: center;
     justify-content: space-between; /* Distribute space between left and right sections */
-    height: 60px; /* Fixed height for the navbar */
+    height: 84px;
     box-sizing: border-box;
   }
   
