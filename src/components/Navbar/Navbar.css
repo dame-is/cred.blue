@@ -255,6 +255,9 @@
   display: none;
 }
 
+.navbar-support-button-container {
+  font-size: 0.9em;
+}
 
   /* Responsive Design: Links display in a row under the logo */
   @media (max-width: 815px) {
@@ -326,11 +329,12 @@
       font-weight: 600;
       margin: 11px;
       padding: 4px 7px;
+      margin-right: 0px;
     }
   }
 
   /* Responsive Design: Links display in a row under the logo */
-  @media (max-width: 350px) {
+  @media (max-width: 370px) {
     .navbar-support-button {
       max-width: 135.5px;
       font-size: 0.8em;
