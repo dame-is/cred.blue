@@ -1085,9 +1085,9 @@ function buildAnalysisNarrative(accountData) {
       domainHistoryStatement = "They still have a default Bluesky handle";
   }
 
-  let rotationKeyStatement = accountData.rotationKeys === 3 
-      ? "They don't have their own rotation key set" 
-      : "They have their own rotation key set";
+  let rotationKeyStatement = accountData.rotationKeys > 2 
+      ? "They have their own rotation key set" 
+      : "They don't have their own rotation key set";
 
   let pdsHostStatement = serviceEndpoint.includes("bsky.network")
       ? "their PDS is hosted by a Bluesky mushroom"
