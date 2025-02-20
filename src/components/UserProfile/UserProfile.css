@@ -164,9 +164,7 @@
 }
 
 .grid-item {
-  overflow: scroll;
-  scroll-behavior: auto;
-  scrollbar-width: none;
+  overflow: clip;
 }
 
 .react-grid-item {
