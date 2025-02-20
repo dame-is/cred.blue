@@ -175,8 +175,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text);
+  color: #004f84;
   padding: 0px;
+}
+
+/* Theme toggle button icon only */
+.dark-mode .theme-toggle-button {
+  color: #004f84;
 }
 
 /* Icon styles */
@@ -185,9 +190,14 @@
   align-items: center;
   justify-content: center;
   padding: 0.5rem;
-  color: #004f84;;
+  color: #ffffff;;
   transition: color 0.2s ease;
   scale: 1.3;
+}
+
+/* Icon styles */
+.dark-mode .nav-icon {
+  color: #ffffff;;
 }
 
 .nav-icon:hover {
