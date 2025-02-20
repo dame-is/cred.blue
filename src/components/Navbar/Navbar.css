@@ -249,12 +249,13 @@
   align-content: center;
   background: gray;
   border-radius: 4px;
-  margin: 4px;
   padding: 3px 5px;
   color: white;
   text-transform: uppercase;
   font-size: 0.6em;
   font-weight: 600;
+  margin-bottom: 5.3px;
+  margin-left: 4.9px;
 }
 
 .navbar-auth-button {
