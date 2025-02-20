@@ -1090,7 +1090,7 @@ function buildAnalysisNarrative(accountData) {
   console.log('Root rotationKeys:', accountData.rotationKeys);
   console.log('Nested rotationKeys:', accountData.atprotoCategories?.decentralization?.identity?.rotationKeys);
   
-  const rotationKeyCount = accountData.atprotoCategories?.decentralization?.identity?.rotationKeys || 0;
+  const rotationKeyCount = accountData.rotationKeys || 0;
   console.log('Final rotationKeyCount used:', rotationKeyCount);
   
   let rotationKeyStatement = (rotationKeyCount === 1 || rotationKeyCount >= 3)
