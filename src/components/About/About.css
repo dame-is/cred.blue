@@ -9,5 +9,10 @@
   }
 
 .about-page ul {
-    margin-top: -5px;
-}
+    list-style: none;
+    text-align: center;
+    margin: 0px auto;
+    padding: 0px;
+    width: 100%;
+    opacity: 0.5;
+  }
