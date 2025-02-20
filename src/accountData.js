@@ -495,20 +495,25 @@ function calculateEngagementMetrics(engagementsReceived = {}, onlyPosts = 0, fol
 }
 
 function calculateSocialStatus({ ageInDays = 0, followersCount = 0, followsCount = 0, engagementRate = 0 }) {
-  if (ageInDays < 30) return "Newcomer";
-  
-  const followPercentage = followersCount > 0 ? followsCount / followersCount : 0;
-  
   // Define engagement thresholds
   const ENGAGEMENT_THRESHOLDS = {
-    high: 0.03,    // 3%
+    high: 0.03, // 3%
     moderate: 0.01, // 1%
-    low: 0.005     // 0.5%
+    low: 0.005 // 0.5%
   };
 
-  // Determine base status based on followers
+  // Calculate follow percentage
+  const followPercentage = followersCount > 0 ? followsCount / followersCount : 0;
+
+  // Determine base status
   let baseStatus = "Explorer";
-  if (followPercentage < 0.5) {
+  
+  // Check for Newcomer first
+  if (ageInDays < 30) {
+    baseStatus = "Newcomer";
+  }
+  // Only check other statuses if not a newcomer
+  else if (followPercentage < 0.5) {
     if (followersCount >= 100000) {
       baseStatus = "Leader";
     } else if (followersCount >= 10000) {
@@ -518,17 +523,16 @@ function calculateSocialStatus({ ageInDays = 0, followersCount = 0, followsCount
     }
   }
 
-  // Add engagement qualifier if they have a notable status
-  if (baseStatus !== "Explorer" && baseStatus !== "Newcomer") {
-    if (engagementRate <= ENGAGEMENT_THRESHOLDS.low) {
-      return `Unengaging ${baseStatus}`;
-    } else if (engagementRate <= ENGAGEMENT_THRESHOLDS.moderate) {
-      return `Moderately Engaging ${baseStatus}`;
-    } else if (engagementRate >= ENGAGEMENT_THRESHOLDS.high) {
-      return `Highly Engaging ${baseStatus}`;
-    }
+  // Add engagement qualifier for all status levels
+  if (engagementRate <= ENGAGEMENT_THRESHOLDS.low) {
+    return `Unengaging ${baseStatus}`;
+  } else if (engagementRate <= ENGAGEMENT_THRESHOLDS.moderate) {
+    return `Moderately Engaging ${baseStatus}`;
+  } else if (engagementRate >= ENGAGEMENT_THRESHOLDS.high) {
+    return `Highly Engaging ${baseStatus}`;
   }
 
+  // Return base status if engagement doesn't meet any threshold
   return baseStatus;
 }
 
