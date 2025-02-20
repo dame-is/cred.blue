@@ -9,7 +9,7 @@ const ScoringMethodology = () => {
         <h1>The Scoring Methodology</h1>
 
         <div className="methodology-page-chart">
-              <ScoreGauge score={634} />
+              <ScoreGauge score={500} />
             </div>
 
         <p>Your cred.blue score is generated based on two major categories...</p>
