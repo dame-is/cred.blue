@@ -282,10 +282,9 @@ const ScoreBreakdownCard = () => {
                 />
           </Treemap>
         </ResponsiveContainer>
-      </div>
-      
-      <div className="disclaimer">
+        <div className="disclaimer">
         Hover over sections to see detailed breakdowns
+      </div>
       </div>
     </div>
   );

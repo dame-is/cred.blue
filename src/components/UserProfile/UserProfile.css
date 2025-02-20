@@ -480,6 +480,17 @@ tspan {
   margin: 0px
 }
 
+.card .disclaimer {
+  margin: 0px;
+    margin-top: 0px;
+  margin-top: 12.3px;
+  max-width: 400px;
+}
+
+.score-breakdown-card .disclaimer {
+  margin-left: 3px;
+}
+
 /* Responsive Adjustments for Cards */
 @media (max-width: 750px) {
   .circular-badge {

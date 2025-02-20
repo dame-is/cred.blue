@@ -345,29 +345,6 @@ const UserProfile = () => {
       <div className={`user-profile ${showContent ? "fade-in" : "hidden"}`}>
         <div className="user-profile-container">
         <div className="profile-sections-wrapper">
-          {/* Left Section */}
-          <div className="profile-section left-section">
-            <CircularLogo
-              did={accountData.did}
-              size={370}
-              fontSize={32}
-              textColor="#004f84"
-            />
-          </div>
-
-          {/* Middle Section */}
-          <div className="profile-section middle-section">
-            <div className="user-profile-header-rechart">
-              <ScoreGauge score={accountData.combinedScore} />
-            </div>
-              <div className="user-profile-badges">
-                <h3>{accountData.socialStatus}</h3>
-                <h3>{accountData.postingStyle}</h3>
-              </div>
-              <div className="user-profile-age">
-                <h2>{Math.floor(accountData.ageInDays)} days old</h2>
-              </div>
-          </div>
 
           {/* Right Section */}
           <div className="profile-section right-section">
@@ -407,6 +384,30 @@ const UserProfile = () => {
               </button>
             </div>
             </div>
+          </div>
+
+          {/* Middle Section */}
+          <div className="profile-section middle-section">
+            <div className="user-profile-header-rechart">
+              <ScoreGauge score={accountData.combinedScore} />
+            </div>
+              <div className="user-profile-badges">
+                <h3>{accountData.socialStatus}</h3>
+                <h3>{accountData.postingStyle}</h3>
+              </div>
+              <div className="user-profile-age">
+                <h2>{Math.floor(accountData.ageInDays)} days old</h2>
+              </div>
+          </div>
+
+            {/* Left Section */}
+            <div className="profile-section left-section">
+            <CircularLogo
+              did={accountData.did}
+              size={370}
+              fontSize={32}
+              textColor="#004f84"
+            />
           </div>
         </div>
       </div>
