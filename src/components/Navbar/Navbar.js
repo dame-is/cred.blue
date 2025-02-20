@@ -44,7 +44,7 @@ const Navbar = () => {
             </svg>
           </a>
           <a
-            href="https://github.com/damedotblog"
+            href="https://github.com/dame-is/cred.blue"
             target="_blank"
             rel="noopener noreferrer"
             className="nav-icon"
