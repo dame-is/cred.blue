@@ -478,16 +478,15 @@ tspan {
 }
 
 .user-profile-data-group {
-  text-align: center;
+  text-align: right;
   width: 100%;
   max-width: 300px;
+  gap: 10px;
 }
 
 .share-button-container {
-  max-width: 200px;
   width: 100%;
   text-align: right;
-  margin-top: 7px;
   display: block;
 }
 
@@ -504,6 +503,15 @@ tspan {
 .user-profile-main {
   text-align: right;
   gap: 22.5px;
+}
+
+.user-profile-activity {
+  align-content: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0px;
+  text-transform: capitalize;
 }
 
 .user-profile-badges {
