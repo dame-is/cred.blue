@@ -62,7 +62,7 @@ const Privacy = () => {
         <ul>
             <li>We use Bluesky's authentication system for user login</li>
             <li>We access public data through AT Protocol/Bluesky PDSs</li>
-            <li>We do not share any collected information with third parties</li>
+            <li>We do not share any collected information with third parties unless necessary to establish and maintain important services or features</li>
         </ul>
 
         <h2>Your Rights</h2>

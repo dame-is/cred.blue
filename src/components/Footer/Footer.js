@@ -22,7 +22,10 @@ const Footer = () => {
         </div>
         {/* Additional Info */}
         <div className="footer-info">
-          <p>&copy; {new Date().getFullYear()} cred.blue. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} cred.blue. All rights reserved. <Link to="/zen" className="zen-link">Zen</Link></p>
+        </div>
+        <div className="zen-info">
+          <Link to="/zen">Zen</Link>
         </div>
       </div>
     </footer>

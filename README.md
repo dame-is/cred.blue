@@ -12,6 +12,12 @@ The **cred.blue** scoring methodology is intended to provide a helpful contextua
 
 Future versions of cred.blue may include authenticated data analysis (for your personal AT Proto data that isn't public), a custom score/credibility tracking lexicon, and an in-app labeler for the Bluesky platform.
 
+## The Scoring Methodology
+
+
+
+### How do I increase my score?
+
 ## FAQs
 
 ### Who created cred.blue?

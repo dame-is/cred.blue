@@ -9,7 +9,7 @@ const Terms = () => {
       <main className="privacy-terms-page">
       <div className="alt-card">
             <h1>Terms of Service</h1>
-            <div class="last-updated">Last Updated: February 13, 2025</div>
+            <div class="last-updated">Last Updated: February 19, 2025</div>
 
             <div class="section">
                 <h2>1. Acceptance of Terms</h2>
@@ -32,7 +32,6 @@ const Terms = () => {
                 <p>You agree to:</p>
                 <ul>
                     <li>Use the Service in compliance with all applicable laws</li>
-                    <li>Not attempt to manipulate or game the credibility scoring system</li>
                     <li>Not use the Service to harass, abuse, or harm others</li>
                     <li>Not attempt to access non-public data or bypass security measures</li>
                 </ul>
@@ -85,13 +84,8 @@ const Terms = () => {
                 </ul>
             </div>
 
-            <div class="section">
-                <h2>9. Governing Law</h2>
-                <p>These Terms shall be governed by and construed in accordance with the laws of [Jurisdiction], without regard to its conflict of law provisions.</p>
-            </div>
-
             <div class="contact">
-                <h2>10. Contact Information</h2>
+                <h2>9. Contact Information</h2>
                 <p>For questions about these Terms, please contact us at terms @ cred.blue</p>
             </div>
       </div>

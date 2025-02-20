@@ -12,3 +12,16 @@
     margin-top: 0.1em;
     margin-bottom: 0.2em;
   }
+
+  .section h2 {
+    margin-top: 18px;
+  }
+
+  .privacy-terms-page h3 {
+    margin-top: 17px;
+    margin-bottom: 1.5px;
+  }
+
+  .privacy-terms-page h2 {
+    margin-top: 13px;
+  }
