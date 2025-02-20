@@ -147,6 +147,13 @@ ul {
   font-family: articulat-cf;
 }
 
+ol {
+  font-family: articulat-cf;
+  margin: 10px 0;
+  opacity: 1;
+  padding-left: 40px;
+}
+
 .main-container {
   align-content: center;
   margin: 0 auto;
