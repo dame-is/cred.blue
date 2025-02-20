@@ -175,19 +175,16 @@ const ScoreBreakdownCard = () => {
       return Object.entries(categories).map(([name, categoryData]) => {
         const formattedName = formatCategoryName(name);
         
-        // Use the percentage value directly for size
-        const size = categoryData.percentage;
+        // Calculate the actual size based on the percentage of parent score
+        const sizeValue = (categoryData.percentage / 100) * parentScore.size;
         
         return {
           name: formattedName,
-          size: size,
+          size: sizeValue,
           tooltipInfo: true,
           fill: COLORS[parentScore.name],
           description: getScoreDescriptions(formattedName),
-          parent: { 
-            name: parentScore.name, 
-            size: 100  // Since we're using percentages, parent size is 100
-          }
+          parent: { name: parentScore.name, size: parentScore.size }
         };
       });
     };
