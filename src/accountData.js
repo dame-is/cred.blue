@@ -442,7 +442,7 @@ function calculatePostingStyle(stats) {
       return "Engaged Text Poster";
     }
     if (imagePercentage > linkPercentage && imagePercentage > textPercentage && imagePercentage > videoPercentage) {
-      return altTextPercentage <= 0.3 ? "Engaged Image Poster who's bad at alt text" : "Engaged Image Poster";
+      return altTextPercentage <= 0.3 ? "Engaged Image Poster who should use more alt text" : "Engaged Image Poster";
     }
     if (linkPercentage > imagePercentage && linkPercentage > textPercentage && linkPercentage > videoPercentage) {
       return "Engaged Link Poster";
@@ -470,6 +470,7 @@ function calculatePostingStyle(stats) {
   if (stats.quoteOtherPercentage >= 0.5) return "Quote Guy";
   if (stats.repostOtherPercentage >= 0.5) return "Repost Guy";
   return "Unknown";
+
 }
 
 // 1. First, add this new function to calculate engagement rate
