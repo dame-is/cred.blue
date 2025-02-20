@@ -9,6 +9,7 @@ const Footer = () => {
       <div className="footer-container">
         {/* Important Links */}
         <div className="footer-links">
+          <Link to="/newsletter">Newsletter</Link>
           <Link to="/privacy">Privacy Policy</Link>
           <Link to="/terms">Terms of Service</Link>
           <a
