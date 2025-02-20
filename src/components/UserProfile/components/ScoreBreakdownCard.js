@@ -16,8 +16,8 @@ const CustomTooltip = ({ active, payload }) => {
       <div className="custom-tooltip bg-white p-4 rounded shadow-lg border border-gray-200 max-w-md">
         <p className="font-semibold text-lg mb-2">{data.name}</p>
         <p className="text-sm text-gray-700 mb-2">
-          {/* Display the weight as a percentage */}
-          {(data.weight * 100).toFixed(1)}% of {data.parent?.name || 'Total Score'}
+          {/* Show the percentage from our data */}
+          {data.percentage?.toFixed(1)}% of {data.parent?.name || 'Total Score'}
         </p>
         {data.description && (
           <p className="text-sm text-gray-600">{data.description}</p>
@@ -172,7 +172,7 @@ const ScoreBreakdownCard = () => {
         return {
           name: formattedName,
           size: categoryData.size, // Use size for treemap proportions
-          weight: categoryData.weight,
+          percentage: categoryData.percentage, // Use percentage for tooltip
           tooltipInfo: true,
           fill: COLORS[parentScore.name],
           description: getScoreDescriptions(formattedName),
