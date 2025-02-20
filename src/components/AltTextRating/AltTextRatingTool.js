@@ -1,6 +1,7 @@
 // frontend/src/pages/AltTextRatingTool.js
 
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './AltTextRatingTool.css';
 
 const PUBLIC_API_URL = "https://public.api.bsky.app";
@@ -37,6 +38,8 @@ const AltTextRatingTool = () => {
   const lastTimestampRef = useRef(null);
   const currentOscillationRef = useRef(0);
   const oscillationDirectionRef = useRef(1);
+
+  const navigate = useNavigate();
 
   // ----------------------------
   // Helper functions (converted from inline script)
@@ -413,8 +416,8 @@ const AltTextRatingTool = () => {
           <button 
             className="full-analysis-button" 
             type="button"
-            onClick={() => window.open(
-                `https://cred.blue/${username}`, '_blank'
+            onClick={() => navigate(
+                `https://cred.blue/${username}`
               )}
             >
                 View Full Analysis

@@ -1,70 +1,33 @@
-# Getting Started with Create React App
+# cred.blue
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+- Generate a Bluesky credibility score. 
+- Understand your AT Proto data footprint. 
+- Vibe check strangers and new accounts.
 
-## Available Scripts
+## About
 
-In the project directory, you can run:
+The **cred.blue** platform allows anyone to better understand the data footprint that an **AT Protocol** or **Bluesky** identity is creating. During its beta launch, **cred.blue** provides an early version of its custom scoring algorithm that generates a "credibility" score based on an identity's activity in the ecosystem. Additionally, there is an **Alt Text Rating Tool** that allows you to see how consistently an account includes accessibility alt-text when posting images on Bluesky.
 
-### `npm start`
+The **cred.blue** scoring methodology is intended to provide a helpful contextual analysis of the public data associated with an AT Protocol or Bluesky identity. The hope is that the scoring system might help incentivize healthier behaviors and activity patterns on the network.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Future versions of cred.blue may include authenticated data analysis (for your personal AT Proto data that isn't public), a custom score/credibility tracking lexicon, and an in-app labeler for the Bluesky platform.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## FAQs
 
-### `npm test`
+### Who created cred.blue?
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+It was created by [@dame.is](https://bsky.app/profile/dame.is)! Dame has been a part of the Bluesky community from almost the very beginning and is passionate about the AT Protocol. Dame was user number Bluesky user #1,216 and is building cred.blue independently.
 
-### `npm run build`
+### Why was cred.blue created?
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Since its inception, Bluesky has relied upon an innovative domain verification system to help identities establish their credibility and authority. This system is powerful and should be taken advantage of, but it can only do so much in its current form. The cred.blue platform is just one experiment among many that is attempting to help people understand which social media accounts are more (or less) trustworthy.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Is this just a social credit score like they have in China?
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Not at all! To begin with, the often imagined "social credit" system that many people think exists in China is not really real... to better understand the prevelant misconceptions people have about this subject, check out [the Wikipedia article](https://en.wikipedia.org/wiki/Social_Credit_System).
 
-### `npm run eject`
+At its core, the cred.blue scoring system is just an attempt to help people understand the data footprint that is being left behind by every Bluesky or AT Protocol identity. In a world saturated in fake profiles or AI-controlled accounts, it's never been more vital to have resources that can help humans effectively and safely navigate their online spaces.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Why is cred.blue in a "beta" state?
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+To put it simply, cred.blue is very experimental and at this early stage things will likely change a lot. The first version of the scoring algorithm lays a foundation for future plans, but it will take some time (and real-world usage) to calibrate the model's weights and variables.
