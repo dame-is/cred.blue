@@ -21,3 +21,39 @@
   .newsletter-form input {
     margin-bottom: 15px;
   }
+
+  .newsletter-form {
+    display: flex;
+    flex-direction: column;
+    max-width: 300px;
+    background: none;
+    border: none;
+    margin: auto;
+    padding: 0px;
+    text-align: center;
+    gap: 6.2px;
+    font-family: articulat-cf;
+  }
+
+  .newsletter-page p {
+    text-align: center;
+    margin-bottom: 30.6px;
+  }
+
+  .newsletter-form label {
+    font-weight: 600;
+  }
+
+  button {
+    background: var(--button-bg);
+    border: none;
+    border-radius: 6px;
+    color: var(--button-text);
+    cursor: pointer;
+    margin: auto;
+    max-width: 175px;
+    padding: 10px 15px;
+    font-weight: 700;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+  }

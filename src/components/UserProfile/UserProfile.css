@@ -488,7 +488,7 @@ tspan {
   max-width: 400px;
 }
 
-.score-breakdown-card .disclaimer {
+.score-breakdown-container .disclaimer {
   margin-left: 3px;
 }
 

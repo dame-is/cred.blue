@@ -69,7 +69,7 @@ const createLayouts = () => ({
     { i: "NarrativeCard", x: 1, y: 0, w: 1, h: 7, static: false },
     { i: "ProfileCard", x: 0, y: 14, w: 1, h: 7, static: false },
     { i: "PostTypeCard", x: 1, y: 22, w: 1, h: 6, static: false },
-    { i: "AltTextCard", x: 0, y: 26, w: 1, h: 5, static: false },
+    { i: "AltTextCard", x: 0, y: 26, w: 1, h: 6, static: false },
     { i: "ActivityCard", x: 1, y: 30, w: 1, h: 6, static: false }
   ]
 });
@@ -405,7 +405,7 @@ const UserProfile = () => {
             <CircularLogo
               did={accountData.did}
               size={370}
-              fontSize={33}
+              fontSize={35}
               textColor="#004f84"
             />
           </div>

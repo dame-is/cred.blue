@@ -7,7 +7,8 @@ const Newsletter = () => {
     <main className="newsletter-page">
       <div className="alt-card">
         <h1>Subscribe to the Newsletter</h1>
-        <p>Lorem ipsum...</p>
+        <p>Hi, my name is Dame! I'm the creator of cred.blue.</p>
+        <p>If you'd like to stay up-to-date with cred.blue and the other things I'm making, sign up with your email below.</p>
         
         <form 
           className="newsletter-form embeddable-buttondown-form"
@@ -40,7 +41,7 @@ const Newsletter = () => {
             placeholder="name" 
           />
 
-          <input type="submit" value="Subscribe" />
+          <button type="submit" value="Subscribe">Subscribe</button>
           <input type="hidden" name="tag" value="cred.blue subscribers" />
         </form>
       </div>
