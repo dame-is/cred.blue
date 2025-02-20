@@ -16,7 +16,7 @@ const CustomTooltip = ({ active, payload }) => {
       <div className="custom-tooltip bg-white p-4 rounded shadow-lg border border-gray-200 max-w-md">
         <p className="font-semibold text-lg mb-2">{data.name}</p>
         <p className="text-sm text-gray-700 mb-2">
-          {/* Show the percentage from our data */}
+          {/* Display percentage directly */}
           {data.percentage?.toFixed(1)}% of {data.parent?.name || 'Total Score'}
         </p>
         {data.description && (
@@ -165,20 +165,22 @@ const ScoreBreakdownCard = () => {
       return specialCases[capitalizedName] || capitalizedName;
     };
   
-    const buildCategoryChildren = (categories, parentScore) => {
+    const buildCategoryChildren = (categories, parentScore, parentName) => {
       return Object.entries(categories).map(([name, categoryData]) => {
         const formattedName = formatCategoryName(name);
         
         return {
           name: formattedName,
-          size: categoryData.size, // Use size for treemap proportions
-          percentage: categoryData.percentage, // Use percentage for tooltip
+          // Use percentage directly for size
+          size: categoryData.percentage,
+          percentage: categoryData.percentage,
           tooltipInfo: true,
-          fill: COLORS[parentScore.name],
+          fill: COLORS[parentName],
           description: getScoreDescriptions(formattedName),
           parent: { 
-            name: parentScore.name,
-            size: parentScore.size 
+            name: parentName,
+            // Parent size is always 100 for percentage calculation
+            size: 100
           }
         };
       });
@@ -187,21 +189,24 @@ const ScoreBreakdownCard = () => {
     return [
       {
         name: 'Bluesky Score',
-        size: blueskyScore,
+        // Total size for parent is the relative score proportion
+        size: (blueskyScore / (blueskyScore + atprotoScore)) * 100,
         fill: COLORS['Bluesky Score'],
-        children: buildCategoryChildren(breakdown.blueskyCategories, { 
-          name: 'Bluesky Score', 
-          size: blueskyScore 
-        })
+        children: buildCategoryChildren(
+          breakdown.blueskyCategories, 
+          blueskyScore,
+          'Bluesky Score'
+        )
       },
       {
         name: 'ATProto Score',
-        size: atprotoScore,
+        size: (atprotoScore / (blueskyScore + atprotoScore)) * 100,
         fill: COLORS['ATProto Score'],
-        children: buildCategoryChildren(breakdown.atprotoCategories, { 
-          name: 'ATProto Score', 
-          size: atprotoScore 
-        })
+        children: buildCategoryChildren(
+          breakdown.atprotoCategories, 
+          atprotoScore,
+          'ATProto Score'
+        )
       }
     ];
   };
