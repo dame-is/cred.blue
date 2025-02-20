@@ -1085,9 +1085,18 @@ function buildAnalysisNarrative(accountData) {
       domainHistoryStatement = "They still have a default Bluesky handle";
   }
 
-  let rotationKeyStatement = (accountData.rotationKeys === 1 || accountData.rotationKeys >= 3)
+  // Debug logging to see what values we're working with
+  console.log('Root rotationKeys:', accountData.rotationKeys);
+  console.log('Nested rotationKeys:', accountData.atprotoCategories?.decentralization?.identity?.rotationKeys);
+  
+  const rotationKeyCount = accountData.atprotoCategories?.decentralization?.identity?.rotationKeys || 0;
+  console.log('Final rotationKeyCount used:', rotationKeyCount);
+  
+  let rotationKeyStatement = (rotationKeyCount === 1 || rotationKeyCount >= 3)
       ? "They have their own rotation key set" 
       : "They don't have their own rotation key set";
+  
+  console.log('Generated statement:', rotationKeyStatement);
 
   let pdsHostStatement = serviceEndpoint.includes("bsky.network")
       ? "their PDS is hosted by a Bluesky mushroom"
