@@ -370,7 +370,7 @@ const AltTextRatingTool = () => {
               type="button"
               onClick={() => window.open(
                 `https://bsky.app/intent/compose?text=${encodeURIComponent(
-                  `My alt text rating score is ${analysis?.altTextPercentage?.toFixed(2)}% ${analysis?.emoji}\n\n${analysis?.totalPosts} posts analyzed,\n${analysis?.postsWithImages} contain images,\n${analysis?.postsWithAltText} have alt text...\n\nGet your Bluesky alt text rating here: dame.is/ratingalttext`
+                  `My alt text rating score is ${analysis?.altTextPercentage?.toFixed(2)}% ${analysis?.emoji}\n\n${analysis?.totalPosts} posts analyzed,\n${analysis?.postsWithImages} contain images,\n${analysis?.postsWithAltText} have alt text...\n\nGet your Bluesky alt text rating here: https://cred.blue/alt-text`
                 )}`, '_blank'
               )}
               style={{ display: shareButtonVisible ? 'inline-block' : 'none' }}
