@@ -369,7 +369,7 @@ const UserProfile = () => {
                 type="button"
                 onClick={() => window.open(
                   `https://bsky.app/intent/compose?text=${encodeURIComponent(
-                    `My @cred.blue score is ${accountData.combinedScore}/1000! 🦋\n\n👤 Social Status: "${accountData.socialStatus}"\n✍️ Posting Style: "${accountData.postingStyle}".\n\nCheck your score: cred.blue 🍥`
+                    `My @cred.blue score is ${accountData.combinedScore}! 🦋\n\nSocial Status: "${accountData.socialStatus}" 👤\n\nPosting Style: "${accountData.postingStyle}" ✍️\n\nCheck your score: cred.blue`
                   )}`, '_blank'
                 )}
               >
