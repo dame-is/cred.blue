@@ -381,116 +381,77 @@ tspan {
 
 /* Responsive Adjustments for Cards */
 @media (max-width: 750px) {
-  .profile-sections-wrapper {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto;
-    gap: 10px;
-  }
-
-  .profile-section.right-section {
-    grid-row: 1;
-    justify-self: center;
-    padding-right: 0;
-  }
-
-  .profile-section.middle-section {
-    grid-row: 2;
-    margin-top: -20px;
-  }
-
-  .profile-section.left-section {
-    grid-row: 3;
-    justify-self: center;
-    scale: 0.7;
-    margin-top: -30px;
-  }
-
   .circular-badge {
     grid-column: 1;
     grid-row: 1;
     margin-left: 0;
     margin-right: 1.5px;
   }
-
   .user-profile-emoji-group {
     grid-row: 1;
     grid-column: 1;
     display: none;
   }
-
   .user-profile-main {
     grid-row: 2;
     grid-column: 1;
     gap: 10px;
-    text-align: center;
-    margin: 0 auto;
-    padding: 0;
   }
-
   .user-profile-header-rechart {
     grid-row: 3;
     grid-column: 1;
     scale: 0.9;
-    margin: 0 auto;
     margin-bottom: 5px;
   }
 
   .user-profile-data-group {
     grid-row: 4;
     grid-column: 1;
-    text-align: center;
-    margin: 0 auto;
+  }
+
+  .share-button-container {
+    gap: 10px;
+  }
+
+  .user-profile-score {
+    padding: 0px;
   }
 
   .share-button-container {
     grid-row: 5;
     grid-column: 1;
-    gap: 10px;
-    text-align: center;
-    margin: 10px auto;
-  }
-
-  .user-profile-score {
-    padding: 0;
   }
 
   .user-profile-header {
-    margin-left: 0;
+    margin-left: 0px;
     row-gap: 10px;
   }
-
-  .user-profile-badges {
-    margin-top: 5px;
+  .user-profile-data-group {
+    text-align: center;
   }
 
-  .user-profile-age {
-    margin-top: 5px;
+  .share-button-container {
+    text-align: center;
   }
 
-  .user-profile-container {
-    margin-top: 30px;
-    margin-bottom: 20px;
+  .profile-section.left-section {
+    scale: 0.7;
+    margin-top: -39px;
+  }
+
+  .profile-section.middle-section {
+    margin-top: -47.5px;
   }
 }
 
 @media (max-width: 440px) {
-  .profile-section.left-section {
-    scale: 0.6;
-    margin-top: -40px;
-  }
-
-  .profile-section.middle-section {
-    margin-top: -25px;
-  }
-
   .score-breakdown-card .disclaimer {
     font-size: .7em !important;
-    margin: 0;
+    margin: 0px;
+    margin-top: 0px;
     max-width: 300px;
   }
 }
-
 
 .user-profile-container {
   margin: auto;
@@ -593,7 +554,7 @@ tspan {
   margin: 0px
 }
 
-/* Keep your existing responsive adjustments for larger screens */
+/* Responsive adjustments */
 @media (max-width: 1024px) {
   .profile-sections-wrapper {
     grid-template-columns: 1fr 2fr 1fr;
@@ -601,7 +562,7 @@ tspan {
   }
 }
 
-@media (max-width: 768px) and (min-width: 751px) {
+@media (max-width: 768px) {
   .profile-sections-wrapper {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto auto;
