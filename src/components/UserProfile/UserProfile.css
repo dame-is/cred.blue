@@ -1,60 +1,89 @@
+/* src/components/UserProfile/UserProfile.css */
+
 /* Container for the profile page */
 .user-profile {
-  margin: auto;
-  max-width: 1200px;
-  margin-top: 40px;
-  opacity: 0; /* Initially hidden */
-  transform: translateY(20px);
-  transition: opacity 1s ease, transform 1s ease;
-}
+    margin: auto;
+    max-width: 1200px;
+    margin-top: 40px;
+  }
 
-.user-profile h1 {
-  margin: 0px;
-}
 
-.user-profile.fade-in {
-  opacity: 1;
-  transform: translateY(0);
-}
+  .user-profile h1 {
+    margin: 0px;
+  }
+  
+  /* Media query for responsiveness (optional, handled by react-grid-layout) */
+  @media (max-width: 1200px) {
+    .layout {
+      width: 100%;
+    }
+  }
 
-.user-profile.hidden {
-  display: none;
-}
+  .user-profile {
+    margin: auto;
+    max-width: 1200px;
+    opacity: 0; /* Initially hidden */
+    transform: translateY(20px);
+    transition: opacity 1s ease, transform 1s ease;
+  }
+  
+  .user-profile.fade-in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .user-profile.hidden {
+    display: none;
+  }
+  
+  .user-profile.loading-container {
+    opacity: 1;
+    transition: opacity 1s ease;
+  }
+  
+  .user-profile.loading-container.fade-out {
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  .user-profile-header {
+    text-align: center;
+  }
 
-.user-profile.loading-container {
-  opacity: 1;
-  transition: opacity 1s ease;
-}
+  .react-grid-item.react-grid-placeholder {
+    background: #3B9AF8 !important;
+    border-radius: 8px;
+    opacity: 0.2;
+    transition-duration: 100ms;
+    z-index: 2;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+  }
 
-.user-profile.loading-container.fade-out {
-  opacity: 0;
-  pointer-events: none;
-}
+  .react-grid-item.react-grid-placeholder.placeholder-resizing {
+    transition: none;
+  }
 
-/* Grid Layout */
-.react-grid-item.react-grid-placeholder {
-  background: #3B9AF8 !important;
-  border-radius: 8px;
-  opacity: 0.2;
-  transition-duration: 100ms;
-  z-index: 2;
-  user-select: none;
-}
+  .react-grid-layout {
+    margin-bottom: 40px;
+  }
 
-.react-grid-item.react-grid-placeholder.placeholder-resizing {
-  transition: none;
-}
+  /* src/components/UserProfile/UserProfile.css */
 
-.react-grid-layout {
-  margin-bottom: 40px;
-}
+  .user-profile-header {
+    display: inline-grid;
+    column-gap: 50px;
+    row-gap: 22px;
+    justify-content: center;
+    text-align: center;
+    grid-auto-flow: column;
+    margin-left: 36.5px;
+  }
 
-.react-grid-item {
-  transition: all 200ms ease;
-  transition-property: left, top;
-}
 
-/* Button Styles */
 .toggle-button {
   padding: 10px 20px;
   margin: 0 5px;
@@ -74,13 +103,402 @@
   background-color: #ccc;
 }
 
-/* Main Profile Layout */
+.user-profile-header p {
+  margin-bottom: 0px;
+  margin-top: 0px;
+}
+
+.user-profile-header h2 {
+  font-size: 1.2em;
+  margin: 0px;
+}
+
+.user-profile-header h1 {
+  margin-bottom: 0px;
+  line-height: 0.9em;
+}
+
+.text-center.font-semibold.mt-2 {
+  font-size: 1.2em;
+  font-weight: 600;
+  color: var(--text);
+  margin-top: -10.5px;
+  margin-left: 11.5px;
+  display: flex;
+  gap: 8.5px;
+}
+
+.user-profile-header-main {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-content: center;
+  justify-content: center;
+}
+
+.user-profile-data {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-profile-data {
+  justify-content: center;
+  gap: 35px;
+}
+
+.circular-badge {
+  margin-bottom: -10px;
+  margin-top: -10px;
+}
+
+.user-profile-name {
+  gap: 7px;
+  display: flex;
+  flex-direction: column;
+}
+
+.loading-container-1 {
+  min-height: 0 !important;
+  margin-bottom: 50px;
+  margin-top: 30px;
+}
+
+.grid-item {
+  overflow: scroll;
+  scroll-behavior: auto;
+  scrollbar-width: none;
+}
+
+.react-grid-item {
+  transition: all 200ms ease;
+  transition-property: left, top;
+}
+
+.narrative-card p:first-letter {
+  text-transform: capitalize;
+}
+
+.user-profile-badges h3 {
+  margin: 0px;
+  font-size: 0.8em;
+  font-weight: 500;
+}
+
+.circular-badge {
+  position: relative;
+  display: inline-block;
+  grid-row: 1;
+  grid-column: 1;
+  margin-left: -9px;
+  margin-right: -18px;
+}
+
+/* Light mode styles */
+.circular-logo-text {
+  fill: var(--circular-logo-text, #004f84);
+  transition: fill 0.3s ease;
+}
+
+.user-profile .recharts-responsive-container {
+  max-width: 100%;
+}
+
+.share-button-container {
+  align-content: center;
+  grid-column: 3;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 0.8em;
+}
+
+.toggle-switch {
+  display: none;
+}
+
+.user-profile-activity {
+  text-transform: capitalize;
+  align-content: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0px;
+}
+
+tspan {
+  font-family: articulat-cf;
+}
+
+.dark-mode tspan {
+  fill: white;
+  opacity: 0.5;
+}
+
+.user-profile-score {
+  align-content: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.user-profile-data-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  grid-row: 2;
+  grid-column: 2;
+  font-size: 0.8em;
+}
+
+.dark-mode rect {
+  stroke: #2c2c2c !important;
+  stroke-width: 5px !important;
+}
+
+.recharts-surface {
+  stroke-width: 0.3px;
+}
+
+.recharts-cartesian-axis-ticks {
+  font-size: 0.7em;
+}
+
+.text-sm.text-gray-500.text-center.mt-4 {
+  text-align: center;
+  padding-top: 10px;
+  font-size: 0.8em;
+  opacity: 0.5;
+}
+
+.user-profile-header-rechart {
+  align-items: center;
+  display: flex;
+  grid-row: 1;
+  justify-content: center;
+  margin: 0 auto;
+  max-height: 130px;
+  max-width: 200px;
+  padding: 1rem;
+  width: 100%;
+  grid-column: 3;
+  scale: 0.9;
+}
+
+.score-gauge {
+  margin-right: 10px !important;
+}
+
+.user-profile-main {
+  display: flex;
+  flex-direction: column;
+  grid-row: 1;
+  justify-content: space-evenly;
+  padding-top: 5px;
+  grid-column: 2;
+  max-width: 240px;
+}
+
+.user-profile-container {
+  text-align: center;
+  margin: 55px 20px 40px;
+}
+
+.user-profile-age h2 {
+  font-size: 0.8em;
+}
+
+.compare-button-container {
+  align-content: center;
+  grid-row: 3;
+}
+
+.share-button-profile {
+  margin-top: 5px;
+}
+
+.max-score {
+  opacity: 0.5;
+}
+
+.comparea-button-profile {
+  background: gray;
+}
+
+.user-profile-emoji-group {
+  display: inline-grid;
+  font-size: 1.8em;
+  align-content: center;
+  justify-content: center;
+  row-gap: 10px;
+  column-gap: 20px;
+  margin-left: 10px;
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.emoji-1 {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.emoji-2 {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.emoji-3 {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.emoji-4 {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.narrative-card {
+  font-size: 0.9em;
+}
+
+.narrative-disclaimer {
+  font-size: 0.8em;
+  margin-top: 13.5px;
+  opacity: 0.5;
+}
+
+.narrative-methodology-link {
+  font-size: 0.9em;
+}
+
+.post-type-card .recharts-surface {
+  margin-left: -15px;
+}
+
+.score-breakdown-card .disclaimer {
+  margin-left: 3px;
+}
+
+/* Responsive Adjustments for Cards */
+@media (max-width: 750px) {
+  .profile-sections-wrapper {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 10px;
+  }
+
+  .profile-section.right-section {
+    grid-row: 1;
+    justify-self: center;
+    padding-right: 0;
+  }
+
+  .profile-section.middle-section {
+    grid-row: 2;
+    margin-top: -20px;
+  }
+
+  .profile-section.left-section {
+    grid-row: 3;
+    justify-self: center;
+    scale: 0.7;
+    margin-top: -30px;
+  }
+
+  .circular-badge {
+    grid-column: 1;
+    grid-row: 1;
+    margin-left: 0;
+    margin-right: 1.5px;
+  }
+
+  .user-profile-emoji-group {
+    grid-row: 1;
+    grid-column: 1;
+    display: none;
+  }
+
+  .user-profile-main {
+    grid-row: 2;
+    grid-column: 1;
+    gap: 10px;
+    text-align: center;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  .user-profile-header-rechart {
+    grid-row: 3;
+    grid-column: 1;
+    scale: 0.9;
+    margin: 0 auto;
+    margin-bottom: 5px;
+  }
+
+  .user-profile-data-group {
+    grid-row: 4;
+    grid-column: 1;
+    text-align: center;
+    margin: 0 auto;
+  }
+
+  .share-button-container {
+    grid-row: 5;
+    grid-column: 1;
+    gap: 10px;
+    text-align: center;
+    margin: 10px auto;
+  }
+
+  .user-profile-score {
+    padding: 0;
+  }
+
+  .user-profile-header {
+    margin-left: 0;
+    row-gap: 10px;
+  }
+
+  .user-profile-badges {
+    margin-top: 5px;
+  }
+
+  .user-profile-age {
+    margin-top: 5px;
+  }
+
+  .user-profile-container {
+    margin-top: 30px;
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 440px) {
+  .profile-section.left-section {
+    scale: 0.6;
+    margin-top: -40px;
+  }
+
+  .profile-section.middle-section {
+    margin-top: -25px;
+  }
+
+  .score-breakdown-card .disclaimer {
+    font-size: .7em !important;
+    margin: 0;
+    max-width: 300px;
+  }
+}
+
+
 .user-profile-container {
   margin: auto;
+    margin-top: auto;
+    margin-bottom: auto;
   width: 100%;
   margin-bottom: 30px;
   margin-top: 49.5px;
-  text-align: center;
 }
 
 .profile-sections-wrapper {
@@ -107,32 +525,28 @@
 }
 
 .user-profile-header-rechart {
-  align-items: center;
-  display: flex;
-  justify-content: center;
   margin: 0 auto;
-  max-height: 130px;
   max-width: 200px;
   width: 100%;
   scale: 1.07;
   margin-top: 4px;
 }
 
-.user-profile-badges {
+.user-profile-data-group {
+  text-align: center;
+  width: 100%;
+  max-width: 300px;
+  gap: 10px;
+}
+
+.share-button-container {
+  width: 100%;
+  text-align: center;
+  display: block;
+}
+
+.comparea-button-profile {
   margin-top: 10px;
-  font-size: 1.2em;
-  line-height: 1.2em;
-}
-
-.user-profile-badges h3 {
-  margin: 0px;
-  font-size: 0.8em;
-  font-weight: 500;
-}
-
-.user-profile-age h2 {
-  font-size: 0.8em;
-  margin: 0px;
 }
 
 /* Right Section */
@@ -142,16 +556,27 @@
 }
 
 .user-profile-main {
-  display: flex;
-  flex-direction: column;
-  gap: 22.5px;
   text-align: right;
+  gap: 22.5px;
 }
 
-.user-profile-name {
-  gap: 7px;
+.user-profile-activity {
+  align-content: center;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  padding: 0px;
+  text-transform: capitalize;
+}
+
+.user-profile-badges {
+  margin-top: 10px;
+  font-size: 1.2em;
+  line-height: 1.2em;
+}
+
+.user-profile-data-group p {
+  margin: 2px;
 }
 
 .user-profile-name h2 {
@@ -159,127 +584,16 @@
   margin: 0px;
 }
 
-.user-profile-data-group {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  font-size: 0.8em;
-  text-align: center;
-  width: 100%;
-  max-width: 300px;
-  gap: 10px;
-}
-
-.user-profile-data-group p {
-  margin: 2px;
-}
-
-.user-profile-score {
-  align-content: center;
-  justify-content: center;
-  display: flex;
-  flex-direction: column;
-}
-
-.user-profile-activity {
-  text-transform: capitalize;
-  align-content: center;
-  justify-content: center;
-  display: flex;
-  flex-direction: column;
-  padding: 0px;
-}
-
-/* Share buttons */
-.share-button-container {
-  align-content: center;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  font-size: 0.8em;
-  width: 100%;
-  text-align: center;
-}
-
-.share-button-profile {
-  margin-top: 5px;
-}
-
-.comparea-button-profile {
-  background: gray;
-  margin-top: 10px;
-}
-
-/* Card Styles */
-.grid-item {
-  overflow: scroll;
-  scroll-behavior: auto;
-  scrollbar-width: none;
-}
-
-.narrative-card {
-  font-size: 0.9em;
-}
-
-.narrative-card p:first-letter {
-  text-transform: capitalize;
-}
-
-.narrative-disclaimer {
-  font-size: 0.8em;
-  margin-top: 13.5px;
-  opacity: 0.5;
-}
-
-.narrative-methodology-link {
-  font-size: 0.9em;
-}
-
-.post-type-card .recharts-surface {
-  margin-left: -15px;
-}
-
-/* Chart Styles */
-.user-profile .recharts-responsive-container {
-  max-width: 100%;
-}
-
-.recharts-surface {
-  stroke-width: 0.3px;
-}
-
-.recharts-cartesian-axis-ticks {
-  font-size: 0.7em;
-}
-
-.score-gauge {
-  margin-right: 10px !important;
-}
-
-/* Dark Mode Styles */
-.dark-mode tspan {
-  fill: white;
-  opacity: 0.5;
-}
-
-.dark-mode rect {
-  stroke: #2c2c2c !important;
-  stroke-width: 5px !important;
-}
-
-/* Circular Logo */
-.circular-badge {
-  position: relative;
-  display: inline-block;
+.user-profile-age h2 {
+  font-size: .8em;
   margin: 0px;
 }
 
-.circular-logo-text {
-  fill: var(--circular-logo-text, #004f84);
-  transition: fill 0.3s ease;
+.circular-badge {
+  margin: 0px
 }
 
-/* Responsive Design */
+/* Keep your existing responsive adjustments for larger screens */
 @media (max-width: 1024px) {
   .profile-sections-wrapper {
     grid-template-columns: 1fr 2fr 1fr;
@@ -287,105 +601,24 @@
   }
 }
 
-@media (max-width: 750px) {
+@media (max-width: 768px) and (min-width: 751px) {
   .profile-sections-wrapper {
-    display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: auto auto auto;
-    gap: 0;
+    gap: 30px;
   }
 
-  .profile-section {
-    justify-self: center;
-    padding: 0;
-    width: 100%;
-  }
-
-  /* Reorder sections for mobile */
   .profile-section.left-section {
-    grid-row: 3;
-    scale: 0.7;
-    margin-top: -20px;
+    justify-self: center;
+    padding-left: 0;
   }
 
   .profile-section.right-section {
-    grid-row: 1;
-    margin-bottom: 20px;
+    justify-self: center;
+    padding-right: 0;
   }
 
-  .profile-section.middle-section {
-    grid-row: 2;
-    margin-top: -30px;
-  }
-
-  /* Mobile content adjustments */
   .user-profile-main {
     text-align: center;
-    margin: 0 auto;
-    padding: 0;
-  }
-
-  .user-profile-header-rechart {
-    scale: 0.9;
-    margin: 0 auto;
-  }
-
-  .user-profile-data-group {
-    margin: 0 auto;
-  }
-
-  .share-button-container {
-    margin: 10px auto;
-    gap: 10px;
-  }
-
-  .circular-badge {
-    margin: 0 auto;
-  }
-
-  .user-profile-badges {
-    margin-top: 5px;
-  }
-
-  .user-profile-age {
-    margin-top: 5px;
-  }
-
-  .user-profile-container {
-    margin-top: 30px;
-    margin-bottom: 20px;
-  }
-
-  .user-profile-name {
-    margin-bottom: 10px;
-  }
-
-  .user-profile-score {
-    padding: 0;
-  }
-
-  .user-profile-header {
-    margin-left: 0;
-  }
-
-  .user-profile-emoji-group {
-    display: none;
-  }
-}
-
-@media (max-width: 440px) {
-  .profile-section.left-section {
-    scale: 0.6;
-    margin-top: -40px;
-  }
-
-  .profile-section.middle-section {
-    margin-top: -40px;
-  }
-
-  .score-breakdown-card .disclaimer {
-    font-size: 0.7em !important;
-    margin: 0;
-    max-width: 300px;
   }
 }
