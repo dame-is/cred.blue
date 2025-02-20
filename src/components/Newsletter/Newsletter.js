@@ -1,6 +1,7 @@
 // src/components/Newsletter/Newsletter.jsx
 import React from 'react';
 import './Newsletter.css';
+import { Link } from 'react-router-dom';
 
 const Newsletter = () => {
   return (
@@ -8,7 +9,7 @@ const Newsletter = () => {
       <div className="alt-card">
         <h1>Subscribe to the Newsletter</h1>
         <div className="intro-paragraph">
-          <p>Hi, my name is Dame!</p>
+          <p>Hi, my name is <a href="https://bsky.app/profile/dame.is" target="_blank" rel="noopener noreferrer">Dame</a>!</p>
           <p>I'm the creator of cred.blue.</p>
           <p>If you'd like to stay up-to-date with cred.blue and the other things I'm making, sign up with your email below.</p>
         </div>
@@ -24,7 +25,7 @@ const Newsletter = () => {
             type="email" 
             name="email" 
             id="bd-email" 
-            placeholder="username@gmail.com" 
+            placeholder="name@fastmail.com" 
           />
 
           <label htmlFor="bsky-handle">Bluesky Handle (Optional)</label>

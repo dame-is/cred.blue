@@ -38,10 +38,21 @@
 
   .newsletter-page p {
     text-align: center;
+    margin: 0px auto;
   }
 
   .newsletter-form label {
     font-weight: 600;
+  }
+
+  .intro-paragraph {
+    max-width: 300.2px;
+    margin: auto;
+      margin-top: auto;
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
   }
 
   button {
