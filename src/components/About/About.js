@@ -26,13 +26,13 @@ const About = () => {
           <h2>FAQs</h2>
           
           <h3>Who created cred.blue?</h3>
-          <p>It was created by <a href="https://bsky.app/profile/dame.is">@dame.is</a>! Dame has been a part of the Bluesky community from almost the very beginning and is passionate about the AT Protocol. Dame was user number Bluesky user #1,216 and is building cred.blue independently.</p>
+          <p>It was created by <a href="https://bsky.app/profile/dame.is" target="_blank" rel="noreferrer">@dame.is</a>! Dame has been a part of the Bluesky community from almost the very beginning and is passionate about the AT Protocol. Dame was user number Bluesky user #1,216 and is building cred.blue independently.</p>
           
           <h3>Why was cred.blue created?</h3>
           <p>Since its inception, Bluesky has relied upon an innovative domain verification system to help identities establish their credibility and authority. This system is powerful and should be taken advantage of, but it can only do so much in its current form. The cred.blue platform is just one experiment among many that is attempting to help people understand which social media accounts are more (or less) trustworthy.</p>
           
           <h3>Is this just a social credit score like they have in China?</h3>
-          <p>Not at all! To begin with, the often imagined "social credit" system that many people think exists in China is not really real... to better understand the prevalent misconceptions people have about this subject, check out <a href="https://en.wikipedia.org/wiki/Social_Credit_System">the Wikipedia article</a>.</p>
+          <p>Not at all! To begin with, the often imagined "social credit" system that many people think exists in China is not really real... to better understand the prevalent misconceptions people have about this subject, check out <a href="https://en.wikipedia.org/wiki/Social_Credit_System" target="_blank" rel="noreferrer">the Wikipedia article</a>.</p>
           
           <p>At its core, the cred.blue scoring system is just an attempt to help people understand the data footprint that is being left behind by every Bluesky or AT Protocol identity. In a world saturated in fake profiles or AI-controlled accounts, it's never been more vital to have resources that can help humans effectively and safely navigate their online spaces.</p>
           

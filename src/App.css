@@ -221,7 +221,7 @@ ul {
 }
 
 .alt-card {
-  padding: 30px;
+  padding: 40px 30px;
   background: var(--navbar-bg);
   transition: background-color 0.3s ease;
 }
