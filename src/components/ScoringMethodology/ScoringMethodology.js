@@ -1,6 +1,6 @@
 import React from 'react';
 import './ScoringMethodology.css';
-import ScoreGauge from './ScoreGauge';
+import ScoreGauge from '../UserProfile/ScoreGauge';
 
 const ScoringMethodology = () => {
   return (
