@@ -371,6 +371,10 @@ tspan {
   opacity: 0.5;
 }
 
+.narrative-methodology-link {
+  font-size: 0.9em;
+}
+
 .post-type-card .recharts-surface {
   margin-left: -15px;
 }

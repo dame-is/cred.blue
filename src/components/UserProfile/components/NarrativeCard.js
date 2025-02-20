@@ -19,7 +19,7 @@ const NarrativeCard = () => {
         {narrative2 && <p>{narrative2}</p>}
         {narrative3 && <p>{narrative3}</p>}
       </div>
-      <p><Link to="/methodology" className="narrative-methodology-link">Learn more about the scoring methodology and definitions contained in this summary.</Link></p>
+      <p><Link to="/methodology" className="narrative-methodology-link">Learn more about the scoring methodology</Link>  and definitions contained in this summary.</p>
       <div className="disclaimer">
         <p><strong>NOTE: </strong>This summary was <strong>not</strong> generated using AI.</p>
       </div>

@@ -35,3 +35,7 @@
     margin: 15px 0;
     line-height: 1.5;
   }
+
+  .increase-score-list li {
+    margin-bottom: 5px;
+  }

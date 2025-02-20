@@ -32,6 +32,7 @@ const ScoringMethodology = () => {
           (Bluesky vs AT Proto) has the most impact on your score.
         </p>
 
+        <h2>Score Ranges</h2>
         <p>
           For Version 1 of the scoring algorithm, there is a max score of 1,000 points. 
           This may change in the future, or it could theoretically even be scaled down 
@@ -39,11 +40,24 @@ const ScoringMethodology = () => {
         </p>
 
         <p>
-          A score between 0 - 250 likely indicates that an account is either very new 
-          to the network or isn't very active.
+          A score between 0 - 300 likely indicates that an account is either very new 
+          to the network or isn't very active. A score of 300 - 700 is within a "healthy" range. Scores that are 700+ typically indicate accounts that have been around awhile and are very active. The different score ranges are still in early development along with the algorithm, so these details are likely to change.
         </p>
 
-        <h3>How do I increase my score?</h3>
+        <h2>What are the different social statuses?</h2>
+        <p>
+            Rather than displaying follower counts on profiles, the cred.blue analysis categorizes each identity into one of four social statuses base on its follower count, social graph ratio, engagement rate, and age. There are additional labels placed before the social status to indicate how engaging the account actually is.
+        </p>
+
+        <ol className="social-status-list">
+          <li>Newcomer</li>
+          <li>Explorer</li>
+          <li>Pathfinder</li>
+          <li>Guide</li>
+          <li>Leader</li>
+        </ol>
+
+        <h2>How do I increase my score?</h2>
         <p>
           The scoring methodology is fairly complex and not all of the variables can be 
           easily changed (for instance, an account's age), but there are some specific 
