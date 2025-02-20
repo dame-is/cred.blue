@@ -7,6 +7,7 @@ const COLORS = {
   'ATProto Score': '#004f84'
 };
 
+// Simplified CustomTooltip
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
@@ -15,7 +16,7 @@ const CustomTooltip = ({ active, payload }) => {
       <div className="custom-tooltip bg-white p-4 rounded shadow-lg border border-gray-200 max-w-md">
         <p className="font-semibold text-lg mb-2">{data.name}</p>
         <p className="text-sm text-gray-700 mb-2">
-          {data.percentage?.toFixed(1)}% of {data.parent?.name || 'Total Score'}
+          {data.size.toFixed(1)}% of {data.parent}
         </p>
         {data.description && (
           <p className="text-sm text-gray-600">{data.description}</p>
@@ -155,47 +156,42 @@ const ScoreBreakdownCard = () => {
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
       
-      const specialCases = {
+      return {
         'Content Activity': 'Content & Activity',
         'Recognition Status': 'Recognition & Status'
-      };
-      
-      return specialCases[capitalizedName] || capitalizedName;
+      }[capitalizedName] || capitalizedName;
     };
   
-    const buildCategoryChildren = (categories, parentName) => {
-      return Object.entries(categories).map(([name, data]) => {
-        const formattedName = formatCategoryName(name);
-        
-        return {
-          name: formattedName,
-          // Use the percentage directly for size
-          size: data.percentage,
-          percentage: data.percentage,
-          description: getScoreDescriptions(formattedName),
-          fill: COLORS[parentName],
-          parent: {
-            name: parentName
-          }
-        };
-      });
-    };
+    // First main section: Bluesky Score (about 66% of total)
+    const blueskyChildren = Object.entries(breakdown.blueskyCategories).map(([name, data]) => ({
+      name: formatCategoryName(name),
+      size: data.percentage, // Already a number like 32.53
+      fill: COLORS['Bluesky Score'],
+      description: getScoreDescriptions(formatCategoryName(name)),
+      parent: 'Bluesky Score'
+    }));
   
-    // Calculate total score for relative sizing
-    const totalScore = blueskyScore + atprotoScore;
-    
+    // Second main section: ATProto Score (about 34% of total)
+    const atprotoChildren = Object.entries(breakdown.atprotoCategories).map(([name, data]) => ({
+      name: formatCategoryName(name),
+      size: data.percentage, // Already a number like 25.64
+      fill: COLORS['ATProto Score'],
+      description: getScoreDescriptions(formatCategoryName(name)),
+      parent: 'ATProto Score'
+    }));
+  
     return [
       {
         name: 'Bluesky Score',
-        size: (blueskyScore / totalScore) * 100,
-        fill: COLORS['Bluesky Score'],
-        children: buildCategoryChildren(breakdown.blueskyCategories, 'Bluesky Score')
+        children: blueskyChildren,
+        size: (blueskyScore / (blueskyScore + atprotoScore)) * 100,
+        fill: COLORS['Bluesky Score']
       },
       {
         name: 'ATProto Score',
-        size: (atprotoScore / totalScore) * 100,
-        fill: COLORS['ATProto Score'],
-        children: buildCategoryChildren(breakdown.atprotoCategories, 'ATProto Score')
+        children: atprotoChildren,
+        size: (atprotoScore / (blueskyScore + atprotoScore)) * 100,
+        fill: COLORS['ATProto Score']
       }
     ];
   };
@@ -204,55 +200,29 @@ const ScoreBreakdownCard = () => {
     <div className="w-full h-full min-h-[400px] p-4 bg-white rounded-lg shadow">
       <div className="score-breakdown-card" style={{ width: '100%', height: 280 }}>
         <ResponsiveContainer>
-              <Treemap
-        data={buildTreemapData()}
-        dataKey="size"
-        aspectRatio={4/3}
-        stroke="#fff"
-        radius={20}
-        isAnimationActive={false}
-        content={({ root, depth, x, y, width, height, index, name, value }) => (
-          <CustomizedContent
-            root={root}
-            depth={depth}
-            x={x}
-            y={y}
-            width={width}
-            height={height}
-            index={index}
-            name={name}
-            value={value}
-            colors={COLORS}
-          />
-        )}
-      >
-        <Tooltip content={<CustomTooltip />} />
-        <Legend 
-          iconType="rect"
-          iconSize={10}
-          layout="horizontal"
-          verticalAlign="bottom"
-          align="center"
-          wrapperStyle={{
-            paddingTop: '20px'
-          }}
-          formatter={(value) => (
-            <span style={{ 
-              fill: 'white', 
-              fontSize: 12, 
-              strokeWidth: 0, 
-              fontFamily: 'articulat-cf', 
-              fontWeight: 600, 
-              wordWrap: 'anywhere' 
-            }}>
-              {value}
-            </span>
-          )}
-        />
-      </Treemap>
+          <Treemap
+            data={buildTreemapData()}
+            dataKey="size"
+            aspectRatio={4/3}
+            stroke="#fff"
+            radius={20}
+            isAnimationActive={false}
+            content={CustomizedContent}
+          >
+            <Tooltip content={<CustomTooltip />} />
+            <Legend 
+              iconType="rect"
+              iconSize={10}
+              layout="horizontal"
+              verticalAlign="bottom"
+              align="center"
+              wrapperStyle={{
+                paddingTop: '20px'
+              }}
+            />
+          </Treemap>
         </ResponsiveContainer>
       </div>
-      
       <div className="disclaimer">
         Hover over sections to see detailed breakdowns
       </div>
