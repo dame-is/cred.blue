@@ -64,13 +64,15 @@ const Navbar = () => {
               <use href={`/icons/icons-sprite.svg#icon-${isDarkMode ? 'sun' : 'moon'}`} />
             </svg>
           </button>
-          <div className="navbar-newsletter-button-container">
+          <div className="navbar-support-button-container">
           <button
-            className="navbar-newsletter-button"
+            className="navbar-support-button"
             type="button"
-            onClick={() => navigate('/newsletter')}
+            onClick={() => window.open(
+              `https://www.patreon.com/dameis`, '_blank'
+            )}
           >
-            newsletter
+            become a supporter
           </button>
           </div>
         </div>
