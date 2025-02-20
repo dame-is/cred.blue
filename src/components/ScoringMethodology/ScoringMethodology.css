@@ -9,7 +9,6 @@
   }
   
   .methodology-list {
-    list-style: none;
     margin: 10px 0;
     padding-left: 20px;
     opacity: 0.8;
@@ -17,8 +16,9 @@
   
   .increase-score-list {
     margin: 10px 0;
+    opacity: 1;
     padding-left: 40px;
-    opacity: 0.8;
+    font-family: articulat-cf;
   }
   
   .methodology-page h2 {

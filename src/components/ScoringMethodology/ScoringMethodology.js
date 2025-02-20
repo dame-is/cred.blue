@@ -5,7 +5,7 @@ const ScoringMethodology = () => {
   return (
     <main className="methodology-page">
       <div className="alt-card">
-        <h2>The Scoring Methodology</h2>
+        <h1>The Scoring Methodology</h1>
         <p>Your cred.blue score is generated based on two major categories...</p>
         
         <h3>1. Bluesky Data</h3>
