@@ -32,6 +32,11 @@ const saveUserData = async (userData) => {
         profile_edited_date: userData.profileEditedDate,
         profile_completion: userData.profileCompletion,
         
+        // Score fields
+        combined_score: userData.combinedScore,     // Added
+        bluesky_score: userData.blueskyScore,      // Added
+        atproto_score: userData.atprotoScore,      // Added
+        
         // Activity metrics
         activity_status: userData.activityAll.activityStatus,
         bsky_activity_status: userData.activityAll.bskyActivityStatus,
