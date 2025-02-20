@@ -50,7 +50,7 @@ const createLayouts = () => ({
   ],
   sm: [
     { i: "ScoreBreakdownCard", x: 0, y: 8, w: 1, h: 6, static: false },
-    { i: "NarrativeCard", x: 0, y: 0, w: 1, h: 5, static: false },
+    { i: "NarrativeCard", x: 0, y: 0, w: 1, h: 6, static: false },
     { i: "ProfileCard", x: 0, y: 14, w: 1, h: 6, static: false },
     { i: "PostTypeCard", x: 0, y: 22, w: 1, h: 6, static: false },
     { i: "AltTextCard", x: 0, y: 26, w: 1, h: 6, static: false },

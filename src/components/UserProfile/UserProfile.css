@@ -428,7 +428,7 @@ tspan {
 
 .share-button-container {
   width: 100%;
-  text-align: center;
+  text-align: right;
   display: block;
 }
 
@@ -496,7 +496,7 @@ tspan {
   .user-profile-main {
     grid-row: 2;
     grid-column: 1;
-    gap: 10px;
+    gap: 20.8px;
   }
   .user-profile-header-rechart {
     grid-row: 3;
@@ -521,6 +521,7 @@ tspan {
   .share-button-container {
     grid-row: 5;
     grid-column: 1;
+    text-align: center;
   }
 
   .user-profile-header {
@@ -536,13 +537,23 @@ tspan {
   }
 
   .profile-section.left-section {
-    scale: 0.7;
-    margin-top: -39px;
+    scale: 0.6;
+    margin-top: -64.5px;
   }
 
   .profile-section.middle-section {
-    margin-top: -47.5px;
+    margin-top: -91.3px;
+    gap: 13.5px;
   }
+
+  .user-profile-badges {
+    margin-top: 0px;
+  }
+
+  .text-center.font-semibold.mt-2 {
+    font-size: 1.5em;
+  }
+
 }
 
 @media (max-width: 440px) {
@@ -573,6 +584,7 @@ tspan {
   .profile-section.left-section {
     justify-self: center;
     padding-left: 0;
+    scale: .7;
   }
 
   .profile-section.right-section {
