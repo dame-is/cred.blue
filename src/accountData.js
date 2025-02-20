@@ -558,64 +558,7 @@ function calculateDomainRarity(handle) {
     const len = handle.length;
     if (len >= 21) return "very common";
     if (len >= 18 && len <= 20) return "common";
-    if (len === 17) return "uncommon";function calculateSocialStatus({ ageInDays = 0, followersCount = 0, followsCount = 0, engagementRate = 0 }) {
-      // Define engagement thresholds
-      const ENGAGEMENT_THRESHOLDS = {
-        high: 0.03, // 3%
-        moderate: 0.01, // 1%
-        low: 0.005 // 0.5%
-      };
-    
-      // Calculate follow percentage
-      const followPercentage = followersCount > 0 ? followsCount / followersCount : 0;
-    
-      // Determine base status
-      let baseStatus = "Explorer";
-      
-      // Check for Newcomer first
-      if (ageInDays < 30) {
-        baseStatus = "Newcomer";
-      }
-      // Only check other statuses if not a newcomer
-      else if (followPercentage < 0.5) {
-        if (followersCount >= 100000) {
-          baseStatus = "Leader";
-        } else if (followersCount >= 10000) {
-          baseStatus = "Guide";
-        } else if (followersCount >= 500) {
-          baseStatus = "Pathfinder";
-        }
-      }
-    
-      // Add engagement qualifier for all status levels
-      if (engagementRate <= ENGAGEMENT_THRESHOLDS.low) {
-        return `Unengaging ${baseStatus}`;
-      } else if (engagementRate <= ENGAGEMENT_THRESHOLDS.moderate) {
-        return `Moderately Engaging ${baseStatus}`;
-      } else if (engagementRate >= ENGAGEMENT_THRESHOLDS.high) {
-        return `Highly Engaging ${baseStatus}`;
-      }
-    
-      // Return base status if engagement doesn't meet any threshold
-      return baseStatus;
-    }
-    
-    function calculateActivityStatus(rate) {
-      if (rate === 0) return "inactive";
-      if (rate > 0 && rate < 10) return "barely active";
-      if (rate >= 10 && rate < 25) return "active";
-      if (rate >= 25 && rate < 100) return "very active";
-      if (rate >= 100) return "extremely active";
-    }
-    
-    function calculateProfileCompletion(profile) {
-      const hasDisplayName = Boolean(profile.displayName && profile.displayName.trim());
-      const hasBanner = Boolean(profile.banner && profile.banner.trim());
-      const hasDescription = Boolean(profile.description && profile.description.trim());
-      if (hasDisplayName && hasBanner && hasDescription) return "complete";
-      if (hasDisplayName || hasBanner || hasDescription) return "incomplete";
-      return "not started";
-    }
+    if (len === 17) return "uncommon";
     if (len === 16) return "rare";
     if (len === 15) return "very rare";
     if (len <= 14) return "extremely rare";
@@ -625,8 +568,8 @@ function calculateDomainRarity(handle) {
     let len;
     if (hasStandardTLD) {
       const parts = handle.split(".");
-      const domain = parts.slice(1).join(".");
-      len = domain.length;
+      const domainName = parts[0]; // Take just the domain name part before the TLD
+      len = domainName.length;
       if (len >= 15) return "very common";
       if (len >= 12 && len <= 14) return "common";
       if (len >= 9 && len <= 11) return "uncommon";
