@@ -379,6 +379,10 @@ tspan {
   margin-left: -15px;
 }
 
+.score-breakdown-card .disclaimer {
+  margin-left: 3px;
+}
+
 /* Responsive Adjustments for Cards */
 @media (max-width: 750px) {
   .circular-badge {
@@ -425,5 +429,14 @@ tspan {
   .user-profile-header {
     margin-left: 0px;
     row-gap: 10px;
+  }
+}
+
+@media (max-width: 440px) {
+  .score-breakdown-card .disclaimer {
+    font-size: .7em !important;
+    margin: 0px;
+    margin-top: 0px;
+    max-width: 300px;
   }
 }

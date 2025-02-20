@@ -23,7 +23,7 @@ import "./UserProfile.css";
 
 // Memoized layouts configuration
 const CARD_HEIGHT = 6;
-const breakpoints = { lg: 850, md: 700, sm: 450, xs: 390, xxs: 0 };
+const breakpoints = { lg: 850, md: 700, sm: 520, xs: 390, xxs: 0 };
 const cols = { lg: 2, md: 2, sm: 1, xs: 1, xxs: 1 };
 
 // Cache configuration
