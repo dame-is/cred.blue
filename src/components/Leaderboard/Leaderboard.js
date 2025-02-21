@@ -15,23 +15,35 @@ const Leaderboard = () => {
     atproto_score: 'AT Proto Score'
   };
 
-  // Calculate protocol balance score (0-100)
-  const calculateBalanceScore = (bskyRecords, nonBskyRecords) => {
-    if (!bskyRecords && !nonBskyRecords) return 0;
+  // Calculate protocol balance and determine which side has more activity
+  const calculateProtocolBalance = (bskyRecords, nonBskyRecords) => {
+    if (!bskyRecords && !nonBskyRecords) return { score: 50, leaning: 'neutral' };
     const total = bskyRecords + nonBskyRecords;
-    if (total === 0) return 0;
+    if (total === 0) return { score: 50, leaning: 'neutral' };
     
-    // Calculate the ratio of the smaller to the larger number
-    const ratio = Math.min(bskyRecords, nonBskyRecords) / Math.max(bskyRecords, nonBskyRecords);
-    // Convert to a 0-100 score, with 1 (perfect balance) = 100
-    return Math.round(ratio * 100);
+    // Calculate the percentage of bsky records
+    const bskyPercentage = (bskyRecords / total) * 100;
+    
+    // Return both the percentage and which side it leans towards
+    return {
+      score: bskyPercentage,
+      leaning: bskyRecords > nonBskyRecords ? 'bsky' : 'atproto'
+    };
   };
 
-  const getBalanceIndicator = (score) => {
-    if (score >= 80) return 'Balanced';
-    if (score >= 50) return 'Moderately Balanced';
-    if (score >= 20) return 'Imbalanced';
-    return 'Highly Imbalanced';
+  const getBalanceDescription = (bskyRecords, nonBskyRecords) => {
+    const { score, leaning } = calculateProtocolBalance(bskyRecords, nonBskyRecords);
+    
+    if (score >= 45 && score <= 55) return 'Balanced Usage';
+    if (leaning === 'bsky') {
+      if (score > 90) return 'Almost Entirely Bluesky';
+      if (score > 75) return 'Heavily Bluesky';
+      return 'Leans Bluesky';
+    } else {
+      if (score < 10) return 'Almost Entirely AT Proto';
+      if (score < 25) return 'Heavily AT Proto';
+      return 'Leans AT Proto';
+    }
   };
 
   const fetchUsers = useCallback(async () => {
@@ -43,7 +55,6 @@ const Leaderboard = () => {
         .from('user_scores')
         .select(`
           handle,
-          display_name,
           combined_score,
           bluesky_score,
           atproto_score,
@@ -62,7 +73,6 @@ const Leaderboard = () => {
         .from('user_scores')
         .select(`
           handle,
-          display_name,
           combined_score,
           bluesky_score,
           atproto_score,
@@ -118,13 +128,21 @@ const Leaderboard = () => {
       </td>
       <td>
         <div className="balance-indicator">
-          <div 
-            className="balance-bar"
-            style={{
-              width: `${calculateBalanceScore(user.total_bsky_records, user.total_non_bsky_records)}%`
-            }}
-          ></div>
-          <span>{getBalanceIndicator(calculateBalanceScore(user.total_bsky_records, user.total_non_bsky_records))}</span>
+          <div className="balance-track">
+            <div 
+              className="balance-bar"
+              style={{
+                left: `${calculateProtocolBalance(user.total_bsky_records, user.total_non_bsky_records).score}%`
+              }}
+            ></div>
+            <div className="protocol-labels">
+              <span className="at-proto-label">AT Proto</span>
+              <span className="bsky-label">Bluesky</span>
+            </div>
+          </div>
+          <span className="balance-description">
+            {getBalanceDescription(user.total_bsky_records, user.total_non_bsky_records)}
+          </span>
         </div>
       </td>
     </tr>
