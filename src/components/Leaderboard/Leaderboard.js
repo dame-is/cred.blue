@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../../lib/supabase';
+import './Leaderboard.css';
 
 const Leaderboard = () => {
   const [users, setUsers] = useState([]);
@@ -74,25 +75,21 @@ const Leaderboard = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold mb-2">Leaderboard</h1>
-          <p className="text-gray-600">
+    <div className="leaderboard-container">
+      <div className="leaderboard-card">
+        <div className="leaderboard-header">
+          <h1>Leaderboard</h1>
+          <p className="leaderboard-description">
             Discover the top-performing accounts on the Bluesky network. Rankings are based on various factors including engagement, activity, and protocol participation.
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-2 mb-6">
+        <div className="score-type-filters">
           {Object.entries(scoreTypes).map(([value, label]) => (
             <button
               key={value}
               onClick={() => handleScoreTypeChange(value)}
-              className={`px-4 py-2 rounded-full transition-colors ${
-                scoreType === value 
-                ? 'bg-blue-500 text-white' 
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
+              className={`filter-button ${scoreType === value ? 'active' : ''}`}
             >
               {label}
             </button>
@@ -100,44 +97,41 @@ const Leaderboard = () => {
         </div>
 
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          <div className="error-message">
             Error loading leaderboard: {error}
           </div>
         )}
 
-        <div className="overflow-x-auto">
-          <table className="w-full">
+        <div className="table-container">
+          <table className="leaderboard-table">
             <thead>
-              <tr className="border-b-2 border-gray-200">
-                <th className="py-3 px-4 text-left">Rank</th>
-                <th className="py-3 px-4 text-left">Handle</th>
-                <th className="py-3 px-4 text-left">Display Name</th>
-                <th className="py-3 px-4 text-left">Status</th>
-                <th className="py-3 px-4 text-right">Score</th>
+              <tr>
+                <th>Rank</th>
+                <th>Handle</th>
+                <th>Display Name</th>
+                <th>Status</th>
+                <th className="score-column">Score</th>
               </tr>
             </thead>
             <tbody>
               {users.map((user, index) => (
-                <tr 
-                  key={user.handle} 
-                  className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
-                >
-                  <td className="py-3 px-4 font-medium">#{(page - 1) * perPage + index + 1}</td>
-                  <td className="py-3 px-4">
+                <tr key={user.handle}>
+                  <td className="rank-cell">#{(page - 1) * perPage + index + 1}</td>
+                  <td>
                     <a 
                       href={`/${user.handle}`}
-                      className="text-blue-500 hover:text-blue-700 font-medium"
+                      className="user-handle"
                     >
                       @{user.handle}
                     </a>
                   </td>
-                  <td className="py-3 px-4">{user.display_name || '-'}</td>
-                  <td className="py-3 px-4">
-                    <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                  <td>{user.display_name || '-'}</td>
+                  <td>
+                    <span className="status-badge">
                       {user.social_status || 'Unknown'}
                     </span>
                   </td>
-                  <td className="py-3 px-4 text-right font-medium">
+                  <td className="score-cell">
                     {user[scoreType]?.toFixed(1) || '-'}
                   </td>
                 </tr>
@@ -147,17 +141,14 @@ const Leaderboard = () => {
         </div>
 
         {loading && (
-          <div className="text-center py-4">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-blue-500 border-t-transparent"></div>
+          <div className="loading-container">
+            <div className="loading-spinner"></div>
           </div>
         )}
 
         {!loading && hasMore && (
-          <div className="text-center mt-6">
-            <button
-              onClick={loadMore}
-              className="bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-lg transition-colors"
-            >
+          <div className="load-more-container">
+            <button onClick={loadMore} className="load-more-button">
               Load More
             </button>
           </div>
