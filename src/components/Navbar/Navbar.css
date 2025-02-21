@@ -269,7 +269,7 @@
 }
 
   /* Responsive Design: Links display in a row under the logo */
-  @media (max-width: 835px) {
+  @media (max-width: 940px) {
     .navbar-container {
       flex-direction: column;
       align-items: center;

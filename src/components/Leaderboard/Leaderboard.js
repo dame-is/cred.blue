@@ -12,7 +12,7 @@ const Leaderboard = () => {
   const scoreTypes = {
     combined_score: 'Combined Score',
     bluesky_score: 'Bluesky Score',
-    atproto_score: 'AT Proto Score'
+    atproto_score: 'ATProto Score'
   };
 
   // Calculate protocol balance and determine which side has more activity
@@ -40,9 +40,9 @@ const Leaderboard = () => {
       if (score > 75) return 'Heavily Bluesky';
       return 'Leans Bluesky';
     } else {
-      if (score < 10) return 'Almost Entirely AT Proto';
-      if (score < 25) return 'Heavily AT Proto';
-      return 'Leans AT Proto';
+      if (score < 10) return 'Almost Entirely ATProto';
+      if (score < 25) return 'Heavily ATProto';
+      return 'Leans ATProto';
     }
   };
 
@@ -136,7 +136,7 @@ const Leaderboard = () => {
               }}
             ></div>
             <div className="protocol-labels">
-              <span className="at-proto-label">AT Proto</span>
+              <span className="at-proto-label">ATProto</span>
               <span className="bsky-label">Bluesky</span>
             </div>
           </div>

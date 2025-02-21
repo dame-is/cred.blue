@@ -2,6 +2,7 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 1rem;
+  margin-top: 20px;
 }
 
 .leaderboard-card {
@@ -215,6 +216,13 @@
 @keyframes spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 680px) {
+  .filter-button {
+    margin-bottom: 10px;
   }
 }
 
