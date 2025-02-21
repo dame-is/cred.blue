@@ -6,6 +6,7 @@ import Footer from './components/Footer/Footer';
 import Newsletter from './components/Newsletter/Newsletter';
 import About from './components/About/About';
 import Home from './components/Home/Home';
+import Supporter from './components/Supporter/Supporter';
 import ScoringMethodology from './components/ScoringMethodology/ScoringMethodology';
 import Terms from './components/PrivacyTerms/Terms';
 import Privacy from './components/PrivacyTerms/Privacy';
@@ -32,6 +33,7 @@ const App = () => {
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/terms" element={<Terms />} />
               <Route path="/newsletter" element={<Newsletter />} />
+              <Route path="/supporter" element={<Supporter />} />
               <Route path="/:username" element={<UserProfile />} />
               <Route path="/zen" element={<ZenPage />} />
               <Route path="/methodology" element={<ScoringMethodology />} />
