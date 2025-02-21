@@ -119,14 +119,6 @@ const Leaderboard = () => {
         {Math.round(user[scoreType] || 0)}
       </td>
       <td>
-        <span className="activity-badge">
-          {user.activity_status || 'Unknown'}
-        </span>
-      </td>
-      <td className="age-cell">
-        {Math.round(user.age_in_days)} days
-      </td>
-      <td>
         <div className="balance-indicator">
           <div className="balance-track">
             <div 
@@ -144,6 +136,14 @@ const Leaderboard = () => {
             {getBalanceDescription(user.total_bsky_records, user.total_non_bsky_records)}
           </span>
         </div>
+      </td>
+      <td>
+        <span className="activity-badge">
+          {user.activity_status || 'Unknown'}
+        </span>
+      </td>
+      <td className="age-cell">
+        {Math.round(user.age_in_days)} days
       </td>
     </tr>
   );
@@ -176,23 +176,25 @@ const Leaderboard = () => {
           </div>
         )}
 
-        <div className="table-container">
-          <table className="leaderboard-table">
-            <thead>
-              <tr>
-                <th>Rank</th>
-                <th>Handle</th>
-                <th className="score-column">Score</th>
-                <th>Activity Status</th>
-                <th>Account Age</th>
-                <th>Protocol Balance</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((user, index) => renderUserRow(user, index))}
-              {runnerUps.map((user, index) => renderUserRow(user, index + 100, true))}
-            </tbody>
-          </table>
+        <div className="table-wrapper">
+          <div className="table-container">
+            <table className="leaderboard-table">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Handle</th>
+                  <th className="score-column">Score</th>
+                  <th>Protocol Balance</th>
+                  <th>Activity Status</th>
+                  <th>Account Age</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.map((user, index) => renderUserRow(user, index))}
+                {runnerUps.map((user, index) => renderUserRow(user, index + 100, true))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         {loading && (

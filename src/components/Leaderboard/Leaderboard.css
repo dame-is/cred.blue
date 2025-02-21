@@ -65,12 +65,50 @@
   margin-bottom: 1rem;
 }
 
+/* Table wrapper and scrollbar styles */
+.table-wrapper {
+  position: relative;
+  margin: -5px;
+  padding: 5px;
+}
+
 .table-container {
   overflow-x: auto;
+  padding-bottom: 20px; /* Space for the scrollbar */
+}
+
+/* Webkit scrollbar styles */
+.table-container::-webkit-scrollbar {
+  -webkit-appearance: none;
+  height: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+  background: var(--card-border);
+  border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+  background: var(--button-bg);
+  border-radius: 4px;
+}
+
+/* Make the scrollbar float in supporting browsers */
+@supports (overflow: overlay) {
+  .table-container {
+    overflow: overlay;
+  }
+}
+
+/* Firefox scrollbar styles */
+.table-container {
+  scrollbar-width: thin;
+  scrollbar-color: var(--button-bg) var(--card-border);
 }
 
 .leaderboard-table {
   width: 100%;
+  min-width: 800px;
   border-collapse: collapse;
 }
 
@@ -112,7 +150,9 @@
   opacity: 0.7;
 }
 
+/* Column specific styles */
 .rank-cell {
+  width: 80px;
   font-weight: 500;
 }
 
@@ -127,6 +167,13 @@
   opacity: 0.8;
 }
 
+.score-column,
+.score-cell {
+  width: 100px;
+  text-align: right;
+  font-weight: 600;
+}
+
 .activity-badge {
   background: var(--card-border);
   color: var(--text);
@@ -138,12 +185,14 @@
 }
 
 .age-cell {
+  width: 100px;
   white-space: nowrap;
 }
 
 /* Balance indicator styling */
 .balance-indicator {
-  width: 200px;
+  width: 180px;
+  min-width: 180px;
   position: relative;
 }
 
@@ -191,12 +240,7 @@
   transition: color 0.3s ease;
 }
 
-.score-column,
-.score-cell {
-  text-align: right;
-  font-weight: 600;
-}
-
+/* Loading spinner */
 .loading-container {
   text-align: center;
   padding: 1rem 0;
@@ -220,20 +264,14 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: 680px) {
-  .filter-button {
-    margin-bottom: 10px;
-  }
-}
-
-/* Responsive adjustments */
 @media (max-width: 1024px) {
   .leaderboard-card {
     padding: 1rem;
   }
   
   .balance-indicator {
-    width: 100px;
+    width: 140px;
+    min-width: 140px;
   }
   
   .activity-badge {
@@ -253,9 +291,21 @@
   
   .filter-button {
     width: 100%;
+    margin-bottom: 10px;
   }
   
-  .balance-indicator span {
+  .balance-description {
     display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .protocol-labels {
+    font-size: 0.6rem;
+  }
+  
+  .balance-indicator {
+    width: 100px;
+    min-width: 100px;
   }
 }
