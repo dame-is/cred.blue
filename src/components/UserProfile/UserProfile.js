@@ -151,6 +151,82 @@ const createDebouncedSave = () => {
   };
 };
 
+const processAccountData = (data) => {
+  if (!data) return null;
+
+  return {
+    ...data,
+    breakdown: {
+      blueskyCategories: {
+        profileQuality: {
+          score: data.blueskyScore * 0.25,
+          weight: 0.25,
+          details: {
+            profileCompleteness: data.profileCompleteness || 0,
+            altTextConsistency: data.altTextConsistencyBonus || 0,
+            customDomain: data.customDomainBonus || 0
+          }
+        },
+        communityEngagement: {
+          score: data.blueskyScore * 0.35,
+          weight: 0.35,
+          details: {
+            socialGraph: data.socialGraphScore || 0,
+            engagement: data.engagementScore || 0,
+            replyActivity: data.activityScore || 0
+          }
+        },
+        contentActivity: {
+          score: data.blueskyScore * 0.25,
+          weight: 0.25,
+          details: {
+            posts: data.activityDetails?.postsScore || 0,
+            collections: data.collectionsScore?.bskyCollectionsScore || 0,
+            labels: (data.labelBonus || 0) + (data.labelPenalty || 0)
+          }
+        },
+        recognitionStatus: {
+          score: data.blueskyScore * 0.15,
+          weight: 0.15,
+          details: {
+            teamStatus: data.handleBonuses?.teamBonus || 0,
+            contributorStatus: data.handleBonuses?.contributorBonus || 0,
+            socialStatus: data.socialStatusBonus || 0
+          }
+        }
+      },
+      atprotoCategories: {
+        decentralization: {
+          score: data.atprotoScore * 0.45,
+          weight: 0.45,
+          details: {
+            rotationKeys: data.rotationKeyBonus || 0,
+            didWeb: data.didWebBonus || 0,
+            thirdPartyPDS: data.thirdPartyPDSBonus || 0,
+            customDomain: data.customDomainBonus || 0
+          }
+        },
+        protocolActivity: {
+          score: data.atprotoScore * 0.35,
+          weight: 0.35,
+          details: {
+            nonBskyCollections: data.collectionsScore?.nonBskyCollectionsScore || 0,
+            atprotoActivity: data.atprotoActivityBonus || 0
+          }
+        },
+        accountMaturity: {
+          score: data.atprotoScore * 0.20,
+          weight: 0.20,
+          details: {
+            accountAge: data.accountAgeScore || 0,
+            contributorStatus: data.handleBonuses?.contributorBonus || 0
+          }
+        }
+      }
+    }
+  };
+};
+
 export const AccountDataContext = createContext(null);
 const ResponsiveGridLayout = WidthProvider(Responsive);
 const debouncedSaveUserData = createDebouncedSave();
@@ -190,7 +266,7 @@ const UserProfile = () => {
       try {
         setLoading(true);
         let handle = username;
-
+    
         // Handle DID resolution if necessary
         if (isDID(username)) {
           try {
@@ -205,7 +281,7 @@ const UserProfile = () => {
             return;
           }
         }
-
+    
         // Check cache first
         const cachedData = userDataCache.get(handle);
         if (cachedData && Date.now() - cachedData.timestamp < CACHE_TTL) {
@@ -214,21 +290,24 @@ const UserProfile = () => {
           setShowContent(true);
           return;
         }
-
+    
         const data = await loadAccountData(handle);
         if (data.error) throw new Error(data.error);
-
+    
+        // Process the data to ensure correct structure for the treemap
+        const processed90DaysData = processAccountData(data.accountData90Days);
+        
         // Update cache
         userDataCache.set(handle, {
-          data: data.accountData90Days,
+          data: processed90DaysData,
           timestamp: Date.now()
         });
-
-        setAccountData(data.accountData90Days);
+    
+        setAccountData(processed90DaysData);
         
         // Debounced save to database
-        await debouncedSaveUserData(data.accountData90Days);
-
+        await debouncedSaveUserData(processed90DaysData);
+    
       } catch (err) {
         console.error("Error fetching account data:", err);
         setError(err.message);
@@ -240,7 +319,6 @@ const UserProfile = () => {
         }, 500);
       }
     };
-
     fetchAccountData();
   }, [username, navigate, updateCardHeights]);
 
