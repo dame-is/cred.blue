@@ -1,0 +1,329 @@
+.leaderboard-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+  margin-top: 20px;
+}
+
+.leaderboard-card {
+  background: var(--navbar-bg);
+  border-radius: 8px;
+  border: 5px solid var(--card-border);
+  padding: 1.5rem;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.leaderboard-header {
+  margin-bottom: 1.5rem;
+}
+
+.leaderboard-header h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: var(--button-bg);
+}
+
+.leaderboard-description {
+  color: var(--text);
+  line-height: 1.5;
+  opacity: 0.8;
+  transition: color 0.3s ease;
+}
+
+.score-type-filters {
+  margin-bottom: 1.5rem;
+}
+
+.filter-button {
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--card-border);
+  color: var(--text);
+  margin-right: 10px;
+}
+
+.filter-button:hover {
+  background: var(--button-bg);
+  color: var(--button-text);
+}
+
+.filter-button.active {
+  background: var(--button-bg);
+  color: var(--button-text);
+}
+
+.error-message {
+  background: #fee2e2;
+  border: 1px solid #ef4444;
+  color: #b91c1c;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+/* Table wrapper and scrollbar styles */
+.table-wrapper {
+  position: relative;
+  margin: -5px;
+  padding: 5px;
+}
+
+.table-container {
+  overflow-x: auto;
+  padding-bottom: 20px; /* Space for the scrollbar */
+}
+
+/* Webkit scrollbar styles */
+.table-container::-webkit-scrollbar {
+  -webkit-appearance: none;
+  height: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+  background: var(--card-border);
+  border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+  background: var(--button-bg);
+  border-radius: 4px;
+}
+
+/* Make the scrollbar float in supporting browsers */
+@supports (overflow: overlay) {
+  .table-container {
+    overflow: overlay;
+  }
+}
+
+/* Firefox scrollbar styles */
+.table-container {
+  scrollbar-width: thin;
+  scrollbar-color: var(--button-bg) var(--card-border);
+}
+
+.leaderboard-table {
+  width: 100%;
+  min-width: 800px;
+  border-collapse: collapse;
+}
+
+.leaderboard-table th,
+.leaderboard-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  color: var(--text);
+  transition: color 0.3s ease;
+}
+
+.leaderboard-table th {
+  border-bottom: 2px solid var(--card-border);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.leaderboard-table tr {
+  transition: background-color 0.3s ease;
+}
+
+.leaderboard-table tr:hover {
+  background: var(--card-border);
+}
+
+/* Runner-up styling */
+.leaderboard-table tr.runner-up {
+  position: relative;
+}
+
+.leaderboard-table tr.runner-up td {
+  background: var(--card-border);
+  opacity: 0.8;
+}
+
+.leaderboard-table tr.runner-up:first-of-type td:first-child {
+  border-top-left-radius: 10px;
+}
+
+.leaderboard-table tr.runner-up:first-of-type td:last-child {
+  border-top-right-radius: 10px;
+}
+
+.leaderboard-table tr.runner-up:last-of-type td:first-child {
+  border-bottom-left-radius: 10px;
+}
+
+.leaderboard-table tr.runner-up:last-of-type td:last-child {
+  border-bottom-right-radius: 10px;
+}
+
+.leaderboard-table tr.runner-up:hover td {
+  opacity: 0.9;
+}
+
+.leaderboard-table tr.runner-up .user-handle {
+  opacity: 0.8;
+}
+
+/* Column specific styles */
+.rank-cell {
+  width: 80px;
+  font-weight: 500;
+}
+
+.user-handle {
+  color: var(--button-bg);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.user-handle:hover {
+  opacity: 0.8;
+}
+
+.score-column,
+.score-cell {
+  width: 100px;
+  text-align: right;
+  font-weight: 600;
+}
+
+.activity-badge {
+  background: var(--card-border);
+  color: var(--text);
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.age-cell {
+  width: 100px;
+  white-space: nowrap;
+}
+
+/* Balance indicator styling */
+.balance-indicator {
+  width: 180px;
+  min-width: 180px;
+  position: relative;
+}
+
+.balance-track {
+  height: 24px;
+  background: var(--card-border);
+  border-radius: 12px;
+  position: relative;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+
+.balance-bar {
+  width: 4px;
+  height: 24px;
+  background: var(--button-bg);
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  transition: left 0.3s ease;
+}
+
+.protocol-labels {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+  font-size: 0.7rem;
+  color: var(--text);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.balance-description {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text);
+  opacity: 0.8;
+  text-align: center;
+  transition: color 0.3s ease;
+}
+
+/* Loading spinner */
+.loading-container {
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  border: 4px solid var(--card-border);
+  border-top-color: var(--button-bg);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  transition: border-color 0.3s ease;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .leaderboard-card {
+    padding: 1rem;
+  }
+  
+  .balance-indicator {
+    width: 140px;
+    min-width: 140px;
+  }
+  
+  .activity-badge {
+    padding: 0.25rem 0.5rem;
+  }
+  
+  .leaderboard-table th,
+  .leaderboard-table td {
+    padding: 0.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .score-type-filters {
+    flex-direction: column;
+  }
+  
+  .filter-button {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .balance-description {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .protocol-labels {
+    font-size: 0.6rem;
+  }
+  
+  .balance-indicator {
+    width: 100px;
+    min-width: 100px;
+  }
+}

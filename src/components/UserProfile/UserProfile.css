@@ -458,9 +458,14 @@ tspan {
 }
 
 .user-profile-badges {
-  margin-top: 10px;
   font-size: 1.2em;
   line-height: 1.2em;
+}
+
+.context-line p {
+  margin: 0px;
+  font-size: 0.6em;
+  opacity: 0.5;
 }
 
 .user-profile-data-group p {

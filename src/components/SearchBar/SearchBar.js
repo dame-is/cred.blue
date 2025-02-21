@@ -1,6 +1,6 @@
-// SearchBar.jsx
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { isDID, resolveDIDToHandle } from "../../utils/didUtils";
 import "./SearchBar.css";
 
 const SearchBar = () => {
@@ -11,8 +11,9 @@ const SearchBar = () => {
   const [selectedSuggestion, setSelectedSuggestion] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const debounceTimeout = useRef(null);
 
-  // Debounce function (similar to AltTextRatingTool)
+  // Debounce function
   const debounce = (func, delay) => {
     let timer;
     const debounced = (...args) => {
@@ -27,7 +28,7 @@ const SearchBar = () => {
 
   // Fetch suggestions from the API
   const fetchSuggestions = async (query) => {
-    if (!query) {
+    if (!query || isDID(query)) {
       setSuggestions([]);
       return;
     }
@@ -49,9 +50,10 @@ const SearchBar = () => {
     }
   };
 
-  const debouncedFetchSuggestions = useCallback(debounce(fetchSuggestions, 300), []);
+  const debouncedFetchSuggestions = useRef(debounce(fetchSuggestions, 300)).current;
 
   useEffect(() => {
+    // Only fetch suggestions if the username does NOT match a selected suggestion
     if (!selectedSuggestion) {
       debouncedFetchSuggestions(username);
     }
@@ -60,13 +62,30 @@ const SearchBar = () => {
     };
   }, [username, debouncedFetchSuggestions, selectedSuggestion]);
 
-  const handleNavigation = (handle) => {
+  const handleNavigation = async (handle) => {
     // First, navigate to home to reset any error states
     navigate("/home");
-    // Then, after a brief timeout, navigate to the profile
-    setTimeout(() => {
-      navigate(`/${encodeURIComponent(handle)}`);
-    }, 0);
+    
+    try {
+      // If the handle is a DID, resolve it first
+      if (isDID(handle)) {
+        const resolvedHandle = await resolveDIDToHandle(handle);
+        if (resolvedHandle) {
+          handle = resolvedHandle;
+        }
+      }
+      
+      // Then, after a brief timeout, navigate to the profile
+      setTimeout(() => {
+        navigate(`/${encodeURIComponent(handle)}`);
+      }, 0);
+    } catch (error) {
+      console.error("Error resolving DID:", error);
+      // Navigate to the original handle if DID resolution fails
+      setTimeout(() => {
+        navigate(`/${encodeURIComponent(handle)}`);
+      }, 0);
+    }
   };
 
   const handleSubmit = (e) => {
@@ -176,6 +195,16 @@ const SearchBar = () => {
         </div>
         <button type="submit">Search</button>
       </form>
+      {isLoading && <div className="loading">Loading...</div>}
+      <div
+        role="status"
+        aria-live="polite"
+        className="sr-only"
+      >
+        {suggestions.length > 0
+          ? `${suggestions.length} suggestions available.`
+          : "No suggestions available."}
+      </div>
     </div>
   );
 };
