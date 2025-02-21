@@ -254,13 +254,13 @@ const CompareScores = () => {
         <h1>Compare Scores</h1>
         <div>
           <label>
-            Username 1 (or DID):
+            Username 1:
             <div style={{ position: 'relative' }}>
               <input
                 type="text"
                 value={username1}
                 onChange={handleInputChange1}
-                placeholder="e.g., alice.bsky.social or did:plc:..."
+                placeholder="(e.g., alice.bsky.social)"
               />
               {autocompleteActive1 && suggestions1.length > 0 && (
                 <div className="autocomplete-items">
@@ -288,13 +288,13 @@ const CompareScores = () => {
         </div>
         <div>
           <label>
-            Username2 (or DID):
+            Username 2:
             <div style={{ position: 'relative' }}>
               <input
                 type="text"
                 value={username2}
                 onChange={handleInputChange2}
-                placeholder="e.g., bob.bsky.social or did:plc:..."
+                placeholder="(e.g., bob.bsky.social)"
               />
               {autocompleteActive2 && suggestions2.length > 0 && (
                 <div className="autocomplete-items">
