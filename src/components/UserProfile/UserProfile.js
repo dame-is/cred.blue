@@ -2,6 +2,7 @@ import React, { useEffect, useState, createContext, useRef, useMemo } from "reac
 import { useParams, useNavigate } from "react-router-dom";
 import { Responsive, WidthProvider } from "react-grid-layout";
 import { loadAccountData } from "../../accountData";
+import { isDID, resolveDIDToHandle } from "../../utils/didUtils";
 import Card from "../Card/Card";
 import MatterLoadingAnimation from "../MatterLoadingAnimation";
 import ScoreGauge from './ScoreGauge';
@@ -20,41 +21,6 @@ import _ from 'lodash';
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import "./UserProfile.css";
-
-const resolveDid = async (did) => {
-  try {
-    // Use the identity.resolveHandle endpoint for DID resolution
-    const res = await fetch(
-      `https://public.api.bsky.app/xrpc/com.atproto.identity.resolveHandle?handle=${encodeURIComponent(did)}`
-    );
-    
-    if (!res.ok) {
-      // If that fails, try the repo.describeRepo endpoint
-      const repoRes = await fetch(
-        `https://public.api.bsky.app/xrpc/com.atproto.repo.describeRepo?repo=${encodeURIComponent(did)}`
-      );
-      
-      if (!repoRes.ok) throw new Error("Failed to resolve DID");
-      const repoData = await repoRes.json();
-      return repoData.handle;
-    }
-    
-    const data = await res.json();
-    if (!data.did) throw new Error("Could not resolve DID");
-    
-    // Now get the handle from the DID
-    const handleRes = await fetch(
-      `https://public.api.bsky.app/xrpc/com.atproto.repo.describeRepo?repo=${encodeURIComponent(data.did)}`
-    );
-    
-    if (!handleRes.ok) throw new Error("Failed to get handle from DID");
-    const handleData = await handleRes.json();
-    return handleData.handle;
-  } catch (error) {
-    console.error("Error resolving DID:", error);
-    throw error; // Propagate the error instead of returning null
-  }
-};
 
 // Memoized layouts configuration
 const CARD_HEIGHT = 6;
@@ -110,83 +76,6 @@ const createLayouts = () => ({
 });
 
 const layouts = createLayouts();
-
-// Moved outside component to prevent recreation
-const processAccountData = (data) => {
-  if (!data) return null;
-
-  return {
-    ...data,
-    breakdown: {
-      blueskyCategories: {
-        profileQuality: {
-          score: data.blueskyScore * 0.25,
-          weight: 0.25,
-          details: {
-            profileCompleteness: data.profileCompleteness || 0,
-            altTextConsistency: data.altTextConsistencyBonus || 0,
-            customDomain: data.customDomainBonus || 0
-          }
-        },
-        communityEngagement: {
-          score: data.blueskyScore * 0.35,
-          weight: 0.35,
-          details: {
-            socialGraph: data.socialGraphScore || 0,
-            engagement: data.engagementScore || 0,
-            replyActivity: data.activityScore || 0
-          }
-        },
-        contentActivity: {
-          score: data.blueskyScore * 0.25,
-          weight: 0.25,
-          details: {
-            posts: data.activityDetails?.postsScore || 0,
-            collections: data.collectionsScore?.bskyCollectionsScore || 0,
-            labels: (data.labelBonus || 0) + (data.labelPenalty || 0)
-          }
-        },
-        recognitionStatus: {
-          score: data.blueskyScore * 0.15,
-          weight: 0.15,
-          details: {
-            teamStatus: data.handleBonuses?.teamBonus || 0,
-            contributorStatus: data.handleBonuses?.contributorBonus || 0,
-            socialStatus: data.socialStatusBonus || 0
-          }
-        }
-      },
-      atprotoCategories: {
-        decentralization: {
-          score: data.atprotoScore * 0.45,
-          weight: 0.45,
-          details: {
-            rotationKeys: data.rotationKeyBonus || 0,
-            didWeb: data.didWebBonus || 0,
-            thirdPartyPDS: data.thirdPartyPDSBonus || 0,
-            customDomain: data.customDomainBonus || 0
-          }
-        },
-        protocolActivity: {
-          score: data.atprotoScore * 0.35,
-          weight: 0.35,
-          details: {
-            nonBskyCollections: data.collectionsScore?.nonBskyCollectionsScore || 0,
-            atprotoActivity: data.atprotoActivityBonus || 0
-          }
-        },
-        accountMaturity: {
-          score: data.atprotoScore * 0.20,
-          weight: 0.20,
-          details: {
-            accountAge: data.accountAgeScore || 0,
-            contributorStatus: data.handleBonuses?.contributorBonus || 0
-          }
-        }
-      }
-    }
-  };
-};
 
 // Memoized save function with debouncing
 const createDebouncedSave = () => {
@@ -295,54 +184,51 @@ const UserProfile = () => {
     };
   }, []);
 
-  // Optimized data fetching
+  // Optimized data fetching with DID support
   useEffect(() => {
     const fetchAccountData = async () => {
       try {
         setLoading(true);
-        setError(null);
-        let resolvedUsername = username;
-        
-        // If the username is a DID, resolve it to a handle
-        if (username.startsWith('did:')) {
+        let handle = username;
+
+        // Handle DID resolution if necessary
+        if (isDID(username)) {
           try {
-            const handle = await resolveDid(username);
-            resolvedUsername = handle;
-            // Update the URL without triggering a new navigation
-            window.history.replaceState(null, '', `/${handle}`);
+            handle = await resolveDIDToHandle(username);
+            // Redirect to the handle-based URL
+            navigate(`/${handle}`, { replace: true });
+            return; // The navigation will trigger a new effect
           } catch (didError) {
-            console.error("DID resolution error:", didError);
-            setError("Could not resolve DID to handle");
+            console.error("Error resolving DID:", didError);
+            setError(`Could not resolve DID: ${didError.message}`);
             setLoading(false);
             return;
           }
         }
-  
+
         // Check cache first
-        const cachedData = userDataCache.get(resolvedUsername);
+        const cachedData = userDataCache.get(handle);
         if (cachedData && Date.now() - cachedData.timestamp < CACHE_TTL) {
           setAccountData(cachedData.data);
           setLoading(false);
           setShowContent(true);
           return;
         }
-  
-        const data = await loadAccountData(resolvedUsername);
+
+        const data = await loadAccountData(handle);
         if (data.error) throw new Error(data.error);
-  
-        const processed90DaysData = processAccountData(data.accountData90Days);
-        
+
         // Update cache
-        userDataCache.set(resolvedUsername, {
-          data: processed90DaysData,
+        userDataCache.set(handle, {
+          data: data.accountData90Days,
           timestamp: Date.now()
         });
-  
-        setAccountData(processed90DaysData);
+
+        setAccountData(data.accountData90Days);
         
         // Debounced save to database
-        await debouncedSaveUserData(processed90DaysData);
-  
+        await debouncedSaveUserData(data.accountData90Days);
+
       } catch (err) {
         console.error("Error fetching account data:", err);
         setError(err.message);
@@ -354,9 +240,9 @@ const UserProfile = () => {
         }, 500);
       }
     };
-  
+
     fetchAccountData();
-  }, [username, updateCardHeights]);
+  }, [username, navigate, updateCardHeights]);
 
   // Memoized resize handler
   useEffect(() => {
@@ -388,63 +274,62 @@ const UserProfile = () => {
   return (
     <AccountDataContext.Provider value={accountData}>
       <Helmet>
-        <title>{`${username}'s cred.blue Score`}</title>
-        <meta name="description" content={`Check ${username}'s Bluesky credibility score and data footprint on cred.blue`} />
-        <meta property="og:title" content={`${username} - cred.blue Score`} />
-        <meta property="og:description" content={`Check ${username}'s Bluesky credibility score and data footprint on cred.blue`} />
-        <meta property="og:url" content={`https://cred.blue/${username}`} />
-        <meta name="twitter:title" content={`${username} - cred.blue Score`} />
-        <meta name="twitter:description" content={`Check ${username}'s Bluesky credibility score and data footprint on cred.blue`} />
+        <title>{`${resolvedHandle}'s cred.blue Score`}</title>
+        <meta name="description" content={`Check ${resolvedHandle}'s Bluesky credibility score and data footprint on cred.blue`} />
+        <meta property="og:title" content={`${resolvedHandle} - cred.blue Score`} />
+        <meta property="og:description" content={`Check ${resolvedHandle}'s Bluesky credibility score and data footprint on cred.blue`} />
+        <meta property="og:url" content={`https://cred.blue/${resolvedHandle}`} />
+        <meta name="twitter:title" content={`${resolvedHandle} - cred.blue Score`} />
+        <meta name="twitter:description" content={`Check ${resolvedHandle}'s Bluesky credibility score and data footprint on cred.blue`} />
       </Helmet>
       <div className={`user-profile ${showContent ? "fade-in" : "hidden"}`}>
         <div className="user-profile-container">
-        <div className="profile-sections-wrapper">
+          <div className="profile-sections-wrapper">
+            {/* Right Section */}
+            <div className="profile-section right-section">
+              <div className="user-profile-main">
+                <div className="user-profile-name">
+                  <h1>{displayName}</h1>
+                  <h2>@{resolvedHandle}</h2>
+                </div>
+                <div className="user-profile-data-group">
+                  <div className="user-profile-score">
+                    <p><strong>Bluesky Score:</strong> {accountData.blueskyScore}</p>
+                    <p><strong>AT Proto Score:</strong> {accountData.atprotoScore}</p>
+                  </div>
+                  <div className="user-profile-activity">
+                    <p><strong>Bluesky Status:</strong> {accountData.activityAll.bskyActivityStatus}</p>
+                    <p><strong>AT Proto Status:</strong> {accountData.activityAll.atprotoActivityStatus}</p>
+                    </div>
+                </div>
+                <div className="share-button-container">
+                  <button
+                    className="share-button-profile"
+                    type="button"
+                    onClick={() => window.open(
+                      `https://bsky.app/intent/compose?text=${encodeURIComponent(
+                        `My @cred.blue score is ${accountData.combinedScore}! 🦋\n\nI've been on Bluesky for ${accountData.ageInDays} days, joined during the "${accountData.era.toLowerCase()}" era, and have a social status of "${accountData.socialStatus}"\n\nGet your score: cred.blue`
+                      )}`, '_blank'
+                    )}
+                  >
+                    Share Results
+                  </button>
+                  <button
+                    className="comparea-button-profile"
+                    type="button"
+                    onClick={() => window.open(`https://cred.blue/compare`, '_blank')}
+                  >
+                    Compare Scores
+                  </button>
+                </div>
+              </div>
+            </div>
 
-          {/* Right Section */}
-          <div className="profile-section right-section">
-            <div className="user-profile-main">
-              <div className="user-profile-name">
-                <h1>{displayName}</h1>
-                <h2>@{resolvedHandle}</h2>
+            {/* Middle Section */}
+            <div className="profile-section middle-section">
+              <div className="user-profile-header-rechart">
+                <ScoreGauge score={accountData.combinedScore} />
               </div>
-              <div className="user-profile-data-group">
-              <div className="user-profile-score">
-                <p><strong>Bluesky Score:</strong> {accountData.blueskyScore}</p>
-                <p><strong>AT Proto Score:</strong> {accountData.atprotoScore}</p>
-              </div>
-              <div className="user-profile-activity">
-                <p><strong>Bluesky Status:</strong> {accountData.activityAll.bskyActivityStatus}</p>
-                <p><strong>AT Proto Status:</strong> {accountData.activityAll.atprotoActivityStatus}</p>
-              </div>
-            </div>
-              <div className="share-button-container">
-              <button
-                className="share-button-profile"
-                type="button"
-                onClick={() => window.open(
-                  `https://bsky.app/intent/compose?text=${encodeURIComponent(
-                    `My @cred.blue score is ${accountData.combinedScore}! 🦋\n\nI've been on Bluesky for ${accountData.ageInDays} days, joined during the "${accountData.era.toLowerCase()}" era, and have a social status of "${accountData.socialStatus}"\n\nGet your score: cred.blue`
-                  )}`, '_blank'
-                )}
-              >
-                Share Results
-              </button>
-              <button
-                className="comparea-button-profile"
-                type="button"
-                onClick={() => window.open(`https://cred.blue/compare`, '_blank')}
-              >
-                Compare Scores
-              </button>
-            </div>
-            </div>
-          </div>
-
-          {/* Middle Section */}
-          <div className="profile-section middle-section">
-            <div className="user-profile-header-rechart">
-              <ScoreGauge score={accountData.combinedScore} />
-            </div>
               <div className="user-profile-badges">
                 <h3>{accountData.socialStatus}</h3>
                 <h3>{accountData.postingStyle}</h3>
@@ -452,19 +337,19 @@ const UserProfile = () => {
               <div className="user-profile-age">
                 <h2>{Math.floor(accountData.ageInDays)} days old</h2>
               </div>
-          </div>
+            </div>
 
             {/* Left Section */}
             <div className="profile-section left-section">
-            <CircularLogo
-              did={accountData.did}
-              size={370}
-              fontSize={35}
-              textColor="#004f84"
-            />
+              <CircularLogo
+                did={accountData.did}
+                size={370}
+                fontSize={35}
+                textColor="#004f84"
+              />
+            </div>
           </div>
         </div>
-      </div>
 
         <ResponsiveGridLayout
           className="layout"

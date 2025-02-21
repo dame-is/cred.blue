@@ -1,16 +1,18 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { isDID, resolveDIDToHandle } from "../../utils/didUtils";
 import "./SearchBar.css";
 
 const SearchBar = () => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [username, setUsername] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [autocompleteActive, setAutocompleteActive] = useState(false);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
   const [selectedSuggestion, setSelectedSuggestion] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  
+  const debounceTimeout = useRef(null);
+
   // Debounce function
   const debounce = (func, delay) => {
     let timer;
@@ -24,45 +26,9 @@ const SearchBar = () => {
     return debounced;
   };
 
-  // Function to resolve DID to handle
-  const resolveDid = async (did) => {
-    try {
-      // Use the identity.resolveHandle endpoint for DID resolution
-      const res = await fetch(
-        `https://public.api.bsky.app/xrpc/com.atproto.identity.resolveHandle?handle=${encodeURIComponent(did)}`
-      );
-      
-      if (!res.ok) {
-        // If that fails, try the repo.describeRepo endpoint
-        const repoRes = await fetch(
-          `https://public.api.bsky.app/xrpc/com.atproto.repo.describeRepo?repo=${encodeURIComponent(did)}`
-        );
-        
-        if (!repoRes.ok) throw new Error("Failed to resolve DID");
-        const repoData = await repoRes.json();
-        return repoData.handle;
-      }
-      
-      const data = await res.json();
-      if (!data.did) throw new Error("Could not resolve DID");
-      
-      // Now get the handle from the DID
-      const handleRes = await fetch(
-        `https://public.api.bsky.app/xrpc/com.atproto.repo.describeRepo?repo=${encodeURIComponent(data.did)}`
-      );
-      
-      if (!handleRes.ok) throw new Error("Failed to get handle from DID");
-      const handleData = await handleRes.json();
-      return handleData.handle;
-    } catch (error) {
-      console.error("Error resolving DID:", error);
-      throw error;
-    }
-  };
-
   // Fetch suggestions from the API
   const fetchSuggestions = async (query) => {
-    if (!query) {
+    if (!query || isDID(query)) {
       setSuggestions([]);
       return;
     }
@@ -87,41 +53,46 @@ const SearchBar = () => {
   const debouncedFetchSuggestions = useRef(debounce(fetchSuggestions, 300)).current;
 
   useEffect(() => {
+    // Only fetch suggestions if the username does NOT match a selected suggestion
     if (!selectedSuggestion) {
-      debouncedFetchSuggestions(searchTerm);
+      debouncedFetchSuggestions(username);
     }
     return () => {
       debouncedFetchSuggestions.cancel();
     };
-  }, [searchTerm, debouncedFetchSuggestions, selectedSuggestion]);
+  }, [username, debouncedFetchSuggestions, selectedSuggestion]);
 
-  const handleNavigation = async (term) => {
-    let handle = term;
-    
-    // Check if the term is a DID
-    if (term.startsWith('did:')) {
-      const resolvedHandle = await resolveDid(term);
-      if (resolvedHandle) {
-        handle = resolvedHandle;
-      } else {
-        // If DID resolution fails, still try to use the DID
-        handle = term;
-      }
-    }
-
-    // First navigate to home to reset any error states
+  const handleNavigation = async (handle) => {
+    // First, navigate to home to reset any error states
     navigate("/home");
-    // Then navigate to the profile
-    setTimeout(() => {
-      navigate(`/${encodeURIComponent(handle)}`);
-    }, 0);
+    
+    try {
+      // If the handle is a DID, resolve it first
+      if (isDID(handle)) {
+        const resolvedHandle = await resolveDIDToHandle(handle);
+        if (resolvedHandle) {
+          handle = resolvedHandle;
+        }
+      }
+      
+      // Then, after a brief timeout, navigate to the profile
+      setTimeout(() => {
+        navigate(`/${encodeURIComponent(handle)}`);
+      }, 0);
+    } catch (error) {
+      console.error("Error resolving DID:", error);
+      // Navigate to the original handle if DID resolution fails
+      setTimeout(() => {
+        navigate(`/${encodeURIComponent(handle)}`);
+      }, 0);
+    }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (searchTerm.trim() !== "") {
-      await handleNavigation(searchTerm.trim());
-      setSearchTerm("");
+    if (username.trim() !== "") {
+      handleNavigation(username.trim());
+      setUsername("");
       setSuggestions([]);
       setAutocompleteActive(false);
       setActiveSuggestionIndex(-1);
@@ -129,13 +100,13 @@ const SearchBar = () => {
   };
 
   const handleInputChange = (e) => {
-    setSearchTerm(e.target.value);
+    setUsername(e.target.value);
     if (selectedSuggestion && e.target.value !== selectedSuggestion) {
       setSelectedSuggestion('');
     }
   };
 
-  const handleKeyDown = async (e) => {
+  const handleKeyDown = (e) => {
     if (!autocompleteActive) return;
 
     switch (e.key) {
@@ -155,11 +126,11 @@ const SearchBar = () => {
         if (activeSuggestionIndex >= 0 && activeSuggestionIndex < suggestions.length) {
           e.preventDefault();
           const selectedHandle = suggestions[activeSuggestionIndex].handle;
-          setSearchTerm(selectedHandle);
+          setUsername(selectedHandle);
           setSelectedSuggestion(selectedHandle);
           setSuggestions([]);
           setAutocompleteActive(false);
-          await handleNavigation(selectedHandle);
+          handleNavigation(selectedHandle);
         }
         break;
       case "Escape":
@@ -177,8 +148,8 @@ const SearchBar = () => {
         <div style={{ position: 'relative' }}>
           <input
             type="text"
-            placeholder="Enter handle or DID (e.g. user.bsky.social or did:plc:...)"
-            value={searchTerm}
+            placeholder="(e.g. user.bsky.social or did:plc:...)"
+            value={username}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
             required
@@ -199,13 +170,13 @@ const SearchBar = () => {
                 <div
                   key={actor.handle}
                   className={`autocomplete-item ${index === activeSuggestionIndex ? 'active' : ''}`}
-                  onClick={async () => {
-                    setSearchTerm(actor.handle);
+                  onClick={() => {
+                    setUsername(actor.handle);
                     setSelectedSuggestion(actor.handle);
                     setSuggestions([]);
                     setAutocompleteActive(false);
                     debouncedFetchSuggestions.cancel();
-                    await handleNavigation(actor.handle);
+                    handleNavigation(actor.handle);
                   }}
                 >
                   <img 
@@ -216,10 +187,7 @@ const SearchBar = () => {
                       e.target.src = "/default-avatar.png";
                     }}
                   />
-                  <div className="suggestion-info">
-                    <span className="handle">{actor.handle}</span>
-                    <span className="did">{actor.did}</span>
-                  </div>
+                  <span>{actor.handle}</span>
                 </div>
               ))}
             </div>
