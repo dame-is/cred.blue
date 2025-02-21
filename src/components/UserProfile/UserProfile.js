@@ -408,6 +408,9 @@ const UserProfile = () => {
               <div className="user-profile-header-rechart">
                 <ScoreGauge score={accountData.combinedScore} />
               </div>
+              <div className="context-line">
+                <p>Average score is ~328</p>
+              </div>
               <div className="user-profile-badges">
                 <h3>{accountData.socialStatus}</h3>
                 <h3>{accountData.postingStyle}</h3>

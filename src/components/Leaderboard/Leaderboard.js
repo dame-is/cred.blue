@@ -154,7 +154,7 @@ const Leaderboard = () => {
         <div className="leaderboard-header">
           <h1>Leaderboard</h1>
           <p className="leaderboard-description">
-            Discover the top-performing accounts on the Bluesky network. Rankings are based on various factors including engagement, activity, and protocol participation.
+            Discover the highest scoring accounts across Bluesky and the AT Protocol network that have been calculated so far. Scores are based on numerous factors across activity and protocol participation. If a username has never been searched on cred.blue, it won't appear here. <a href="https://testing.cred.blue/methodology">Learn more about the scoring methodology.</a>
           </p>
         </div>
 
