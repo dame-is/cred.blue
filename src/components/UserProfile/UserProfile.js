@@ -23,15 +23,36 @@ import "./UserProfile.css";
 
 const resolveDid = async (did) => {
   try {
+    // Use the identity.resolveHandle endpoint for DID resolution
     const res = await fetch(
-      `https://public.api.bsky.app/xrpc/com.atproto.repo.describeRepo?repo=${encodeURIComponent(did)}`
+      `https://public.api.bsky.app/xrpc/com.atproto.identity.resolveHandle?handle=${encodeURIComponent(did)}`
     );
-    if (!res.ok) throw new Error("Failed to resolve DID");
+    
+    if (!res.ok) {
+      // If that fails, try the repo.describeRepo endpoint
+      const repoRes = await fetch(
+        `https://public.api.bsky.app/xrpc/com.atproto.repo.describeRepo?repo=${encodeURIComponent(did)}`
+      );
+      
+      if (!repoRes.ok) throw new Error("Failed to resolve DID");
+      const repoData = await repoRes.json();
+      return repoData.handle;
+    }
+    
     const data = await res.json();
-    return data.handle;
+    if (!data.did) throw new Error("Could not resolve DID");
+    
+    // Now get the handle from the DID
+    const handleRes = await fetch(
+      `https://public.api.bsky.app/xrpc/com.atproto.repo.describeRepo?repo=${encodeURIComponent(data.did)}`
+    );
+    
+    if (!handleRes.ok) throw new Error("Failed to get handle from DID");
+    const handleData = await handleRes.json();
+    return handleData.handle;
   } catch (error) {
     console.error("Error resolving DID:", error);
-    return null;
+    throw error; // Propagate the error instead of returning null
   }
 };
 
@@ -278,17 +299,22 @@ const UserProfile = () => {
   useEffect(() => {
     const fetchAccountData = async () => {
       try {
+        setLoading(true);
+        setError(null);
         let resolvedUsername = username;
         
         // If the username is a DID, resolve it to a handle
         if (username.startsWith('did:')) {
-          const handle = await resolveDid(username);
-          if (handle) {
+          try {
+            const handle = await resolveDid(username);
             resolvedUsername = handle;
             // Update the URL without triggering a new navigation
             window.history.replaceState(null, '', `/${handle}`);
-          } else {
-            throw new Error("Could not resolve DID to handle");
+          } catch (didError) {
+            console.error("DID resolution error:", didError);
+            setError("Could not resolve DID to handle");
+            setLoading(false);
+            return;
           }
         }
   
@@ -328,7 +354,7 @@ const UserProfile = () => {
         }, 500);
       }
     };
-
+  
     fetchAccountData();
   }, [username, updateCardHeights]);
 
