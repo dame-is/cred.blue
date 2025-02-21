@@ -34,13 +34,13 @@ const Leaderboard = () => {
   const getBalanceDescription = (bskyRecords, nonBskyRecords) => {
     const { score, leaning } = calculateProtocolBalance(bskyRecords, nonBskyRecords);
     
-    if (score >= 45 && score <= 55) return 'Balanced Usage';
+    if (score >= 45 && score <= 55) return 'Balanced usage';
     if (leaning === 'bsky') {
-      if (score > 90) return 'Almost Entirely Bluesky';
+      if (score > 90) return 'Almost entirely Bluesky';
       if (score > 75) return 'Heavily Bluesky';
       return 'Leans Bluesky';
     } else {
-      if (score < 10) return 'Almost Entirely ATProto';
+      if (score < 10) return 'Almost entirely ATProto';
       if (score < 25) return 'Heavily ATProto';
       return 'Leans ATProto';
     }
