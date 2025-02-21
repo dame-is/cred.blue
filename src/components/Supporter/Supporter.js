@@ -29,7 +29,9 @@ const Supporter = () => {
                 One-time Tip 
               </button>
           </div>
-          <p>My name is Dame. I'm an artist and software experimentalist who has been creating resources, tools, and content for the AT Protocol + Bluesky community for the past several months during my professional (unpaid) sabbatical. I've been a part of Bluesky since almost the very beginning (user #1,216), and I've developed a keen interest in helping make the "Atmosphere" better.</p>
+          <p>Hello there,</p>
+
+          <p>My name is <a href="https://bsky.app/profile/dame.is" target="_blank" rel="noreferrer">Dame</a>. I'm an artist and software experimentalist who has been creating resources, tools, and content for the AT Protocol + Bluesky community for the past several months during my professional (unpaid) sabbatical. I've been a part of Bluesky since almost the very beginning (user #1,216), and I've developed a keen interest in helping make the "Atmosphere" better.</p>
           
           <p>Today I'm launching the beta version of a new platform I've created called cred.blue. It allows you to generate a Bluesky "credibility" score, helps you understand your AT Protocol data footprint, and let's you vibe check strangers and new accounts. Bots, fake accounts, and bad actors are all over the place these days, so it's my hope that this platform can play a small part in helping you better navigate the digital spaces we inhabit.</p>
           
@@ -38,6 +40,7 @@ const Supporter = () => {
           <p>Thank you for considering supporting me,</p>
 
           <p>Dame</p>
+          <p><a href="https://bsky.app/profile/dame.is" target="_blank" rel="noreferrer">@dame.is</a></p>
        </div> 
       </main>
     </>

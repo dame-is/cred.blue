@@ -68,9 +68,7 @@ const Navbar = () => {
           <button
             className="navbar-support-button"
             type="button"
-            onClick={() => window.open(
-              `https://www.patreon.com/dameis`, '_blank'
-            )}
+            onClick={() => navigate(`/supporter`)}
           >
             become a supporter
           </button>

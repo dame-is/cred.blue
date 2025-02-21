@@ -16,3 +16,18 @@
     width: 100%;
     opacity: 0.5;
   }
+
+  .supporter-buttons {
+    text-align: center;
+    display: flex;
+    gap: 17.3px;
+    justify-content: center;
+  }
+
+  .patreon-button {
+    margin: 0px;
+  }
+
+  .ko-fi-button {
+    margin: 0px;
+  }
