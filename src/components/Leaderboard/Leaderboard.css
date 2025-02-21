@@ -146,33 +146,19 @@
 }
 
 .leaderboard-table tr.runner-up:first-of-type td:first-child {
-  border-top-left-radius: 6px;
+  border-top-left-radius: 10px;
 }
 
 .leaderboard-table tr.runner-up:first-of-type td:last-child {
-  border-top-right-radius: 6px;
+  border-top-right-radius: 10px;
 }
 
 .leaderboard-table tr.runner-up:last-of-type td:first-child {
-  border-bottom-left-radius: 6px;
+  border-bottom-left-radius: 10px;
 }
 
 .leaderboard-table tr.runner-up:last-of-type td:last-child {
-  border-bottom-right-radius: 6px;
-}
-
-/* Add a subtle border around the runner-up section */
-.leaderboard-table tr.runner-up td {
-  border: 1px solid var(--card-border);
-  border-width: 0 1px;
-}
-
-.leaderboard-table tr.runner-up:first-of-type td {
-  border-top-width: 1px;
-}
-
-.leaderboard-table tr.runner-up:last-of-type td {
-  border-bottom-width: 1px;
+  border-bottom-right-radius: 10px;
 }
 
 .leaderboard-table tr.runner-up:hover td {
