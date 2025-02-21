@@ -254,7 +254,7 @@ const CompareScores = () => {
         <h1>Compare Scores</h1>
         <div>
           <label>
-            Username/DID 1:
+            Username 1 (or DID):
             <div style={{ position: 'relative' }}>
               <input
                 type="text"
@@ -288,7 +288,7 @@ const CompareScores = () => {
         </div>
         <div>
           <label>
-            Username/DID 2:
+            Username2 (or DID):
             <div style={{ position: 'relative' }}>
               <input
                 type="text"

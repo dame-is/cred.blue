@@ -6,6 +6,7 @@ import Footer from './components/Footer/Footer';
 import Newsletter from './components/Newsletter/Newsletter';
 import About from './components/About/About';
 import Home from './components/Home/Home';
+import Leaderboard from './components/Leaderboard/Leaderboard';
 import Supporter from './components/Supporter/Supporter';
 import ScoringMethodology from './components/ScoringMethodology/ScoringMethodology';
 import Terms from './components/PrivacyTerms/Terms';
@@ -34,6 +35,7 @@ const App = () => {
             <Route path="/terms" element={<Terms />} />
             <Route path="/newsletter" element={<Newsletter />} />
             <Route path="/supporter" element={<Supporter />} />
+            <Route path="/leaderboard" element={<Leaderboard />} />
             <Route path="/zen" element={<ZenPage />} />
             <Route path="/methodology" element={<ScoringMethodology />} />
             {/* Handle both DIDs and regular usernames */}
