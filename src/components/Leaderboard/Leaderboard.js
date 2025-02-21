@@ -165,11 +165,10 @@ const Leaderboard = () => {
               <tr>
                 <th>Rank</th>
                 <th>Handle</th>
-                <th>Display Name</th>
+                <th className="score-column">Score</th>
                 <th>Activity Status</th>
                 <th>Account Age</th>
                 <th>Protocol Balance</th>
-                <th className="score-column">Score</th>
               </tr>
             </thead>
             <tbody>
