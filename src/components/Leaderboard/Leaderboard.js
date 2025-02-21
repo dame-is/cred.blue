@@ -154,7 +154,7 @@ const Leaderboard = () => {
         <div className="leaderboard-header">
           <h1>Leaderboard (Top 100)</h1>
           <p className="leaderboard-description">
-            Discover the highest scoring accounts across Bluesky and the AT Protocol network that have been calculated so far. Scores are based on numerous factors across activity and protocol participation. If a username has never been searched on cred.blue, it won't appear here. <a href="https://testing.cred.blue/methodology">Learn more about the scoring methodology.</a>
+            Discover the highest scoring accounts across Bluesky and the AT Protocol network that have been calculated so far. Scores are based on numerous factors across activity and protocol participation. If a username has never been searched on cred.blue, it won't appear here. <a href="https://cred.blue/methodology">Learn more about the scoring methodology.</a>
           </p>
         </div>
 
