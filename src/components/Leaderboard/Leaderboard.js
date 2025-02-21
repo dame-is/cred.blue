@@ -137,13 +137,13 @@ const Leaderboard = () => {
           </span>
         </div>
       </td>
+      <td className="age-cell">
+        {Math.round(user.age_in_days)} days
+      </td>
       <td>
         <span className="activity-badge">
           {user.activity_status || 'Unknown'}
         </span>
-      </td>
-      <td className="age-cell">
-        {Math.round(user.age_in_days)} days
       </td>
     </tr>
   );
@@ -185,8 +185,8 @@ const Leaderboard = () => {
                   <th>Handle</th>
                   <th className="score-column">Score</th>
                   <th>Protocol Balance</th>
-                  <th>Activity Status</th>
                   <th>Account Age</th>
+                  <th>Activity Status</th>
                 </tr>
               </thead>
               <tbody>
