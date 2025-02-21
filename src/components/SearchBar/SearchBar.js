@@ -1,18 +1,17 @@
-// SearchBar.jsx
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SearchBar.css";
 
 const SearchBar = () => {
-  const [username, setUsername] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [autocompleteActive, setAutocompleteActive] = useState(false);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
   const [selectedSuggestion, setSelectedSuggestion] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-
-  // Debounce function (similar to AltTextRatingTool)
+  
+  // Debounce function
   const debounce = (func, delay) => {
     let timer;
     const debounced = (...args) => {
@@ -23,6 +22,21 @@ const SearchBar = () => {
       clearTimeout(timer);
     };
     return debounced;
+  };
+
+  // Function to resolve DID to handle
+  const resolveDid = async (did) => {
+    try {
+      const res = await fetch(
+        `https://public.api.bsky.app/xrpc/com.atproto.repo.describeRepo?repo=${encodeURIComponent(did)}`
+      );
+      if (!res.ok) throw new Error("Failed to resolve DID");
+      const data = await res.json();
+      return data.handle;
+    } catch (error) {
+      console.error("Error resolving DID:", error);
+      return null;
+    }
   };
 
   // Fetch suggestions from the API
@@ -49,31 +63,44 @@ const SearchBar = () => {
     }
   };
 
-  const debouncedFetchSuggestions = useCallback(debounce(fetchSuggestions, 300), []);
+  const debouncedFetchSuggestions = useRef(debounce(fetchSuggestions, 300)).current;
 
   useEffect(() => {
     if (!selectedSuggestion) {
-      debouncedFetchSuggestions(username);
+      debouncedFetchSuggestions(searchTerm);
     }
     return () => {
       debouncedFetchSuggestions.cancel();
     };
-  }, [username, debouncedFetchSuggestions, selectedSuggestion]);
+  }, [searchTerm, debouncedFetchSuggestions, selectedSuggestion]);
 
-  const handleNavigation = (handle) => {
-    // First, navigate to home to reset any error states
+  const handleNavigation = async (term) => {
+    let handle = term;
+    
+    // Check if the term is a DID
+    if (term.startsWith('did:')) {
+      const resolvedHandle = await resolveDid(term);
+      if (resolvedHandle) {
+        handle = resolvedHandle;
+      } else {
+        // If DID resolution fails, still try to use the DID
+        handle = term;
+      }
+    }
+
+    // First navigate to home to reset any error states
     navigate("/home");
-    // Then, after a brief timeout, navigate to the profile
+    // Then navigate to the profile
     setTimeout(() => {
       navigate(`/${encodeURIComponent(handle)}`);
     }, 0);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (username.trim() !== "") {
-      handleNavigation(username.trim());
-      setUsername("");
+    if (searchTerm.trim() !== "") {
+      await handleNavigation(searchTerm.trim());
+      setSearchTerm("");
       setSuggestions([]);
       setAutocompleteActive(false);
       setActiveSuggestionIndex(-1);
@@ -81,13 +108,13 @@ const SearchBar = () => {
   };
 
   const handleInputChange = (e) => {
-    setUsername(e.target.value);
+    setSearchTerm(e.target.value);
     if (selectedSuggestion && e.target.value !== selectedSuggestion) {
       setSelectedSuggestion('');
     }
   };
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = async (e) => {
     if (!autocompleteActive) return;
 
     switch (e.key) {
@@ -107,11 +134,11 @@ const SearchBar = () => {
         if (activeSuggestionIndex >= 0 && activeSuggestionIndex < suggestions.length) {
           e.preventDefault();
           const selectedHandle = suggestions[activeSuggestionIndex].handle;
-          setUsername(selectedHandle);
+          setSearchTerm(selectedHandle);
           setSelectedSuggestion(selectedHandle);
           setSuggestions([]);
           setAutocompleteActive(false);
-          handleNavigation(selectedHandle);
+          await handleNavigation(selectedHandle);
         }
         break;
       case "Escape":
@@ -129,8 +156,8 @@ const SearchBar = () => {
         <div style={{ position: 'relative' }}>
           <input
             type="text"
-            placeholder="(e.g. user.bsky.social)"
-            value={username}
+            placeholder="Enter handle or DID (e.g. user.bsky.social or did:plc:...)"
+            value={searchTerm}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
             required
@@ -151,13 +178,13 @@ const SearchBar = () => {
                 <div
                   key={actor.handle}
                   className={`autocomplete-item ${index === activeSuggestionIndex ? 'active' : ''}`}
-                  onClick={() => {
-                    setUsername(actor.handle);
+                  onClick={async () => {
+                    setSearchTerm(actor.handle);
                     setSelectedSuggestion(actor.handle);
                     setSuggestions([]);
                     setAutocompleteActive(false);
                     debouncedFetchSuggestions.cancel();
-                    handleNavigation(actor.handle);
+                    await handleNavigation(actor.handle);
                   }}
                 >
                   <img 
@@ -168,7 +195,10 @@ const SearchBar = () => {
                       e.target.src = "/default-avatar.png";
                     }}
                   />
-                  <span>{actor.handle}</span>
+                  <div className="suggestion-info">
+                    <span className="handle">{actor.handle}</span>
+                    <span className="did">{actor.did}</span>
+                  </div>
                 </div>
               ))}
             </div>
@@ -176,6 +206,16 @@ const SearchBar = () => {
         </div>
         <button type="submit">Search</button>
       </form>
+      {isLoading && <div className="loading">Loading...</div>}
+      <div
+        role="status"
+        aria-live="polite"
+        className="sr-only"
+      >
+        {suggestions.length > 0
+          ? `${suggestions.length} suggestions available.`
+          : "No suggestions available."}
+      </div>
     </div>
   );
 };

@@ -23,24 +23,25 @@ const App = () => {
         <div className="app-container" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
           <Navbar />
           <div className="main-container" style={{ flex: 1 }}>
-            <Routes>
-              {/* All routes are now public */}
-              <Route path="/home" element={<Home />} />
-              <Route path="/compare/:username1/:username2" element={<CompareScores />} />
-              <Route path="/compare" element={<CompareScores />} />
-              <Route path="/alt-text" element={<AltTextRatingTool />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/privacy" element={<Privacy />} />
-              <Route path="/terms" element={<Terms />} />
-              <Route path="/newsletter" element={<Newsletter />} />
-              <Route path="/supporter" element={<Supporter />} />
-              <Route path="/:username" element={<UserProfile />} />
-              <Route path="/zen" element={<ZenPage />} />
-              <Route path="/methodology" element={<ScoringMethodology />} />
-              {/* Default routes */}
-              <Route path="/" element={<Navigate to="/home" replace />} />
-              <Route path="*" element={<Navigate to="/home" replace />} />
-            </Routes>
+          <Routes>
+            {/* All routes are now public */}
+            <Route path="/home" element={<Home />} />
+            <Route path="/compare/:username1/:username2" element={<CompareScores />} />
+            <Route path="/compare" element={<CompareScores />} />
+            <Route path="/alt-text" element={<AltTextRatingTool />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/newsletter" element={<Newsletter />} />
+            <Route path="/supporter" element={<Supporter />} />
+            <Route path="/zen" element={<ZenPage />} />
+            <Route path="/methodology" element={<ScoringMethodology />} />
+            {/* Handle both DIDs and regular usernames */}
+            <Route path="/:username" element={<UserProfile />} />
+            {/* Default routes */}
+            <Route path="/" element={<Navigate to="/home" replace />} />
+            <Route path="*" element={<Navigate to="/home" replace />} />
+          </Routes>
           </div>
           <Footer />
         </div>

@@ -21,6 +21,20 @@ import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import "./UserProfile.css";
 
+const resolveDid = async (did) => {
+  try {
+    const res = await fetch(
+      `https://public.api.bsky.app/xrpc/com.atproto.repo.describeRepo?repo=${encodeURIComponent(did)}`
+    );
+    if (!res.ok) throw new Error("Failed to resolve DID");
+    const data = await res.json();
+    return data.handle;
+  } catch (error) {
+    console.error("Error resolving DID:", error);
+    return null;
+  }
+};
+
 // Memoized layouts configuration
 const CARD_HEIGHT = 6;
 const breakpoints = { lg: 850, md: 700, sm: 520, xs: 460, xxs: 0 };
@@ -264,31 +278,45 @@ const UserProfile = () => {
   useEffect(() => {
     const fetchAccountData = async () => {
       try {
+        let resolvedUsername = username;
+        
+        // If the username is a DID, resolve it to a handle
+        if (username.startsWith('did:')) {
+          const handle = await resolveDid(username);
+          if (handle) {
+            resolvedUsername = handle;
+            // Update the URL without triggering a new navigation
+            window.history.replaceState(null, '', `/${handle}`);
+          } else {
+            throw new Error("Could not resolve DID to handle");
+          }
+        }
+  
         // Check cache first
-        const cachedData = userDataCache.get(username);
+        const cachedData = userDataCache.get(resolvedUsername);
         if (cachedData && Date.now() - cachedData.timestamp < CACHE_TTL) {
           setAccountData(cachedData.data);
           setLoading(false);
           setShowContent(true);
           return;
         }
-
-        const data = await loadAccountData(username);
+  
+        const data = await loadAccountData(resolvedUsername);
         if (data.error) throw new Error(data.error);
-
+  
         const processed90DaysData = processAccountData(data.accountData90Days);
         
         // Update cache
-        userDataCache.set(username, {
+        userDataCache.set(resolvedUsername, {
           data: processed90DaysData,
           timestamp: Date.now()
         });
-
+  
         setAccountData(processed90DaysData);
         
         // Debounced save to database
         await debouncedSaveUserData(processed90DaysData);
-
+  
       } catch (err) {
         console.error("Error fetching account data:", err);
         setError(err.message);
