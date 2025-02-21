@@ -4,12 +4,10 @@ import './Leaderboard.css';
 
 const Leaderboard = () => {
   const [users, setUsers] = useState([]);
+  const [runnerUps, setRunnerUps] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [scoreType, setScoreType] = useState('combined_score');
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const perPage = 25;
 
   const scoreTypes = {
     combined_score: 'Combined Score',
@@ -17,14 +15,31 @@ const Leaderboard = () => {
     atproto_score: 'AT Proto Score'
   };
 
+  // Calculate protocol balance score (0-100)
+  const calculateBalanceScore = (bskyRecords, nonBskyRecords) => {
+    if (!bskyRecords && !nonBskyRecords) return 0;
+    const total = bskyRecords + nonBskyRecords;
+    if (total === 0) return 0;
+    
+    // Calculate the ratio of the smaller to the larger number
+    const ratio = Math.min(bskyRecords, nonBskyRecords) / Math.max(bskyRecords, nonBskyRecords);
+    // Convert to a 0-100 score, with 1 (perfect balance) = 100
+    return Math.round(ratio * 100);
+  };
+
+  const getBalanceIndicator = (score) => {
+    if (score >= 80) return 'Balanced';
+    if (score >= 50) return 'Moderately Balanced';
+    if (score >= 20) return 'Imbalanced';
+    return 'Highly Imbalanced';
+  };
+
   const fetchUsers = useCallback(async () => {
     try {
       setLoading(true);
       
-      const start = (page - 1) * perPage;
-      const end = start + perPage - 1;
-
-      const { data, error } = await supabase
+      // Fetch top 100 users
+      const { data: topUsers, error: topError } = await supabase
         .from('user_scores')
         .select(`
           handle,
@@ -32,22 +47,37 @@ const Leaderboard = () => {
           combined_score,
           bluesky_score,
           atproto_score,
-          social_status
+          activity_status,
+          age_in_days,
+          total_bsky_records,
+          total_non_bsky_records
         `)
         .order(scoreType, { ascending: false })
-        .range(start, end);
+        .limit(100);
 
-      if (error) throw error;
+      if (topError) throw topError;
 
-      if (data.length < perPage) {
-        setHasMore(false);
-      }
+      // Fetch next 10 users
+      const { data: nextUsers, error: nextError } = await supabase
+        .from('user_scores')
+        .select(`
+          handle,
+          display_name,
+          combined_score,
+          bluesky_score,
+          atproto_score,
+          activity_status,
+          age_in_days,
+          total_bsky_records,
+          total_non_bsky_records
+        `)
+        .order(scoreType, { ascending: false })
+        .range(100, 109);  // Get positions 101-110
 
-      if (page === 1) {
-        setUsers(data);
-      } else {
-        setUsers(prev => [...prev, ...data]);
-      }
+      if (nextError) throw nextError;
+
+      setUsers(topUsers || []);
+      setRunnerUps(nextUsers || []);
 
     } catch (err) {
       console.error('Error fetching leaderboard:', err);
@@ -55,7 +85,7 @@ const Leaderboard = () => {
     } finally {
       setLoading(false);
     }
-  }, [page, scoreType, perPage]);
+  }, [scoreType]);
 
   useEffect(() => {
     fetchUsers();
@@ -63,16 +93,43 @@ const Leaderboard = () => {
 
   const handleScoreTypeChange = (type) => {
     setScoreType(type);
-    setPage(1);
-    setHasMore(true);
     setUsers([]);
+    setRunnerUps([]);
   };
 
-  const loadMore = () => {
-    if (!loading && hasMore) {
-      setPage(prev => prev + 1);
-    }
-  };
+  const renderUserRow = (user, index, isRunnerUp = false) => (
+    <tr key={user.handle} className={isRunnerUp ? 'runner-up' : ''}>
+      <td className="rank-cell">#{index + 1}</td>
+      <td>
+        <a href={`/${user.handle}`} className="user-handle">
+          @{user.handle}
+        </a>
+      </td>
+      <td>{user.display_name || '-'}</td>
+      <td>
+        <span className="activity-badge">
+          {user.activity_status || 'Unknown'}
+        </span>
+      </td>
+      <td className="age-cell">
+        {Math.round(user.age_in_days)} days
+      </td>
+      <td>
+        <div className="balance-indicator">
+          <div 
+            className="balance-bar"
+            style={{
+              width: `${calculateBalanceScore(user.total_bsky_records, user.total_non_bsky_records)}%`
+            }}
+          ></div>
+          <span>{getBalanceIndicator(calculateBalanceScore(user.total_bsky_records, user.total_non_bsky_records))}</span>
+        </div>
+      </td>
+      <td className="score-cell">
+        {Math.round(user[scoreType] || 0)}
+      </td>
+    </tr>
+  );
 
   return (
     <div className="leaderboard-container">
@@ -109,33 +166,15 @@ const Leaderboard = () => {
                 <th>Rank</th>
                 <th>Handle</th>
                 <th>Display Name</th>
-                <th>Status</th>
+                <th>Activity Status</th>
+                <th>Account Age</th>
+                <th>Protocol Balance</th>
                 <th className="score-column">Score</th>
               </tr>
             </thead>
             <tbody>
-              {users.map((user, index) => (
-                <tr key={user.handle}>
-                  <td className="rank-cell">#{(page - 1) * perPage + index + 1}</td>
-                  <td>
-                    <a 
-                      href={`/${user.handle}`}
-                      className="user-handle"
-                    >
-                      @{user.handle}
-                    </a>
-                  </td>
-                  <td>{user.display_name || '-'}</td>
-                  <td>
-                    <span className="status-badge">
-                      {user.social_status || 'Unknown'}
-                    </span>
-                  </td>
-                  <td className="score-cell">
-                    {user[scoreType]?.toFixed(1) || '-'}
-                  </td>
-                </tr>
-              ))}
+              {users.map((user, index) => renderUserRow(user, index))}
+              {runnerUps.map((user, index) => renderUserRow(user, index + 100, true))}
             </tbody>
           </table>
         </div>
@@ -143,14 +182,6 @@ const Leaderboard = () => {
         {loading && (
           <div className="loading-container">
             <div className="loading-spinner"></div>
-          </div>
-        )}
-
-        {!loading && hasMore && (
-          <div className="load-more-container">
-            <button onClick={loadMore} className="load-more-button">
-              Load More
-            </button>
           </div>
         )}
       </div>

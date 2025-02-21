@@ -1,5 +1,5 @@
 .leaderboard-container {
-  max-width: 1024px;
+  max-width: 1200px;  /* Increased to accommodate new columns */
   margin: 0 auto;
   padding: 1rem;
 }
@@ -79,6 +79,7 @@
 .leaderboard-table th {
   border-bottom: 2px solid #e5e7eb;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .leaderboard-table tr {
@@ -87,6 +88,20 @@
 
 .leaderboard-table tr:hover {
   background: #f9fafb;
+}
+
+/* Runner-up styling */
+.leaderboard-table tr.runner-up {
+  background: #f9fafb;
+  color: #6b7280;
+}
+
+.leaderboard-table tr.runner-up:hover {
+  background: #f3f4f6;
+}
+
+.leaderboard-table tr.runner-up .user-handle {
+  color: #6b7280;
 }
 
 .rank-cell {
@@ -103,17 +118,41 @@
   color: #2563eb;
 }
 
-.status-badge {
+.activity-badge {
   background: #dbeafe;
   color: #1e40af;
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;
   font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+.age-cell {
+  white-space: nowrap;
+}
+
+/* Balance indicator styling */
+.balance-indicator {
+  width: 150px;
+  position: relative;
+}
+
+.balance-bar {
+  height: 8px;
+  background: #3b82f6;
+  border-radius: 4px;
+  margin-bottom: 4px;
+}
+
+.balance-indicator span {
+  font-size: 0.75rem;
+  color: #6b7280;
 }
 
 .score-column,
 .score-cell {
   text-align: right;
+  font-weight: 600;
 }
 
 .loading-container {
@@ -137,33 +176,17 @@
   }
 }
 
-.load-more-container {
-  text-align: center;
-  margin-top: 1.5rem;
-}
-
-.load-more-button {
-  background: #f3f4f6;
-  color: #374151;
-  font-weight: 600;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.load-more-button:hover {
-  background: #e5e7eb;
-}
-
 /* Responsive adjustments */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .leaderboard-card {
     padding: 1rem;
   }
   
-  .status-badge {
+  .balance-indicator {
+    width: 100px;
+  }
+  
+  .activity-badge {
     padding: 0.25rem 0.5rem;
   }
   
@@ -173,12 +196,16 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .score-type-filters {
     flex-direction: column;
   }
   
   .filter-button {
     width: 100%;
+  }
+  
+  .balance-indicator span {
+    display: none;
   }
 }
