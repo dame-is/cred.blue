@@ -105,7 +105,9 @@ const Leaderboard = () => {
           @{user.handle}
         </a>
       </td>
-      <td>{user.display_name || '-'}</td>
+      <td className="score-cell">
+        {Math.round(user[scoreType] || 0)}
+      </td>
       <td>
         <span className="activity-badge">
           {user.activity_status || 'Unknown'}
@@ -124,9 +126,6 @@ const Leaderboard = () => {
           ></div>
           <span>{getBalanceIndicator(calculateBalanceScore(user.total_bsky_records, user.total_non_bsky_records))}</span>
         </div>
-      </td>
-      <td className="score-cell">
-        {Math.round(user[scoreType] || 0)}
       </td>
     </tr>
   );
