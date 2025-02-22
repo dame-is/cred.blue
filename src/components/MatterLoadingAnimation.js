@@ -338,7 +338,7 @@ const messages = useMemo(
         </div>
       </div>
         <div className="version-number">
-          <p>cred.blue v1.1</p>
+          <p>cred.blue v1.2</p>
         </div>
       </div>
     </div>
