@@ -48,7 +48,7 @@ const messages = useMemo(
       "Calculating domain uniqueness",
       "Generating Bluesky scores",
       "Calculating Atproto scores",
-      "Evaluating combined credibility scores",
+      "Evaluating combined scores",
     ],
     []
   );

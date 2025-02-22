@@ -11,7 +11,7 @@ const About = () => {
        <div className="alt-card">
         <h1>About cred.blue</h1>
           <ul>
-            <li>Generate a Bluesky credibility score.</li>
+            <li>Generate a Bluesky score.</li>
             <li>Understand your AT Proto data footprint.</li>
             <li>Vibe check strangers and new accounts.</li>
           </ul>
@@ -24,7 +24,7 @@ const About = () => {
           <p><Link to="/methodology" className="methodology-link">Learn more about the scoring methodology</Link> and how to increase your score.</p>
           </div>
           
-          <p>Future versions of cred.blue may include authenticated data analysis (for your personal AT Proto data that isn't public), a custom score/credibility tracking lexicon, and an in-app labeler for the Bluesky platform.</p>
+          <p>Future versions of cred.blue may include authenticated data analysis (for your personal AT Proto data that isn't public), a custom score/tracking lexicon, and an in-app labeler for the Bluesky platform.</p>
 
           <a href="https://bsky.app/profile/did:plc:7lazllqgiktcts3gs4i6xtv6" target="_blank" rel="noreferrer">Follow cred.blue on Bluesky</a>
 
@@ -34,7 +34,7 @@ const About = () => {
           <p>It was created by <a href="https://bsky.app/profile/dame.is" target="_blank" rel="noreferrer">@dame.is</a>! Dame has been a part of the Bluesky community from almost the very beginning and is passionate about the AT Protocol. Dame was Bluesky user #1,216 and is building cred.blue independently.</p>
           
           <h3>Why was cred.blue created?</h3>
-          <p>Since its inception, Bluesky has relied upon an innovative domain verification system to help identities establish their credibility and authority. This system is powerful and should be taken advantage of, but it can only do so much in its current form. The cred.blue platform is just one experiment among many that is attempting to help people understand which social media accounts are more (or less) trustworthy.</p>
+          <p>Since its inception, Bluesky has relied upon an innovative domain verification system to help identities establish their and authority. This system is powerful and should be taken advantage of, but it can only do so much in its current form. The cred.blue platform is just one experiment among many that is attempting to help people understand which social media accounts are more (or less) trustworthy.</p>
           
           <h3>Is this just a social credit score like they have in China?</h3>
           <p>Not at all! To begin with, the often imagined "social credit" system that many people think exists in China is not really real... to better understand the prevalent misconceptions people have about this subject, check out <a href="https://en.wikipedia.org/wiki/Social_Credit_System" target="_blank" rel="noreferrer">the Wikipedia article</a>.</p>

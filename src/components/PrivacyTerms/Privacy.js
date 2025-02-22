@@ -24,7 +24,7 @@ const Privacy = () => {
           <ul>
             <li>Public Bluesky/AT Protocol PDS data associated with searched user accounts</li>
             <li>This includes publicly available posts, follows, likes, and other public account information</li>
-            <li>We create and maintain a database of this public information when usernames are searched or when credibility scores are generated</li>
+            <li>We create and maintain a database of this public information when usernames are searched or when scores are generated</li>
             <li>This stored data helps us improve our service, provide enhanced analytics, and develop new features</li>
           </ul>
 
@@ -41,7 +41,7 @@ const Privacy = () => {
           
           <h3>Public Bluesky Data</h3>
           <ul>
-            <li>To calculate credibility scores and provide analytics</li>
+            <li>To calculate scores and provide analytics</li>
             <li>To display user statistics and insights</li>
             <li>To maintain historical data for trend analysis and feature improvement</li>
             <li>To develop and enhance our scoring algorithms</li>

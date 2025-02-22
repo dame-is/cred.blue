@@ -1,6 +1,6 @@
 # cred.blue
 
-- Generate a Bluesky credibility score. 
+- Generate a Bluesky score. 
 - Understand your AT Proto data footprint. 
 - Vibe check strangers and new accounts.
 
@@ -10,7 +10,7 @@ The **cred.blue** platform allows anyone to better understand the data footprint
 
 The **cred.blue** scoring methodology is intended to provide a helpful contextual analysis of the public data associated with an AT Protocol or Bluesky identity. The hope is that the scoring system might help incentivize healthier behaviors and activity patterns on the network.
 
-Future versions of cred.blue may include authenticated data analysis (for your personal AT Proto data that isn't public), a custom score/credibility tracking lexicon, and an in-app labeler for the Bluesky platform.
+Future versions of cred.blue may include authenticated data analysis (for your personal AT Proto data that isn't public), a custom score/tracking lexicon, and an in-app labeler for the Bluesky platform.
 
 ## The Scoring Methodology
 
@@ -69,7 +69,7 @@ It was created by [@dame.is](https://bsky.app/profile/dame.is)! Dame has been a 
 
 ### Why was cred.blue created?
 
-Since its inception, Bluesky has relied upon an innovative domain verification system to help identities establish their credibility and authority. This system is powerful and should be taken advantage of, but it can only do so much in its current form. The cred.blue platform is just one experiment among many that is attempting to help people understand which social media accounts are more (or less) trustworthy.
+Since its inception, Bluesky has relied upon an innovative domain verification system to help identities establish their and authority. This system is powerful and should be taken advantage of, but it can only do so much in its current form. The cred.blue platform is just one experiment among many that is attempting to help people understand which social media accounts are more (or less) trustworthy.
 
 ### Is this just a social credit score like they have in China?
 

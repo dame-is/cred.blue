@@ -353,12 +353,12 @@ const UserProfile = () => {
     <AccountDataContext.Provider value={accountData}>
       <Helmet>
         <title>{`${resolvedHandle}'s cred.blue Score`}</title>
-        <meta name="description" content={`Check ${resolvedHandle}'s Bluesky credibility score and data footprint on cred.blue`} />
+        <meta name="description" content={`Check ${resolvedHandle}'s Bluesky score and data footprint on cred.blue`} />
         <meta property="og:title" content={`${resolvedHandle} - cred.blue Score`} />
-        <meta property="og:description" content={`Check ${resolvedHandle}'s Bluesky credibility score and data footprint on cred.blue`} />
+        <meta property="og:description" content={`Check ${resolvedHandle}'s Bluesky score and data footprint on cred.blue`} />
         <meta property="og:url" content={`https://cred.blue/${resolvedHandle}`} />
         <meta name="twitter:title" content={`${resolvedHandle} - cred.blue Score`} />
-        <meta name="twitter:description" content={`Check ${resolvedHandle}'s Bluesky credibility score and data footprint on cred.blue`} />
+        <meta name="twitter:description" content={`Check ${resolvedHandle}'s Bluesky score and data footprint on cred.blue`} />
       </Helmet>
       <div className={`user-profile ${showContent ? "fade-in" : "hidden"}`}>
         <div className="user-profile-container">

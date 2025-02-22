@@ -19,7 +19,7 @@ const Terms = () => {
             <p>cred.blue provides:</p>
             <ul>
               <li>Analysis of public Bluesky user data</li>
-              <li>Credibility scoring based on public information</li>
+              <li>scoring based on public information</li>
               <li>Enhanced tools for authenticated Bluesky users</li>
               <li>Optional email updates and notifications</li>
               <li>Storage and analysis of public user data to improve service quality</li>
@@ -51,7 +51,7 @@ const Terms = () => {
             <h2>5. Intellectual Property</h2>
             <ul>
               <li>All content, features, and functionality are owned by cred.blue</li>
-              <li>The Service's credibility scoring system and algorithms are proprietary</li>
+              <li>The Service's scoring system and algorithms are proprietary</li>
               <li>Users may not reproduce, distribute, or create derivative works without permission</li>
             </ul>
           </div>
@@ -69,7 +69,7 @@ const Terms = () => {
             <h2>7. Disclaimer of Warranties</h2>
             <ul>
               <li>The Service is provided "as is" without warranties of any kind</li>
-              <li>We do not guarantee the accuracy of credibility scores or analytics</li>
+              <li>We do not guarantee the accuracy of scores or analytics</li>
               <li>We are not responsible for the accuracy of public Bluesky data</li>
               <li>We do not guarantee the availability or retention period of stored data</li>
             </ul>
@@ -80,7 +80,7 @@ const Terms = () => {
             <p>We shall not be liable for:</p>
             <ul>
               <li>Any indirect, incidental, or consequential damages</li>
-              <li>Decisions made based on credibility scores or analytics</li>
+              <li>Decisions made based on scores or analytics</li>
               <li>Temporary service interruptions or data unavailability</li>
               <li>Any issues arising from our storage or analysis of public data</li>
             </ul>
