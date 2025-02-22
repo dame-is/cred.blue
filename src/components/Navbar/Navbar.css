@@ -346,6 +346,14 @@
   }
 
   /* Responsive Design: Links display in a row under the logo */
+  @media (max-width: 450px) {
+    .navbar-links {
+      max-width: 300px;
+      line-height: 1.8em;
+    }
+  }
+
+  /* Responsive Design: Links display in a row under the logo */
   @media (max-width: 370px) {
     .navbar-support-button {
       max-width: 135.5px;

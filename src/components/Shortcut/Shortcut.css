@@ -1,0 +1,25 @@
+.shortcut-page {
+    margin: 20px auto 20px;
+    max-width: 450px;
+    padding: 20px;
+}
+
+.shortcut-page .alt-card {
+    text-align: left;
+  }
+
+.shortcut-page ul {
+    list-style: none;
+    text-align: center;
+    margin: 0px auto;
+    padding: 0px;
+    width: 100%;
+    opacity: 0.5;
+  }
+
+  .shortcut-buttons {
+    text-align: center;
+    display: flex;
+    gap: 17.3px;
+    justify-content: center;
+  }

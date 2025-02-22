@@ -180,6 +180,7 @@
   margin: 0px;
   font-size: 0.8em;
   font-weight: 500;
+  margin-bottom: 4px;
 }
 
 .circular-badge {
@@ -309,10 +310,6 @@ tspan {
 .compare-button-container {
   align-content: center;
   grid-row: 3;
-}
-
-.share-button-profile {
-  margin-top: 5px;
 }
 
 .max-score {
@@ -517,7 +514,7 @@ tspan {
   .profile-sections-wrapper {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto auto;
-    gap: 37.7px;
+    gap: 27px;
   }
 
   .profile-section.left-section {
@@ -604,7 +601,7 @@ tspan {
   }
 
   .profile-section.middle-section {
-    margin-top: -91.3px;
+    margin-top: -85.7px;
     gap: 13.5px;
     grid-column: 1;
     grid-row: 2;

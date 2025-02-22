@@ -8,6 +8,7 @@ import About from './components/About/About';
 import Home from './components/Home/Home';
 import Leaderboard from './components/Leaderboard/Leaderboard';
 import Supporter from './components/Supporter/Supporter';
+import Shortcut from './components/Shortcut/Shortcut';
 import ScoringMethodology from './components/ScoringMethodology/ScoringMethodology';
 import Terms from './components/PrivacyTerms/Terms';
 import Privacy from './components/PrivacyTerms/Privacy';
@@ -36,6 +37,7 @@ const App = () => {
             <Route path="/newsletter" element={<Newsletter />} />
             <Route path="/supporter" element={<Supporter />} />
             <Route path="/leaderboard" element={<Leaderboard />} />
+            <Route path="/shortcut" element={<Shortcut />} />
             <Route path="/zen" element={<ZenPage />} />
             <Route path="/methodology" element={<ScoringMethodology />} />
             {/* Handle both DIDs and regular usernames */}

@@ -318,6 +318,10 @@
   .balance-description {
     display: none;
   }
+
+  .balance-track {
+    margin-bottom: 0px;
+  }
 }
 
 @media (max-width: 480px) {
