@@ -434,43 +434,35 @@ function calculatePostingStyle(stats) {
     altTextPercentage = 0,
     postsPerDay = 0,
   } = stats;
+
+  // Check for lurker first
   if (postsPerDay < 0.1 && stats.totalBskyRecordsPerDay > 0.3) {
     return "Lurker";
   }
-  if (onlyPostsPerDay > 0.8 && replyOtherPercentage >= 0.3) {
+
+  // If posting regularly (removed engagement check)
+  if (onlyPostsPerDay > 0.8) {
     if (textPercentage > linkPercentage && textPercentage > imagePercentage && textPercentage > videoPercentage) {
-      return "Engaged Text Poster";
+      return "Text Poster";
     }
     if (imagePercentage > linkPercentage && imagePercentage > textPercentage && imagePercentage > videoPercentage) {
-      return altTextPercentage <= 0.3 ? "Engaged Image Poster who should use more alt text" : "Engaged Image Poster";
+      return altTextPercentage <= 0.3 ? "Image Poster whose working on using alt text" : "Image Poster";
     }
     if (linkPercentage > imagePercentage && linkPercentage > textPercentage && linkPercentage > videoPercentage) {
-      return "Engaged Link Poster";
+      return "Link Poster";
     }
     if (videoPercentage > imagePercentage && videoPercentage > textPercentage && videoPercentage > linkPercentage) {
-      return "Engaged Video Poster";
+      return "Video Poster";
     }
-    return "Engaged Poster";
-  } else if (onlyPostsPerDay > 0.8 && replyOtherPercentage < 0.3) {
-    if (textPercentage > linkPercentage && textPercentage > imagePercentage && textPercentage > videoPercentage) {
-      return "Unengaged Text Poster";
-    }
-    if (imagePercentage > linkPercentage && imagePercentage > textPercentage && imagePercentage > videoPercentage) {
-      return altTextPercentage <= 0.3 ? "Unengaged Image Poster who is inconsistent with alt text" : "Unengaged Image Poster";
-    }
-    if (linkPercentage > imagePercentage && linkPercentage > textPercentage && linkPercentage > videoPercentage) {
-      return "Unengaged Link Poster";
-    }
-    if (videoPercentage > imagePercentage && videoPercentage > textPercentage && videoPercentage > linkPercentage) {
-      return "Unengaged Video Poster";
-    }
-    return "Unengaged Poster";
+    return "Mixed Content Poster";
   }
+
+  // Special interaction types
   if (replyOtherPercentage >= 0.5) return "Reply Guy";
   if (stats.quoteOtherPercentage >= 0.5) return "Quote Guy";
   if (stats.repostOtherPercentage >= 0.5) return "Repost Guy";
+  
   return "Unknown";
-
 }
 
 // 1. First, add this new function to calculate engagement rate
@@ -526,9 +518,9 @@ function calculateSocialStatus({ ageInDays = 0, followersCount = 0, followsCount
 
   // Add engagement qualifier for all status levels
   if (engagementRate <= ENGAGEMENT_THRESHOLDS.low) {
-    return `Unengaging ${baseStatus}`;
+    return `${baseStatus}`;
   } else if (engagementRate <= ENGAGEMENT_THRESHOLDS.moderate) {
-    return `Moderately Engaging ${baseStatus}`;
+    return `Engaging ${baseStatus}`;
   } else if (engagementRate >= ENGAGEMENT_THRESHOLDS.high) {
     return `Highly Engaging ${baseStatus}`;
   }
