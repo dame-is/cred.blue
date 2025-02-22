@@ -7,9 +7,9 @@
 
 .leaderboard-card {
   background: var(--navbar-bg);
-  border-radius: 8px;
+  border-radius: 12px;
   border: 5px solid var(--card-border);
-  padding: 1.5rem;
+  padding: 1.7rem;
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
@@ -37,7 +37,7 @@
 
 .filter-button {
   padding: 0.5rem 1rem;
-  border-radius: 9999px;
+  border-radius: 6px;
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -74,7 +74,6 @@
 
 .table-container {
   overflow-x: auto;
-  padding-bottom: 20px; /* Space for the scrollbar */
 }
 
 /* Webkit scrollbar styles */
@@ -115,7 +114,7 @@
 .leaderboard-table th,
 .leaderboard-table td {
   padding: 0.75rem 1rem;
-  text-align: left;
+  text-align: center;
   color: var(--text);
   transition: color 0.3s ease;
 }
@@ -131,7 +130,11 @@
 }
 
 .leaderboard-table tr:hover {
-  background: var(--card-border);
+  background: #b6b6b6;
+}
+
+.dark-mode .leaderboard-table tr:hover {
+  background: #151515;
 }
 
 /* Runner-up styling */
