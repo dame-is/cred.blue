@@ -1064,9 +1064,9 @@ function buildAnalysisNarrative(accountData) {
       if (engagementRate > 0.03) {
         engagementPhrase = "with exceptionally high engagement";
       } else if (engagementRate > 0.01) {
-        engagementPhrase = "with strong engagement";
+        engagementPhrase = "with very high engagement";
       } else if (engagementRate > 0.005) {
-        engagementPhrase = "with moderate engagement";
+        engagementPhrase = "with high engagement";
       } else {
         engagementPhrase = "with normal engagement";
       }
