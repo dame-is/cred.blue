@@ -1068,7 +1068,7 @@ function buildAnalysisNarrative(accountData) {
       } else if (engagementRate > 0.005) {
         engagementPhrase = "with moderate engagement";
       } else {
-        engagementPhrase = "with relatively low engagement";
+        engagementPhrase = "with normal engagement";
       }
     
       const narrative3 =
