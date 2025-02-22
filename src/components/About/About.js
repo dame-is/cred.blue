@@ -39,7 +39,7 @@ const About = () => {
           <h3>Is this just a social credit score like they have in China?</h3>
           <p>Not at all! To begin with, the often imagined "social credit" system that many people think exists in China is not really real... to better understand the prevalent misconceptions people have about this subject, check out <a href="https://en.wikipedia.org/wiki/Social_Credit_System" target="_blank" rel="noreferrer">the Wikipedia article</a>.</p>
           
-          <p>At its core, the cred.blue scoring system is just an attempt to help people understand the data footprint that is being left behind by every Bluesky or AT Protocol identity. In a world saturated in fake profiles or AI-controlled accounts, it's never been more vital to have resources that can help humans effectively and safely navigate their online spaces.</p>
+          <p>At its core, the cred.blue scoring system is just an attempt to help people understand the data footprint that is being left behind by every Bluesky or AT Protocol identity. In the digital ecosystem we find ourselves in, it's never been more vital to have resources that can help humans effectively and safely navigate their online spaces. Understanding data is a key part of the solution.</p>
           
           <h3>Why is cred.blue in a "beta" state?</h3>
           <p>To put it simply, cred.blue is very experimental and at this early stage things will likely change a lot. The first version of the scoring algorithm lays a foundation for future plans, but it will take some time (and real-world usage) to calibrate the model's weights and variables.</p>
