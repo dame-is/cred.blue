@@ -400,7 +400,7 @@ const UserProfile = () => {
                     Compare Scores
                   </button>
                 </div>
-              </div>
+                <a className="bluesky-link" href={`https://bsky.app/profile/${resolvedHandle}`} target="_blank" rel="noopener noreferrer">View {resolvedHandle} on Bluesky</a>
             </div>
 
             {/* Middle Section */}
