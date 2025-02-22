@@ -6,7 +6,7 @@
 
 ## About
 
-The **cred.blue** platform allows anyone to better understand the data footprint that an **AT Protocol** or **Bluesky** identity is creating. During its beta launch, **cred.blue** provides an early version of its custom scoring algorithm that generates a "credibility" score based on an identity's activity in the ecosystem. Additionally, there is an **Alt Text Rating Tool** that allows you to see how consistently an account includes accessibility alt-text when posting images on Bluesky.
+The **cred.blue** platform allows anyone to better understand the data footprint that an **AT Protocol** or **Bluesky** identity is creating. During its beta launch, **cred.blue** provides an early version of its custom scoring algorithm that generates a score based on an identity's activity in the ecosystem. Additionally, there is an **Alt Text Rating Tool** that allows you to see how consistently an account includes accessibility alt-text when posting images on Bluesky.
 
 The **cred.blue** scoring methodology is intended to provide a helpful contextual analysis of the public data associated with an AT Protocol or Bluesky identity. The hope is that the scoring system might help incentivize healthier behaviors and activity patterns on the network.
 

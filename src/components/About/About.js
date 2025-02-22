@@ -16,7 +16,7 @@ const About = () => {
             <li>Vibe check strangers and new accounts.</li>
           </ul>
           <h2>Intro</h2>
-          <p>The <strong>cred.blue</strong> platform allows anyone to better understand the data footprint that an <strong>AT Protocol</strong> or <strong>Bluesky</strong> identity is making. During its beta launch, <strong>cred.blue</strong> provides an early version of its custom scoring algorithm that generates a "credibility" score based on an identity's activity in the ecosystem. Additionally, there is an <strong>Alt Text Rating Tool</strong> that allows you to see how consistently an account includes accessibility alt-text when posting images on Bluesky.</p>
+          <p>The <strong>cred.blue</strong> platform allows anyone to better understand the data footprint that an <strong>AT Protocol</strong> or <strong>Bluesky</strong> identity is making. During its beta launch, <strong>cred.blue</strong> provides an early version of its custom scoring algorithm that generates a score based on an identity's activity in the ecosystem. Additionally, there is an <strong>Alt Text Rating Tool</strong> that allows you to see how consistently an account includes accessibility alt-text when posting images on Bluesky.</p>
           
           <p>The <strong>cred.blue</strong> scoring methodology is intended to provide a helpful contextual analysis of the public data associated with an AT Protocol or Bluesky identity. The hope is that the scoring system might help incentivize healthier behaviors and activity patterns on the network.</p>
 
