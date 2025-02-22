@@ -401,6 +401,7 @@ const UserProfile = () => {
                   </button>
                 </div>
                 <a className="bluesky-link" href={`https://bsky.app/profile/${resolvedHandle}`} target="_blank" rel="noopener noreferrer">View {resolvedHandle} on Bluesky</a>
+              </div>
             </div>
 
             {/* Middle Section */}
