@@ -18,7 +18,7 @@ const Shortcut = () => {
               Download
             </button>
             <p className="disclaimer">
-              Version 1.0
+              Version 1.1
             </p>
           </div>
 
