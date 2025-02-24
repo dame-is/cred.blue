@@ -54,7 +54,7 @@ const Leaderboard = () => {
       console.log(`Fetching leaderboard data for scoreType: ${scoreType}`);
       
       // Call the backend endpoint instead of directly querying Supabase
-      const response = await fetch(`/api/leaderboard?scoreType=${scoreType}&limit=100`);
+      const response = await fetch(`https://api.cred.blue/api/leaderboard?scoreType=${scoreType}&limit=100`);
       
       // Check for non-200 responses
       if (!response.ok) {
