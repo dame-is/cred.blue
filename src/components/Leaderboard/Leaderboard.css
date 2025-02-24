@@ -65,6 +65,10 @@
   margin-bottom: 1rem;
 }
 
+.dark-mode .error-message {
+  background: #414141;
+}
+
 /* Table wrapper and scrollbar styles */
 .table-wrapper {
   position: relative;
