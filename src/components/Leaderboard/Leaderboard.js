@@ -51,45 +51,19 @@ const Leaderboard = () => {
     try {
       setLoading(true);
       
-      // Fetch top 100 users
-      const { data: topUsers, error: topError } = await supabase
-        .from('user_scores')
-        .select(`
-          handle,
-          combined_score,
-          bluesky_score,
-          atproto_score,
-          activity_status,
-          age_in_days,
-          total_bsky_records,
-          total_non_bsky_records
-        `)
-        .order(scoreType, { ascending: false })
-        .limit(100);
-
-      if (topError) throw topError;
-
-      // Fetch next 10 users
-      const { data: nextUsers, error: nextError } = await supabase
-        .from('user_scores')
-        .select(`
-          handle,
-          combined_score,
-          bluesky_score,
-          atproto_score,
-          activity_status,
-          age_in_days,
-          total_bsky_records,
-          total_non_bsky_records
-        `)
-        .order(scoreType, { ascending: false })
-        .range(100, 109);  // Get positions 101-110
-
-      if (nextError) throw nextError;
-
-      setUsers(topUsers || []);
-      setRunnerUps(nextUsers || []);
-
+      // Call the backend endpoint instead of directly querying Supabase
+      const response = await fetch(`/api/leaderboard?scoreType=${scoreType}&limit=100`);
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to fetch leaderboard data');
+      }
+      
+      const data = await response.json();
+      
+      setUsers(data.topUsers || []);
+      setRunnerUps(data.runnerUps || []);
+  
     } catch (err) {
       console.error('Error fetching leaderboard:', err);
       setError(err.message);
