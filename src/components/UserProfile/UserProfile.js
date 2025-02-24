@@ -78,14 +78,20 @@ const createLayouts = () => ({
 const layouts = createLayouts();
 
 // Memoized save function with debouncing
-// Create a function to save user data securely through the backend
+// Update createDebouncedSave function in UserProfile.js
 const createDebouncedSave = () => {
   let timeout;
   return async (userData) => {
     if (timeout) clearTimeout(timeout);
     timeout = setTimeout(async () => {
       try {
-        // Call the backend endpoint instead of directly writing to Supabase
+        // Basic validation before sending
+        if (!userData || !userData.did || !userData.handle) {
+          console.error('Invalid user data format');
+          return;
+        }
+        
+        // Send to untrusted table
         const response = await fetch('https://api.cred.blue/api/save-user-data', {
           method: 'POST',
           headers: {
@@ -96,14 +102,12 @@ const createDebouncedSave = () => {
         
         if (!response.ok) {
           const errorData = await response.json();
-          throw new Error(errorData.error || 'Failed to save user data');
+          throw new Error(errorData.error || 'Failed to submit user data');
         }
         
-        // Optional: Handle successful save response
-        const result = await response.json();
-        console.log('User data saved successfully:', result);
+        console.log('User data submitted successfully for processing');
       } catch (error) {
-        console.error('Error saving user data:', error);
+        console.error('Error submitting user data:', error);
       }
     }, 1000);
   };
