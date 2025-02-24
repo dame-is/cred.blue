@@ -86,7 +86,7 @@ const createDebouncedSave = () => {
     timeout = setTimeout(async () => {
       try {
         // Call the backend endpoint instead of directly writing to Supabase
-        const response = await fetch('https://cred.blue/api/save-user-data', {
+        const response = await fetch('https://api.cred.blue/api/save-user-data', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
