@@ -9,11 +9,11 @@ const Shortcut = () => {
         <div className="alt-card">
           <h1>Download Apple Shortcut</h1>
           <p>
-            If you have an iPhone, iPad, or Macbook, you can download a special Apple Shortcut to your device that will allow you to quickly check a Bluesky account's cred.blue score while you're scrolling inside of the Bluesky app.
+            If you have an iPhone, you can download a special Apple Shortcut to your device that will allow you to quickly check a Bluesky account's cred.blue score while you're scrolling inside of the Bluesky app.
           </p>
 
           <p>
-            You don't even have to go to an account's profile for the shortcut to work. You can tap the share button on any post, profile, or even use the developer mode "copy author DID" or "copy post URI", letting you quickly check a score even from within a thread or a feed.
+            You don't even have to go to an account's profile for the shortcut to work. You can tap the share button on any post, profile, or even use the "copy author DID" or "copy post URI" buttons in developer mode, letting you quickly check a score even from within a thread or a feed.
           </p>
 
           <div className="image-container">
@@ -40,7 +40,7 @@ const Shortcut = () => {
             <button
               className="shortcut-button"
               type="button"
-              onClick={() => window.open('https://cred.blue/shortcut', '_blank')}
+              onClick={() => window.open('https://www.icloud.com/shortcuts/d399b453ae774a43a95e0caf35c120c7', '_blank')}
             >
               Download Shortcut
             </button>
