@@ -78,72 +78,30 @@ const createLayouts = () => ({
 const layouts = createLayouts();
 
 // Memoized save function with debouncing
+// Create a function to save user data securely through the backend
 const createDebouncedSave = () => {
   let timeout;
   return async (userData) => {
     if (timeout) clearTimeout(timeout);
     timeout = setTimeout(async () => {
       try {
-        const { error } = await supabase
-          .from('user_scores')
-          .upsert({
-            // Basic profile info
-            handle: userData.handle,
-            display_name: userData.displayName,
-            did: userData.did,
-            profile_edited_date: userData.profileEditedDate,
-            profile_completion: userData.profileCompletion,
-            
-            // Score fields
-            combined_score: userData.combinedScore,
-            bluesky_score: userData.blueskyScore,
-            atproto_score: userData.atprotoScore,
-            
-            // Activity metrics
-            activity_status: userData.activityAll.activityStatus,
-            bsky_activity_status: userData.activityAll.bskyActivityStatus,
-            atproto_activity_status: userData.activityAll.atprotoActivityStatus,
-            total_collections: userData.activityAll.totalCollections,
-            total_bsky_collections: userData.activityAll.totalBskyCollections,
-            total_non_bsky_collections: userData.activityAll.totalNonBskyCollections,
-            total_records: userData.activityAll.totalRecords,
-            total_bsky_records: userData.activityAll.totalBskyRecords,
-            total_non_bsky_records: userData.activityAll.totalNonBskyRecords,
-            plc_operations: userData.activityAll.plcOperations,
-            blobs_count: userData.activityAll.blobsCount,
-            
-            // Store category data as JSONB
-            blueskycategories: userData.blueskyCategories,
-            atprotocategories: userData.atprotoCategories,
-            
-            // Metadata fields
-            service_endpoint: userData.serviceEndpoint,
-            pds_type: userData.pdsType,
-            created_at: userData.createdAt,
-            age_in_days: userData.ageInDays,
-            age_percentage: userData.agePercentage,
-            followers_count: userData.followersCount,
-            follows_count: userData.followsCount,
-            posts_count: userData.postsCount,
-            rotation_keys: userData.rotationKeys,
-            era: userData.era,
-            posting_style: userData.postingStyle,
-            social_status: userData.socialStatus,
-            
-            // Store complex metrics as JSONB
-            engagement_metrics: userData.engagementMetrics,
-            weekly_activity: userData.weeklyActivity,
-            
-            // Store full profile data
-            profile_data: userData.profile,
-            
-            // Update timestamp
-            last_checked_at: new Date()
-          }, {
-            onConflict: 'handle'
-          });
-
-        if (error) throw error;
+        // Call the backend endpoint instead of directly writing to Supabase
+        const response = await fetch('https://cred.blue/api/save-user-data', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(userData)
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to save user data');
+        }
+        
+        // Optional: Handle successful save response
+        const result = await response.json();
+        console.log('User data saved successfully:', result);
       } catch (error) {
         console.error('Error saving user data:', error);
       }
