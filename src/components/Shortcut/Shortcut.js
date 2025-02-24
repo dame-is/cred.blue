@@ -1,5 +1,5 @@
 // src/components/Shortcut/Shortcut.jsx
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import ImageGallery from 'react-image-gallery';
 import 'react-image-gallery/styles/css/image-gallery.css';
 import './Shortcut.css';
@@ -7,6 +7,7 @@ import './Shortcut.css';
 const Shortcut = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const galleryRef = useRef(null);
 
   const images = [
     {
@@ -27,6 +28,12 @@ const Shortcut = () => {
   const closeLightbox = () => {
     setCurrentIndex(0);
     setIsOpen(false);
+  };
+
+  const handleClickOutside = (event) => {
+    if (galleryRef.current && !galleryRef.current.contains(event.target)) {
+      closeLightbox();
+    }
   };
 
   return (
@@ -69,14 +76,22 @@ const Shortcut = () => {
       </main>
 
       {isOpen && (
-        <ImageGallery
-          items={images}
-          startIndex={currentIndex}
-          onClose={closeLightbox}
-          showThumbnails={false}
-          showPlayButton={false}
-          showFullscreenButton={false}
-        />
+        <div className="lightbox-overlay" onClick={handleClickOutside}>
+          <div className="lightbox-content" ref={galleryRef}>
+            <ImageGallery
+              items={images}
+              startIndex={currentIndex}
+              onClose={closeLightbox}
+              showThumbnails={false}
+              showPlayButton={false}
+              showFullscreenButton={false}
+              additionalClass="custom-image-gallery"
+            />
+            <button className="close-button" onClick={closeLightbox}>
+              &times;
+            </button>
+          </div>
+        </div>
       )}
     </>
   );
