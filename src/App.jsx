@@ -36,7 +36,6 @@ const App = () => {
             <Route path="/terms" element={<Terms />} />
             <Route path="/newsletter" element={<Newsletter />} />
             <Route path="/supporter" element={<Supporter />} />
-            <Route path="/leaderboard" element={<Leaderboard />} />
             <Route path="/shortcut" element={<Shortcut />} />
             <Route path="/zen" element={<ZenPage />} />
             <Route path="/methodology" element={<ScoringMethodology />} />

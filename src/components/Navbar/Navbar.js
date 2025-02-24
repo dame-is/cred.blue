@@ -25,7 +25,6 @@ const Navbar = () => {
             <ul>
               <li><Link to="/">score</Link></li>
               <li><Link to="/compare">compare</Link></li>
-              <li><Link to="/leaderboard">leaderboard</Link></li>
               <li><Link to="/alt-text">alt text</Link></li>
               <li><Link to="/about">about</Link></li>
             </ul>
