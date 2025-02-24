@@ -20,7 +20,7 @@
   .shortcut-buttons {
     text-align: center;
     display: flex;
-    gap: 17.3px;
+    flex-direction: column;
     justify-content: center;
     margin-top: 20px;
     margin-bottom: 20px;

@@ -7,7 +7,7 @@ const Shortcut = () => {
     <>
       <main className="shortcut-page">
         <div className="alt-card">
-          <h1>Download Apple Shortcut</h1>
+          <h1>Apple Shortcut</h1>
 
           <div className="shortcut-buttons">
             <button
@@ -15,7 +15,7 @@ const Shortcut = () => {
               type="button"
               onClick={() => window.open('https://www.icloud.com/shortcuts/d399b453ae774a43a95e0caf35c120c7', '_blank')}
             >
-              Download Shortcut
+              Download for iPhone
             </button>
             <p className="disclaimer">
               Version 1.0
