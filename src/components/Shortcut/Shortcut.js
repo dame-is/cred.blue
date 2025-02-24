@@ -8,6 +8,20 @@ const Shortcut = () => {
       <main className="shortcut-page">
         <div className="alt-card">
           <h1>Download Apple Shortcut</h1>
+
+          <div className="shortcut-buttons">
+            <button
+              className="shortcut-button"
+              type="button"
+              onClick={() => window.open('https://www.icloud.com/shortcuts/d399b453ae774a43a95e0caf35c120c7', '_blank')}
+            >
+              Download Shortcut
+            </button>
+            <p className="disclaimer">
+              Version 1.0
+            </p>
+          </div>
+
           <p>
             If you have an iPhone, you can download a special Apple Shortcut to your device that will allow you to quickly check a Bluesky account's cred.blue score while you're scrolling inside of the Bluesky app.
           </p>
@@ -35,17 +49,6 @@ const Shortcut = () => {
               className="shortcut-image"
             />
           </div>
-
-          <div className="shortcut-buttons">
-            <button
-              className="shortcut-button"
-              type="button"
-              onClick={() => window.open('https://www.icloud.com/shortcuts/d399b453ae774a43a95e0caf35c120c7', '_blank')}
-            >
-              Download Shortcut
-            </button>
-          </div>
-          
         </div>
       </main>
     </>
