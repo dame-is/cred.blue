@@ -1,41 +1,8 @@
 // src/components/Shortcut/Shortcut.jsx
-import React, { useState, useRef } from 'react';
-import ImageGallery from 'react-image-gallery';
-import 'react-image-gallery/styles/css/image-gallery.css';
+import React from 'react';
 import './Shortcut.css';
 
 const Shortcut = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const galleryRef = useRef(null);
-
-  const images = [
-    {
-      original: '/how-to-use-cred-blue-shortcut.png',
-      thumbnail: '/how-to-use-cred-blue-shortcut.png',
-    },
-    {
-      original: '/enable-share-sheet.png',
-      thumbnail: '/enable-share-sheet.png',
-    },
-  ];
-
-  const openLightbox = (index) => {
-    setCurrentIndex(index);
-    setIsOpen(true);
-  };
-
-  const closeLightbox = () => {
-    setCurrentIndex(0);
-    setIsOpen(false);
-  };
-
-  const handleClickOutside = (event) => {
-    if (galleryRef.current && !galleryRef.current.contains(event.target)) {
-      closeLightbox();
-    }
-  };
-
   return (
     <>
       <main className="shortcut-page">
@@ -44,25 +11,31 @@ const Shortcut = () => {
           <p>
             If you have an iPhone, iPad, or Macbook, you can download a special Apple Shortcut to your device that will allow you to quickly check a Bluesky account's cred.blue score while you're scrolling inside of the Bluesky app.
           </p>
+
+          <p>
+            You don't even have to go to an account's profile for the shortcut to work. You can tap the share button on any post, profile, or even use the developer mode "copy author DID" or "copy post URI", letting you quickly check a score even from within a thread or a feed.
+          </p>
+
           <div className="image-container">
             <img
               src="/how-to-use-cred-blue-shortcut.png"
               alt="How to use Cred.blue Shortcut"
               className="shortcut-image"
-              onClick={() => openLightbox(0)}
             />
           </div>
+
           <p>
             Once you have the Apple Shortcut installed, go through the setup process to enter your username and then check to make sure that the Share Sheet feature has been enabled.
           </p>
+
           <div className="image-container">
             <img
               src="/enable-share-sheet.png"
               alt="Enable Share Sheet"
               className="shortcut-image"
-              onClick={() => openLightbox(1)}
             />
           </div>
+
           <div className="shortcut-buttons">
             <button
               className="shortcut-button"
@@ -72,27 +45,9 @@ const Shortcut = () => {
               Download Shortcut
             </button>
           </div>
+          
         </div>
       </main>
-
-      {isOpen && (
-        <div className="lightbox-overlay" onClick={handleClickOutside}>
-          <div className="lightbox-content" ref={galleryRef}>
-            <ImageGallery
-              items={images}
-              startIndex={currentIndex}
-              onClose={closeLightbox}
-              showThumbnails={false}
-              showPlayButton={false}
-              showFullscreenButton={false}
-              additionalClass="custom-image-gallery"
-            />
-            <button className="close-button" onClick={closeLightbox}>
-              &times;
-            </button>
-          </div>
-        </div>
-      )}
     </>
   );
 };
