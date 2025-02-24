@@ -15,7 +15,7 @@ const Shortcut = () => {
               type="button"
               onClick={() => window.open('https://www.icloud.com/shortcuts/d399b453ae774a43a95e0caf35c120c7', '_blank')}
             >
-              Download for iPhone
+              Download
             </button>
             <p className="disclaimer">
               Version 1.0
