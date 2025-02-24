@@ -23,3 +23,16 @@
     gap: 17.3px;
     justify-content: center;
   }
+
+  .image-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+  }
+  
+  .shortcut-image {
+    max-width: 100%;
+    height: auto;
+  }
