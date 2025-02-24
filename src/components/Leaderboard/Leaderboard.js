@@ -3,6 +3,33 @@ import { supabase } from '../../lib/supabase';
 import { Link } from 'react-router-dom';
 import './Leaderboard.css';
 
+// Function to truncate handles that are too long
+const truncateHandle = (handle, maxLength = 20) => {
+  if (!handle) return '';
+  if (handle.length <= maxLength) return handle;
+  
+  // For handles with domains, try to preserve the beginning and domain part
+  if (handle.includes('.')) {
+    const parts = handle.split('.');
+    const domain = parts.slice(-2).join('.');
+    const username = parts.slice(0, -2).join('.');
+    
+    // If username + domain is short enough, just return it
+    if (username.length + domain.length + 1 <= maxLength) {
+      return `${username}.${domain}`;
+    }
+    
+    // Otherwise, truncate the username part
+    const availableLength = maxLength - domain.length - 4; // Account for ellipsis and dot
+    if (availableLength > 0) {
+      return `${username.substring(0, availableLength)}...${domain}`;
+    }
+  }
+  
+  // For simple handles or fallback
+  return `${handle.substring(0, maxLength - 3)}...`;
+};
+
 const Leaderboard = () => {
   const [users, setUsers] = useState([]);
   const [runnerUps, setRunnerUps] = useState([]);
@@ -107,8 +134,12 @@ const Leaderboard = () => {
     <tr key={user.handle} className={isRunnerUp ? 'runner-up' : ''}>
       <td className="rank-cell">#{index + 1}</td>
       <td>
-        <a href={`/${user.handle}`} className="user-handle">
-          @{user.handle}
+        <a 
+          href={`/${user.handle}`} 
+          className="user-handle" 
+          title={`@${user.handle}`} // Add title for hover to see full handle
+        >
+          @{truncateHandle(user.handle)}
         </a>
       </td>
       <td className="score-cell">
