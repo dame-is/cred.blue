@@ -51,15 +51,36 @@ const Leaderboard = () => {
     try {
       setLoading(true);
       
+      console.log(`Fetching leaderboard data for scoreType: ${scoreType}`);
+      
       // Call the backend endpoint instead of directly querying Supabase
       const response = await fetch(`/api/leaderboard?scoreType=${scoreType}&limit=100`);
       
+      // Check for non-200 responses
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to fetch leaderboard data');
+        let errorMessage;
+        try {
+          // Try to parse error JSON
+          const errorData = await response.json();
+          errorMessage = errorData.error || `Server error: ${response.status} ${response.statusText}`;
+        } catch (parseError) {
+          // If JSON parsing fails, use status text
+          errorMessage = `Server error: ${response.status} ${response.statusText}`;
+        }
+        throw new Error(errorMessage);
       }
       
-      const data = await response.json();
+      // Parse successful response
+      let data;
+      try {
+        data = await response.json();
+      } catch (parseError) {
+        console.error('Error parsing JSON response:', parseError);
+        throw new Error('Invalid response format from server');
+      }
+      
+      // Debug logging
+      console.log(`Received ${data.topUsers?.length || 0} top users and ${data.runnerUps?.length || 0} runner ups`);
       
       setUsers(data.topUsers || []);
       setRunnerUps(data.runnerUps || []);
