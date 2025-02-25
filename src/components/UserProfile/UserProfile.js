@@ -372,7 +372,7 @@ const UserProfile = () => {
                 <ScoreGauge score={accountData.combinedScore} />
               </div>
               <div className="context-line">
-                <p>Average score is ~328</p>
+                <p>Average is ~325, highest is ~789</p>
               </div>
               <div className="user-profile-badges">
                 <h3>{accountData.socialStatus}</h3>
