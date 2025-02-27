@@ -26,76 +26,89 @@ const ScoringMethodology = () => {
     }
   };
 
-  // Definitions data
+  // Definitions data with added links
   const definitions = [
     {
       id: "pds",
       term: "Personal Data Server (PDS)",
-      definition: "A server that hosts your AT Protocol data and content. You can use Bluesky's PDS or choose a third-party PDS for more control over your data."
+      definition: "A server that hosts your AT Protocol data and content. You can use Bluesky's PDS hosting or choose a third-party PDS host for more control over your data. By default, new Bluesky accounts use Bluesky's PDS hosting, so the vast majority of accounts right now do not use a third-party PDS. Having a third-party PDS host contributes to the further decentralization of the network, but it is currently difficult to do.",
+      learnMoreLink: "https://atproto.com/guides/pds"
+    },
+    {
+      id: "did",
+      term: "DID",
+      definition: "The AT Protocol uses Decentralized Identifiers (DIDs) as persistent, long-term account identifiers. DID is a W3C standard, with many standardized and proposed DID method implementations. There are currently two methods supported by the protocol: did:plc and did:web. New Bluesky accounts use the did:plc method.",
+      learnMoreLink: "https://atproto.com/specs/did"
     },
     {
       id: "lexicon",
       term: "Lexicon",
-      definition: "The schema system used by the AT Protocol to define data structures. Third-party lexicons allow for custom features and extensions to the protocol."
-    },
-    {
-      id: "plc",
-      term: "PLC (Decentralized Identity)",
-      definition: "The Personal Ledger of Claims system that manages identities in the AT Protocol. PLC logs contain cryptographic proofs of identity ownership."
+      definition: "The schema system used by the AT Protocol to define data structures. Lexicons are kind of like a file formats, and different AT Protocol apps can choose which of these file formats to support. Apps can have their own unique file formats as well. Third-party lexicons allow for custom features and extensions to the protocol.",
+      learnMoreLink: "https://atproto.com/guides/lexicon"
     },
     {
       id: "rotation-key",
       term: "Rotation Key",
-      definition: "A security feature that allows you to recover your account if your primary credentials are compromised."
+      definition: "A security feature that allows you to recover your account if your primary credentials are compromised.",
+      learnMoreLink: "https://bsky.app/profile/mattyoukhana.xyz/post/3ke5j53mxwt2o"
     },
     {
       id: "alt-text",
       term: "Alt Text",
-      definition: "Text descriptions added to images that make content accessible to users with visual impairments or when images fail to load."
+      definition: "Text descriptions added to images that make content accessible to users with visual impairments or when images fail to load.",
+      learnMoreLink: "https://help.bsky.app/en/articles/8754485-how-do-i-add-alt-text-to-my-images"
     },
     {
       id: "social-graph",
       term: "Social Graph",
-      definition: "The network of connections between accounts, including followers, following, and engagement patterns."
+      definition: "The network of connections between accounts, including followers, following, and engagement patterns.",
+      learnMoreLink: "https://atproto.com/lexicons/app-bsky-graph"
     },
     {
       id: "labelers",
       term: "Labelers",
-      definition: "Entities that can apply labels to content on Bluesky for moderation purposes. Users can choose which labelers they trust."
+      definition: "Entities that can apply labels to content on Bluesky for moderation purposes. Users can choose which labelers they trust.",
+      learnMoreLink: "https://bsky.social/about/blog/5-22-24-content-labeling-moderation"
     },
     {
       id: "engagement-rate",
       term: "Engagement Rate",
-      definition: "A metric that measures how much interaction your content receives relative to your audience size."
+      definition: "A metric that measures how much interaction your content receives relative to your audience size.",
+      learnMoreLink: "https://cred.blue/methodology"
     }
   ];
 
-  // Social status data
+  // Social status data with added links
   const socialStatuses = [
     {
       id: "newcomer",
       name: "Newcomer",
-      description: "Accounts that are new to Bluesky or have minimal activity. These users are just getting started on the platform and beginning to build their presence."
+      description: "Accounts that are new to Bluesky or have minimal activity. These users are just getting started on the platform and beginning to build their presence. After 30 days, Newcomers become Explorers.",
+      learnMoreLink: "https://cred.blue/social-status/newcomer"
     },
     {
       id: "explorer",
       name: "Explorer",
-      description: "Users who are actively engaging with the platform, discovering features, and building their initial network. They have established a basic presence but are still growing their connections."
+      description: "Users who are actively engaging with the platform, discovering features, and building their initial network. They have established a basic presence but are still growing their connections and potentially finding their community.",
+      learnMoreLink: "https://cred.blue/social-status/explorer"
     },
     {
       id: "pathfinder",
       name: "Pathfinder",
-      description: "Established users who have developed a consistent presence and are actively contributing to conversations. These accounts have a growing influence and solid engagement within their communities."
+      description: "Established users who have developed a consistent presence and are actively contributing to conversations. These accounts have a growing influence (1,000+ followers) and solid engagement within their communities.",
+      learnMoreLink: "https://cred.blue/social-status/pathfinder"
     },
     {
       id: "guide",
       name: "Guide",
-      description: "Well-established users who have significant impact within specific communities. They often create valuable content and maintain strong engagement with their followers."
+      description: "Well-established users who have significant influence within specific communities (10,000+ followers). They often create valuable content and maintain strong engagement with their followers.",
+      learnMoreLink: "https://cred.blue/social-status/guide"
     },
     {
       id: "leader",
       name: "Leader",
-      description: "Highly influential accounts with substantial followings and engagement. These users have a broad impact across multiple communities and consistently contribute high-value content to the platform."
+      description: "Highly influential accounts with substantial followings (100,000+) and engagement. These users have a broad impact across multiple communities and consistently contribute high-value content to the platform.",
+      learnMoreLink: "https://cred.blue/social-status/leader"
     }
   ];
 
@@ -181,6 +194,17 @@ const ScoringMethodology = () => {
                 aria-hidden={expandedStatus !== status.id}
               >
                 {status.description}
+                {status.learnMoreLink && (
+                  <div className="learn-more-link">
+                    <a 
+                      href={status.learnMoreLink} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                    >
+                      Learn more about {status.name} status →
+                    </a>
+                  </div>
+                )}
               </dd>
             </div>
           ))}
@@ -207,6 +231,17 @@ const ScoringMethodology = () => {
                 aria-hidden={expandedTerm !== item.id}
               >
                 {item.definition}
+                {item.learnMoreLink && (
+                  <div className="learn-more-link">
+                    <a 
+                      href={item.learnMoreLink} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                    >
+                      Learn more about {item.term} →
+                    </a>
+                  </div>
+                )}
               </dd>
             </div>
           ))}

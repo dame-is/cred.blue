@@ -335,11 +335,11 @@ const UserProfile = () => {
                 <div className="user-profile-data-group">
                   <div className="user-profile-score">
                     <p><strong>Bluesky Score:</strong> {accountData.blueskyScore}</p>
-                    <p><strong>AT Proto Score:</strong> {accountData.atprotoScore}</p>
+                    <p><strong>ATProto Score:</strong> {accountData.atprotoScore}</p>
                   </div>
                   <div className="user-profile-activity">
                     <p><strong>Bluesky Status:</strong> {accountData.activityAll.bskyActivityStatus}</p>
-                    <p><strong>AT Proto Status:</strong> {accountData.activityAll.atprotoActivityStatus}</p>
+                    <p><strong>ATProto Status:</strong> {accountData.activityAll.atprotoActivityStatus}</p>
                     </div>
                 </div>
                 <div className="share-button-container">

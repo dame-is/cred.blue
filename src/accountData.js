@@ -511,7 +511,7 @@ function calculateSocialStatus({ ageInDays = 0, followersCount = 0, followsCount
       baseStatus = "Leader";
     } else if (followersCount >= 10000) {
       baseStatus = "Guide";
-    } else if (followersCount >= 500) {
+    } else if (followersCount >= 1000) {
       baseStatus = "Pathfinder";
     }
   }
@@ -1043,7 +1043,7 @@ function buildAnalysisNarrative(accountData) {
   const narrative1 =
       `${profile.displayName} has been on the network ${accountAgeStatement} ${calculateActivityStatus(activityAll.totalRecordsPerDay)}. ` +
       `Their profile is ${calculateProfileCompletion(profile)}, and ${blueskyFeatures}. ` +
-      `When it comes to the broader AT Proto ecosystem, this identity ${atprotoEngagement}.`;
+      `When it comes to the broader ATProto ecosystem, this identity ${atprotoEngagement}.`;
 
   // Second Paragraph
   const narrative2 =

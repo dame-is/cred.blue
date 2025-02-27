@@ -87,6 +87,7 @@
   
   .definition-description {
     max-height: 0;
+    margin-left: 0;
     overflow: hidden;
     padding: 0 15px;
     transition: all 0.3s ease;
@@ -190,4 +191,35 @@
   
   .social-statuses-container .definition-item:nth-child(5) .definition-term {
     border-left: 4px solid #FFD700; /* Darkest - Leader */
+  }
+
+  /* Add these styles to your ScoringMethodology.css file */
+
+.learn-more-link {
+    margin-top: 12px;
+    font-size: 0.9em;
+    text-align: right;
+  }
+  
+  .learn-more-link a {
+    color: var(--button-bg);
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s ease;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+  
+  .learn-more-link a:hover {
+    background-color: rgba(59, 154, 248, 0.1);
+    text-decoration: underline;
+  }
+  
+  /* Make sure links work properly in dark mode */
+  .dark-mode .learn-more-link a {
+    color: var(--button-bg);
+  }
+  
+  .dark-mode .learn-more-link a:hover {
+    background-color: rgba(59, 154, 248, 0.15);
   }
