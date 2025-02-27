@@ -10,7 +10,6 @@ import Leaderboard from './components/Leaderboard/Leaderboard';
 import Supporter from './components/Supporter/Supporter';
 import Shortcut from './components/Shortcut/Shortcut';
 import Resources from './components/Resources/Resources';
-import ResourceSubmission from './components/Resources/ResourceSubmission';
 import ScoringMethodology from './components/ScoringMethodology/ScoringMethodology';
 import Terms from './components/PrivacyTerms/Terms';
 import Privacy from './components/PrivacyTerms/Privacy';
