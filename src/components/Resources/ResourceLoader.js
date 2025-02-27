@@ -1,3 +1,4 @@
+// src/components/Resources/ResourceLoader.jsx
 import React from 'react';
 
 const ResourceLoader = () => {

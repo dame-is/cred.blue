@@ -349,11 +349,15 @@ const Resources = () => {
   return (
     <>
       <main className="resources-page">
+       <div className="alt-card">
         <div className="resources-header">
-          <div className="resources-title">
-            <h1>Bluesky Resources</h1>
-            <p>A curated collection of third-party tools, services, and guides for the Bluesky ecosystem</p>
-          </div>
+          <h1>Bluesky Resources</h1>
+          <ul>
+            <li>Find tools to enhance your Bluesky experience.</li>
+            <li>Discover analytics, feeds, clients, and more.</li>
+            <li>Explore community-built solutions.</li>
+          </ul>
+          <p className="resources-description">A curated collection of third-party tools, services, and guides for the Bluesky ecosystem</p>
           
           <div className="share-button-container">
             <button
@@ -441,6 +445,7 @@ const Resources = () => {
         </div>
         </>
         )}
+       </div>
       </main>
     </>
   );

@@ -1,55 +1,50 @@
 /* src/components/Resources/Resources.css */
 
 .resources-page {
+  margin: 20px auto 20px;
   max-width: 1200px;
-  margin: 0 auto;
   padding: 20px;
-  font-family: sans-serif;
+}
+
+.resources-page .alt-card {
+  text-align: left;
+  background: var(--navbar-bg);
+  border-radius: 12px;
+  border: 5px solid var(--card-border);
+  padding: 1.7rem;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .resources-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 1.5rem;
 }
 
-.resources-title h1 {
-  font-size: 2rem;
-  margin-bottom: 8px;
-  color: #0066cc;
+.resources-header h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: var(--button-bg);
 }
 
-.resources-title p {
-  font-size: 1rem;
-  color: #666;
-  margin: 0;
+.resources-page ul {
+  list-style: none;
+  text-align: center;
+  margin: 0px auto;
+  padding: 0px;
+  width: 100%;
+  opacity: 0.5;
 }
 
-.share-button-container {
-  margin-left: 20px;
-}
-
-.share-button {
-  background-color: #0066cc;
-  color: white;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 20px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  transition: background-color 0.3s ease;
-}
-
-.share-button:hover {
-  background-color: #0055aa;
+.resources-description {
+  color: var(--text);
+  line-height: 1.5;
+  opacity: 0.8;
+  transition: color 0.3s ease;
+  margin-top: 1rem;
 }
 
 .resources-disclaimer {
-  background-color: #f8f9fa;
+  background-color: var(--card-border);
   border-left: 4px solid #ffd700;
   padding: 12px 16px;
   margin-bottom: 24px;
@@ -59,7 +54,29 @@
 .resources-disclaimer p {
   margin: 0;
   font-size: 0.9rem;
-  color: #555;
+  color: var(--text);
+}
+
+.share-button-container {
+  margin-top: 1rem;
+}
+
+.share-button {
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  padding: 10px 16px;
+  border: none;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+
+.share-button:hover {
+  opacity: 0.8;
 }
 
 .resources-filters {
@@ -74,9 +91,17 @@
   width: 100%;
   padding: 12px 16px;
   font-size: 1rem;
-  border: 1px solid #ddd;
+  border: 1px solid var(--card-border);
   border-radius: 8px;
   box-sizing: border-box;
+  background-color: var(--navbar-bg);
+  color: var(--text);
+  transition: border-color 0.3s ease;
+}
+
+.search-input:focus {
+  border-color: var(--button-bg);
+  outline: none;
 }
 
 .filter-options {
@@ -94,7 +119,8 @@
 }
 
 .category-filter {
-  background-color: #f0f0f0;
+  background-color: var(--card-border);
+  color: var(--text);
   border: none;
   padding: 8px 16px;
   border-radius: 16px;
@@ -104,19 +130,22 @@
 }
 
 .category-filter:hover {
-  background-color: #e0e0e0;
+  background: var(--button-bg);
+  color: var(--button-text);
 }
 
 .category-filter.active {
-  background-color: #0066cc;
-  color: white;
+  background: var(--button-bg);
+  color: var(--button-text);
 }
 
 .quality-select {
   padding: 8px 16px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--card-border);
   border-radius: 8px;
   font-size: 0.9rem;
+  background-color: var(--navbar-bg);
+  color: var(--text);
 }
 
 .featured-section,
@@ -126,10 +155,10 @@
 
 .featured-section h2,
 .all-resources-section h2 {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   margin-bottom: 16px;
-  color: #333;
-  border-bottom: 2px solid #eee;
+  color: var(--button-bg);
+  border-bottom: 2px solid var(--card-border);
   padding-bottom: 8px;
 }
 
@@ -140,13 +169,13 @@
 }
 
 .resource-card {
-  border: 1px solid #eee;
+  border: 1px solid var(--card-border);
   border-radius: 8px;
   overflow: hidden;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   text-decoration: none;
   color: inherit;
-  background-color: white;
+  background-color: var(--navbar-bg);
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -155,6 +184,7 @@
 .resource-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  background-color: var(--card-border);
 }
 
 .resource-content {
@@ -167,14 +197,15 @@
 .resource-name {
   font-size: 1.1rem;
   margin: 0 0 8px 0;
-  color: #0066cc;
+  color: var(--button-bg);
 }
 
 .resource-description {
   font-size: 0.9rem;
-  color: #555;
+  color: var(--text);
   margin: 0 0 16px 0;
   flex-grow: 1;
+  opacity: 0.8;
 }
 
 .resource-meta {
@@ -186,10 +217,10 @@
 
 .resource-category {
   font-size: 0.8rem;
-  background-color: #f0f0f0;
+  background-color: var(--card-border);
   padding: 4px 8px;
   border-radius: 4px;
-  color: #666;
+  color: var(--text);
 }
 
 .resource-quality {
@@ -206,13 +237,14 @@
 }
 
 .quality-star.empty {
-  color: #ddd;
+  color: var(--card-border);
 }
 
 .no-results {
   text-align: center;
   padding: 40px;
-  color: #666;
+  color: var(--text);
+  opacity: 0.7;
 }
 
 /* Resource Loader */
@@ -226,13 +258,19 @@
 }
 
 .loader-spinner {
-  border: 4px solid rgba(0, 0, 0, 0.1);
-  border-left-color: #0066cc;
+  border: 4px solid var(--card-border);
+  border-left-color: var(--button-bg);
   border-radius: 50%;
   width: 40px;
   height: 40px;
   animation: spin 1s linear infinite;
   margin-bottom: 16px;
+  transition: border-color 0.3s ease;
+}
+
+.resource-loader p {
+  color: var(--text);
+  opacity: 0.8;
 }
 
 @keyframes spin {
@@ -242,13 +280,21 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+  .resources-page {
+    padding: 10px;
+  }
+  
+  .resources-page .alt-card {
+    padding: 1rem;
+  }
+
   .resources-header {
     flex-direction: column;
     align-items: flex-start;
   }
   
   .share-button-container {
-    margin: 16px 0 0 0;
+    margin-top: 16px;
   }
   
   .filter-options {
@@ -256,9 +302,14 @@
     align-items: flex-start;
   }
   
+  .category-filters {
+    margin-bottom: 12px;
+    width: 100%;
+    justify-content: flex-start;
+  }
+  
   .quality-filter {
     width: 100%;
-    margin-top: 12px;
   }
   
   .quality-select {
@@ -266,6 +317,23 @@
   }
   
   .resources-grid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .resources-page {
+    max-width: 100%;
+  }
+  
+  .category-filters {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .category-filter {
+    margin-bottom: 8px;
+    width: calc(50% - 8px);
+    text-align: center;
   }
 }
