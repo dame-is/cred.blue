@@ -3,7 +3,7 @@ import {
   getResources, 
   getPendingSubmissions, 
   approveSubmission 
-} from '../services/supabaseClient';
+} from '../lib/supabase';
 
 const ResourceAdmin = () => {
   const [resources, setResources] = useState([]);

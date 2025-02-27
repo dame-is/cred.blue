@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { submitResource, getCategories } from '../services/supabaseClient';
+import { submitResource, getCategories } from '../services/supabase';
 
 const ResourceSubmission = () => {
   const [categories, setCategories] = useState([]);
