@@ -3,15 +3,26 @@ import './ScoringMethodology.css';
 import ScoreGauge from '../UserProfile/ScoreGauge';
 
 const ScoringMethodology = () => {
-  // State to track which definition is expanded (if using accordion style)
+  // State to track which definition is expanded
   const [expandedTerm, setExpandedTerm] = useState(null);
+  // State to track which social status is expanded
+  const [expandedStatus, setExpandedStatus] = useState(null);
 
-  // Toggle function for accordion behavior
+  // Toggle function for definitions accordion
   const toggleTerm = (term) => {
     if (expandedTerm === term) {
       setExpandedTerm(null);
     } else {
       setExpandedTerm(term);
+    }
+  };
+
+  // Toggle function for social status accordion
+  const toggleStatus = (status) => {
+    if (expandedStatus === status) {
+      setExpandedStatus(null);
+    } else {
+      setExpandedStatus(status);
     }
   };
 
@@ -56,6 +67,35 @@ const ScoringMethodology = () => {
       id: "engagement-rate",
       term: "Engagement Rate",
       definition: "A metric that measures how much interaction your content receives relative to your audience size."
+    }
+  ];
+
+  // Social status data
+  const socialStatuses = [
+    {
+      id: "newcomer",
+      name: "Newcomer",
+      description: "Accounts that are new to Bluesky or have minimal activity. These users are just getting started on the platform and beginning to build their presence."
+    },
+    {
+      id: "explorer",
+      name: "Explorer",
+      description: "Users who are actively engaging with the platform, discovering features, and building their initial network. They have established a basic presence but are still growing their connections."
+    },
+    {
+      id: "pathfinder",
+      name: "Pathfinder",
+      description: "Established users who have developed a consistent presence and are actively contributing to conversations. These accounts have a growing influence and solid engagement within their communities."
+    },
+    {
+      id: "guide",
+      name: "Guide",
+      description: "Well-established users who have significant impact within specific communities. They often create valuable content and maintain strong engagement with their followers."
+    },
+    {
+      id: "leader",
+      name: "Leader",
+      description: "Highly influential accounts with substantial followings and engagement. These users have a broad impact across multiple communities and consistently contribute high-value content to the platform."
     }
   ];
 
@@ -119,15 +159,32 @@ const ScoringMethodology = () => {
         
         <h2>What are the different social statuses?</h2>
         <p>
-          Rather than displaying follower counts on profiles, the cred.blue analysis categorizes each identity into one of four social statuses base on its follower count, social graph ratio, engagement rate, and age. There are additional labels placed before the social status to indicate how engaging the account actually is.
+          Rather than displaying follower counts on profiles, the cred.blue analysis categorizes each identity into one of five social statuses based on its follower count, social graph ratio, engagement rate, and age. There are additional labels placed before the social status to indicate how engaging the account actually is.
         </p>
-        <ol className="social-status-list">
-          <li>Newcomer</li>
-          <li>Explorer</li>
-          <li>Pathfinder</li>
-          <li>Guide</li>
-          <li>Leader</li>
-        </ol>
+        <div className="social-statuses-container definitions-container">
+          {socialStatuses.map((status) => (
+            <div key={status.id} className="definition-item">
+              <dt 
+                className="definition-term" 
+                onClick={() => toggleStatus(status.id)}
+                role="button"
+                aria-expanded={expandedStatus === status.id}
+              >
+                {status.name}
+                {expandedStatus === status.id ? 
+                  <span className="toggle-icon" aria-hidden="true">−</span> : 
+                  <span className="toggle-icon" aria-hidden="true">+</span>
+                }
+              </dt>
+              <dd 
+                className={`definition-description ${expandedStatus === status.id ? 'expanded' : ''}`}
+                aria-hidden={expandedStatus !== status.id}
+              >
+                {status.description}
+              </dd>
+            </div>
+          ))}
+        </div>
         
         <h2>Key Terms and Definitions</h2>
         <div className="definitions-container">

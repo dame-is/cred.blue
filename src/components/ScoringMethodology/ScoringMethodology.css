@@ -54,7 +54,6 @@
 
 .definitions-container {
     margin-top: 20px;
-    border-radius: 8px;
     overflow: hidden;
   }
   
@@ -99,6 +98,7 @@
     max-height: 500px;
     padding: 15px;
     border-top: 1px solid var(--card-border);
+    margin-left: 0px;
   }
   
   .definition-item:hover {
@@ -156,4 +156,60 @@
   
   .dark-mode .definitions-simple .definition-description {
     border-left-color: var(--button-bg);
+  }
+
+
+  /* Add these styles to your ScoringMethodology.css file */
+
+/* Make the social statuses container use the same styling as definitions */
+.social-statuses-container {
+    margin-top: 15px;
+    margin-bottom: 30px;
+  }
+  
+  /* Additional style for the social status names to make them stand out */
+  .social-statuses-container .definition-term {
+    font-weight: 700;
+  }
+  
+  /* Add a subtle indicator for the different status levels */
+  .social-statuses-container .definition-item:nth-child(1) .definition-term {
+    border-left: 4px solid #e2e8f0; /* Lightest - Newcomer */
+  }
+  
+  .social-statuses-container .definition-item:nth-child(2) .definition-term {
+    border-left: 4px solid #cbd5e0; /* Explorer */
+  }
+  
+  .social-statuses-container .definition-item:nth-child(3) .definition-term {
+    border-left: 4px solid #a0aec0; /* Pathfinder */
+  }
+  
+  .social-statuses-container .definition-item:nth-child(4) .definition-term {
+    border-left: 4px solid #718096; /* Guide */
+  }
+  
+  .social-statuses-container .definition-item:nth-child(5) .definition-term {
+    border-left: 4px solid #4a5568; /* Darkest - Leader */
+  }
+  
+  /* Dark mode overrides for the status indicators */
+  .dark-mode .social-statuses-container .definition-item:nth-child(1) .definition-term {
+    border-left: 4px solid #2d3748;
+  }
+  
+  .dark-mode .social-statuses-container .definition-item:nth-child(2) .definition-term {
+    border-left: 4px solid #4a5568;
+  }
+  
+  .dark-mode .social-statuses-container .definition-item:nth-child(3) .definition-term {
+    border-left: 4px solid #718096;
+  }
+  
+  .dark-mode .social-statuses-container .definition-item:nth-child(4) .definition-term {
+    border-left: 4px solid #a0aec0;
+  }
+  
+  .dark-mode .social-statuses-container .definition-item:nth-child(5) .definition-term {
+    border-left: 4px solid #cbd5e0;
   }
