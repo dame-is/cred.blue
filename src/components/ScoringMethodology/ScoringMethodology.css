@@ -49,3 +49,68 @@
     padding-right: 11px;
     padding-bottom: 10.5px;
   }
+
+  /* Add these styles to your ScoringMethodology.css file */
+
+.definitions-container {
+    margin-top: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .definition-item {
+    margin-bottom: 10px;
+    border-radius: 6px;
+    background-color: #f8f9fa;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .definition-term {
+    padding: 12px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    cursor: pointer;
+    background-color: #edf2f7;
+    border-radius: 6px;
+  }
+  
+  .toggle-icon {
+    font-size: 16px;
+    font-weight: bold;
+    color: #4a5568;
+  }
+  
+  .definition-description {
+    max-height: 0;
+    overflow: hidden;
+    padding: 0 15px;
+    transition: all 0.3s ease;
+  }
+  
+  .definition-description.expanded {
+    max-height: 500px;
+    padding: 15px;
+    border-top: 1px solid #e2e8f0;
+  }
+  
+  /* Alternative simple style (if you prefer a non-accordion approach) */
+  .definitions-simple .definition-item {
+    margin-bottom: 20px;
+  }
+  
+  .definitions-simple .definition-term {
+    font-weight: 700;
+    margin-bottom: 8px;
+    cursor: default;
+    background-color: transparent;
+    padding: 0;
+  }
+  
+  .definitions-simple .definition-description {
+    max-height: none;
+    padding: 0 0 0 15px;
+    border-left: 3px solid #e2e8f0;
+  }
