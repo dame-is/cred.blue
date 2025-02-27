@@ -133,15 +133,21 @@ const ScoringMethodology = () => {
         <div className="definitions-container">
           {definitions.map((item) => (
             <div key={item.id} className="definition-item">
-              <dt className="definition-term" onClick={() => toggleTerm(item.id)}>
+              <dt 
+                className="definition-term" 
+                onClick={() => toggleTerm(item.id)}
+                role="button"
+                aria-expanded={expandedTerm === item.id}
+              >
                 {item.term}
                 {expandedTerm === item.id ? 
-                  <span className="toggle-icon">−</span> : 
-                  <span className="toggle-icon">+</span>
+                  <span className="toggle-icon" aria-hidden="true">−</span> : 
+                  <span className="toggle-icon" aria-hidden="true">+</span>
                 }
               </dt>
               <dd 
                 className={`definition-description ${expandedTerm === item.id ? 'expanded' : ''}`}
+                aria-hidden={expandedTerm !== item.id}
               >
                 {item.definition}
               </dd>
