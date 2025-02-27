@@ -10,6 +10,8 @@ import Leaderboard from './components/Leaderboard/Leaderboard';
 import Supporter from './components/Supporter/Supporter';
 import Shortcut from './components/Shortcut/Shortcut';
 import Resources from './components/Resources/Resources';
+import ResourcesManager from './components/Admin/ResourcesManager';
+import ResourceSubmission from './components/Resources/ResourceSubmission';
 import ScoringMethodology from './components/ScoringMethodology/ScoringMethodology';
 import Terms from './components/PrivacyTerms/Terms';
 import Privacy from './components/PrivacyTerms/Privacy';
@@ -39,6 +41,8 @@ const App = () => {
             <Route path="/supporter" element={<Supporter />} />
             <Route path="/leaderboard" element={<Leaderboard />} />
             <Route path="/resources" element={<Resources />} />
+            <Route path="/resources/submit" element={<ResourceSubmission />} />
+            <Route path="/admin/resources" element={<ResourcesManager />} />
             <Route path="/shortcut" element={<Shortcut />} />
             <Route path="/zen" element={<ZenPage />} />
             <Route path="/methodology" element={<ScoringMethodology />} />
