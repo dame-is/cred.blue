@@ -26,14 +26,30 @@ const ScoringMethodology = () => {
     }
   };
 
+  // Helper function to add UTM parameters to links
+  const addUtmParams = (url, source = "term_definition") => {
+    // Check if URL already has parameters
+    const hasParams = url.includes('?');
+    const connector = hasParams ? '&' : '?';
+    
+    // Add UTM parameters
+    return `${url}${connector}utm_source=cred.blue&utm_medium=methodology&utm_campaign=${source}`;
+  };
+
   // Definitions data with added links
   const definitions = [
     {
       id: "pds",
       term: "Personal Data Server (PDS)",
       definition: "A server that hosts your AT Protocol data and content. You can use Bluesky's PDS hosting or choose a third-party PDS host for more control over your data. By default, new Bluesky accounts use Bluesky's PDS hosting, so the vast majority of accounts right now do not use a third-party PDS. Having a third-party PDS host contributes to the further decentralization of the network, but it is currently difficult to do.",
-      learnMoreLink: "https://atproto.com/guides/pds"
+      learnMoreLink: "https://atproto.com/guides/self-hosting"
     },
+    {
+        id: "bsky-mushroom",
+        term: "Bluesky Mushroom",
+        definition: "All of Bluesky's PDS hosting servers are named after various types of mushrooms. If your account is on a Bluesky Mushroom, that means you are entrusting Bluesky with holding your data for you. To see a full list of the Bluesky Mushrooms, use the learn more link below.",
+        learnMoreLink: "https://bsky-debug.app/"
+      },
     {
       id: "did",
       term: "DID",
@@ -42,39 +58,44 @@ const ScoringMethodology = () => {
     },
     {
       id: "lexicon",
-      term: "Lexicon",
-      definition: "The schema system used by the AT Protocol to define data structures. Lexicons are kind of like a file formats, and different AT Protocol apps can choose which of these file formats to support. Apps can have their own unique file formats as well. Third-party lexicons allow for custom features and extensions to the protocol.",
+      term: "Lexicon/Collection",
+      definition: "The schema system used by the AT Protocol to define data structures. Lexicons are kind of like a file formats, and different AT Protocol apps can choose which of these file formats to support. Apps can have their own unique file formats as well. Third-party lexicons allow for custom features and extensions to the protocol. Lexicons are written in JSON and are sometimes referred to as collections.",
       learnMoreLink: "https://atproto.com/guides/lexicon"
     },
     {
       id: "rotation-key",
       term: "Rotation Key",
-      definition: "A security feature that allows you to recover your account if your primary credentials are compromised.",
-      learnMoreLink: "https://bsky.app/profile/mattyoukhana.xyz/post/3ke5j53mxwt2o"
+      definition: "A security key that allows you to recover your account if your primary credentials are compromised.",
+      learnMoreLink: "https://atproto.com/guides/account-migration#updating-identity"
     },
+    {
+        id: "bluesky-eras",
+        term: "Bluesky Eras",
+        definition: "Ever since Bluesky was first incubated from within Twitter in 2019, it has been through numerous different defining eras. Each of these eras has had distinct qualities and even cultures. The main eras are as follows: 1. pre-history (early staff, advisors, friends), 2. invite-only (with the introduction of the invite system), 3. public release (anyone could create an account)",
+        learnMoreLink: "https://atproto.com/guides/account-migration#updating-identity"
+      },
     {
       id: "alt-text",
       term: "Alt Text",
       definition: "Text descriptions added to images that make content accessible to users with visual impairments or when images fail to load.",
-      learnMoreLink: "https://help.bsky.app/en/articles/8754485-how-do-i-add-alt-text-to-my-images"
+      learnMoreLink: "https://accessibility.huit.harvard.edu/describe-content-images"
     },
     {
       id: "social-graph",
       term: "Social Graph",
       definition: "The network of connections between accounts, including followers, following, and engagement patterns.",
-      learnMoreLink: "https://atproto.com/lexicons/app-bsky-graph"
+      learnMoreLink: "https://en.wikipedia.org/wiki/Social_graph"
     },
     {
       id: "labelers",
       term: "Labelers",
       definition: "Entities that can apply labels to content on Bluesky for moderation purposes. Users can choose which labelers they trust.",
-      learnMoreLink: "https://bsky.social/about/blog/5-22-24-content-labeling-moderation"
+      learnMoreLink: "https://docs.bsky.app/docs/advanced-guides/moderation"
     },
     {
       id: "engagement-rate",
       term: "Engagement Rate",
       definition: "A metric that measures how much interaction your content receives relative to your audience size.",
-      learnMoreLink: "https://cred.blue/methodology"
     }
   ];
 
@@ -197,7 +218,7 @@ const ScoringMethodology = () => {
                 {status.learnMoreLink && (
                   <div className="learn-more-link">
                     <a 
-                      href={status.learnMoreLink} 
+                      href={addUtmParams(status.learnMoreLink, `social_status_${status.id}`)} 
                       target="_blank" 
                       rel="noopener noreferrer"
                     >
@@ -234,7 +255,7 @@ const ScoringMethodology = () => {
                 {item.learnMoreLink && (
                   <div className="learn-more-link">
                     <a 
-                      href={item.learnMoreLink} 
+                      href={addUtmParams(item.learnMoreLink, `term_${item.id}`)} 
                       target="_blank" 
                       rel="noopener noreferrer"
                     >
