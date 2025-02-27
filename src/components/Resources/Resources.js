@@ -1622,6 +1622,15 @@ const Resources = () => {
 
   // Get all categories
   const categories = ['All', ...new Set(resourcesWithUTM.map(item => item.category))];
+  
+  // Count resources per category
+  const categoryCounts = useMemo(() => {
+    const counts = { 'All': resourcesWithUTM.length };
+    resourcesWithUTM.forEach(resource => {
+      counts[resource.category] = (counts[resource.category] || 0) + 1;
+    });
+    return counts;
+  }, [resourcesWithUTM]);
 
   // Filter resources based on active category, search query, and quality filter
   const filteredResources = useMemo(() => {
@@ -1650,6 +1659,20 @@ const Resources = () => {
   const featuredResources = useMemo(() => {
     return resourcesWithUTM.filter(resource => resource.featured);
   }, [resourcesWithUTM]);
+  
+  // Group resources by category when "All" is selected
+  const resourcesByCategory = useMemo(() => {
+    if (activeCategory !== 'All') return {};
+    
+    const grouped = {};
+    filteredResources.forEach(resource => {
+      if (!grouped[resource.category]) {
+        grouped[resource.category] = [];
+      }
+      grouped[resource.category].push(resource);
+    });
+    return grouped;
+  }, [filteredResources, activeCategory]);
   
   // Should show featured section only when All category is selected
   const shouldShowFeatured = activeCategory === 'All';
@@ -1709,31 +1732,34 @@ const Resources = () => {
           </div>
           
           <div className="filter-options">
-            <div className="category-filters-container">
-              <div className="category-filters">
-                {categories.map(category => (
-                  <button 
-                    key={category}
-                    className={`category-filter ${activeCategory === category ? 'active' : ''}`}
-                    onClick={() => setActiveCategory(category)}
-                  >
-                    {categoryEmojis[category]} {category}
-                  </button>
-                ))}
+            <div className="filter-dropdowns">
+              {/* Changed category filter to dropdown */}
+              <div className="category-filter-dropdown">
+                <select 
+                  value={activeCategory}
+                  onChange={(e) => setActiveCategory(e.target.value)}
+                  className="filter-select"
+                >
+                  {categories.map(category => (
+                    <option key={category} value={category}>
+                      {categoryEmojis[category]} {category} ({categoryCounts[category]})
+                    </option>
+                  ))}
+                </select>
               </div>
-            </div>
-            
-            <div className="quality-filter">
-              <select 
-                value={qualityFilter}
-                onChange={(e) => setQualityFilter(e.target.value)}
-                className="quality-select"
-              >
-                <option value="All">All Quality Levels</option>
-                <option value="High">High Quality</option>
-                <option value="Medium">Medium Quality</option>
-                <option value="Low">Low Quality</option>
-              </select>
+              
+              <div className="quality-filter">
+                <select 
+                  value={qualityFilter}
+                  onChange={(e) => setQualityFilter(e.target.value)}
+                  className="filter-select"
+                >
+                  <option value="All">All Quality Levels</option>
+                  <option value="High">High Quality</option>
+                  <option value="Medium">Medium Quality</option>
+                  <option value="Low">Low Quality</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
@@ -1750,20 +1776,41 @@ const Resources = () => {
           </div>
         )}
         
-        <div className="all-resources-section">
-          <h2>{activeCategory === 'All' ? 'All Resources' : `${categoryEmojis[activeCategory]} ${activeCategory} Resources`}</h2>
-          {filteredResources.length > 0 ? (
-            <div className="resources-grid">
-              {filteredResources.map((resource, index) => (
-                <ResourceCard key={index} resource={resource} />
-              ))}
-            </div>
-          ) : (
-            <div className="no-results">
-              <p>No resources found matching your filters.</p>
-            </div>
-          )}
-        </div>
+        {activeCategory === 'All' ? (
+          // When "All" is selected, show resources by category
+          <div className="all-resources-section">
+            <h2>All Resources ({filteredResources.length})</h2>
+            
+            {Object.keys(resourcesByCategory).map(category => (
+              <div key={category} className="category-section">
+                <h3 className="category-header">
+                  {categoryEmojis[category]} {category} ({resourcesByCategory[category].length})
+                </h3>
+                <div className="resources-grid">
+                  {resourcesByCategory[category].map((resource, index) => (
+                    <ResourceCard key={`${category}-${index}`} resource={resource} />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          // When a specific category is selected
+          <div className="all-resources-section">
+            <h2>{categoryEmojis[activeCategory]} {activeCategory} Resources ({filteredResources.length})</h2>
+            {filteredResources.length > 0 ? (
+              <div className="resources-grid">
+                {filteredResources.map((resource, index) => (
+                  <ResourceCard key={index} resource={resource} />
+                ))}
+              </div>
+            ) : (
+              <div className="no-results">
+                <p>No resources found matching your filters.</p>
+              </div>
+            )}
+          </div>
+        )}
         </>
         )}
        </div>
