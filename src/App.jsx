@@ -42,7 +42,6 @@ const App = () => {
             <Route path="/leaderboard" element={<Leaderboard />} />
             <Route path="/resources" element={<Resources />} />
             <Route path="/resources/submit" element={<ResourceSubmission />} />
-            <Route path="/admin/resources" element={<ResourcesManager />} />
             <Route path="/shortcut" element={<Shortcut />} />
             <Route path="/zen" element={<ZenPage />} />
             <Route path="/methodology" element={<ScoringMethodology />} />
