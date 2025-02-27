@@ -488,45 +488,48 @@ function calculateEngagementMetrics(engagementsReceived = {}, onlyPosts = 0, fol
 }
 
 function calculateSocialStatus({ ageInDays = 0, followersCount = 0, followsCount = 0, engagementRate = 0 }) {
-  // Define engagement thresholds
-  const ENGAGEMENT_THRESHOLDS = {
-    high: 0.03, // 3%
-    moderate: 0.01, // 1%
-    low: 0.005 // 0.5%
-  };
-
-  // Calculate follow percentage
-  const followPercentage = followersCount > 0 ? followsCount / followersCount : 0;
-
-  // Determine base status
-  let baseStatus = "Explorer";
+  // Define the minimum engagement rate threshold for advancing to higher tiers
+  const MIN_ENGAGEMENT_RATE = 0.01; // 1%
   
-  // Check for Newcomer first
+  // Check for Newcomer first (less than 30 days old)
   if (ageInDays < 30) {
-    baseStatus = "Newcomer";
+    return "Newcomer";
   }
-  // Only check other statuses if not a newcomer
-  else if (followPercentage < 0.5) {
-    if (followersCount >= 100000) {
-      baseStatus = "Leader";
-    } else if (followersCount >= 10000) {
-      baseStatus = "Guide";
-    } else if (followersCount >= 1000) {
-      baseStatus = "Pathfinder";
+  
+  // Default status for accounts older than 30 days
+  let status = "Explorer";
+  
+  // Check follower counts and engagement rate for higher tiers
+  if (followersCount >= 100000) {
+    if (engagementRate >= MIN_ENGAGEMENT_RATE) {
+      status = "Leader";
+    } else {
+      // Fallback to Guide if engagement requirement not met
+      status = "Guide";
     }
+  } else if (followersCount >= 10000) {
+    if (engagementRate >= MIN_ENGAGEMENT_RATE) {
+      status = "Guide";
+    } else {
+      // Fallback to Pathfinder if engagement requirement not met
+      status = "Pathfinder";
+    }
+  } else if (followersCount >= 1000) {
+    if (engagementRate >= MIN_ENGAGEMENT_RATE) {
+      status = "Pathfinder";
+    }
+    // Fallback to Explorer if engagement requirement not met
   }
-
-  // Add engagement qualifier for all status levels
-  if (engagementRate <= ENGAGEMENT_THRESHOLDS.low) {
-    return `${baseStatus}`;
-  } else if (engagementRate <= ENGAGEMENT_THRESHOLDS.moderate) {
-    return `Engaging ${baseStatus}`;
-  } else if (engagementRate >= ENGAGEMENT_THRESHOLDS.high) {
-    return `Highly Engaging ${baseStatus}`;
+  
+  // Add engagement qualifier based on rate
+  if (engagementRate > 0.03) { // 3%
+    return `Highly Engaging ${status}`;
+  } else if (engagementRate > 0.01) { // 1%
+    return `Engaging ${status}`;
   }
-
-  // Return base status if engagement doesn't meet any threshold
-  return baseStatus;
+  
+  // Return base status
+  return status;
 }
 
 function calculateActivityStatus(rate) {

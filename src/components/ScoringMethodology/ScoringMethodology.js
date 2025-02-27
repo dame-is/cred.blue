@@ -71,7 +71,7 @@ const ScoringMethodology = () => {
     {
         id: "bluesky-eras",
         term: "Bluesky Eras",
-        definition: "Ever since Bluesky was first incubated from within Twitter in 2019, it has been through numerous different defining eras. Each of these eras has had distinct qualities and even cultures. The main eras are as follows: 1. pre-history (early staff, advisors, friends), 2. invite-only (with the introduction of the invite system), 3. public release (anyone could create an account)",
+        definition: "Ever since Bluesky was first incubated from within Twitter in 2019, it has been through numerous different defining eras. Each of these eras has had distinct qualities and even cultures. The main eras are as follows: 1. pre-history (staff, advisors, friends), 2. invite-only (the introduction of the invite system), 3. public release (anyone could create an account)",
         learnMoreLink: "https://atproto.com/guides/account-migration#updating-identity"
       },
     {
@@ -105,31 +105,26 @@ const ScoringMethodology = () => {
       id: "newcomer",
       name: "Newcomer",
       description: "Accounts that are new to Bluesky or have minimal activity. These users are just getting started on the platform and beginning to build their presence. After 30 days, Newcomers become Explorers.",
-      learnMoreLink: "https://cred.blue/social-status/newcomer"
     },
     {
       id: "explorer",
       name: "Explorer",
       description: "Users who are actively engaging with the platform, discovering features, and building their initial network. They have established a basic presence but are still growing their connections and potentially finding their community.",
-      learnMoreLink: "https://cred.blue/social-status/explorer"
     },
     {
       id: "pathfinder",
       name: "Pathfinder",
       description: "Established users who have developed a consistent presence and are actively contributing to conversations. These accounts have a growing influence (1,000+ followers) and solid engagement within their communities.",
-      learnMoreLink: "https://cred.blue/social-status/pathfinder"
     },
     {
       id: "guide",
       name: "Guide",
       description: "Well-established users who have significant influence within specific communities (10,000+ followers). They often create valuable content and maintain strong engagement with their followers.",
-      learnMoreLink: "https://cred.blue/social-status/guide"
     },
     {
       id: "leader",
       name: "Leader",
       description: "Highly influential accounts with substantial followings (100,000+) and engagement. These users have a broad impact across multiple communities and consistently contribute high-value content to the platform.",
-      learnMoreLink: "https://cred.blue/social-status/leader"
     }
   ];
 
