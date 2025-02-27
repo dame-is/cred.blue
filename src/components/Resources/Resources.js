@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import './Resources.css';
 import ResourceLoader from './ResourceLoader';
-import { supabase } from '../../lib/supabaseClient';
+import { supabase } from '../../lib/supabase';
 
 const Resources = () => {
   // State management
