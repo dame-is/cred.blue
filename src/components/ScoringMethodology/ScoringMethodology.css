@@ -74,7 +74,6 @@
     font-weight: 600;
     cursor: pointer;
     background-color: var(--navbar-bg);
-    border-radius: 6px;
     color: var(--text);
     transition: background-color 0.3s ease, color 0.3s ease;
   }
@@ -178,38 +177,17 @@
   }
   
   .social-statuses-container .definition-item:nth-child(2) .definition-term {
-    border-left: 4px solid #cbd5e0; /* Explorer */
+    border-left: 4px solid #004F84; /* Explorer */
   }
   
   .social-statuses-container .definition-item:nth-child(3) .definition-term {
-    border-left: 4px solid #a0aec0; /* Pathfinder */
+    border-left: 4px solid #3B9AF8; /* Pathfinder */
   }
   
   .social-statuses-container .definition-item:nth-child(4) .definition-term {
-    border-left: 4px solid #718096; /* Guide */
+    border-left: 4px solid #FFA500; /* Guide */
   }
   
   .social-statuses-container .definition-item:nth-child(5) .definition-term {
-    border-left: 4px solid #4a5568; /* Darkest - Leader */
-  }
-  
-  /* Dark mode overrides for the status indicators */
-  .dark-mode .social-statuses-container .definition-item:nth-child(1) .definition-term {
-    border-left: 4px solid #2d3748;
-  }
-  
-  .dark-mode .social-statuses-container .definition-item:nth-child(2) .definition-term {
-    border-left: 4px solid #4a5568;
-  }
-  
-  .dark-mode .social-statuses-container .definition-item:nth-child(3) .definition-term {
-    border-left: 4px solid #718096;
-  }
-  
-  .dark-mode .social-statuses-container .definition-item:nth-child(4) .definition-term {
-    border-left: 4px solid #a0aec0;
-  }
-  
-  .dark-mode .social-statuses-container .definition-item:nth-child(5) .definition-term {
-    border-left: 4px solid #cbd5e0;
+    border-left: 4px solid #FFD700; /* Darkest - Leader */
   }
