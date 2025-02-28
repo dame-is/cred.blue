@@ -79,6 +79,12 @@
     text-align: center;
     border-top: 1px solid var(--card-border, #e2e8f0);
   }
+
+  .related-page-content p {
+    font-size: .9em;
+    margin: 0;
+    opacity: .8;
+  }
   
   .definitions-link:hover {
     background-color: var(--background, #f8f9fa);

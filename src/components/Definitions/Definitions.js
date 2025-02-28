@@ -73,7 +73,6 @@ const Definitions = () => {
       id: "bluesky-eras",
       term: "Bluesky Eras",
       definition: "Ever since Bluesky was first incubated from within Twitter in 2019, it has been through numerous different defining eras. Each of these eras has had distinct qualities and even cultures. The main eras are as follows: 1. pre-history (staff, advisors, friends), 2. invite-only (the introduction of the invite system), 3. public release (anyone could create an account)",
-      learnMoreLink: "https://atproto.com/guides/account-migration#updating-identity"
     },
     {
       id: "alt-text",
@@ -139,14 +138,10 @@ const Definitions = () => {
             This page provides explanations for key terms related to Bluesky, the AT Protocol, and how the cred.blue scoring system works.
           </p>
           
-          <div className="back-to-methodology">
-            <Link to="/methodology">← Back to Scoring Methodology</Link>
-          </div>
-          
           <section className="definitions-section">
-            <h2>Social Status Definitions</h2>
+            <h2>Social Statuses</h2>
             <p>
-              Rather than displaying follower counts on profiles, the cred.blue analysis categorizes each identity into one of five social statuses based on its follower count, social graph ratio, engagement rate, and age. There are additional labels placed before the social status to indicate how engaging the account actually is.
+              Rather than displaying follower counts on profiles, the cred.blue analysis categorizes each identity into one of five social statuses based on its follower count, social graph ratio, engagement rate, and age.
             </p>
             <div className="social-statuses-container definitions-container">
               {socialStatuses.map((status) => (
@@ -186,7 +181,7 @@ const Definitions = () => {
           </section>
           
           <section className="definitions-section">
-            <h2>AT Protocol & Bluesky Terms</h2>
+            <h2>Bluesky & ATProto Terms</h2>
             <p>
               Understanding these terms will help you better navigate the Bluesky ecosystem and interpret your cred.blue score.
             </p>
