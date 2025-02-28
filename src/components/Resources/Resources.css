@@ -163,7 +163,6 @@
   padding: 14px 18px;
   background-color: var(--background);
   border: 2px solid var(--card-border);
-  max-width: 298.7px;
 }
 
 .disclaimer-icon {
@@ -557,7 +556,7 @@
 .resource-tag {
   font-size: 0.75rem;
   background-color: rgba(var(--button-bg-rgb), 0.1);
-  padding: 3px 6px;
+  padding-top: 5px;
   border-radius: 4px;
   color: var(--text);
   opacity: 0.8;
