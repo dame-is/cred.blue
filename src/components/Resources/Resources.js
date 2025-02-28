@@ -340,51 +340,54 @@ const Resources = () => {
           {/* Improved Filter Bar */}
           <div className="filter-bar">
             <div className="filter-section">
-              {/* Category filter dropdown */}
-              <div className="filter-dropdown">
-                <label htmlFor="category-select" className="filter-label">Category:</label>
-                <select 
-                  id="category-select"
-                  value={activeCategory}
-                  onChange={(e) => setActiveCategory(e.target.value)}
-                  className="filter-select"
-                >
-                  {categories.map(category => (
-                    <option key={category} value={category}>
-                      {categoryEmojis[category] || '🔹'} {category} ({categoryCounts[category] || 0})
-                    </option>
-                  ))}
-                </select>
-              </div>
-              
-              {/* Toggle filters */}
-              <div className="toggle-filters">
-                {/* New resources toggle */}
-                <div className="toggle-filter">
-                  <label className="toggle-label" htmlFor="new-toggle">
-                    <input
-                      id="new-toggle"
-                      type="checkbox"
-                      checked={showNewOnly}
-                      onChange={() => setShowNewOnly(!showNewOnly)}
-                      aria-label="Show only recently added resources"
-                    />
-                    <span className="toggle-text">Recently Added</span>
-                  </label>
+              {/* All filters in one row */}
+              <div className="filters-row">
+                {/* Category filter dropdown */}
+                <div className="filter-dropdown">
+                  <label htmlFor="category-select" className="filter-label">Category:</label>
+                  <select 
+                    id="category-select"
+                    value={activeCategory}
+                    onChange={(e) => setActiveCategory(e.target.value)}
+                    className="filter-select"
+                  >
+                    {categories.map(category => (
+                      <option key={category} value={category}>
+                        {categoryEmojis[category] || '🔹'} {category} ({categoryCounts[category] || 0})
+                      </option>
+                    ))}
+                  </select>
                 </div>
-                
-                {/* Score impact toggle */}
-                <div className="toggle-filter">
-                  <label className="toggle-label" htmlFor="score-toggle">
-                    <input
-                      id="score-toggle"
-                      type="checkbox"
-                      checked={showScoreImpactOnly}
-                      onChange={() => setShowScoreImpactOnly(!showScoreImpactOnly)}
-                      aria-label="Show only resources that impact score"
-                    />
-                    <span className="toggle-text">Impacts Score</span>
-                  </label>
+
+                {/* Toggle filters */}
+                <div className="toggle-filters">
+                  {/* New resources toggle */}
+                  <div className="toggle-filter">
+                    <label className="toggle-label" htmlFor="new-toggle">
+                      <input
+                        id="new-toggle"
+                        type="checkbox"
+                        checked={showNewOnly}
+                        onChange={() => setShowNewOnly(!showNewOnly)}
+                        aria-label="Show only recently added resources"
+                      />
+                      <span className="toggle-text">Recently Added</span>
+                    </label>
+                  </div>
+                  
+                  {/* Score impact toggle */}
+                  <div className="toggle-filter">
+                    <label className="toggle-label" htmlFor="score-toggle">
+                      <input
+                        id="score-toggle"
+                        type="checkbox"
+                        checked={showScoreImpactOnly}
+                        onChange={() => setShowScoreImpactOnly(!showScoreImpactOnly)}
+                        aria-label="Show only resources that impact score"
+                      />
+                      <span className="toggle-text">Impacts Score</span>
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>

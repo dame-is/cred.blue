@@ -154,6 +154,43 @@
   font-size: 1.1rem;
 }
 
+/* ======= Filter Controls Container ======= */
+.filter-controls-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  gap: 20px;
+}
+
+/* Filter bar */
+.filter-bar {
+  background-color: var(--navbar-bg);
+  border: 2px solid var(--card-border);
+  border-radius: 8px;
+  padding: 15px;
+  flex-grow: 1;
+}
+
+.filter-section {
+  width: 100%;
+}
+
+/* Filters row - for horizontal alignment */
+.filters-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* Filter dropdown */
+.filter-dropdown {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 /* Enhanced disclaimer styling */
 .resources-disclaimer {
   align-items: flex-start;
@@ -163,6 +200,7 @@
   padding: 14px 18px;
   background-color: var(--background);
   border: 2px solid var(--card-border);
+  flex-basis: 40%;
 }
 
 .disclaimer-icon {
@@ -196,6 +234,7 @@
   font-weight: 600;
   margin-right: 8px;
   color: var(--text);
+  white-space: nowrap;
 }
 
 .filter-options {
@@ -290,19 +329,15 @@
   background-color: rgba(var(--text-rgb), 0.2);
 }
 
-/* Toggle filters container - New */
+/* Toggle filters container - Modified for horizontal layout */
 .toggle-filters {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-  width: 100%;
-  justify-content: center;
-  margin-top: 1rem;
+  align-items: center;
+  gap: 20px;
 }
 
 /* New and Score toggle styling */
-.new-filter,
-.score-filter {
+.toggle-filter {
   display: flex;
   align-items: center;
 }
@@ -320,12 +355,9 @@
   cursor: pointer;
   height: 20px;
   margin: 0 8px 0 0;
-  margin-right: 8px;
   position: relative;
   transition: background-color .3s;
   width: 38px;
-  scale: 1.4;
-  margin-right: 20px;
 }
 
 .toggle-label input[type="checkbox"]:checked {
@@ -338,7 +370,7 @@
   width: 16px;
   height: 16px;
   border-radius: 5px;
-  top: 1px;
+  top: 2px;
   left: 2px;
   background-color: white;
   transition: transform 0.3s;
@@ -349,7 +381,7 @@
 }
 
 .toggle-label input[type="checkbox"]:checked::before {
-  transform: translateX(14px);
+  transform: translateX(18px);
 }
 
 .toggle-label input[type="checkbox"]:focus {
@@ -361,7 +393,7 @@
   font-size: .95rem;
   font-weight: 600;
   font-family: articulat-cf;
-  margin-top: 3px;
+  white-space: nowrap;
 }
 
 /* ======= Content Sections ======= */
@@ -383,7 +415,6 @@
 }
 
 /* Category section styling */
-
 .category-header {
   font-size: 1.2rem;
   margin: 45px 0 16px;
@@ -633,6 +664,16 @@
 }
 
 /* Responsive adjustments */
+@media (max-width: 920px) {
+  .filter-controls-container {
+    flex-direction: column;
+  }
+  
+  .resources-disclaimer {
+    width: 100%;
+  }
+}
+
 @media (max-width: 768px) {
   .resources-page {
     padding: 10px;
@@ -658,13 +699,22 @@
     max-width: none;
   }
   
-  .filter-dropdowns {
+  .filters-row {
     flex-direction: column;
-    align-items: center;
-    gap: 1rem;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .filter-dropdown {
+    width: 100%;
   }
   
   .toggle-filters {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .filter-dropdowns {
     flex-direction: column;
     align-items: center;
     gap: 1rem;
@@ -720,5 +770,11 @@
   
   .resources-header h1 {
     font-size: 1.3rem;
+  }
+  
+  .toggle-filters {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
   }
 }
