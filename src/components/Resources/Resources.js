@@ -217,27 +217,31 @@ const Resources = () => {
     return resource.categories && resource.categories.some(cat => cat.name === categoryName);
   };
 
-  // Filter resources based on active category, search query, and filters
-  const filteredResources = useMemo(() => {
-    return resources.filter(resource => {
-      // Filter by category
-      const categoryMatch = resourceHasCategory(resource, activeCategory);
-      
-      // Filter by search query
-      const searchMatch = 
-        resource.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-        resource.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (resource.domain && resource.domain.toLowerCase().includes(searchQuery.toLowerCase()));
-      
-      // Filter by "new" status if the toggle is active
-      const newMatch = !showNewOnly || isNewResource(resource.created_at);
-      
-      // Filter by "impacts score" status if the toggle is active
-      const scoreMatch = !showScoreImpactOnly || impactsScore(resource);
-      
-      return categoryMatch && searchMatch && newMatch && scoreMatch;
-    });
-  }, [resources, activeCategory, searchQuery, showNewOnly, showScoreImpactOnly]);
+// Filter resources based on active category, search query, and filters
+const filteredResources = useMemo(() => {
+  return resources.filter(resource => {
+    // Filter by category
+    const categoryMatch = resourceHasCategory(resource, activeCategory);
+    
+    // Filter by search query
+    const searchMatch = 
+      resource.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      resource.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (resource.domain && resource.domain.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      // Add search in tags
+      (resource.tags && resource.tags.some(tag => 
+        tag.name.toLowerCase().includes(searchQuery.toLowerCase())
+      ));
+    
+    // Filter by "new" status if the toggle is active
+    const newMatch = !showNewOnly || isNewResource(resource.created_at);
+    
+    // Filter by "impacts score" status if the toggle is active
+    const scoreMatch = !showScoreImpactOnly || impactsScore(resource);
+    
+    return categoryMatch && searchMatch && newMatch && scoreMatch;
+  });
+}, [resources, activeCategory, searchQuery, showNewOnly, showScoreImpactOnly]);
 
   // Get featured resources
   const featuredResources = useMemo(() => {
@@ -513,7 +517,7 @@ const ResourceCard = ({ resource, isNew, impactsScore }) => {
           <div className="resource-tags">
             {resource.tags.map((tag, idx) => (
               <span key={idx} className="resource-tag">
-                {tag.name}
+                #{tag.name}
               </span>
             ))}
           </div>

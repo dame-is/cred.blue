@@ -661,10 +661,6 @@
   .filter-controls-container {
     flex-direction: column;
   }
-  
-  .resources-disclaimer {
-    width: 100%;
-  }
 }
 
 @media (max-width: 768px) {
@@ -685,7 +681,6 @@
   .search-filters-container {
     align-items: stretch;
     flex-direction: row;
-    gap: 2.5rem;
   }
   
   .search-container {
@@ -696,15 +691,6 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 15px;
-  }
-  
-  .filter-dropdown {
-    width: 100%;
-  }
-  
-  .toggle-filters {
-    width: 100%;
-    justify-content: space-between;
   }
   
   .filter-dropdowns {
@@ -770,4 +756,16 @@
     align-items: flex-start;
     gap: 10px;
   }
+
+  .search-filters-container {
+    align-items: stretch;
+    flex-direction: row;
+    gap: 2.5rem;
+  }
+
+  .filter-dropdown {
+    display: flex;
+    flex-direction: column;
+  }
+
 }
