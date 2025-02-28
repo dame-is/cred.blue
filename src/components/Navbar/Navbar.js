@@ -183,7 +183,7 @@ const Navbar = () => {
             href="https://discord.gg/95ypHb2qPE"
             target="_blank"
             rel="noopener noreferrer"
-            className="nav-icon"
+            className="nav-icon-discord"
             aria-label="Discord Profile"
           >
             <svg className="icon" fill="currentColor">

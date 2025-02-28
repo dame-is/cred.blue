@@ -317,6 +317,17 @@
   padding-bottom: 10px !important;
 }
 
+.nav-icon-discord {
+  align-items: center;
+  color: #004f84;
+  display: inline-flex;
+  justify-content: center;
+  padding: .5rem;
+  scale: 1.7;
+  padding-right: 10px;
+  transition: color .2s ease;
+}
+
 /* Adjust hover state for dropdown items */
 .dropdown-menu li a:hover {
   background-color: rgba(59, 154, 248, 0.1);

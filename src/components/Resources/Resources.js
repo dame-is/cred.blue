@@ -294,7 +294,10 @@ const filteredResources = useMemo(() => {
   }, [filteredResources, activeCategory, categories]);
   
   // Should show featured section only when All category is selected and search query is empty
-  const shouldShowFeatured = activeCategory === 'All' && searchQuery.trim() === '';
+  const shouldShowFeatured = activeCategory === 'All' && 
+  searchQuery.trim() === '' && 
+  !showNewOnly && 
+  !showScoreImpactOnly;
 
   // Handle search input change
   const handleSearchChange = (e) => {

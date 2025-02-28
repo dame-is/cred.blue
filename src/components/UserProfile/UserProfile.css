@@ -362,10 +362,6 @@ tspan {
   opacity: 0.5;
 }
 
-.narrative-methodology-link {
-  font-size: 0.9em;
-}
-
 .post-type-card .recharts-surface {
   margin-left: -15px;
 }
@@ -495,6 +491,10 @@ tspan {
     margin-top: 0px;
   margin-top: 12.3px;
   max-width: 400px;
+}
+
+.learn-more-text {
+  font-size: 0.9em
 }
 
 .score-breakdown-container .disclaimer {
