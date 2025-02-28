@@ -71,7 +71,7 @@ const Resources = () => {
 
         // Then fetch the categories for each resource using the junction table
         const { data: resourceCategories, error: categoriesError } = await supabase
-          .from('resources_categories')
+          .from('resource_categories')
           .select(`
             resource_id,
             category:categories(id, name, emoji)
