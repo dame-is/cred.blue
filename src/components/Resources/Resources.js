@@ -1,4 +1,4 @@
-// src/components/Resources/Resources.jsx
+// src/components/Resources/Resources.jsx - Modified version
 import React, { useState, useEffect, useMemo } from 'react';
 import './Resources.css';
 import ResourceLoader from './ResourceLoader';
@@ -178,12 +178,17 @@ const Resources = () => {
     return grouped;
   }, [filteredResources, activeCategory]);
   
-  // Should show featured section only when All category is selected and no quality filter is active
-  const shouldShowFeatured = activeCategory === 'All' && qualityFilter === 0;
+  // Should show featured section only when All category is selected, no quality filter is active, and search query is empty
+  const shouldShowFeatured = activeCategory === 'All' && qualityFilter === 0 && searchQuery.trim() === '';
 
   // Handle star rating click for quality filter
   const handleStarClick = (rating) => {
     setQualityFilter(rating === qualityFilter ? 0 : rating);
+  };
+
+  // Handle search input change
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
   };
 
   return (
@@ -205,7 +210,7 @@ const Resources = () => {
                 type="text" 
                 placeholder="Search resources..." 
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={handleSearchChange}
                 className="search-input"
                 aria-label="Search resources"
               />
@@ -225,7 +230,7 @@ const Resources = () => {
           </div>
         </header>
         
-        <div class="filter-disclaimer-container">
+        <div className="filter-disclaimer-container">
 
           {/* Improved Filter Bar */}
         <div className="resources-filters">
@@ -311,7 +316,7 @@ const Resources = () => {
           <ResourceLoader />
         ) : (
         <>
-          {/* Featured Section - Hidden when quality filter is active */}
+          {/* Featured Section - Hidden when quality filter is active or search query is not empty */}
           {shouldShowFeatured && featuredResources.length > 0 && (
             <div className="featured-section">
               <h2>Featured Resources</h2>
