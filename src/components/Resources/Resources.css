@@ -388,6 +388,7 @@
   font-weight: 600;
   font-family: articulat-cf;
   white-space: nowrap;
+  padding-top: 3px;
 }
 
 /* ======= Content Sections ======= */
@@ -742,13 +743,17 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 400px) {
   .resources-page {
     max-width: 100%;
   }
   
   .resources-header h1 {
-    font-size: 1.3rem;
+    font-size: 1.4rem;
+  }
+
+  .header-tagline p {
+    font-size: 0.9rem;
   }
   
   .toggle-filters {
@@ -760,12 +765,15 @@
   .search-filters-container {
     align-items: stretch;
     flex-direction: row;
-    gap: 2.5rem;
   }
 
   .filter-dropdown {
     display: flex;
     flex-direction: column;
+  }
+
+  .filters-row {
+    align-items: center;
   }
 
 }
