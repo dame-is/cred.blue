@@ -173,7 +173,7 @@ const Resources = () => {
 
   // Function to share the resources page on Bluesky
   const shareOnBluesky = () => {
-    const shareText = `Check out this collection of Bluesky tools and resources from cred.blue! 🔧🦋\n\nFind analytics, feeds, alternative clients, and much more to enhance your Bluesky experience.\n\nExplore the tools: https://cred.blue/resources`;
+    const shareText = `Check out this collection of Bluesky + ATProto resources curated by @cred.blue! 🔧🦋\n\nFind lexicons, alternative clients, and much more to enhance your Bluesky experience.\n\nExplore the library: https://cred.blue/resources`;
     
     window.open(
       `https://bsky.app/intent/compose?text=${encodeURIComponent(shareText)}`,
@@ -329,7 +329,6 @@ const Resources = () => {
                 onClick={shareOnBluesky}
                 aria-label="Share this page on Bluesky"
               >
-                <span className="share-icon">📤</span>
                 <span>Share</span>
               </button>
             </div>
