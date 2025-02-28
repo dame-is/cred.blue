@@ -4,7 +4,7 @@ import { ThemeContext } from '../../contexts/ThemeContext';
 import './Navbar.css';
 
 // Dropdown Menu Component
-const DropdownMenu = ({ title, path, items, position }) => {
+const DropdownMenu = ({ title, path, items }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   
@@ -97,6 +97,15 @@ const DropdownMenu = ({ title, path, items, position }) => {
   );
 };
 
+// Regular menu item component to ensure consistent styling
+const MenuItem = ({ title, path }) => {
+  return (
+    <li>
+      <Link to={path}>{title}</Link>
+    </li>
+  );
+};
+
 const Navbar = () => {
   const { isDarkMode, toggleDarkMode } = useContext(ThemeContext);
   const navigate = useNavigate();
@@ -140,9 +149,9 @@ const Navbar = () => {
           </div>
           <nav className="navbar-links">
             <ul>
-              <DropdownMenu {...scoreDropdown} position="left" />
-              <li><Link to="/resources">resources</Link></li>
-              <DropdownMenu {...aboutDropdown} position="right" />
+              <DropdownMenu {...scoreDropdown} />
+              <MenuItem title="resources" path="/resources" />
+              <DropdownMenu {...aboutDropdown} />
             </ul>
           </nav>
         </div>

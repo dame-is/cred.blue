@@ -81,6 +81,13 @@
   transition: color 0.3s ease;
 }
 
+.navbar-links ul li {
+  margin-left: 20px; /* Consistent spacing between all links */
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
 .navbar-links ul li a:hover {
   color: #3B9AF8; /* Change color on hover */
 }
@@ -237,19 +244,24 @@
 
 .dropdown-trigger {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   white-space: nowrap;
+  padding-right: 1.2em; /* Add padding to accommodate the triangle */
 }
 
 .dropdown-trigger::after {
   content: '▼';
   font-size: 0.6em;
+  display: inline-block;
+  margin-left: 0.4em;
   position: absolute;
   right: 0;
   top: 50%;
   transform: translateY(-50%);
   transition: transform 0.2s ease;
 }
+
 
 .dropdown-container:hover .dropdown-trigger::after {
   transform: translateY(-50%) rotate(180deg);
@@ -301,6 +313,12 @@
   background-color: rgba(59, 154, 248, 0.1);
   color: #3B9AF8;
 }
+
+.navbar-links ul li a:not(.dropdown-trigger) {
+  padding-right: 0;
+  display: inline-block;
+}
+
 
 /* Dark mode adjustments for dropdown */
 .dark-mode .dropdown-menu {
@@ -467,6 +485,24 @@
   .dropdown-container {
     margin-bottom: 4px;
     min-height: 32px;
+  }
+}
+
+@media (max-width: 940px) {
+  .dropdown-trigger {
+    padding-right: 1.5em;
+  }
+  
+  .dropdown-trigger::after {
+    right: 0;
+  }
+  
+  /* Ensure all links in mobile have consistent appearance */
+  .navbar-links ul li a {
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 

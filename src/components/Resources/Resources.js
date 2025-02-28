@@ -86,7 +86,6 @@ const Resources = () => {
       } catch (error) {
         console.error('Error fetching resources:', error);
         // In case of error, we could use local data as fallback
-        // setResources(localResourcesWithUTM);
       } finally {
         setIsLoading(false);
       }
@@ -179,8 +178,8 @@ const Resources = () => {
     return grouped;
   }, [filteredResources, activeCategory]);
   
-  // Should show featured section only when All category is selected
-  const shouldShowFeatured = activeCategory === 'All';
+  // Should show featured section only when All category is selected and no quality filter is active
+  const shouldShowFeatured = activeCategory === 'All' && qualityFilter === 0;
 
   // Handle star rating click for quality filter
   const handleStarClick = (rating) => {
@@ -190,59 +189,74 @@ const Resources = () => {
   return (
     <main className="resources-page">
       <div className="alt-card">
-        <div className="resources-header">
-          <h1>Bluesky Resources</h1>
-          
-          {/* Improved header structure */}
-          <div className="resources-intro">
-            <ul>
-              <li>Find tools to enhance your Bluesky experience.</li>
-              <li>Discover analytics, feeds, clients, and more.</li>
-              <li>Explore community-built solutions.</li>
-            </ul>
-            <p className="resources-description">
-              A curated collection of third-party tools, services, and guides for the Bluesky ecosystem
-            </p>
+        {/* Redesigned Header Section */}
+        <header className="resources-header">
+          <div className="header-main">
+            <h1>Bluesky Resources</h1>
+            <div className="header-tagline">
+              <p>A curated collection of tools and services for the Bluesky ecosystem</p>
+            </div>
           </div>
           
-          {/* Improved disclaimer positioning */}
+          <div className="header-features">
+            <div className="feature-cards">
+              <div className="feature-card">
+                <span className="feature-icon">🔍</span>
+                <span className="feature-text">Discover analytics, feeds & clients</span>
+              </div>
+              <div className="feature-card">
+                <span className="feature-icon">⚡</span>
+                <span className="feature-text">Enhance your Bluesky experience</span>
+              </div>
+              <div className="feature-card">
+                <span className="feature-icon">🧩</span>
+                <span className="feature-text">Community-built solutions</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="search-filters-container">
+            <div className="search-container">
+              <span className="search-icon">🔎</span>
+              <input 
+                type="text" 
+                placeholder="Search resources..." 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="search-input"
+                aria-label="Search resources"
+              />
+            </div>
+            
+            <div className="quick-actions">
+              <button
+                className="share-button"
+                type="button"
+                onClick={shareOnBluesky}
+                aria-label="Share this page on Bluesky"
+              >
+                <span className="share-icon">📤</span>
+                <span>Share</span>
+              </button>
+            </div>
+          </div>
+          
           <div className="resources-disclaimer">
+            <div className="disclaimer-icon">⚠️</div>
             <p><strong>Disclaimer:</strong> These resources are third-party tools and services not affiliated with cred.blue or Bluesky. 
             Use them at your own risk and exercise caution when providing access to your data.</p>
           </div>
-          
-          <div className="share-button-container">
-            <button
-              className="share-button"
-              type="button"
-              onClick={shareOnBluesky}
-            >
-              Share This Page
-            </button>
-          </div>
-        </div>
+        </header>
         
-        {isLoading ? (
-          <ResourceLoader />
-        ) : (
-        <>
-        {/* Improved search and filters layout */}
+        {/* Improved Filter Bar */}
         <div className="resources-filters">
-          <div className="search-container">
-            <input 
-              type="text" 
-              placeholder="Search resources..." 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="search-input"
-            />
-          </div>
-          
           <div className="filter-options">
             <div className="filter-dropdowns">
               {/* Category filter dropdown */}
               <div className="category-filter-dropdown">
+                <label htmlFor="category-select" className="filter-label">Category:</label>
                 <select 
+                  id="category-select"
                   value={activeCategory}
                   onChange={(e) => setActiveCategory(e.target.value)}
                   className="filter-select"
@@ -255,108 +269,122 @@ const Resources = () => {
                 </select>
               </div>
               
-              {/* New Quality Filter using Stars */}
+              {/* Quality Filter using Stars */}
               <div className="quality-filter">
-                <div className="quality-filter-stars">
-                  <span className="quality-filter-label">Quality: </span>
-                  <div className="star-filter-container">
-                    {[1, 2, 3, 4, 5].map((rating) => (
-                      <span 
-                        key={rating}
-                        onClick={() => handleStarClick(rating)}
-                        className={`quality-star ${rating <= qualityFilter ? 'filled' : 'empty'}`}
-                        title={`${rating} stars or higher`}
-                      >
-                        ★
-                      </span>
-                    ))}
-                    {qualityFilter > 0 && (
-                      <span 
-                        className="quality-filter-clear"
-                        onClick={() => setQualityFilter(0)}
-                        title="Clear filter"
-                      >
-                        ✕
-                      </span>
-                    )}
-                  </div>
+                <span className="filter-label">Quality:</span>
+                <div className="star-filter-container">
+                  {[1, 2, 3, 4, 5].map((rating) => (
+                    <span 
+                      key={rating}
+                      onClick={() => handleStarClick(rating)}
+                      className={`quality-star ${rating <= qualityFilter ? 'filled' : 'empty'}`}
+                      title={`${rating} stars or higher`}
+                      role="button"
+                      tabIndex="0"
+                      aria-label={`Filter by ${rating} stars or higher`}
+                      onKeyPress={(e) => e.key === 'Enter' && handleStarClick(rating)}
+                    >
+                      ★
+                    </span>
+                  ))}
+                  {qualityFilter > 0 && (
+                    <span 
+                      className="quality-filter-clear"
+                      onClick={() => setQualityFilter(0)}
+                      title="Clear filter"
+                      role="button"
+                      tabIndex="0"
+                      aria-label="Clear quality filter"
+                      onKeyPress={(e) => e.key === 'Enter' && setQualityFilter(0)}
+                    >
+                      ✕
+                    </span>
+                  )}
                 </div>
               </div>
               
               {/* New resources toggle */}
               <div className="new-filter">
-                <label className="toggle-label">
+                <label className="toggle-label" htmlFor="new-toggle">
                   <input
+                    id="new-toggle"
                     type="checkbox"
                     checked={showNewOnly}
                     onChange={() => setShowNewOnly(!showNewOnly)}
+                    aria-label="Show only recently added resources"
                   />
-                  <span className="toggle-text">Recently Added Only</span>
+                  <span className="toggle-text">Recently Added</span>
                 </label>
               </div>
             </div>
           </div>
         </div>
         
-        {shouldShowFeatured && featuredResources.length > 0 && (
-          <div className="featured-section">
-            <h2>Featured Resources</h2>
-            <p className="featured-description">Hand-selected tools that we love and use regularly. These are not sponsored or paid placements.</p>
-            <div className="resources-grid">
-              {featuredResources.map((resource, index) => (
-                <ResourceCard 
-                  key={`featured-${index}`} 
-                  resource={resource} 
-                  isNew={isNewResource(resource.created_at)}
-                />
-              ))}
-            </div>
-          </div>
-        )}
-        
-        {activeCategory === 'All' ? (
-          // When "All" is selected, show resources by category
-          <div className="all-resources-section">
-            <h2>All Resources ({filteredResources.length})</h2>
-            
-            {Object.keys(resourcesByCategory).map(category => (
-              <div key={category} className="category-section">
-                <h3 className="category-header">
-                  {categoryEmojis[category] || '🔹'} {category} ({resourcesByCategory[category].length})
-                </h3>
-                <div className="resources-grid">
-                  {resourcesByCategory[category].map((resource, index) => (
-                    <ResourceCard 
-                      key={`${category}-${index}`} 
-                      resource={resource} 
-                      isNew={isNewResource(resource.created_at)}
-                    />
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
+        {/* Loading indication */}
+        {isLoading ? (
+          <ResourceLoader />
         ) : (
-          // When a specific category is selected
-          <div className="all-resources-section">
-            <h2>{categoryEmojis[activeCategory] || '🔹'} {activeCategory} Resources ({filteredResources.length})</h2>
-            {filteredResources.length > 0 ? (
+        <>
+          {/* Featured Section - Hidden when quality filter is active */}
+          {shouldShowFeatured && featuredResources.length > 0 && (
+            <div className="featured-section">
+              <h2>Featured Resources</h2>
+              <p className="featured-description">Hand-selected tools that we love and use regularly. These are not sponsored or paid placements.</p>
               <div className="resources-grid">
-                {filteredResources.map((resource, index) => (
+                {featuredResources.map((resource, index) => (
                   <ResourceCard 
-                    key={index} 
+                    key={`featured-${index}`} 
                     resource={resource} 
                     isNew={isNewResource(resource.created_at)}
                   />
                 ))}
               </div>
-            ) : (
-              <div className="no-results">
-                <p>No resources found matching your filters.</p>
-              </div>
-            )}
-          </div>
-        )}
+            </div>
+          )}
+          
+          {activeCategory === 'All' ? (
+            // When "All" is selected, show resources by category
+            <div className="all-resources-section">
+              <h2>All Resources ({filteredResources.length})</h2>
+              
+              {Object.keys(resourcesByCategory).map(category => (
+                <div key={category} className="category-section">
+                  <h3 className="category-header">
+                    {categoryEmojis[category] || '🔹'} {category} ({resourcesByCategory[category].length})
+                  </h3>
+                  <div className="resources-grid">
+                    {resourcesByCategory[category].map((resource, index) => (
+                      <ResourceCard 
+                        key={`${category}-${index}`} 
+                        resource={resource} 
+                        isNew={isNewResource(resource.created_at)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            // When a specific category is selected
+            <div className="all-resources-section">
+              <h2>{categoryEmojis[activeCategory] || '🔹'} {activeCategory} Resources ({filteredResources.length})</h2>
+              {filteredResources.length > 0 ? (
+                <div className="resources-grid">
+                  {filteredResources.map((resource, index) => (
+                    <ResourceCard 
+                      key={index} 
+                      resource={resource} 
+                      isNew={isNewResource(resource.created_at)}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="no-results">
+                  <p>No resources found matching your filters.</p>
+                </div>
+              )}
+            </div>
+          )}
         </>
         )}
       </div>
