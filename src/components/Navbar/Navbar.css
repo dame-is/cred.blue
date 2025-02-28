@@ -312,6 +312,11 @@
   text-align: left; /* Align text to the left */
 }
 
+.dropdown-menu {
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+}
+
 /* Adjust hover state for dropdown items */
 .dropdown-menu li a:hover {
   background-color: rgba(59, 154, 248, 0.1);
