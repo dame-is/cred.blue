@@ -15,24 +15,31 @@
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
+/* Improved header structure */
 .resources-header {
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .resources-header h1 {
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: bold;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
   color: var(--button-bg);
+  text-align: center;
+}
+
+.resources-intro {
+  max-width: 800px;
+  margin: 0 auto 1.5rem auto;
 }
 
 .resources-page ul {
   list-style: none;
   text-align: center;
-  margin: 0px auto;
-  padding: 0px;
+  margin: 0 auto 1rem auto;
+  padding: 0;
   width: 100%;
-  opacity: 0.5;
+  opacity: 0.8;
 }
 
 .resources-description {
@@ -40,15 +47,19 @@
   line-height: 1.5;
   opacity: 0.8;
   transition: color 0.3s ease;
-  margin-top: 1rem;
+  text-align: center;
+  font-size: 1.1rem;
+  margin: 0 auto;
 }
 
+/* Improved disclaimer styling */
 .resources-disclaimer {
   background-color: var(--card-border);
   border-left: 4px solid #ffd700;
   padding: 12px 16px;
-  margin-bottom: 24px;
+  margin: 1.5rem auto;
   border-radius: 4px;
+  max-width: 900px;
 }
 
 .resources-disclaimer p {
@@ -58,16 +69,17 @@
 }
 
 .share-button-container {
-  margin-top: 1rem;
+  text-align: center;
+  margin: 1.5rem auto;
 }
 
 .share-button {
   background-color: var(--button-bg);
   color: var(--button-text);
-  padding: 10px 16px;
+  padding: 10px 20px;
   border: none;
   border-radius: 20px;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   display: inline-flex;
@@ -79,8 +91,12 @@
   opacity: 0.8;
 }
 
+/* Improved search and filters */
 .resources-filters {
   margin-bottom: 30px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .search-container {
@@ -89,9 +105,9 @@
 
 .search-input {
   width: 100%;
-  padding: 12px 16px;
+  padding: 14px 18px;
   font-size: 1rem;
-  border: 1px solid var(--card-border);
+  border: 2px solid var(--card-border);
   border-radius: 8px;
   box-sizing: border-box;
   background-color: var(--navbar-bg);
@@ -102,6 +118,7 @@
 .search-input:focus {
   border-color: var(--button-bg);
   outline: none;
+  box-shadow: 0 0 0 2px rgba(var(--button-bg-rgb), 0.2);
 }
 
 .filter-options {
@@ -112,22 +129,26 @@
   justify-content: space-between;
 }
 
-/* New filter dropdowns styling */
+/* Filter dropdowns styling */
 .filter-dropdowns {
   display: flex;
   gap: 16px;
   width: 100%;
+  align-items: center;
 }
 
-.category-filter-dropdown,
+.category-filter-dropdown {
+  flex: 2;
+}
+
 .quality-filter {
-  flex: 1;
+  flex: 2;
 }
 
 .filter-select {
   width: 100%;
   padding: 12px 16px;
-  border: 1px solid var(--card-border);
+  border: 2px solid var(--card-border);
   border-radius: 8px;
   font-size: 0.95rem;
   background-color: var(--navbar-bg);
@@ -145,6 +166,63 @@
   outline: none;
 }
 
+/* New star filter styling */
+.quality-filter-stars {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--navbar-bg);
+  border: 2px solid var(--card-border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  height: 44px;
+  box-sizing: border-box;
+}
+
+.quality-filter-label {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text);
+  margin-right: 4px;
+}
+
+.star-filter-container {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.star-filter-container .quality-star {
+  cursor: pointer;
+  font-size: 1.4rem;
+  transition: transform 0.1s, color 0.2s;
+}
+
+.star-filter-container .quality-star:hover {
+  transform: scale(1.1);
+}
+
+.star-filter-container .quality-star.filled {
+  color: #ffd700;
+}
+
+.star-filter-container .quality-star.empty {
+  color: var(--card-border);
+}
+
+.quality-filter-clear {
+  font-size: 0.8rem;
+  margin-left: 5px;
+  cursor: pointer;
+  color: var(--text);
+  opacity: 0.7;
+  font-weight: bold;
+}
+
+.quality-filter-clear:hover {
+  opacity: 1;
+}
+
 .featured-section,
 .all-resources-section {
   margin-bottom: 40px;
@@ -159,7 +237,7 @@
   padding-bottom: 8px;
 }
 
-/* New category section styling */
+/* Category section styling */
 .category-section {
   margin-bottom: 30px;
 }
@@ -213,10 +291,46 @@
   flex-direction: column;
 }
 
+/* Improved resource header styling */
+.resource-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
 .resource-name {
   font-size: 1.1rem;
-  margin: 0 0 8px 0;
+  margin: 0;
   color: var(--button-bg);
+  line-height: 1.3;
+}
+
+/* Improved NEW badge styling */
+.new-badge {
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  vertical-align: text-top;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .resource-description {
@@ -256,8 +370,8 @@
 }
 
 .quality-star {
-  font-size: 1.1rem; /* Increased from 0.9rem */
-  margin-left: 3px; /* Increased from 2px */
+  font-size: 1.1rem;
+  margin-left: 3px;
   font-weight: bold;
   text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
 }
@@ -303,46 +417,12 @@
   opacity: 0.8;
 }
 
-/* Add these styles to your existing Resources.css file */
-
-/* New badge styling */
-.new-badge {
-  background-color: #007aff;
-  color: white;
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 0.7rem;
-  font-weight: bold;
-  margin-left: 8px;
-  display: inline-block;
-  vertical-align: middle;
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-/* Resource header to display name and new badge on same line */
-.resource-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
 /* New filter toggle styling */
 .new-filter {
-  margin-left: 15px;
+  flex: 1;
   display: flex;
   align-items: center;
+  justify-content: flex-end;
 }
 
 .toggle-label {
@@ -357,14 +437,14 @@
   position: relative;
   width: 40px;
   height: 20px;
-  background-color: #ddd;
+  background-color: var(--card-border);
   border-radius: 20px;
   transition: background-color 0.3s;
   cursor: pointer;
 }
 
 .toggle-label input[type="checkbox"]:checked {
-  background-color: #007aff;
+  background-color: var(--button-bg);
 }
 
 .toggle-label input[type="checkbox"]::before {
@@ -393,7 +473,7 @@
   .filter-options .filter-dropdowns {
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
+    gap: 12px;
   }
   
   .category-filter-dropdown,
@@ -404,6 +484,15 @@
   
   .filter-select {
     width: 100%;
+  }
+  
+  .new-filter {
+    justify-content: flex-start;
+  }
+  
+  .quality-filter-stars {
+    width: 100%;
+    justify-content: space-between;
   }
 }
 
@@ -422,6 +511,10 @@
     padding: 1rem;
   }
 
+  .resources-header h1 {
+    font-size: 1.5rem;
+  }
+  
   .resources-header {
     flex-direction: column;
     align-items: flex-start;
@@ -444,5 +537,9 @@
 @media (max-width: 480px) {
   .resources-page {
     max-width: 100%;
+  }
+  
+  .resources-header h1 {
+    font-size: 1.3rem;
   }
 }

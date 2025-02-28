@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './Definitions.css';
 import { Link } from 'react-router-dom';
+import RelatedPagesNav from '../common/RelatedPagesNav';
 
 const Definitions = () => {
   // State to track which definition is expanded
@@ -225,6 +226,9 @@ const Definitions = () => {
               ))}
             </div>
           </section>
+          
+          {/* Add the related pages navigation */}
+          <RelatedPagesNav currentPage="definitions" />
         </div>
       </main>
     </>

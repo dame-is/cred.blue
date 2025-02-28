@@ -3,6 +3,7 @@
 import React from 'react';
 import './About.css';
 import { Link } from 'react-router-dom';
+import RelatedPagesNav from '../common/RelatedPagesNav';
 
 const About = () => {
   return (
@@ -43,6 +44,9 @@ const About = () => {
           
           <h3>Why is cred.blue in a "beta" state?</h3>
           <p>To put it simply, cred.blue is very experimental and at this early stage things will likely change a lot. The first version of the scoring algorithm lays a foundation for future plans, but it will take some time (and real-world usage) to calibrate the model's weights and variables.</p>
+
+          {/* Add the related pages navigation */}
+          <RelatedPagesNav currentPage="about" />
        </div> 
       </main>
     </>

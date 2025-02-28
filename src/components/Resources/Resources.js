@@ -9,7 +9,7 @@ const Resources = () => {
   const [resources, setResources] = useState([]);
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
-  const [qualityFilter, setQualityFilter] = useState('All');
+  const [qualityFilter, setQualityFilter] = useState(0); // Changed to numeric value (0 = All)
   const [showNewOnly, setShowNewOnly] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -36,7 +36,7 @@ const Resources = () => {
       try {
         const preferences = JSON.parse(savedPreferences);
         setActiveCategory(preferences.activeCategory || 'All');
-        setQualityFilter(preferences.qualityFilter || 'All');
+        setQualityFilter(preferences.qualityFilter || 0);
         setShowNewOnly(preferences.showNewOnly || false);
       } catch (error) {
         console.error('Error loading preferences:', error);
@@ -148,12 +148,10 @@ const Resources = () => {
         resource.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (resource.domain && resource.domain.toLowerCase().includes(searchQuery.toLowerCase()));
       
-      // Filter by quality
+      // Filter by quality (changed to numeric)
       const qualityMatch = 
-        qualityFilter === 'All' || 
-        (qualityFilter === 'High' && resource.quality >= 4) ||
-        (qualityFilter === 'Medium' && resource.quality === 3) ||
-        (qualityFilter === 'Low' && resource.quality <= 2);
+        qualityFilter === 0 || 
+        resource.quality >= qualityFilter;
       
       // Filter by "new" status if the toggle is active
       const newMatch = !showNewOnly || isNewResource(resource.created_at);
@@ -184,18 +182,34 @@ const Resources = () => {
   // Should show featured section only when All category is selected
   const shouldShowFeatured = activeCategory === 'All';
 
+  // Handle star rating click for quality filter
+  const handleStarClick = (rating) => {
+    setQualityFilter(rating === qualityFilter ? 0 : rating);
+  };
+
   return (
-    <>
-      <main className="resources-page">
-       <div className="alt-card">
+    <main className="resources-page">
+      <div className="alt-card">
         <div className="resources-header">
           <h1>Bluesky Resources</h1>
-          <ul>
-            <li>Find tools to enhance your Bluesky experience.</li>
-            <li>Discover analytics, feeds, clients, and more.</li>
-            <li>Explore community-built solutions.</li>
-          </ul>
-          <p className="resources-description">A curated collection of third-party tools, services, and guides for the Bluesky ecosystem</p>
+          
+          {/* Improved header structure */}
+          <div className="resources-intro">
+            <ul>
+              <li>Find tools to enhance your Bluesky experience.</li>
+              <li>Discover analytics, feeds, clients, and more.</li>
+              <li>Explore community-built solutions.</li>
+            </ul>
+            <p className="resources-description">
+              A curated collection of third-party tools, services, and guides for the Bluesky ecosystem
+            </p>
+          </div>
+          
+          {/* Improved disclaimer positioning */}
+          <div className="resources-disclaimer">
+            <p><strong>Disclaimer:</strong> These resources are third-party tools and services not affiliated with cred.blue or Bluesky. 
+            Use them at your own risk and exercise caution when providing access to your data.</p>
+          </div>
           
           <div className="share-button-container">
             <button
@@ -208,15 +222,11 @@ const Resources = () => {
           </div>
         </div>
         
-        <div className="resources-disclaimer">
-          <p><strong>Disclaimer:</strong> These resources are third-party tools and services not affiliated with cred.blue or Bluesky. 
-          Use them at your own risk and exercise caution when providing access to your data.</p>
-        </div>
-        
         {isLoading ? (
           <ResourceLoader />
         ) : (
         <>
+        {/* Improved search and filters layout */}
         <div className="resources-filters">
           <div className="search-container">
             <input 
@@ -245,18 +255,32 @@ const Resources = () => {
                 </select>
               </div>
               
-              {/* Quality filter dropdown */}
+              {/* New Quality Filter using Stars */}
               <div className="quality-filter">
-                <select 
-                  value={qualityFilter}
-                  onChange={(e) => setQualityFilter(e.target.value)}
-                  className="filter-select"
-                >
-                  <option value="All">All Quality Levels</option>
-                  <option value="High">High Quality</option>
-                  <option value="Medium">Medium Quality</option>
-                  <option value="Low">Low Quality</option>
-                </select>
+                <div className="quality-filter-stars">
+                  <span className="quality-filter-label">Quality: </span>
+                  <div className="star-filter-container">
+                    {[1, 2, 3, 4, 5].map((rating) => (
+                      <span 
+                        key={rating}
+                        onClick={() => handleStarClick(rating)}
+                        className={`quality-star ${rating <= qualityFilter ? 'filled' : 'empty'}`}
+                        title={`${rating} stars or higher`}
+                      >
+                        ★
+                      </span>
+                    ))}
+                    {qualityFilter > 0 && (
+                      <span 
+                        className="quality-filter-clear"
+                        onClick={() => setQualityFilter(0)}
+                        title="Clear filter"
+                      >
+                        ✕
+                      </span>
+                    )}
+                  </div>
+                </div>
               </div>
               
               {/* New resources toggle */}
@@ -335,9 +359,8 @@ const Resources = () => {
         )}
         </>
         )}
-       </div>
-      </main>
-    </>
+      </div>
+    </main>
   );
 };
 

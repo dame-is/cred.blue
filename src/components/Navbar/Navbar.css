@@ -238,7 +238,6 @@
 .dropdown-trigger {
   position: relative;
   display: inline-block;
-  padding-right: 20px; /* Space for the arrow indicator */
   white-space: nowrap;
 }
 
