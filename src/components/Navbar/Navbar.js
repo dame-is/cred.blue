@@ -1,24 +1,63 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ThemeContext } from '../../contexts/ThemeContext';
 import './Navbar.css';
 
 // Dropdown Menu Component
 const DropdownMenu = ({ title, path, items }) => {
-  const [isHovered, setIsHovered] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  
+  // Handle click outside to close the dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    // Add event listener only when dropdown is open
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
+  
+  // Detect if we're on mobile based on window width
+  const isMobile = () => window.innerWidth <= 940;
   
   return (
     <li 
-      className="dropdown-container"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      className={`dropdown-container ${isOpen ? 'active' : ''}`}
+      ref={dropdownRef}
+      onMouseEnter={() => !isMobile() && setIsOpen(true)}
+      onMouseLeave={() => !isMobile() && setIsOpen(false)}
     >
-      <Link to={path} className="dropdown-trigger">{title}</Link>
-      {isHovered && (
+      <Link 
+        to={path} 
+        className="dropdown-trigger"
+        onClick={(e) => {
+          if (isMobile()) {
+            e.preventDefault();
+            setIsOpen(!isOpen);
+          }
+        }}
+      >
+        {title}
+      </Link>
+      {(isOpen || (!isMobile() && isOpen)) && (
         <ul className="dropdown-menu">
           {items.map((item, index) => (
             <li key={index}>
-              <Link to={item.path}>{item.title}</Link>
+              <Link 
+                to={item.path} 
+                onClick={() => setIsOpen(false)}
+              >
+                {item.title}
+              </Link>
             </li>
           ))}
         </ul>

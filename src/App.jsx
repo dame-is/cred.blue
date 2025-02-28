@@ -8,6 +8,7 @@ import About from './components/About/About';
 import Home from './components/Home/Home';
 import Leaderboard from './components/Leaderboard/Leaderboard';
 import Supporter from './components/Supporter/Supporter';
+import Definitions from './components/Definitions/Definitions';
 import Shortcut from './components/Shortcut/Shortcut';
 import Resources from './components/Resources/Resources';
 import ScoringMethodology from './components/ScoringMethodology/ScoringMethodology';
@@ -37,6 +38,7 @@ const App = () => {
             <Route path="/terms" element={<Terms />} />
             <Route path="/newsletter" element={<Newsletter />} />
             <Route path="/supporter" element={<Supporter />} />
+            <Route path="/definitions" element={<Definitions />} />
             <Route path="/leaderboard" element={<Leaderboard />} />
             <Route path="/resources" element={<Resources />} />
             <Route path="/shortcut" element={<Shortcut />} />

@@ -35,191 +35,54 @@
     margin: 15px 0;
     line-height: 1.5;
   }
-
+  
   .increase-score-list li {
     margin-bottom: 5px;
   }
-
-  .social-status-list li {
-    margin-bottom: 5px;
-  }
-
+  
   .methodology-page-chart .score-gauge {
     margin: auto !important;
     padding-right: 11px;
     padding-bottom: 10.5px;
   }
-
-/* Add these styles to your ScoringMethodology.css file */
-
-.definitions-container {
-    margin-top: 20px;
-    overflow: hidden;
-  }
   
-  .definition-item {
-    margin-bottom: 10px;
-    border-radius: 6px;
-    background-color: var(--navbar-bg);
-    overflow: hidden;
-    transition: all 0.3s ease;
-    border: 1px solid var(--card-border);
-  }
-  
-  .definition-term {
-    padding: 12px 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: 600;
-    cursor: pointer;
-    background-color: var(--navbar-bg);
-    color: var(--text);
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-  
-  .toggle-icon {
-    font-size: 16px;
-    font-weight: bold;
-    color: var(--button-bg);
-    transition: color 0.3s ease;
-  }
-  
-  .definition-description {
-    max-height: 0;
-    margin-left: 0;
-    overflow: hidden;
-    padding: 0 15px;
-    transition: all 0.3s ease;
-    color: var(--text);
-  }
-  
-  .definition-description.expanded {
-    max-height: 500px;
+  /* Link to Definitions page */
+  .definitions-link-container {
+    margin-top: 40px;
     padding: 15px;
-    border-top: 1px solid var(--card-border);
-    margin-left: 0px;
+    background-color: rgba(59, 154, 248, 0.1);
+    border-radius: 8px;
+    border-left: 4px solid var(--button-bg);
   }
   
-  .definition-item:hover {
-    border-color: var(--button-bg);
-  }
-  
-  .definition-term:hover {
-    background-color: var(--background);
-  }
-  
-  /* Alternative simple style (if you prefer a non-accordion approach) */
-  .definitions-simple .definition-item {
-    margin-bottom: 20px;
-    background-color: transparent;
-    border: none;
-  }
-  
-  .definitions-simple .definition-term {
-    font-weight: 700;
-    margin-bottom: 8px;
-    cursor: default;
-    background-color: transparent;
-    padding: 0;
-    color: var(--text);
-  }
-  
-  .definitions-simple .definition-description {
-    max-height: none;
-    padding: 0 0 0 15px;
-    border-left: 3px solid var(--button-bg);
-    color: var(--text);
-  }
-  
-  /* Dark mode specific overrides */
-  .dark-mode .definition-item {
-    background-color: var(--navbar-bg);
-    border-color: var(--card-border);
-  }
-  
-  .dark-mode .definition-term {
-    background-color: var(--navbar-bg);
-  }
-  
-  .dark-mode .definition-term:hover {
-    background-color: #2d2d2d;
-  }
-  
-  .dark-mode .toggle-icon {
-    color: var(--button-bg);
-  }
-  
-  .dark-mode .definition-description.expanded {
-    border-top-color: var(--card-border);
-  }
-  
-  .dark-mode .definitions-simple .definition-description {
-    border-left-color: var(--button-bg);
-  }
-
-
-  /* Add these styles to your ScoringMethodology.css file */
-
-/* Make the social statuses container use the same styling as definitions */
-.social-statuses-container {
-    margin-top: 15px;
-    margin-bottom: 30px;
-  }
-  
-  /* Additional style for the social status names to make them stand out */
-  .social-statuses-container .definition-term {
-    font-weight: 700;
-  }
-  
-  /* Add a subtle indicator for the different status levels */
-  .social-statuses-container .definition-item:nth-child(1) .definition-term {
-    border-left: 4px solid #e2e8f0; /* Lightest - Newcomer */
-  }
-  
-  .social-statuses-container .definition-item:nth-child(2) .definition-term {
-    border-left: 4px solid #004F84; /* Explorer */
-  }
-  
-  .social-statuses-container .definition-item:nth-child(3) .definition-term {
-    border-left: 4px solid #3B9AF8; /* Pathfinder */
-  }
-  
-  .social-statuses-container .definition-item:nth-child(4) .definition-term {
-    border-left: 4px solid #FFA500; /* Guide */
-  }
-  
-  .social-statuses-container .definition-item:nth-child(5) .definition-term {
-    border-left: 4px solid #FFD700; /* Darkest - Leader */
-  }
-
-  /* Add these styles to your ScoringMethodology.css file */
-
-.learn-more-link {
-    margin-top: 12px;
-    font-size: 0.9em;
-    text-align: right;
-  }
-  
-  .learn-more-link a {
+  .definitions-link {
+    display: inline-block;
+    margin-top: 10px;
     color: var(--button-bg);
     text-decoration: none;
-    display: inline-block;
-    transition: all 0.2s ease;
-    padding: 4px 8px;
+    padding: 8px 16px;
     border-radius: 4px;
+    background-color: rgba(59, 154, 248, 0.15);
+    transition: all 0.2s ease;
+    font-weight: 500;
   }
   
-  .learn-more-link a:hover {
-    background-color: rgba(59, 154, 248, 0.1);
+  .definitions-link:hover {
+    background-color: rgba(59, 154, 248, 0.25);
     text-decoration: underline;
   }
   
-  /* Make sure links work properly in dark mode */
-  .dark-mode .learn-more-link a {
-    color: var(--button-bg);
+  /* Dark mode specific overrides */
+  .dark-mode .definitions-link-container {
+    background-color: rgba(59, 154, 248, 0.1);
+    border-left-color: var(--button-bg);
   }
   
-  .dark-mode .learn-more-link a:hover {
-    background-color: rgba(59, 154, 248, 0.15);
+  .dark-mode .definitions-link {
+    color: var(--button-bg);
+    background-color: rgba(59, 154, 248, 0.2);
+  }
+  
+  .dark-mode .definitions-link:hover {
+    background-color: rgba(59, 154, 248, 0.3);
   }

@@ -2,186 +2,122 @@
 
 /* Common Navbar Styles */
 .navbar {
-    width: 100%;
-    background-color: var(--navbar-bg);
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-    border-bottom: 5px solid var(--card-border);
+  width: 100%;
+  background-color: var(--navbar-bg);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  border-bottom: 5px solid var(--card-border);
 }
 
-  .cred {
-    color: #3B9AF8;
-  }
+.cred {
+  color: #3B9AF8;
+}
 
-  .period {
-    color: black;
-  }
+.period {
+  color: black;
+}
 
-  .blue {
-    color: #004F84;
-  }
+.blue {
+  color: #004F84;
+}
 
-  .dark-mode .cred {
-    color: #c7c7c7;
-  }
+.dark-mode .cred {
+  color: #c7c7c7;
+}
 
-  .dark-mode .period {
-    color: #fff;
-  }
+.dark-mode .period {
+  color: #fff;
+}
 
-  .dark-mode .blue {
-    color: #3B9AF8;
-  }
+.dark-mode .blue {
+  color: #3B9AF8;
+}
 
-  .theme-toggle-button:hover {
-    background: none;
-  }
-  
-  .navbar-container {
-    max-width: 1000px;
-    margin: 0 auto; /* Center the content */
-    padding: 0 20px; /* Horizontal padding */
-    display: flex;
-    align-items: center;
-    justify-content: space-between; /* Distribute space between left and right sections */
-    height: 84px;
-    box-sizing: border-box;
-  }
-  
-  /* Left Section: Logo and Links */
-  .navbar-left {
-    display: flex;
-    align-items: center;
-  }
-  
-  .navbar-logo a {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #3B9AF8; /* Blue color for the logo */
-    text-decoration: none;
-    transition: color 0.3s ease;
-  }
+.navbar-container {
+  max-width: 1000px;
+  margin: 0 auto; /* Center the content */
+  padding: 0 20px; /* Horizontal padding */
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Distribute space between left and right sections */
+  height: 84px;
+  box-sizing: border-box;
+}
 
-  .navbar-links {
-    font-weight: bold;
-    margin-top: 2px;
-  }
-  
-  .navbar-links ul {
-    list-style: none;
-    display: flex;
-    margin: 0;
-    padding: 0;
-    margin-left: 20px; /* Spacing between logo and links */
-  }
-  
-  .navbar-links ul li {
-    margin-left: 20px; /* Spacing between links */
-  }
-  
-  .navbar-links ul li a {
-    text-decoration: none;
-    color: #004f84; /* Dark gray color for links */
-    font-size: 1rem;
-    transition: color 0.3s ease;
-  }
-  
-  .navbar-links ul li a:hover {
-    color: #3B9AF8; /* Change color on hover */
-  }
-  
-  /* Right Section: Actions */
-  .navbar-actions {
-    display: flex;
-    align-items: center;
-    gap: 20px; /* Space between the toggle and auth buttons */
-  }
-  
-  /* Logout Button */
-  .logout-button {
-    background-color: #dc3545; /* Red background */
-    color: #ffffff; /* White text */
-  }
-  
-  .logout-button:hover {
-    background-color: #c82333; /* Darker red on hover */
-  }
-  
-  /* Disabled Button Styling */
-  .disabled-button {
-    background-color: gray;
-    color: white;
-    cursor: not-allowed;
-  }
-  
-  .dark-mode .navbar-logo a {
-    color: #f5f5f5; /* Light color for logo */
-  }
-  
-  .dark-mode .navbar-links ul li a {
-    color: #f5f5f5; /* Light gray for links */
-  }
-  
-  .dark-mode .navbar-links ul li a:hover {
-    color: #66b2ff; /* Lighter blue on hover */
-  }
-  
-  .dark-mode .auth-button {
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-  
-  /* Adjust Login Button for Dark Mode */
-  .dark-mode .login-button {
-    background-color: #3B9AF8; /* Dark gray background */
-    color: #f5f5f5; /* Light text */
-  }
-  
-  .dark-mode .login-button:hover {
-    background-color: #004F84; /* Even darker on hover */
-  }
-  
-  /* Adjust Logout Button for Dark Mode */
-  .dark-mode .logout-button {
-    background-color: #ff6b6b; /* Light red background */
-    color: #f5f5f5; /* Light text */
-  }
-  
-  .dark-mode .logout-button:hover {
-    background-color: #ff4c4c; /* Darker red on hover */
-  }
-  
-  /* Dark Mode Toggle Button Styling */
-  .theme-toggle-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-    color: var(--text);; /* Default text color */
-    transition: color 0.3s ease;
-    display: flex;
-    align-items: center;
-  }
-  
-  .theme-toggle-button svg {
-    margin-right: 5px; /* Space between icon and text */
-  }
+/* Left Section: Logo and Links */
+.navbar-left {
+  display: flex;
+  align-items: center;
+}
 
+.navbar-logo a {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #3B9AF8; /* Blue color for the logo */
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
 
-/* Theme toggle button icon only */
+.navbar-links {
+  font-weight: bold;
+  margin-top: 2px;
+}
+
+.navbar-links ul {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+  margin-left: 20px; /* Spacing between logo and links */
+}
+
+.navbar-links ul li {
+  margin-left: 20px; /* Spacing between links */
+}
+
+.navbar-links ul li a {
+  text-decoration: none;
+  color: #004f84; /* Dark blue color for links */
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+.navbar-links ul li a:hover {
+  color: #3B9AF8; /* Change color on hover */
+}
+
+/* Right Section: Actions */
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+}
+
+/* Theme toggle and icon styles */
 .theme-toggle-button {
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 1.6em;
-  display: flex;
+  display: inline-flex;
+  scale: 1.3;
   align-items: center;
   justify-content: center;
+  padding: 0.5rem;
   color: #004f84;
-  padding: 0px;
+  transition: color 0.2s ease;
+  font-size: 1.6em;
 }
 
-/* Theme toggle button icon only */
+.theme-toggle-button:hover {
+  color: var(--primary-color);
+  background: none;
+}
+
 .dark-mode .theme-toggle-button {
   color: #ffffff;
+}
+
+.theme-toggle-button svg {
+  margin-right: 5px; /* Space between icon and text */
 }
 
 /* Icon styles */
@@ -190,14 +126,13 @@
   align-items: center;
   justify-content: center;
   padding: 0.5rem;
-  color: #004f84;;
+  color: #004f84;
   transition: color 0.2s ease;
   scale: 1.3;
 }
 
-/* Icon styles */
 .dark-mode .nav-icon {
-  color: #ffffff;;
+  color: #ffffff;
 }
 
 .nav-icon:hover {
@@ -209,33 +144,58 @@
   height: 1.25rem;
 }
 
-/* Theme toggle button styles */
-.theme-toggle-button {
-  display: inline-flex;
-  scale: 1.3;
-  align-items: center;
-  justify-content: center;
-  padding: 0.5rem;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #004f84;;
-  transition: color 0.2s ease;
-}
-
-.theme-toggle-button:hover {
-  color: var(--primary-color);
-}
-
-/* Navbar actions container */
-.navbar-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.3em;
-}
-
+/* Button styles */
 .auth-button.login-button {
   padding: 7px 14px;
+}
+
+.logout-button {
+  background-color: #dc3545; /* Red background */
+  color: #ffffff; /* White text */
+}
+
+.logout-button:hover {
+  background-color: #c82333; /* Darker red on hover */
+}
+
+.disabled-button {
+  background-color: gray;
+  color: white;
+  cursor: not-allowed;
+}
+
+.dark-mode .navbar-logo a {
+  color: #f5f5f5; /* Light color for logo */
+}
+
+.dark-mode .navbar-links ul li a {
+  color: #f5f5f5; /* Light gray for links */
+}
+
+.dark-mode .navbar-links ul li a:hover {
+  color: #66b2ff; /* Lighter blue on hover */
+}
+
+.dark-mode .auth-button {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dark-mode .login-button {
+  background-color: #3B9AF8; /* Blue background */
+  color: #f5f5f5; /* Light text */
+}
+
+.dark-mode .login-button:hover {
+  background-color: #004F84; /* Darker blue on hover */
+}
+
+.dark-mode .logout-button {
+  background-color: #ff6b6b; /* Light red background */
+  color: #f5f5f5; /* Light text */
+}
+
+.dark-mode .logout-button:hover {
+  background-color: #ff4c4c; /* Darker red on hover */
 }
 
 .navbar-logo {
@@ -268,7 +228,9 @@
   margin-left: 10.2px;
 }
 
-/* Dropdown Menu Styles */
+/* ---------------------------------- */
+/* Dropdown Menu Styles - NEW VERSION */
+/* ---------------------------------- */
 .dropdown-container {
   position: relative;
 }
@@ -320,6 +282,8 @@
 .dropdown-menu li {
   margin: 0 !important;
   padding: 0;
+  display: block; /* Force items to be blocks in a column */
+  width: 100%;
 }
 
 .dropdown-menu li a {
@@ -329,6 +293,8 @@
   text-decoration: none;
   transition: background-color 0.2s ease;
   white-space: nowrap;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .dropdown-menu li a:hover {
@@ -348,143 +314,157 @@
   color: #66b2ff;
 }
 
-/* Responsive Adjustments for Dropdown */
+/* ---------------------------------- */
+/* Responsive Design Styles */
+/* ---------------------------------- */
 @media (max-width: 940px) {
+  /* Navbar container adjustments */
+  .navbar-container {
+    flex-direction: column;
+    align-items: center;
+    height: auto;
+    justify-content: center;
+    row-gap: 23px;
+    margin-top: 27px;
+    margin-bottom: 27px;
+    box-sizing: border-box;
+    max-width: 1200px;
+    padding: 0 20px;
+  }
+  
+  /* Logo adjustments */
+  .navbar-logo {
+    text-align: center;
+  }
+  
+  .navbar-logo a {
+    font-size: 2.5em;
+  }
+  
+  .beta-badge {
+    font-size: 0.75em;
+    font-weight: 600;
+    margin: 11px;
+    padding: 4px 7px;
+    margin-right: 0px;
+  }
+  
+  /* Left section adjustments */
+  .navbar-left {
+    align-items: center;
+    display: block;
+  }
+  
+  /* Links adjustments */
+  .navbar-links {
+    font-weight: 700;
+    margin-top: 15px;
+    text-align: center;
+  }
+  
+  .navbar-links ul {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 0;
+    list-style: none;
+    margin: 0px;
+  }
+  
+  .navbar-links ul li {
+    margin: 0 10px;
+  }
+  
+  /* Actions adjustments */
+  .navbar-actions {
+    align-items: center;
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+  }
+  
+  .navbar-support-button-container {
+    margin-left: 0px;
+  }
+  
+  /* Dropdown adjustments for mobile */
   .dropdown-menu {
     position: static;
     display: none;
     box-shadow: none;
-    border: none;
     min-width: auto;
     width: 100%;
-    margin-top: 5px;
-    padding: 5px 0;
-    background-color: transparent;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    padding: 8px 0;
+    background-color: rgba(59, 154, 248, 0.05);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
     transform: none;
   }
   
-  .dropdown-container:hover .dropdown-menu {
+  .dropdown-container:hover .dropdown-menu,
+  .dropdown-container.active .dropdown-menu {
     display: block;
     opacity: 1;
     visibility: visible;
     transform: none;
   }
   
-  .dropdown-menu li a {
-    padding: 5px 10px;
+  /* Force menu items to be in a column */
+  .dropdown-menu li {
+    display: block;
+    width: 100%;
     text-align: center;
   }
   
-  .dropdown-trigger::after {
-    position: static;
-    margin-left: 5px;
-    transform: none;
+  .dropdown-menu li a {
+    padding: 8px 16px;
+    text-align: center;
+    display: block;
   }
   
-  .dropdown-container:hover .dropdown-trigger::after {
+  .dropdown-trigger::after {
+    display: inline-block;
+    margin-left: 5px;
+    position: static;
+    transform: none;
+    vertical-align: middle;
+  }
+  
+  .dropdown-container:hover .dropdown-trigger::after,
+  .dropdown-container.active .dropdown-trigger::after {
     transform: rotate(180deg);
+  }
+  
+  /* Prevent layout shifting */
+  .dropdown-container {
+    margin-bottom: 4px;
+    min-height: 32px;
   }
 }
 
-  /* Responsive Design: Links display in a row under the logo */
-  @media (max-width: 940px) {
-    .navbar-container {
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .navbar-support-button-container {
-      margin-left: 0px;
-    }
-  
-    .navbar-links ul {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      padding: 0;
-      list-style: none;
-      margin: 0px;
-    }
-  
-    .navbar-links ul li {
-      margin: 0 10px;
-    }
-  
-    .navbar-actions {
-      align-items: center;
-      display: flex;
-      gap: 5px;
-      justify-content: center;
-    }
-  
-    .navbar-links {
-      font-weight: 700;
-      margin-top: 15px;
-      text-align: center;
-    }
-  
-    .navbar-logo a {
-      font-size: 2.5em;
-    }
-  
-    .navbar-container {
-      align-items: center;
-      flex-direction: column;
-      justify-content: center;
-      row-gap: 23px;
-      margin-top: 27px;
-      margin-bottom: 27px;
-      display: flex;
-    }
-  
-    .navbar-container {
-      box-sizing: border-box;
-      height: 100%;
-      justify-content: space-between;
-      max-width: 1200px;
-      padding: 0 20px;
-    }
-  
-    .navbar-left {
-      align-items: center;
-      display: block;
-    }
-  
-    .navbar-logo {
-      text-align: center;
-    }
-  
-    .beta-badge {
-      font-size: 0.75em;
-      font-weight: 600;
-      margin: 11px;
-      padding: 4px 7px;
-      margin-right: 0px;
-    }
+/* Smaller screen refinements */
+@media (max-width: 450px) {
+  .navbar-links {
+    max-width: 300px;
+    line-height: 1.8em;
   }
+}
 
-  /* Responsive Design: Links display in a row under the logo */
-  @media (max-width: 450px) {
-    .navbar-links {
-      max-width: 300px;
-      line-height: 1.8em;
-    }
+@media (max-width: 370px) {
+  .navbar-support-button {
+    max-width: 135.5px;
+    font-size: 0.8em;
+    margin-left: 0px;
   }
-
-  /* Responsive Design: Links display in a row under the logo */
-  @media (max-width: 370px) {
-    .navbar-support-button {
-      max-width: 135.5px;
-      font-size: 0.8em;
-      margin-left: 0px;
-    }
-    .navbar-links {
-      font-weight: 700;
-      text-align: center;
-      max-width: 205.5px;
-      margin: auto;
-      margin-top: auto;
-      margin-top: 15px;
-      line-height: 1.5em;
-    }
+  
+  .navbar-links {
+    font-weight: 700;
+    text-align: center;
+    max-width: 205.5px;
+    margin: auto;
+    margin-top: 15px;
+    line-height: 1.5em;
   }
+}
