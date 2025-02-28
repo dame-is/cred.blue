@@ -179,6 +179,17 @@ const Navbar = () => {
               <use href="/icons/icons-sprite.svg#icon-github" />
             </svg>
           </a>
+          <a
+            href="https://discord.gg/95ypHb2qPE"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="nav-icon"
+            aria-label="Discord Profile"
+          >
+            <svg className="icon" fill="currentColor">
+              <use href="/icons/icons-sprite.svg#icon-discord" />
+            </svg>
+          </a>
           {/* Theme Toggle */}
           <button
             className="theme-toggle-button"

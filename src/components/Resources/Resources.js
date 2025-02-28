@@ -59,13 +59,10 @@ const Resources = () => {
     async function fetchResources() {
       setIsLoading(true);
       try {
-        // First fetch all resources
+        // First fetch all resources (removed subcategories)
         const { data: resourcesData, error: resourcesError } = await supabase
           .from('resources')
-          .select(`
-            *,
-            subcategory:subcategories(id, name)
-          `)
+          .select('*')
           .order('position');
 
         if (resourcesError) {
@@ -108,7 +105,6 @@ const Resources = () => {
             category: resourceCategoryList.length > 0 ? resourceCategoryList[0].name : 'Misc',
             // Store all categories
             categories: resourceCategoryList,
-            subcategory: resource.subcategory ? resource.subcategory.name : null,
             emoji: resourceCategoryList.length > 0 ? resourceCategoryList[0].emoji : '🔮',
             url: addUTMParameters(resource.url)
           };
