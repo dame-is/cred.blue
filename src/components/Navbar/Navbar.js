@@ -158,6 +158,17 @@ const Navbar = () => {
         <div className="navbar-actions">
           {/* Social Links */}
           <a
+            href="https://discord.gg/95ypHb2qPE"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="nav-icon-discord"
+            aria-label="Discord Profile"
+          >
+            <svg className="icon" fill="currentColor">
+              <use href="/icons/icons-sprite.svg#icon-discord" />
+            </svg>
+          </a>
+          <a
             href="https://bsky.app/profile/cred.blue"
             target="_blank"
             rel="noopener noreferrer"
@@ -177,17 +188,6 @@ const Navbar = () => {
           >
             <svg className="icon" fill="currentColor">
               <use href="/icons/icons-sprite.svg#icon-github" />
-            </svg>
-          </a>
-          <a
-            href="https://discord.gg/95ypHb2qPE"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="nav-icon-discord"
-            aria-label="Discord Profile"
-          >
-            <svg className="icon" fill="currentColor">
-              <use href="/icons/icons-sprite.svg#icon-discord" />
             </svg>
           </a>
           {/* Theme Toggle */}
