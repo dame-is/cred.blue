@@ -27,20 +27,33 @@ const DropdownMenu = ({ title, path, items }) => {
   }, [isOpen]);
   
   // Detect if we're on mobile based on window width
-  const isMobile = () => window.innerWidth <= 940;
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const isMobile = windowWidth <= 940;
+  
+  // Update window width on resize
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
   
   return (
     <li 
       className={`dropdown-container ${isOpen ? 'active' : ''}`}
       ref={dropdownRef}
-      onMouseEnter={() => !isMobile() && setIsOpen(true)}
-      onMouseLeave={() => !isMobile() && setIsOpen(false)}
+      onMouseEnter={() => !isMobile && setIsOpen(true)}
+      onMouseLeave={() => !isMobile && setIsOpen(false)}
     >
       <Link 
         to={path} 
         className="dropdown-trigger"
         onClick={(e) => {
-          if (isMobile()) {
+          if (isMobile) {
             e.preventDefault();
             setIsOpen(!isOpen);
           }
@@ -48,7 +61,7 @@ const DropdownMenu = ({ title, path, items }) => {
       >
         {title}
       </Link>
-      {(isOpen || (!isMobile() && isOpen)) && (
+      {isOpen && (
         <ul className="dropdown-menu">
           {items.map((item, index) => (
             <li key={index}>
