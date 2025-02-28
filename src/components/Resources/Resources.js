@@ -1,4 +1,4 @@
-// src/components/Resources/Resources.jsx - Updated for multiple categories
+// src/components/Resources/Resources.jsx
 import React, { useState, useEffect, useMemo } from 'react';
 import './Resources.css';
 import ResourceLoader from './ResourceLoader';
@@ -10,6 +10,7 @@ const Resources = () => {
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [showNewOnly, setShowNewOnly] = useState(false);
+  const [showScoreImpactOnly, setShowScoreImpactOnly] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   // Category emojis mapping
@@ -36,6 +37,7 @@ const Resources = () => {
         const preferences = JSON.parse(savedPreferences);
         setActiveCategory(preferences.activeCategory || 'All');
         setShowNewOnly(preferences.showNewOnly || false);
+        setShowScoreImpactOnly(preferences.showScoreImpactOnly || false);
       } catch (error) {
         console.error('Error loading preferences:', error);
       }
@@ -46,17 +48,18 @@ const Resources = () => {
   useEffect(() => {
     const preferences = {
       activeCategory,
-      showNewOnly
+      showNewOnly,
+      showScoreImpactOnly
     };
     localStorage.setItem('resourcesPreferences', JSON.stringify(preferences));
-  }, [activeCategory, showNewOnly]);
+  }, [activeCategory, showNewOnly, showScoreImpactOnly]);
 
   // Fetch resources from Supabase
   useEffect(() => {
     async function fetchResources() {
       setIsLoading(true);
       try {
-        // First fetch all resources (removed subcategories)
+        // First fetch all resources
         const { data: resourcesData, error: resourcesError } = await supabase
           .from('resources')
           .select('*')
@@ -78,6 +81,18 @@ const Resources = () => {
           throw categoriesError;
         }
 
+        // Then fetch the tags for each resource
+        const { data: resourceTags, error: tagsError } = await supabase
+          .from('resource_tags')
+          .select(`
+            resource_id,
+            tag:tags(id, name)
+          `);
+
+        if (tagsError) {
+          throw tagsError;
+        }
+
         // Group categories by resource_id
         const categoriesByResource = {};
         resourceCategories.forEach(item => {
@@ -91,10 +106,24 @@ const Resources = () => {
           });
         });
 
+        // Group tags by resource_id
+        const tagsByResource = {};
+        resourceTags.forEach(item => {
+          if (!tagsByResource[item.resource_id]) {
+            tagsByResource[item.resource_id] = [];
+          }
+          tagsByResource[item.resource_id].push({
+            id: item.tag.id,
+            name: item.tag.name
+          });
+        });
+
         // Transform data to match the expected format
         const formattedResources = resourcesData.map(resource => {
           // Get categories for this resource
           const resourceCategoryList = categoriesByResource[resource.id] || [];
+          // Get tags for this resource
+          const resourceTagList = tagsByResource[resource.id] || [];
           
           return {
             ...resource,
@@ -102,6 +131,8 @@ const Resources = () => {
             category: resourceCategoryList.length > 0 ? resourceCategoryList[0].name : 'Misc',
             // Store all categories
             categories: resourceCategoryList,
+            // Store all tags
+            tags: resourceTagList,
             emoji: resourceCategoryList.length > 0 ? resourceCategoryList[0].emoji : '🔮',
             url: addUTMParameters(resource.url)
           };
@@ -126,6 +157,12 @@ const Resources = () => {
     const now = new Date();
     const daysDiff = Math.floor((now - resourceDate) / (1000 * 60 * 60 * 24));
     return daysDiff < 14;
+  };
+
+  // Check if a resource impacts score
+  const impactsScore = (resource) => {
+    if (!resource.tags) return false;
+    return resource.tags.some(tag => tag.name.toLowerCase() === 'score');
   };
 
   // Add UTM parameters to URLs
@@ -180,7 +217,7 @@ const Resources = () => {
     return resource.categories && resource.categories.some(cat => cat.name === categoryName);
   };
 
-  // Filter resources based on active category, search query, and new filter
+  // Filter resources based on active category, search query, and filters
   const filteredResources = useMemo(() => {
     return resources.filter(resource => {
       // Filter by category
@@ -195,9 +232,12 @@ const Resources = () => {
       // Filter by "new" status if the toggle is active
       const newMatch = !showNewOnly || isNewResource(resource.created_at);
       
-      return categoryMatch && searchMatch && newMatch;
+      // Filter by "impacts score" status if the toggle is active
+      const scoreMatch = !showScoreImpactOnly || impactsScore(resource);
+      
+      return categoryMatch && searchMatch && newMatch && scoreMatch;
     });
-  }, [resources, activeCategory, searchQuery, showNewOnly]);
+  }, [resources, activeCategory, searchQuery, showNewOnly, showScoreImpactOnly]);
 
   // Get featured resources
   const featuredResources = useMemo(() => {
@@ -225,7 +265,7 @@ const Resources = () => {
           if (!grouped[category.name]) {
             grouped[category.name] = [];
           }
-          // Avoid duplicates (could happen if we process the same resource multiple times)
+          // Avoid duplicates
           if (!grouped[category.name].some(r => r.id === resource.id)) {
             grouped[category.name].push(resource);
           }
@@ -296,14 +336,12 @@ const Resources = () => {
           </div>
         </header>
         
-        <div className="filter-disclaimer-container">
-
+        <div className="filter-controls-container">
           {/* Improved Filter Bar */}
-        <div className="resources-filters">
-          <div className="filter-options">
-            <div className="filter-dropdowns">
+          <div className="filter-bar">
+            <div className="filter-section">
               {/* Category filter dropdown */}
-              <div className="category-filter-dropdown">
+              <div className="filter-dropdown">
                 <label htmlFor="category-select" className="filter-label">Category:</label>
                 <select 
                   id="category-select"
@@ -319,28 +357,43 @@ const Resources = () => {
                 </select>
               </div>
               
-              {/* New resources toggle */}
-              <div className="new-filter">
-                <label className="toggle-label" htmlFor="new-toggle">
-                  <input
-                    id="new-toggle"
-                    type="checkbox"
-                    checked={showNewOnly}
-                    onChange={() => setShowNewOnly(!showNewOnly)}
-                    aria-label="Show only recently added resources"
-                  />
-                  <span className="toggle-text">Recently Added</span>
-                </label>
+              {/* Toggle filters */}
+              <div className="toggle-filters">
+                {/* New resources toggle */}
+                <div className="toggle-filter">
+                  <label className="toggle-label" htmlFor="new-toggle">
+                    <input
+                      id="new-toggle"
+                      type="checkbox"
+                      checked={showNewOnly}
+                      onChange={() => setShowNewOnly(!showNewOnly)}
+                      aria-label="Show only recently added resources"
+                    />
+                    <span className="toggle-text">Recently Added</span>
+                  </label>
+                </div>
+                
+                {/* Score impact toggle */}
+                <div className="toggle-filter">
+                  <label className="toggle-label" htmlFor="score-toggle">
+                    <input
+                      id="score-toggle"
+                      type="checkbox"
+                      checked={showScoreImpactOnly}
+                      onChange={() => setShowScoreImpactOnly(!showScoreImpactOnly)}
+                      aria-label="Show only resources that impact score"
+                    />
+                    <span className="toggle-text">Impacts Score</span>
+                  </label>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
           <div className="resources-disclaimer">
             <div className="disclaimer-icon">⚠️</div>
             <p><strong>Disclaimer:</strong> These resources are not affiliated with cred.blue or Bluesky. Use them at your own risk and exercise caution when providing access to your data.</p>
           </div>
-
         </div>
         
         {/* Loading indication */}
@@ -359,6 +412,7 @@ const Resources = () => {
                     key={`featured-${index}`} 
                     resource={resource} 
                     isNew={isNewResource(resource.created_at)}
+                    impactsScore={impactsScore(resource)}
                   />
                 ))}
               </div>
@@ -381,6 +435,7 @@ const Resources = () => {
                         key={`${category}-${index}`} 
                         resource={resource} 
                         isNew={isNewResource(resource.created_at)}
+                        impactsScore={impactsScore(resource)}
                       />
                     ))}
                   </div>
@@ -398,6 +453,7 @@ const Resources = () => {
                       key={index} 
                       resource={resource} 
                       isNew={isNewResource(resource.created_at)}
+                      impactsScore={impactsScore(resource)}
                     />
                   ))}
                 </div>
@@ -416,7 +472,7 @@ const Resources = () => {
 };
 
 // ResourceCard component for displaying individual resources
-const ResourceCard = ({ resource, isNew }) => {
+const ResourceCard = ({ resource, isNew, impactsScore }) => {
   return (
     <a 
       href={resource.url} 
@@ -427,9 +483,14 @@ const ResourceCard = ({ resource, isNew }) => {
       <div className="resource-content">
         <div className="resource-header">
           <h3 className="resource-name">{resource.name}</h3>
-          {isNew && (
-            <span className="new-badge">NEW</span>
-          )}
+          <div className="resource-badges">
+            {isNew && (
+              <span className="new-badge">NEW</span>
+            )}
+            {impactsScore && (
+              <span className="score-badge">SCORE</span>
+            )}
+          </div>
         </div>
         <p className="resource-description">{resource.description}</p>
         <p className="resource-domain">{resource.domain}</p>
