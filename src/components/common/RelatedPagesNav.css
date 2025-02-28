@@ -10,7 +10,7 @@
   
   .related-pages-title {
     padding: 15px;
-    margin: 0;
+    margin: 0 !important;
     font-weight: 600;
     color: var(--text);
     border-bottom: 1px solid var(--card-border, #e2e8f0);
@@ -19,7 +19,7 @@
 
   .related-pages-title h3 {
     padding: 15px;
-    margin: 0;
+    margin: 0 !important;
     font-weight: 600;
     color: var(--text);
     border-bottom: 1px solid var(--card-border, #e2e8f0);

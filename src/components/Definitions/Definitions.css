@@ -95,6 +95,7 @@
     background-color: var(--navbar-bg);
     color: var(--text);
     transition: background-color 0.3s ease, color 0.3s ease;
+    font-family: articulat-cf;
   }
   
   .toggle-icon {
@@ -118,6 +119,7 @@
     padding: 15px;
     border-top: 1px solid var(--card-border);
     margin-left: 0px;
+    font-family: articulat-cf;
   }
   
   .definition-item:hover {
