@@ -9,7 +9,6 @@ const Resources = () => {
   const [resources, setResources] = useState([]);
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
-  const [qualityFilter, setQualityFilter] = useState(0); // Changed to numeric value (0 = All)
   const [showNewOnly, setShowNewOnly] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -36,7 +35,6 @@ const Resources = () => {
       try {
         const preferences = JSON.parse(savedPreferences);
         setActiveCategory(preferences.activeCategory || 'All');
-        setQualityFilter(preferences.qualityFilter || 0);
         setShowNewOnly(preferences.showNewOnly || false);
       } catch (error) {
         console.error('Error loading preferences:', error);
@@ -48,11 +46,10 @@ const Resources = () => {
   useEffect(() => {
     const preferences = {
       activeCategory,
-      qualityFilter,
       showNewOnly
     };
     localStorage.setItem('resourcesPreferences', JSON.stringify(preferences));
-  }, [activeCategory, qualityFilter, showNewOnly]);
+  }, [activeCategory, showNewOnly]);
 
   // Fetch resources from Supabase
   useEffect(() => {
@@ -183,7 +180,7 @@ const Resources = () => {
     return resource.categories && resource.categories.some(cat => cat.name === categoryName);
   };
 
-  // Filter resources based on active category, search query, quality filter, and new filter
+  // Filter resources based on active category, search query, and new filter
   const filteredResources = useMemo(() => {
     return resources.filter(resource => {
       // Filter by category
@@ -195,17 +192,12 @@ const Resources = () => {
         resource.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (resource.domain && resource.domain.toLowerCase().includes(searchQuery.toLowerCase()));
       
-      // Filter by quality (changed to numeric)
-      const qualityMatch = 
-        qualityFilter === 0 || 
-        resource.quality >= qualityFilter;
-      
       // Filter by "new" status if the toggle is active
       const newMatch = !showNewOnly || isNewResource(resource.created_at);
       
-      return categoryMatch && searchMatch && qualityMatch && newMatch;
+      return categoryMatch && searchMatch && newMatch;
     });
-  }, [resources, activeCategory, searchQuery, qualityFilter, showNewOnly]);
+  }, [resources, activeCategory, searchQuery, showNewOnly]);
 
   // Get featured resources
   const featuredResources = useMemo(() => {
@@ -257,13 +249,8 @@ const Resources = () => {
     return grouped;
   }, [filteredResources, activeCategory, categories]);
   
-  // Should show featured section only when All category is selected, no quality filter is active, and search query is empty
-  const shouldShowFeatured = activeCategory === 'All' && qualityFilter === 0 && searchQuery.trim() === '';
-
-  // Handle star rating click for quality filter
-  const handleStarClick = (rating) => {
-    setQualityFilter(rating === qualityFilter ? 0 : rating);
-  };
+  // Should show featured section only when All category is selected and search query is empty
+  const shouldShowFeatured = activeCategory === 'All' && searchQuery.trim() === '';
 
   // Handle search input change
   const handleSearchChange = (e) => {
@@ -330,40 +317,6 @@ const Resources = () => {
                     </option>
                   ))}
                 </select>
-              </div>
-              
-              {/* Quality Filter using Stars */}
-              <div className="quality-filter">
-                <span className="filter-label">Quality:</span>
-                <div className="star-filter-container">
-                  {[1, 2, 3, 4, 5].map((rating) => (
-                    <span 
-                      key={rating}
-                      onClick={() => handleStarClick(rating)}
-                      className={`quality-star ${rating <= qualityFilter ? 'filled' : 'empty'}`}
-                      title={`${rating} stars or higher`}
-                      role="button"
-                      tabIndex="0"
-                      aria-label={`Filter by ${rating} stars or higher`}
-                      onKeyPress={(e) => e.key === 'Enter' && handleStarClick(rating)}
-                    >
-                      ★
-                    </span>
-                  ))}
-                  {qualityFilter > 0 && (
-                    <span 
-                      className="quality-filter-clear"
-                      onClick={() => setQualityFilter(0)}
-                      title="Clear filter"
-                      role="button"
-                      tabIndex="0"
-                      aria-label="Clear quality filter"
-                      onKeyPress={(e) => e.key === 'Enter' && setQualityFilter(0)}
-                    >
-                      ✕
-                    </span>
-                  )}
-                </div>
               </div>
               
               {/* New resources toggle */}
@@ -464,22 +417,6 @@ const Resources = () => {
 
 // ResourceCard component for displaying individual resources
 const ResourceCard = ({ resource, isNew }) => {
-  // Function to render stars based on quality rating
-  const renderQualityStars = (quality) => {
-    const stars = [];
-    for (let i = 1; i <= 5; i++) {
-      stars.push(
-        <span 
-          key={i} 
-          className={`quality-star ${i <= quality ? 'filled' : 'empty'}`}
-        >
-          ★
-        </span>
-      );
-    }
-    return stars;
-  };
-
   return (
     <a 
       href={resource.url} 
@@ -508,10 +445,16 @@ const ResourceCard = ({ resource, isNew }) => {
               <span className="resource-category">Misc</span>
             )}
           </div>
-          <div className="resource-quality">
-            {renderQualityStars(resource.quality)}
-          </div>
         </div>
+        {resource.tags && resource.tags.length > 0 && (
+          <div className="resource-tags">
+            {resource.tags.map((tag, idx) => (
+              <span key={idx} className="resource-tag">
+                {tag.name}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
     </a>
   );
