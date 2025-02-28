@@ -150,8 +150,8 @@ const Navbar = () => {
           <nav className="navbar-links">
             <ul>
               <DropdownMenu {...scoreDropdown} />
-              <MenuItem title="resources" path="/resources" />
               <DropdownMenu {...aboutDropdown} />
+              <MenuItem title="resources" path="/resources" />
             </ul>
           </nav>
         </div>
