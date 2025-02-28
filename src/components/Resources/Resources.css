@@ -17,10 +17,11 @@
 
 /* ======= Redesigned Header Section ======= */
 .resources-header {
-  margin-bottom: 2rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 2em;
+  margin-bottom: 2rem;
+  margin-top: 1em;
 }
 
 /* Header main section with title and tagline */
@@ -85,7 +86,6 @@
   display: inline-flex;
   gap: 1rem;
   justify-content: center;
-  margin: .5rem 0;
 }
 
 /* Improved search input */
@@ -550,6 +550,10 @@
   opacity: 0.8;
 }
 
+#new-toggle:focus {
+  border-color: var(--card-border);
+}
+
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
@@ -572,8 +576,9 @@
   }
   
   .search-filters-container {
-    flex-direction: column;
     align-items: stretch;
+    flex-direction: row;
+    gap: 2.5rem;
   }
   
   .search-container {
@@ -582,7 +587,7 @@
   
   .filter-dropdowns {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     gap: 1rem;
   }
   
@@ -592,24 +597,16 @@
     width: 100%;
   }
   
-  .filter-select {
-    width: 100%;
-  }
-  
   .category-filter-dropdown,
   .quality-filter {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
     gap: 0.5rem;
   }
   
   .star-filter-container {
     width: 100%;
     justify-content: space-between;
-  }
-  
-  .resources-disclaimer {
-    flex-direction: column;
   }
   
   .resources-header h1 {

@@ -223,23 +223,6 @@ const Resources = () => {
               </button>
             </div>
           </div>
-
-          <div className="header-features">
-            <div className="feature-cards">
-              <div className="feature-card">
-                <span className="feature-icon">🔍</span>
-                <span className="feature-text">Discover analytics, feeds & clients</span>
-              </div>
-              <div className="feature-card">
-                <span className="feature-icon">⚡</span>
-                <span className="feature-text">Enhance your Bluesky experience</span>
-              </div>
-              <div className="feature-card">
-                <span className="feature-icon">🧩</span>
-                <span className="feature-text">Community-built solutions</span>
-              </div>
-            </div>
-          </div>
           
           <div className="resources-disclaimer">
             <div className="disclaimer-icon">⚠️</div>

@@ -283,6 +283,8 @@
   visibility: hidden;
   transform: translateY(-10px);
   transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+  display: flex;
+  flex-direction: column; /* Ensure items are in a column */
 }
 
 .dropdown-container:hover .dropdown-menu {
@@ -307,18 +309,25 @@
   white-space: nowrap;
   width: 100%;
   box-sizing: border-box;
+  text-align: left; /* Align text to the left */
 }
 
+/* Adjust hover state for dropdown items */
 .dropdown-menu li a:hover {
   background-color: rgba(59, 154, 248, 0.1);
   color: #3B9AF8;
+  width: 100%;
 }
 
+/* Ensure that non-dropdown links don't get affected by these changes */
 .navbar-links ul li a:not(.dropdown-trigger) {
-  padding-right: 0;
   display: inline-block;
 }
 
+/* Extra rule to ensure dropdown container doesn't affect layout */
+.dropdown-container {
+  position: relative;
+}
 
 /* Dark mode adjustments for dropdown */
 .dark-mode .dropdown-menu {
@@ -388,7 +397,6 @@
     padding: 0;
     list-style: none;
     margin: 0px;
-    align-items: flex-start;
   }
   
   .navbar-links ul li {
@@ -490,7 +498,7 @@
 
 @media (max-width: 940px) {
   .dropdown-trigger {
-    padding-right: 1.5em;
+    padding-right: 0em;
   }
   
   .dropdown-trigger::after {
