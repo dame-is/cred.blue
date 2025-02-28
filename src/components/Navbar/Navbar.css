@@ -229,7 +229,7 @@
 }
 
 /* ---------------------------------- */
-/* Dropdown Menu Styles - NEW VERSION */
+/* Dropdown Menu Styles */
 /* ---------------------------------- */
 .dropdown-container {
   position: relative;
@@ -239,6 +239,7 @@
   position: relative;
   display: inline-block;
   padding-right: 20px; /* Space for the arrow indicator */
+  white-space: nowrap;
 }
 
 .dropdown-trigger::after {
@@ -360,6 +361,7 @@
     font-weight: 700;
     margin-top: 15px;
     text-align: center;
+    width: 100%;
   }
   
   .navbar-links ul {
@@ -369,10 +371,12 @@
     padding: 0;
     list-style: none;
     margin: 0px;
+    align-items: flex-start;
   }
   
   .navbar-links ul li {
     margin: 0 10px;
+    position: relative;
   }
   
   /* Actions adjustments */
@@ -389,18 +393,21 @@
   
   /* Dropdown adjustments for mobile */
   .dropdown-menu {
-    position: static;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
     display: none;
-    box-shadow: none;
-    min-width: auto;
-    width: 100%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    min-width: 180px;
+    width: auto;
     margin-top: 8px;
     margin-bottom: 8px;
     padding: 8px 0;
-    background-color: rgba(59, 154, 248, 0.05);
+    background-color: var(--navbar-bg);
     border: 1px solid var(--card-border);
     border-radius: 4px;
-    transform: none;
+    z-index: 1000;
   }
   
   .dropdown-container:hover .dropdown-menu,
@@ -408,7 +415,6 @@
     display: block;
     opacity: 1;
     visibility: visible;
-    transform: none;
   }
   
   /* Force menu items to be in a column */
@@ -416,12 +422,19 @@
     display: block;
     width: 100%;
     text-align: center;
+    margin: 0 !important;
   }
   
   .dropdown-menu li a {
     padding: 8px 16px;
     text-align: center;
     display: block;
+    white-space: nowrap;
+  }
+  
+  .dropdown-trigger {
+    display: inline-block;
+    white-space: nowrap;
   }
   
   .dropdown-trigger::after {
