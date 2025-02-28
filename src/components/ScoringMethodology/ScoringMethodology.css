@@ -46,43 +46,57 @@
     padding-bottom: 10.5px;
   }
   
-  /* Link to Definitions page */
+  /* Updated Link to Definitions page */
   .definitions-link-container {
     margin-top: 40px;
-    padding: 15px;
-    background-color: rgba(59, 154, 248, 0.1);
-    border-radius: 8px;
-    border-left: 4px solid var(--button-bg);
+    margin-bottom: 10px;
+    border-radius: 6px;
+    background-color: var(--navbar-bg, #fff);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 1px solid var(--card-border, #e2e8f0);
   }
   
-  .definitions-link {
-    display: inline-block;
-    margin-top: 10px;
-    color: var(--button-bg);
-    text-decoration: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    background-color: rgba(59, 154, 248, 0.15);
-    transition: all 0.2s ease;
+  .definitions-link-container:hover {
+    border-color: var(--button-bg, #3B9AF8);
+  }
+  
+  .definitions-link-container p {
+    padding: 12px 15px;
+    margin: 0;
     font-weight: 500;
   }
   
+  .definitions-link {
+    display: block;
+    margin-top: 0;
+    color: var(--button-bg, #3B9AF8);
+    text-decoration: none;
+    padding: 12px 15px;
+    background-color: var(--navbar-bg, #fff);
+    transition: all 0.2s ease;
+    font-weight: 500;
+    text-align: center;
+    border-top: 1px solid var(--card-border, #e2e8f0);
+  }
+  
   .definitions-link:hover {
-    background-color: rgba(59, 154, 248, 0.25);
-    text-decoration: underline;
+    background-color: var(--background, #f8f9fa);
+    text-decoration: none;
   }
   
   /* Dark mode specific overrides */
   .dark-mode .definitions-link-container {
-    background-color: rgba(59, 154, 248, 0.1);
-    border-left-color: var(--button-bg);
+    background-color: var(--navbar-bg);
+    border-color: var(--card-border);
   }
   
   .dark-mode .definitions-link {
     color: var(--button-bg);
-    background-color: rgba(59, 154, 248, 0.2);
+    background-color: var(--navbar-bg);
+    border-top-color: var(--card-border);
   }
   
   .dark-mode .definitions-link:hover {
-    background-color: rgba(59, 154, 248, 0.3);
+    background-color: #2d2d2d;
   }

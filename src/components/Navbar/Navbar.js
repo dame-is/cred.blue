@@ -4,7 +4,7 @@ import { ThemeContext } from '../../contexts/ThemeContext';
 import './Navbar.css';
 
 // Dropdown Menu Component
-const DropdownMenu = ({ title, path, items }) => {
+const DropdownMenu = ({ title, path, items, position }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   
@@ -26,6 +26,20 @@ const DropdownMenu = ({ title, path, items }) => {
     };
   }, [isOpen]);
   
+  // Add event listener to close dropdown on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      if (isOpen) {
+        setIsOpen(false);
+      }
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [isOpen]);
+  
   // Detect if we're on mobile based on window width
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const isMobile = windowWidth <= 940;
@@ -34,13 +48,17 @@ const DropdownMenu = ({ title, path, items }) => {
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
+      // Close dropdown on resize to prevent positioning issues
+      if (isOpen) {
+        setIsOpen(false);
+      }
     };
     
     window.addEventListener('resize', handleResize);
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, []);
+  }, [isOpen]);
   
   return (
     <li 
@@ -122,9 +140,9 @@ const Navbar = () => {
           </div>
           <nav className="navbar-links">
             <ul>
-              <DropdownMenu {...scoreDropdown} />
+              <DropdownMenu {...scoreDropdown} position="left" />
               <li><Link to="/resources">resources</Link></li>
-              <DropdownMenu {...aboutDropdown} />
+              <DropdownMenu {...aboutDropdown} position="right" />
             </ul>
           </nav>
         </div>

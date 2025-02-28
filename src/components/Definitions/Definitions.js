@@ -132,7 +132,7 @@ const Definitions = () => {
     <>
       <main className="definitions-page">
         <div className="alt-card">
-          <h1>Definitions | cred.blue</h1>
+          <h1>Definitions</h1>
           
           <p className="intro-text">
             This page provides explanations for key terms related to Bluesky, the AT Protocol, and how the cred.blue scoring system works.

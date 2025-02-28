@@ -408,6 +408,20 @@
     border: 1px solid var(--card-border);
     border-radius: 4px;
     z-index: 1000;
+    max-width: 90vw; /* Prevent extending beyond viewport */
+  }
+  
+  /* Prevent dropdowns from going off-screen */
+  .navbar-links ul li:last-child .dropdown-menu {
+    left: auto;
+    right: 0;
+    transform: none;
+  }
+  
+  .navbar-links ul li:first-child .dropdown-menu {
+    left: 0;
+    right: auto;
+    transform: none;
   }
   
   .dropdown-container:hover .dropdown-menu,
@@ -479,5 +493,14 @@
     margin: auto;
     margin-top: 15px;
     line-height: 1.5em;
+  }
+  
+  /* Dropdown positioning for very small screens */
+  .dropdown-menu {
+    position: fixed;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 90vw;
+    max-width: 90vw;
   }
 }

@@ -8,9 +8,11 @@ const ScoringMethodology = () => {
     <main className="methodology-page">
       <div className="alt-card">
         <h1>The Scoring Methodology</h1>
+        
         <div className="methodology-page-chart">
           <ScoreGauge score={500} />
         </div>
+        
         <p>Your cred.blue score is generated based on two major categories...</p>
         
         <h3>1. Bluesky Data</h3>
@@ -58,8 +60,7 @@ const ScoringMethodology = () => {
           <li>Set your pronouns</li>
         </ol>
         <p>
-          This is not an exhaustive list by any means, but it should get you started. The goal of the cred.blue score isn't to attempt to max it out... rather, the point is to foster healthy behavior and activity that benefits the
-          entire community.
+          This is not an exhaustive list by any means, but it should get you started. The goal of the cred.blue score isn't to attempt to max it out... rather, the point is to foster healthy behavior and activity that benefits the entire community.
         </p>
         
         <div className="definitions-link-container">
@@ -70,7 +71,6 @@ const ScoringMethodology = () => {
             View Definitions & Social Status Details →
           </Link>
         </div>
-
       </div>
     </main>
   );
