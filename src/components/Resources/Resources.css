@@ -308,17 +308,20 @@
 
 /* Improved NEW badge styling */
 .new-badge {
-  background-color: var(--button-bg);
-  color: var(--button-text);
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 0.7rem;
-  font-weight: bold;
-  display: inline-flex;
   align-items: center;
-  height: 18px;
-  vertical-align: text-top;
   animation: pulse 2s infinite;
+  background-color: #666 !important;
+  border-radius: 5.9px;
+  color: var(--button-text);
+  display: inline-flex;
+  font-size: .7rem;
+  font-weight: 700;
+  height: 18px;
+  padding: 2px 8px;
+    padding-bottom: 2px;
+  vertical-align: text-bottom;
+  margin-bottom: 4px;
+  padding-bottom: 0px;
 }
 
 @keyframes pulse {
@@ -370,10 +373,9 @@
 }
 
 .quality-star {
-  font-size: 1.1rem;
-  margin-left: 3px;
-  font-weight: bold;
-  text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
+  font-size: 1.4em;
+  font-weight: 700;
+  text-shadow: 0 1px 1px #0000001a;
 }
 
 .quality-star.filled {
@@ -382,6 +384,14 @@
 
 .quality-star.empty {
   color: var(--card-border);
+}
+
+.star-filter-container .quality-star.filled {
+  margin-bottom: 3.5px;
+}
+
+.star-filter-container .quality-star.empty {
+  margin-bottom: 3.5px;
 }
 
 .no-results {
