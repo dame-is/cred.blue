@@ -27,7 +27,6 @@
 /* Header main section with title and tagline */
 .header-main {
   text-align: center;
-  margin-bottom: 0.5rem;
 }
 
 .resources-header h1 {
@@ -157,12 +156,14 @@
 
 /* Enhanced disclaimer styling */
 .resources-disclaimer {
-  display: flex;
   align-items: flex-start;
-  gap: 10px;
-  background-color: var(--card-border);
-  padding: 14px 18px;
   border-radius: 8px;
+  display: flex;
+  gap: 10px;
+  padding: 14px 18px;
+  background-color: var(--background);
+  border: 2px solid var(--card-border);
+  max-width: 298.7px;
 }
 
 .disclaimer-icon {
@@ -179,11 +180,16 @@
 
 /* ======= Improved Filter Bar ======= */
 .resources-filters {
-  margin: 0.5rem 0 2rem;
   background-color: var(--navbar-bg);
   border: 2px solid var(--card-border);
-  padding: 1rem;
   border-radius: 8px;
+  padding: 1.1em;
+  max-width: 480px;
+  align-content: center;
+}
+
+.filter-options {
+  margin-bottom: 5px;
 }
 
 .filter-label {
@@ -204,6 +210,7 @@
   gap: 1.5rem;
   width: 100%;
   align-items: center;
+  justify-content: center;
 }
 
 .category-filter-dropdown,
@@ -355,22 +362,16 @@
 .all-resources-section h2 {
   font-size: 1.3rem;
   margin-bottom: 16px;
-  color: var(--button-bg);
   border-bottom: 2px solid var(--card-border);
   padding-bottom: 8px;
 }
 
 /* Category section styling */
-.category-section {
-  margin-bottom: 30px;
-}
 
 .category-header {
   font-size: 1.2rem;
-  color: var(--button-bg);
-  margin: 24px 0 16px;
+  margin: 45px 0 16px;
   padding-bottom: 6px;
-  border-bottom: 1px solid var(--card-border);
 }
 
 /* Featured section description */
@@ -388,6 +389,11 @@
   gap: 20px;
 }
 
+.quick-actions .share-button {
+  background: var(--button-bg);
+  border: 2px solid var(--button-bg);
+}
+
 /* ======= Resource Cards ======= */
 .resource-card {
   border: 2px solid var(--card-border);
@@ -396,7 +402,7 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s;
   text-decoration: none;
   color: inherit;
-  background-color: var(--navbar-bg);
+  background-color: var(--background);
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -413,6 +419,13 @@
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+}
+
+.filter-disclaimer-container {
+  display: flex;
+  gap: 20px;
+  align-content: center;
+  justify-content: space-between;
 }
 
 /* Improved resource header styling */
@@ -604,17 +617,32 @@
     gap: 0.5rem;
   }
   
-  .star-filter-container {
-    width: 100%;
-    justify-content: space-between;
-  }
-  
   .resources-header h1 {
     font-size: 1.5rem;
   }
   
   .resources-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 710px) {
+  .filter-disclaimer-container {
+    display: flex;
+    gap: 20px;
+    align-content: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .resources-filters {
+    max-width: unset;
+  }
+
+  .resources-disclaimer {
+    margin: auto;
+    max-width: unset;
   }
 }
 

@@ -223,15 +223,11 @@ const Resources = () => {
               </button>
             </div>
           </div>
-          
-          <div className="resources-disclaimer">
-            <div className="disclaimer-icon">⚠️</div>
-            <p><strong>Disclaimer:</strong> These resources are third-party tools and services not affiliated with cred.blue or Bluesky. 
-            Use them at your own risk and exercise caution when providing access to your data.</p>
-          </div>
         </header>
         
-        {/* Improved Filter Bar */}
+        <div class="filter-disclaimer-container">
+
+          {/* Improved Filter Bar */}
         <div className="resources-filters">
           <div className="filter-options">
             <div className="filter-dropdowns">
@@ -301,6 +297,13 @@ const Resources = () => {
               </div>
             </div>
           </div>
+        </div>
+
+          <div className="resources-disclaimer">
+            <div className="disclaimer-icon">⚠️</div>
+            <p><strong>Disclaimer:</strong> These resources are not affiliated with cred.blue or Bluesky. Use them at your own risk and exercise caution when providing access to your data.</p>
+          </div>
+
         </div>
         
         {/* Loading indication */}
