@@ -1,11 +1,58 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ThemeContext } from '../../contexts/ThemeContext';
 import './Navbar.css';
 
+// Dropdown Menu Component
+const DropdownMenu = ({ title, path, items }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  
+  return (
+    <li 
+      className="dropdown-container"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <Link to={path} className="dropdown-trigger">{title}</Link>
+      {isHovered && (
+        <ul className="dropdown-menu">
+          {items.map((item, index) => (
+            <li key={index}>
+              <Link to={item.path}>{item.title}</Link>
+            </li>
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+};
+
 const Navbar = () => {
   const { isDarkMode, toggleDarkMode } = useContext(ThemeContext);
   const navigate = useNavigate();
+
+  // Define dropdown menus structure
+  const scoreDropdown = {
+    title: "score",
+    path: "/",
+    items: [
+      { title: "score", path: "/" },
+      { title: "compare", path: "/compare" },
+      { title: "leaderboard", path: "/leaderboard" },
+      { title: "alt text rating", path: "/alt-text" },
+      { title: "shortcut", path: "/shortcut" }
+    ]
+  };
+
+  const aboutDropdown = {
+    title: "about",
+    path: "/about",
+    items: [
+      { title: "about", path: "/about" },
+      { title: "methodology", path: "/methodology" },
+      { title: "definitions", path: "/definitions" }
+    ]
+  };
 
   return (
     <header className="navbar">
@@ -23,12 +70,9 @@ const Navbar = () => {
           </div>
           <nav className="navbar-links">
             <ul>
-              <li><Link to="/">score</Link></li>
-              <li><Link to="/compare">compare</Link></li>
-              <li><Link to="/leaderboard">leaderboard</Link></li>
+              <DropdownMenu {...scoreDropdown} />
               <li><Link to="/resources">resources</Link></li>
-              <li><Link to="/alt-text">alt text</Link></li>
-              <li><Link to="/about">about</Link></li>
+              <DropdownMenu {...aboutDropdown} />
             </ul>
           </nav>
         </div>
@@ -67,13 +111,13 @@ const Navbar = () => {
             </svg>
           </button>
           <div className="navbar-support-button-container">
-          <button
-            className="navbar-support-button"
-            type="button"
-            onClick={() => navigate(`/supporter`)}
-          >
-            become a supporter
-          </button>
+            <button
+              className="navbar-support-button"
+              type="button"
+              onClick={() => navigate(`/supporter`)}
+            >
+              become a supporter
+            </button>
           </div>
         </div>
       </div>

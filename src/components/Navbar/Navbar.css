@@ -268,6 +268,124 @@
   margin-left: 10.2px;
 }
 
+/* Dropdown Menu Styles */
+.dropdown-container {
+  position: relative;
+}
+
+.dropdown-trigger {
+  position: relative;
+  display: inline-block;
+  padding-right: 20px; /* Space for the arrow indicator */
+}
+
+.dropdown-trigger::after {
+  content: '▼';
+  font-size: 0.6em;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: transform 0.2s ease;
+}
+
+.dropdown-container:hover .dropdown-trigger::after {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: var(--navbar-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+  min-width: 180px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  padding: 8px 0;
+  margin-top: 8px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+}
+
+.dropdown-container:hover .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-menu li {
+  margin: 0 !important;
+  padding: 0;
+}
+
+.dropdown-menu li a {
+  display: block;
+  padding: 8px 16px;
+  color: var(--text);
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.dropdown-menu li a:hover {
+  background-color: rgba(59, 154, 248, 0.1);
+  color: #3B9AF8;
+}
+
+/* Dark mode adjustments for dropdown */
+.dark-mode .dropdown-menu {
+  background-color: var(--navbar-bg);
+  border-color: var(--card-border);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .dropdown-menu li a:hover {
+  background-color: rgba(59, 154, 248, 0.2);
+  color: #66b2ff;
+}
+
+/* Responsive Adjustments for Dropdown */
+@media (max-width: 940px) {
+  .dropdown-menu {
+    position: static;
+    display: none;
+    box-shadow: none;
+    border: none;
+    min-width: auto;
+    width: 100%;
+    margin-top: 5px;
+    padding: 5px 0;
+    background-color: transparent;
+    transform: none;
+  }
+  
+  .dropdown-container:hover .dropdown-menu {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+  
+  .dropdown-menu li a {
+    padding: 5px 10px;
+    text-align: center;
+  }
+  
+  .dropdown-trigger::after {
+    position: static;
+    margin-left: 5px;
+    transform: none;
+  }
+  
+  .dropdown-container:hover .dropdown-trigger::after {
+    transform: rotate(180deg);
+  }
+}
+
   /* Responsive Design: Links display in a row under the logo */
   @media (max-width: 940px) {
     .navbar-container {
