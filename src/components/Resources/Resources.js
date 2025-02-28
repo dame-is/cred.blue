@@ -1,4 +1,4 @@
-// src/components/Resources/Resources.jsx - Modified version
+// src/components/Resources/Resources.jsx - Updated for multiple categories
 import React, { useState, useEffect, useMemo } from 'react';
 import './Resources.css';
 import ResourceLoader from './ResourceLoader';
@@ -59,28 +59,60 @@ const Resources = () => {
     async function fetchResources() {
       setIsLoading(true);
       try {
-        // Fetch all resources with category and subcategory data
-        const { data, error } = await supabase
+        // First fetch all resources
+        const { data: resourcesData, error: resourcesError } = await supabase
           .from('resources')
           .select(`
             *,
-            category:categories(id, name, emoji),
             subcategory:subcategories(id, name)
           `)
           .order('position');
 
-        if (error) {
-          throw error;
+        if (resourcesError) {
+          throw resourcesError;
         }
 
+        // Then fetch the categories for each resource using the junction table
+        const { data: resourceCategories, error: categoriesError } = await supabase
+          .from('resources_categories')
+          .select(`
+            resource_id,
+            category:categories(id, name, emoji)
+          `);
+
+        if (categoriesError) {
+          throw categoriesError;
+        }
+
+        // Group categories by resource_id
+        const categoriesByResource = {};
+        resourceCategories.forEach(item => {
+          if (!categoriesByResource[item.resource_id]) {
+            categoriesByResource[item.resource_id] = [];
+          }
+          categoriesByResource[item.resource_id].push({
+            id: item.category.id,
+            name: item.category.name,
+            emoji: item.category.emoji
+          });
+        });
+
         // Transform data to match the expected format
-        const formattedResources = data.map(resource => ({
-          ...resource,
-          category: resource.category.name,
-          subcategory: resource.subcategory ? resource.subcategory.name : null,
-          emoji: resource.category.emoji,
-          url: addUTMParameters(resource.url)
-        }));
+        const formattedResources = resourcesData.map(resource => {
+          // Get categories for this resource
+          const resourceCategoryList = categoriesByResource[resource.id] || [];
+          
+          return {
+            ...resource,
+            // Primary category for backwards compatibility (use first category if available)
+            category: resourceCategoryList.length > 0 ? resourceCategoryList[0].name : 'Misc',
+            // Store all categories
+            categories: resourceCategoryList,
+            subcategory: resource.subcategory ? resource.subcategory.name : null,
+            emoji: resourceCategoryList.length > 0 ? resourceCategoryList[0].emoji : '🔮',
+            url: addUTMParameters(resource.url)
+          };
+        });
 
         setResources(formattedResources);
       } catch (error) {
@@ -122,24 +154,44 @@ const Resources = () => {
   // Get all categories from resources
   const categories = useMemo(() => {
     if (resources.length === 0) return ['All'];
-    const categoryNames = [...new Set(resources.map(item => item.category))];
-    return ['All', ...categoryNames];
+    
+    // Extract all unique categories from all resources
+    const allCategories = new Set();
+    resources.forEach(resource => {
+      if (resource.categories && resource.categories.length > 0) {
+        resource.categories.forEach(cat => allCategories.add(cat.name));
+      }
+    });
+    
+    return ['All', ...Array.from(allCategories).sort()];
   }, [resources]);
   
   // Count resources per category
   const categoryCounts = useMemo(() => {
     const counts = { 'All': resources.length };
+    
     resources.forEach(resource => {
-      counts[resource.category] = (counts[resource.category] || 0) + 1;
+      if (resource.categories && resource.categories.length > 0) {
+        resource.categories.forEach(category => {
+          counts[category.name] = (counts[category.name] || 0) + 1;
+        });
+      }
     });
+    
     return counts;
   }, [resources]);
+
+  // Check if a resource belongs to a category
+  const resourceHasCategory = (resource, categoryName) => {
+    if (categoryName === 'All') return true;
+    return resource.categories && resource.categories.some(cat => cat.name === categoryName);
+  };
 
   // Filter resources based on active category, search query, quality filter, and new filter
   const filteredResources = useMemo(() => {
     return resources.filter(resource => {
       // Filter by category
-      const categoryMatch = activeCategory === 'All' || resource.category === activeCategory;
+      const categoryMatch = resourceHasCategory(resource, activeCategory);
       
       // Filter by search query
       const searchMatch = 
@@ -169,14 +221,45 @@ const Resources = () => {
     if (activeCategory !== 'All') return {};
     
     const grouped = {};
-    filteredResources.forEach(resource => {
-      if (!grouped[resource.category]) {
-        grouped[resource.category] = [];
+    
+    // First, initialize all category groups
+    categories.forEach(category => {
+      if (category !== 'All') {
+        grouped[category] = [];
       }
-      grouped[resource.category].push(resource);
     });
+    
+    // Then add resources to their respective categories
+    filteredResources.forEach(resource => {
+      if (resource.categories && resource.categories.length > 0) {
+        // Add resource to each of its categories
+        resource.categories.forEach(category => {
+          if (!grouped[category.name]) {
+            grouped[category.name] = [];
+          }
+          // Avoid duplicates (could happen if we process the same resource multiple times)
+          if (!grouped[category.name].some(r => r.id === resource.id)) {
+            grouped[category.name].push(resource);
+          }
+        });
+      } else {
+        // If no categories, add to Misc
+        if (!grouped['Misc']) {
+          grouped['Misc'] = [];
+        }
+        grouped['Misc'].push(resource);
+      }
+    });
+    
+    // Remove empty categories
+    Object.keys(grouped).forEach(category => {
+      if (grouped[category].length === 0) {
+        delete grouped[category];
+      }
+    });
+    
     return grouped;
-  }, [filteredResources, activeCategory]);
+  }, [filteredResources, activeCategory, categories]);
   
   // Should show featured section only when All category is selected, no quality filter is active, and search query is empty
   const shouldShowFeatured = activeCategory === 'All' && qualityFilter === 0 && searchQuery.trim() === '';
@@ -338,7 +421,7 @@ const Resources = () => {
             <div className="all-resources-section">
               <h2>All Resources ({filteredResources.length})</h2>
               
-              {Object.keys(resourcesByCategory).map(category => (
+              {Object.keys(resourcesByCategory).sort().map(category => (
                 <div key={category} className="category-section">
                   <h3 className="category-header">
                     {categoryEmojis[category] || '🔹'} {category} ({resourcesByCategory[category].length})
@@ -418,7 +501,17 @@ const ResourceCard = ({ resource, isNew }) => {
         <p className="resource-description">{resource.description}</p>
         <p className="resource-domain">{resource.domain}</p>
         <div className="resource-meta">
-          <span className="resource-category">{resource.category}</span>
+          <div className="resource-categories">
+            {resource.categories && resource.categories.length > 0 ? (
+              resource.categories.map((cat, idx) => (
+                <span key={idx} className="resource-category">
+                  {cat.name}
+                </span>
+              ))
+            ) : (
+              <span className="resource-category">Misc</span>
+            )}
+          </div>
           <div className="resource-quality">
             {renderQualityStars(resource.quality)}
           </div>
