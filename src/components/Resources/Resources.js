@@ -192,26 +192,9 @@ const Resources = () => {
         {/* Redesigned Header Section */}
         <header className="resources-header">
           <div className="header-main">
-            <h1>Bluesky Resources</h1>
+            <h1>Bluesky & AT Protocol Resources</h1>
             <div className="header-tagline">
               <p>A curated collection of tools and services for the Bluesky ecosystem</p>
-            </div>
-          </div>
-          
-          <div className="header-features">
-            <div className="feature-cards">
-              <div className="feature-card">
-                <span className="feature-icon">🔍</span>
-                <span className="feature-text">Discover analytics, feeds & clients</span>
-              </div>
-              <div className="feature-card">
-                <span className="feature-icon">⚡</span>
-                <span className="feature-text">Enhance your Bluesky experience</span>
-              </div>
-              <div className="feature-card">
-                <span className="feature-icon">🧩</span>
-                <span className="feature-text">Community-built solutions</span>
-              </div>
             </div>
           </div>
           
@@ -238,6 +221,23 @@ const Resources = () => {
                 <span className="share-icon">📤</span>
                 <span>Share</span>
               </button>
+            </div>
+          </div>
+
+          <div className="header-features">
+            <div className="feature-cards">
+              <div className="feature-card">
+                <span className="feature-icon">🔍</span>
+                <span className="feature-text">Discover analytics, feeds & clients</span>
+              </div>
+              <div className="feature-card">
+                <span className="feature-icon">⚡</span>
+                <span className="feature-text">Enhance your Bluesky experience</span>
+              </div>
+              <div className="feature-card">
+                <span className="feature-icon">🧩</span>
+                <span className="feature-text">Community-built solutions</span>
+              </div>
             </div>
           </div>
           
