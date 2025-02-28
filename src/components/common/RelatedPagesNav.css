@@ -1,0 +1,92 @@
+/* src/components/common/RelatedPagesNav.css */
+
+.related-pages-container {
+    margin-top: 50px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    background-color: var(--navbar-bg, #fff);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 1px solid var(--card-border, #e2e8f0);
+  }
+  
+  .related-pages-title {
+    padding: 15px;
+    margin: 0;
+    font-weight: 600;
+    color: var(--text);
+    border-bottom: 1px solid var(--card-border, #e2e8f0);
+  }
+  
+  .related-pages-links {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .related-page-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-decoration: none;
+    padding: 15px;
+    transition: all 0.2s ease;
+    color: var(--text);
+    border-bottom: 1px solid var(--card-border, #e2e8f0);
+  }
+  
+  .related-page-link:last-child {
+    border-bottom: none;
+  }
+  
+  .related-page-link:hover {
+    background-color: var(--background, #f8f9fa);
+    text-decoration: none;
+  }
+  
+  .related-page-content {
+    flex: 1;
+  }
+  
+  .related-page-content h4 {
+    margin: 0 0 5px 0;
+    font-weight: 500;
+    color: var(--button-bg, #3B9AF8);
+  }
+  
+  .related-page-content p {
+    margin: 0;
+    font-size: 0.9em;
+    opacity: 0.8;
+  }
+  
+  .related-page-arrow {
+    font-size: 1.2em;
+    color: var(--button-bg, #3B9AF8);
+    margin-left: 10px;
+  }
+  
+  /* Dark mode specific overrides */
+  .dark-mode .related-pages-container {
+    background-color: var(--navbar-bg);
+    border-color: var(--card-border);
+  }
+  
+  .dark-mode .related-pages-title {
+    border-bottom-color: var(--card-border);
+  }
+  
+  .dark-mode .related-page-link {
+    border-bottom-color: var(--card-border);
+  }
+  
+  .dark-mode .related-page-link:hover {
+    background-color: #2d2d2d;
+  }
+  
+  .dark-mode .related-page-content h4 {
+    color: var(--button-bg);
+  }
+  
+  .dark-mode .related-page-arrow {
+    color: var(--button-bg);
+  }
