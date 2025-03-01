@@ -31,21 +31,19 @@
     display: grid;
     grid-template-columns: 300px 1fr;
     gap: 20px;
-    height: calc(100vh - 120px);
+    height: 133.0vh;
   }
   
   /* Resources sidebar */
   .resources-sidebar {
-    background-color: var(--navbar-bg);
-    border-radius: 8px;
-    border: 1px solid var(--card-border);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    display: flex;
     flex-direction: column;
     height: 93.8%;
     overflow: hidden;
     padding: 10px;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
+    background: var(--navbar-bg);
+    border: 5px solid var(--card-border);
+    border-radius: 12px;
+    box-shadow: none;
   }
   
   .sidebar-header {
@@ -65,7 +63,7 @@
   }
   
   .sidebar-filters {
-    padding: 10px 15px;
+    padding: 10px 0px;
     border-bottom: 1px solid var(--card-border);
     background-color: var(--navbar-bg);
     transition: background-color 0.3s ease, border-color 0.3s ease;
@@ -76,15 +74,16 @@
   }
   
   .search-input {
-    width: 100%;
-    padding: 8px;
+    background-color: var(--navbar-bg);
     border: 1px solid var(--card-border);
     border-radius: 4px;
-    font-size: 14px;
-    margin-bottom: 8px;
-    background-color: var(--navbar-bg);
     color: var(--text);
-    transition: all 0.3s ease;
+    font-size: 14px;
+    padding: 8px;
+    transition: all .3s ease;
+    width: 100%;
+    margin: 0px;
+    display: flex;
   }
   
   .search-input:hover,
@@ -236,22 +235,19 @@
   
   /* Resource editor */
   .resource-editor {
-    background-color: var(--navbar-bg);
-    border-radius: 8px;
-    border: 1px solid var(--card-border);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    padding: 20px;
+    color: var(--text);
     height: 92%;
     overflow-y: auto;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-    color: var(--text);
+    padding: 20px;
+    transition: background-color .3s ease,border-color .3s ease;
+    background: var(--navbar-bg);
+    border: 5px solid var(--card-border);
+    border-radius: 12px;
+    box-shadow: none;
   }
   
   .editor-header {
     margin-bottom: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
   }
   
   .resource-editor input {
@@ -277,6 +273,7 @@
     font-weight: 700;
     font-size: 0.9em;
     transition: background-color 0.3s ease;
+    margin: 0px;
   }
   
   .floating-save-button:hover {
@@ -379,6 +376,7 @@
   .form-group textarea {
     resize: vertical;
     min-height: 100px;
+    font-family: articulat-cf;
   }
   
   .checkbox-group {
@@ -467,9 +465,12 @@
   
   .delete-button {
     background: none;
-    padding: 3px 6px;
     font-size: 16px;
-    opacity: 0.7;
+    opacity: .7;
+    padding: 3px 6px;
+    margin: 0px;
+    margin-left: 10px;
+    margin-bottom: 10px;
   }
   
   .delete-button:hover {
@@ -521,6 +522,7 @@
     padding: 8px 16px;
     border: 1px solid var(--card-border);
     transition: all 0.3s ease;
+    margin: 0px;
   }
   
   .logout-button:hover {

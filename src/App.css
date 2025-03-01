@@ -102,6 +102,7 @@ input {
   background-color: var(--navbar-bg);
   color: var(--text);
   transition: all 0.3s ease;
+  font-family: articulat-cf;
 }
 
 @media (max-width: 450px) {
