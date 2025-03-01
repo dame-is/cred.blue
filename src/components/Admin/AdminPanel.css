@@ -650,8 +650,4 @@
     .form-row {
       grid-template-columns: 1fr;
     }
-    
-    .resources-sidebar {
-      height: 300px;
-    }
   }
