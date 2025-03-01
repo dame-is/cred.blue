@@ -22,7 +22,7 @@
   .admin-header h1 {
     margin: 0;
     color: var(--button-bg);
-    font-size: 2.1em;
+    font-size: 1.9em;
     font-weight: 800;
   }
   
@@ -613,6 +613,11 @@
     margin-top: 10px;
     font-weight: 700;
   }
+
+  .admin-container form {
+    border: 0px;
+    padding: 0px;
+  }
   
   .login-button:hover {
     background-color: #004F84;
@@ -646,6 +651,40 @@
     .admin-container {
       grid-template-columns: 1fr;
     }
+
+    .floating-actions {
+        align-items: center;
+        display: flex;
+        gap: 15px;
+        justify-content: space-between;
+        flex-direction: column;
+      }
+
+      .admin-container form {
+        border: 0px;
+        padding: 0px;
+        align-content: center;
+        display: block;
+      }
+
+      .form-group textarea {
+        min-height: 100px;
+        resize: vertical;
+        font-family: articulat-cf;
+        width: unset;
+      }
+
+      .admin-container {
+        grid-gap: 20px;
+        display: grid;
+        gap: 20px;
+        grid-template-columns: 300px 1fr;
+        height: 100%;
+      }
+
+      .resource-editor {
+        height: 100%;
+      }
     
     .form-row {
       grid-template-columns: 1fr;
