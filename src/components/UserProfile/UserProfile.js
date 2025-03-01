@@ -15,7 +15,6 @@ import AltTextCard from "./components/AltTextCard";
 import ActivityCard from "./components/ActivityCard";
 import ScoreBreakdownCard from "./components/ScoreBreakdownCard";
 import ErrorPage from "../ErrorPage/ErrorPage";
-import { supabase } from '../../lib/supabase';
 import _ from 'lodash';
 
 import "react-grid-layout/css/styles.css";

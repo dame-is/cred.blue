@@ -1,5 +1,5 @@
 // src/components/Admin/AdminPanel.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../../lib/supabase';
 import './AdminPanel.css';
 
@@ -12,6 +12,9 @@ const AdminPanel = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authError, setAuthError] = useState(null);
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [completenessFilter, setCompletenessFilter] = useState(0);
 
   // Login state
   const [email, setEmail] = useState('');
@@ -26,59 +29,15 @@ const AdminPanel = () => {
     featured: false,
     position: 0,
     selectedCategories: [],
-    selectedTags: []
+    selectedTags: [],
+    status: 'draft'
   });
 
   // Alert state
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
 
-  // Check authentication on mount
-  useEffect(() => {
-    const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setIsAuthenticated(!!session);
-      
-      if (session) {
-        fetchAllData();
-      } else {
-        setIsLoading(false);
-      }
-    };
-    
-    checkAuth();
-  }, []);
-
-  // Login handler
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setAuthError(null);
-    
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password
-      });
-      
-      if (error) throw error;
-      
-      setIsAuthenticated(true);
-      fetchAllData();
-    } catch (error) {
-      console.error('Error logging in:', error);
-      setAuthError(error.message);
-      setIsLoading(false);
-    }
-  };
-
-  // Logout handler
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    setIsAuthenticated(false);
-  };
-
   // Fetch all required data from Supabase
-  const fetchAllData = async () => {
+  const fetchAllData = useCallback(async () => {
     setIsLoading(true);
     try {
       // Fetch resources
@@ -129,10 +88,19 @@ const AdminPanel = () => {
           .filter(rt => rt.resource_id === resource.id)
           .map(rt => rt.tag_id);
           
+        // Calculate completeness for UI
+        const completeness = calculateCompleteness({
+          ...resource,
+          categoryIds: resourceCats, 
+          tagIds: resourceTs
+        });
+        
         return {
           ...resource,
           categoryIds: resourceCats,
-          tagIds: resourceTs
+          tagIds: resourceTs,
+          completeness,
+          status: resource.status || 'draft'
         };
       });
 
@@ -146,7 +114,23 @@ const AdminPanel = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
+
+  // Check authentication on mount
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setIsAuthenticated(!!session);
+      
+      if (session) {
+        fetchAllData();
+      } else {
+        setIsLoading(false);
+      }
+    };
+    
+    checkAuth();
+  }, [fetchAllData]);
 
   // Handle resource selection
   const handleSelectResource = (resource) => {
@@ -159,8 +143,87 @@ const AdminPanel = () => {
       featured: resource.featured || false,
       position: resource.position || 0,
       selectedCategories: resource.categoryIds || [],
-      selectedTags: resource.tagIds || []
+      selectedTags: resource.tagIds || [],
+      status: resource.status || 'draft'
     });
+  };
+  
+  // Handle keyboard navigation
+  const handleKeyNavigation = useCallback((e) => {
+    if (!selectedResource || resources.length === 0) return;
+    
+    const currentIndex = resources.findIndex(r => r.id === selectedResource.id);
+    let newIndex;
+    
+    switch(e.key) {
+      case "ArrowDown":
+        newIndex = (currentIndex + 1) % resources.length;
+        handleSelectResource(resources[newIndex]);
+        break;
+      case "ArrowUp":
+        newIndex = (currentIndex - 1 + resources.length) % resources.length;
+        handleSelectResource(resources[newIndex]);
+        break;
+      default:
+        break;
+    }
+  }, [selectedResource, resources]);
+
+  // Add event listener for keyboard navigation
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyNavigation);
+    return () => {
+      document.removeEventListener('keydown', handleKeyNavigation);
+    };
+  }, [handleKeyNavigation]);
+
+  // Calculate resource completeness percentage
+  const calculateCompleteness = (resource) => {
+    let total = 4; // Required fields: name, description, url
+    let filled = 0;
+    
+    if (resource.name) filled++;
+    if (resource.description) filled++;
+    if (resource.url) filled++;
+    if (resource.domain) filled++;
+    
+    // Categories and tags are optional but contribute to completeness
+    if (resource.categoryIds && resource.categoryIds.length > 0) filled++;
+    total++;
+    
+    if (resource.tagIds && resource.tagIds.length > 0) filled++;
+    total++;
+    
+    return Math.round((filled / total) * 100);
+  };
+
+  // Login handler
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setAuthError(null);
+    
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+      
+      if (error) throw error;
+      
+      setIsAuthenticated(true);
+      fetchAllData();
+    } catch (error) {
+      console.error('Error logging in:', error);
+      setAuthError(error.message);
+      setIsLoading(false);
+    }
+  };
+
+  // Logout handler
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setIsAuthenticated(false);
   };
 
   // Handle form input changes
@@ -171,6 +234,28 @@ const AdminPanel = () => {
       [name]: type === 'checkbox' ? checked : value
     });
   };
+  
+  // Handle status change
+  const handleStatusChange = (status) => {
+    setFormData({
+      ...formData,
+      status
+    });
+  };
+  
+  // Filter resources based on status, search query, and completeness
+  const filteredResources = resources.filter(resource => {
+    // Status filter
+    if (statusFilter !== 'all' && resource.status !== statusFilter) return false;
+    
+    // Search query filter
+    if (searchQuery && !resource.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+    
+    // Completeness filter
+    if (completenessFilter > 0 && resource.completeness < completenessFilter) return false;
+    
+    return true;
+  });
 
   // Handle category selection changes
   const handleCategoryChange = (categoryId) => {
@@ -225,7 +310,8 @@ const AdminPanel = () => {
       featured: false,
       position: resources.length + 1,
       selectedCategories: [],
-      selectedTags: []
+      selectedTags: [],
+      status: 'draft'
     });
   };
 
@@ -239,7 +325,7 @@ const AdminPanel = () => {
 
   // Save resource changes
   const handleSaveResource = async (e) => {
-    e.preventDefault();
+    if (e && e.preventDefault) e.preventDefault();
     setIsLoading(true);
     
     try {
@@ -250,6 +336,7 @@ const AdminPanel = () => {
         domain: formData.domain,
         featured: formData.featured,
         position: formData.position,
+        status: formData.status,
         updated_at: new Date().toISOString()
       };
       
@@ -387,14 +474,13 @@ const AdminPanel = () => {
     setIsLoading(true);
     
     try {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('categories')
         .insert({
           name: categoryName,
           emoji: emoji,
           created_at: new Date().toISOString()
-        })
-        .select();
+        });
         
       if (error) throw error;
       
@@ -416,13 +502,12 @@ const AdminPanel = () => {
     setIsLoading(true);
     
     try {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('tags')
         .insert({
           name: tagName,
           created_at: new Date().toISOString()
-        })
-        .select();
+        });
         
       if (error) throw error;
       
@@ -506,14 +591,63 @@ const AdminPanel = () => {
               + New Resource
             </button>
           </div>
+          <div className="sidebar-filters">
+            <div className="filter-group">
+              <input
+                type="text"
+                placeholder="Search resources..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="search-input"
+              />
+            </div>
+            <div className="filter-group">
+              <select 
+                value={statusFilter} 
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="status-filter"
+              >
+                <option value="all">All Statuses</option>
+                <option value="draft">Draft</option>
+                <option value="review">Review</option>
+                <option value="published">Published</option>
+              </select>
+              <select 
+                value={completenessFilter} 
+                onChange={(e) => setCompletenessFilter(Number(e.target.value))}
+                className="completeness-filter"
+              >
+                <option value="0">All Completeness</option>
+                <option value="25">At least 25%</option>
+                <option value="50">At least 50%</option>
+                <option value="75">At least 75%</option>
+                <option value="100">100% Complete</option>
+              </select>
+            </div>
+          </div>
           <div className="resources-list">
-            {resources.map(resource => (
+            {filteredResources.map(resource => (
               <div 
                 key={resource.id} 
-                className={`resource-item ${selectedResource && selectedResource.id === resource.id ? 'selected' : ''}`}
+                className={`resource-item ${selectedResource && selectedResource.id === resource.id ? 'selected' : ''} status-${resource.status}`}
                 onClick={() => handleSelectResource(resource)}
               >
-                <div className="resource-item-name">{resource.name}</div>
+                <div className="resource-completeness-indicator">
+                  <div 
+                    className="completeness-bar"
+                    style={{ width: `${resource.completeness}%` }}
+                    title={`${resource.completeness}% complete`}
+                  ></div>
+                </div>
+                <div className="resource-item-content">
+                  <div className="resource-item-name">{resource.name}</div>
+                  <div className="resource-item-meta">
+                    <span className={`status-badge status-${resource.status}`}>
+                      {resource.status}
+                    </span>
+                    {resource.featured && <span className="featured-badge">Featured</span>}
+                  </div>
+                </div>
                 <div className="resource-item-actions">
                   <button 
                     onClick={(e) => {
@@ -533,7 +667,44 @@ const AdminPanel = () => {
 
         {/* Resource edit form */}
         <div className="resource-editor">
-          <h2>{selectedResource ? 'Edit Resource' : 'Add New Resource'}</h2>
+          <div className="editor-header">
+            <h2>{selectedResource ? 'Edit Resource' : 'Add New Resource'}</h2>
+            <div className="floating-actions">
+              <div className="status-selector">
+                <span>Status:</span>
+                <div className="status-buttons">
+                  <button
+                    type="button"
+                    className={`status-button ${formData.status === 'draft' ? 'active' : ''}`}
+                    onClick={() => handleStatusChange('draft')}
+                  >
+                    Draft
+                  </button>
+                  <button
+                    type="button"
+                    className={`status-button ${formData.status === 'review' ? 'active' : ''}`}
+                    onClick={() => handleStatusChange('review')}
+                  >
+                    Review
+                  </button>
+                  <button
+                    type="button"
+                    className={`status-button ${formData.status === 'published' ? 'active' : ''}`}
+                    onClick={() => handleStatusChange('published')}
+                  >
+                    Published
+                  </button>
+                </div>
+              </div>
+              <button 
+                type="button" 
+                onClick={handleSaveResource} 
+                className="floating-save-button"
+              >
+                {selectedResource ? 'Update Resource' : 'Create Resource'}
+              </button>
+            </div>
+          </div>
           <form onSubmit={handleSaveResource}>
             <div className="form-row">
               <div className="form-group">

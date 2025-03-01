@@ -56,6 +56,39 @@
     font-size: 18px;
   }
   
+  .sidebar-filters {
+    padding: 10px 15px;
+    border-bottom: 1px solid #ddd;
+    background-color: #f8f9fa;
+  }
+  
+  .filter-group {
+    margin-bottom: 8px;
+  }
+  
+  .search-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  
+  .status-filter,
+  .completeness-filter {
+    width: 49%;
+    padding: 6px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 13px;
+    margin-right: 2%;
+  }
+  
+  .completeness-filter {
+    margin-right: 0;
+  }
+  
   .resources-list {
     overflow-y: auto;
     flex-grow: 1;
@@ -63,12 +96,30 @@
   
   .resource-item {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 15px;
+    flex-direction: column;
+    padding: 0;
     border-bottom: 1px solid #eee;
     cursor: pointer;
     transition: background-color 0.2s;
+    position: relative;
+  }
+  
+  .resource-completeness-indicator {
+    height: 3px;
+    width: 100%;
+    background-color: #f0f0f0;
+  }
+  
+  .completeness-bar {
+    height: 100%;
+    background-color: #52c41a;
+    transition: width 0.3s;
+  }
+  
+  .resource-item-content {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 15px;
   }
   
   .resource-item:hover {
@@ -80,11 +131,67 @@
     border-left: 3px solid #1890ff;
   }
   
+  .resource-item.status-draft .completeness-bar {
+    background-color: #faad14;
+  }
+  
+  .resource-item.status-review .completeness-bar {
+    background-color: #1890ff;
+  }
+  
+  .resource-item.status-published .completeness-bar {
+    background-color: #52c41a;
+  }
+  
   .resource-item-name {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     flex-grow: 1;
+  }
+  
+  .resource-item-meta {
+    display: flex;
+    gap: 5px;
+    font-size: 12px;
+    margin-top: 4px;
+  }
+  
+  .status-badge {
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  
+  .status-badge.status-draft {
+    background-color: #fff7e6;
+    color: #faad14;
+    border: 1px solid #faad14;
+  }
+  
+  .status-badge.status-review {
+    background-color: #e6f7ff;
+    color: #1890ff;
+    border: 1px solid #1890ff;
+  }
+  
+  .status-badge.status-published {
+    background-color: #f6ffed;
+    color: #52c41a;
+    border: 1px solid #52c41a;
+  }
+  
+  .featured-badge {
+    background-color: #f9f0ff;
+    color: #722ed1;
+    border: 1px solid #722ed1;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: bold;
   }
   
   .resource-item-actions {
@@ -105,6 +212,74 @@
     padding: 20px;
     overflow-y: auto;
     height: 100%;
+  }
+  
+  .editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .editor-header h2 {
+    margin: 0;
+    color: #333;
+  }
+  
+  .floating-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .floating-save-button {
+    background-color: #52c41a;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+  
+  .floating-save-button:hover {
+    background-color: #73d13d;
+  }
+  
+  .status-selector {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .status-selector span {
+    font-weight: 500;
+    color: #555;
+  }
+  
+  .status-buttons {
+    display: flex;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .status-button {
+    padding: 6px 10px;
+    background-color: #f5f5f5;
+    border: none;
+    border-right: 1px solid #ddd;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  
+  .status-button:last-child {
+    border-right: none;
+  }
+  
+  .status-button.active {
+    background-color: #1890ff;
+    color: white;
   }
   
   .resource-editor h2 {
