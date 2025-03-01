@@ -15,7 +15,6 @@ const AdminPanel = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [completenessFilter, setCompletenessFilter] = useState(0);
-  const [darkMode, setDarkMode] = useState(false);
 
   // Login state
   const [email, setEmail] = useState('');
@@ -36,35 +35,6 @@ const AdminPanel = () => {
 
   // Alert state
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
-
-  // Check for dark mode preference on component mount
-  useEffect(() => {
-    // Check if dark mode is stored in localStorage
-    const storedDarkMode = localStorage.getItem('darkMode');
-    if (storedDarkMode) {
-      setDarkMode(storedDarkMode === 'true');
-    } else {
-      // Check system preference
-      const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      setDarkMode(prefersDarkMode);
-    }
-  }, []);
-
-  // Apply dark mode class when darkMode state changes
-  useEffect(() => {
-    if (darkMode) {
-      document.body.classList.add('dark-mode');
-    } else {
-      document.body.classList.remove('dark-mode');
-    }
-  }, [darkMode]);
-
-  // Toggle dark mode
-  const toggleDarkMode = () => {
-    const newDarkMode = !darkMode;
-    setDarkMode(newDarkMode);
-    localStorage.setItem('darkMode', newDarkMode.toString());
-  };
 
   // Fetch all required data from Supabase
   const fetchAllData = useCallback(async () => {
@@ -554,7 +524,7 @@ const AdminPanel = () => {
   // Render loading spinner
   if (isLoading) {
     return (
-      <div className={`admin-loading ${darkMode ? 'dark-mode' : ''}`}>
+      <div className="admin-loading">
         <div className="loading-spinner"></div>
         <p>Loading...</p>
       </div>
@@ -564,7 +534,7 @@ const AdminPanel = () => {
   // Render login form if not authenticated
   if (!isAuthenticated) {
     return (
-      <div className={`admin-login-container ${darkMode ? 'dark-mode' : ''}`}>
+      <div className="admin-login-container">
         <div className="admin-login-card">
           <h2>Admin Login</h2>
           {authError && <div className="auth-error">{authError}</div>}
@@ -591,20 +561,6 @@ const AdminPanel = () => {
             </div>
             <button type="submit" className="login-button">Login</button>
           </form>
-          <div style={{ marginTop: '20px', textAlign: 'center' }}>
-            <button 
-              onClick={toggleDarkMode} 
-              style={{ 
-                background: 'none', 
-                border: 'none', 
-                cursor: 'pointer',
-                fontSize: '1em',
-                color: 'var(--text)'
-              }}
-            >
-              {darkMode ? '☀️ Light Mode' : '🌙 Dark Mode'}
-            </button>
-          </div>
         </div>
       </div>
     );
@@ -612,30 +568,11 @@ const AdminPanel = () => {
 
   // Main admin panel UI
   return (
-    <div className={`admin-panel ${darkMode ? 'dark-mode' : ''}`}>
+    <div className="admin-panel">
       {/* Header */}
       <header className="admin-header">
         <h1>Resources Admin Panel</h1>
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-          <button 
-            onClick={toggleDarkMode} 
-            style={{ 
-              background: 'none', 
-              border: '1px solid var(--card-border)', 
-              borderRadius: '6px',
-              padding: '8px 12px',
-              cursor: 'pointer',
-              fontSize: '0.9em',
-              color: 'var(--text)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '5px'
-            }}
-          >
-            {darkMode ? '☀️ Light' : '🌙 Dark'}
-          </button>
-          <button onClick={handleLogout} className="logout-button">Logout</button>
-        </div>
+        <button onClick={handleLogout} className="logout-button">Logout</button>
       </header>
 
       {/* Alert message */}
@@ -727,8 +664,8 @@ const AdminPanel = () => {
                 </div>
               ))
             ) : (
-              <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text)', opacity: 0.7 }}>
-                No resources match your filters
+              <div className="no-resources-message">
+                <p>No resources match your filters.</p>
               </div>
             )}
           </div>
@@ -785,6 +722,7 @@ const AdminPanel = () => {
                   value={formData.name}
                   onChange={handleInputChange}
                   required
+                  placeholder="Resource name"
                 />
               </div>
               <div className="form-group">
@@ -795,6 +733,7 @@ const AdminPanel = () => {
                   name="domain"
                   value={formData.domain}
                   onChange={handleInputChange}
+                  placeholder="e.g., design, development, marketing"
                 />
               </div>
             </div>
@@ -808,6 +747,7 @@ const AdminPanel = () => {
                 value={formData.url}
                 onChange={handleInputChange}
                 required
+                placeholder="https://example.com"
               />
             </div>
 
@@ -820,6 +760,7 @@ const AdminPanel = () => {
                 onChange={handleInputChange}
                 rows="4"
                 required
+                placeholder="Brief description of the resource..."
               ></textarea>
             </div>
 
@@ -876,9 +817,7 @@ const AdminPanel = () => {
                       </div>
                     ))
                   ) : (
-                    <div style={{ padding: '10px', color: 'var(--text)', opacity: 0.7 }}>
-                      No categories available
-                    </div>
+                    <p className="no-items-message">No categories available. Create one!</p>
                   )}
                 </div>
               </div>
@@ -911,9 +850,7 @@ const AdminPanel = () => {
                       </div>
                     ))
                   ) : (
-                    <div style={{ padding: '10px', color: 'var(--text)', opacity: 0.7 }}>
-                      No tags available
-                    </div>
+                    <p className="no-items-message">No tags available. Create one!</p>
                   )}
                 </div>
               </div>
