@@ -685,6 +685,7 @@
 
       .resources-sidebar {
         max-height: 80%;
+        overflow-y: scroll;
       }
 
       .admin-panel {
