@@ -1,7 +1,5 @@
-// src/components/common/RelatedPagesNav.jsx
-
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './RelatedPagesNav.css';
 
 const RelatedPagesNav = ({ currentPage }) => {
@@ -27,21 +25,35 @@ const RelatedPagesNav = ({ currentPage }) => {
     }
   ];
 
+  const navigate = useNavigate();
+
   // Filter out the current page
   const otherPages = pages.filter(page => page.id !== currentPage);
+
+  // Function to handle navigation and scroll to top
+  const handleNavigation = (path, e) => {
+    e.preventDefault();
+    navigate(path);
+    window.scrollTo(0, 0);
+  };
 
   return (
     <div className="related-pages-container">
       <h3 className="related-pages-title">Related Pages</h3>
       <div className="related-pages-links">
         {otherPages.map(page => (
-          <Link key={page.id} to={page.path} className="related-page-link">
+          <a 
+            key={page.id}
+            href={page.path}
+            className="related-page-link"
+            onClick={(e) => handleNavigation(page.path, e)}
+          >
             <div className="related-page-content">
               <h4>{page.title}</h4>
               <p>{page.description}</p>
             </div>
             <span className="related-page-arrow">→</span>
-          </Link>
+          </a>
         ))}
       </div>
     </div>

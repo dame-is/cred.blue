@@ -22,6 +22,8 @@
     display: flex;
     gap: 17.3px;
     justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 30px;
   }
 
   .patreon-button {
