@@ -304,20 +304,23 @@ const AdminPanel = () => {
   };
   
   // Reorder resources (move up or down in list)
-  const handleReorderResource = async (resourceId, direction) => {
+const handleReorderResource = async (resourceId, direction) => {
     const resourceIndex = resources.findIndex(r => r.id === resourceId);
     if (resourceIndex === -1) return;
     
-    let filteredResources = resources;
+    let filteredResources = [...resources]; // Create a copy to work with
     
     // Filter resources based on reorder mode
     if (reorderMode === 'featured') {
-      filteredResources = resources.filter(r => r.featured);
+      filteredResources = filteredResources.filter(r => r.featured);
     } else if (reorderMode === 'category' && selectedCategoryForReorder) {
-      filteredResources = resources.filter(r => 
+      filteredResources = filteredResources.filter(r => 
         r.categoryIds && r.categoryIds.includes(selectedCategoryForReorder)
       );
     }
+    
+    // Sort by position to ensure correct order
+    filteredResources.sort((a, b) => a.position - b.position);
     
     const resourceToMoveIndex = filteredResources.findIndex(r => r.id === resourceId);
     if (resourceToMoveIndex === -1) return;
@@ -348,15 +351,18 @@ const AdminPanel = () => {
       
       // Update local state without fetching all data again
       setResources(prevResources => {
-        return prevResources.map(resource => {
-          if (resource.id === resourceToMove.id) {
-            return { ...resource, position: adjacentResource.position };
-          }
-          if (resource.id === adjacentResource.id) {
-            return { ...resource, position: resourceToMove.position };
-          }
-          return resource;
-        });
+        const updatedResources = [...prevResources];
+        
+        // Find the actual resources in the full list
+        const resourceToMoveFullIndex = updatedResources.findIndex(r => r.id === resourceToMove.id);
+        const adjacentResourceFullIndex = updatedResources.findIndex(r => r.id === adjacentResource.id);
+        
+        // Swap their positions
+        const tempPosition = updatedResources[resourceToMoveFullIndex].position;
+        updatedResources[resourceToMoveFullIndex].position = updatedResources[adjacentResourceFullIndex].position;
+        updatedResources[adjacentResourceFullIndex].position = tempPosition;
+        
+        return updatedResources;
       });
       
       showAlert(`Resources reordered successfully!`);
