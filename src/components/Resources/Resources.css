@@ -144,6 +144,10 @@
   padding-top: 3px;
 }
 
+.resource-meta {
+  flex-direction: row;
+}
+
 /* ======= Content Sections ======= */
 .featured-section,
 .all-resources-section,
