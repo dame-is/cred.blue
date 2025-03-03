@@ -45,6 +45,14 @@ const Resources = () => {
     localStorage.setItem('resourcesPreferences', JSON.stringify(preferences));
   }, [activeCategory, showNewOnly, showScoreImpactOnly]);
 
+  // Hide random resources when filters are applied
+  useEffect(() => {
+    // Hide random resources when any filter is active or category is not 'All'
+    if (showNewOnly || showScoreImpactOnly || activeCategory !== 'All' || searchQuery.trim() !== '') {
+      setShowRandomResources(false);
+    }
+  }, [showNewOnly, showScoreImpactOnly, activeCategory, searchQuery]);
+
   // Fetch resources from Supabase
   useEffect(() => {
     async function fetchResources() {
@@ -224,9 +232,17 @@ const isNewResource = (date) => {
       [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
     
-    // Take the first 4 items
+    // Take the first 6 items
     setRandomResources(shuffled.slice(0, 6));
     setShowRandomResources(true);
+    
+    // Reset all filters when showing random resources
+    if (activeCategory !== 'All' || showNewOnly || showScoreImpactOnly || searchQuery.trim() !== '') {
+      setActiveCategory('All');
+      setShowNewOnly(false);
+      setShowScoreImpactOnly(false);
+      setSearchQuery('');
+    }
     
     // Auto-scroll to the random resources section
     setTimeout(() => {
@@ -385,6 +401,19 @@ const filteredResources = useMemo(() => {
     setSearchQuery(e.target.value);
   };
 
+  // Handlers for filters to hide random resources
+  const handleCategoryChange = (e) => {
+    setActiveCategory(e.target.value);
+  };
+
+  const handleNewToggle = () => {
+    setShowNewOnly(!showNewOnly);
+  };
+
+  const handleScoreToggle = () => {
+    setShowScoreImpactOnly(!showScoreImpactOnly);
+  };
+
   return (
     <main className="resources-page">
       <div className="alt-card">
@@ -435,7 +464,7 @@ const filteredResources = useMemo(() => {
                   <select 
                     id="category-select"
                     value={activeCategory}
-                    onChange={(e) => setActiveCategory(e.target.value)}
+                    onChange={handleCategoryChange}
                     className="filter-select"
                   >
                     {categories.map(category => (
@@ -455,7 +484,7 @@ const filteredResources = useMemo(() => {
                         id="new-toggle"
                         type="checkbox"
                         checked={showNewOnly}
-                        onChange={() => setShowNewOnly(!showNewOnly)}
+                        onChange={handleNewToggle}
                         aria-label="Show only recently added resources"
                       />
                       <span className="toggle-text">Recently Added</span>
@@ -469,7 +498,7 @@ const filteredResources = useMemo(() => {
                         id="score-toggle"
                         type="checkbox"
                         checked={showScoreImpactOnly}
-                        onChange={() => setShowScoreImpactOnly(!showScoreImpactOnly)}
+                        onChange={handleScoreToggle}
                         aria-label="Show only resources that impact score"
                       />
                       <span className="toggle-text">Impacts Score</span>
@@ -503,8 +532,8 @@ const filteredResources = useMemo(() => {
           <ResourceLoader />
         ) : (
         <>
-          {/* Random Resources Section */}
-          {showRandomResources && randomResources.length > 0 && (
+          {/* Random Resources Section - now only shows when no filters are active */}
+          {showRandomResources && randomResources.length > 0 && !showNewOnly && !showScoreImpactOnly && activeCategory === 'All' && searchQuery.trim() === '' && (
             <div id="random-resources-section" className="random-resources-section">
               <h2>Feeling Lucky Results</h2>
               <p className="featured-description">Here are {randomResources.length} resources picked just for you!</p>

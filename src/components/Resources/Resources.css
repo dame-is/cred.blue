@@ -680,6 +680,11 @@
   font-size: 1.1rem;
 }
 
+.header-tagline-detail {
+  font-size: 0.8em !important;
+  margin-top: 7px !important;
+}
+
 /* Feeling Lucky button */
 .feeling-lucky-button {
   display: flex;
