@@ -23,6 +23,7 @@ const AdminPanel = () => {
   const [activeView, setActiveView] = useState('resources'); // 'resources', 'reorder'
   const [reorderMode, setReorderMode] = useState('featured'); // 'featured', 'category'
   const [selectedCategoryForReorder, setSelectedCategoryForReorder] = useState(null);
+  const [updatingPositions, setUpdatingPositions] = useState(false);
 
   // Login state
   const [email, setEmail] = useState('');
@@ -261,10 +262,50 @@ const AdminPanel = () => {
     });
   };
   
+  // Update a single resource position without full page refresh
+  const updateResourcePosition = async (resourceId, newPosition) => {
+    if (updatingPositions) return;
+    setUpdatingPositions(true);
+    
+    try {
+      // Update the resource position in the database
+      const { error } = await supabase
+        .from('resources')
+        .update({ position: newPosition })
+        .eq('id', resourceId);
+        
+      if (error) throw error;
+      
+      // Update local state without fetching all data again
+      setResources(prevResources => {
+        return prevResources.map(resource => {
+          if (resource.id === resourceId) {
+            return { ...resource, position: newPosition };
+          }
+          return resource;
+        });
+      });
+      
+      showAlert(`Position updated successfully!`);
+    } catch (error) {
+      console.error('Error updating position:', error);
+      showAlert(`Error: ${error.message}`, 'error');
+    } finally {
+      setUpdatingPositions(false);
+    }
+  };
+  
+  // Handle position input change and update
+  const handlePositionChange = (resourceId, e) => {
+    const newPosition = parseInt(e.target.value);
+    if (isNaN(newPosition) || newPosition < 0) return;
+    
+    updateResourcePosition(resourceId, newPosition);
+  };
+  
   // Reorder resources (move up or down in list)
   const handleReorderResource = async (resourceId, direction) => {
     const resourceIndex = resources.findIndex(r => r.id === resourceId);
-    
     if (resourceIndex === -1) return;
     
     let filteredResources = resources;
@@ -279,7 +320,6 @@ const AdminPanel = () => {
     }
     
     const resourceToMoveIndex = filteredResources.findIndex(r => r.id === resourceId);
-    
     if (resourceToMoveIndex === -1) return;
     
     const adjacentIndex = direction === 'up' 
@@ -291,12 +331,11 @@ const AdminPanel = () => {
     const resourceToMove = filteredResources[resourceToMoveIndex];
     const adjacentResource = filteredResources[adjacentIndex];
     
-    setIsLoading(true);
+    if (updatingPositions) return;
+    setUpdatingPositions(true);
     
     try {
-      // Swap positions
-      const tempPosition = resourceToMove.position;
-      
+      // Swap positions in database
       await supabase
         .from('resources')
         .update({ position: adjacentResource.position })
@@ -304,18 +343,28 @@ const AdminPanel = () => {
         
       await supabase
         .from('resources')
-        .update({ position: tempPosition })
+        .update({ position: resourceToMove.position })
         .eq('id', adjacentResource.id);
       
-      // Refresh data
-      await fetchAllData();
+      // Update local state without fetching all data again
+      setResources(prevResources => {
+        return prevResources.map(resource => {
+          if (resource.id === resourceToMove.id) {
+            return { ...resource, position: adjacentResource.position };
+          }
+          if (resource.id === adjacentResource.id) {
+            return { ...resource, position: resourceToMove.position };
+          }
+          return resource;
+        });
+      });
       
       showAlert(`Resources reordered successfully!`);
     } catch (error) {
       console.error('Error reordering resources:', error);
       showAlert(`Error: ${error.message}`, 'error');
     } finally {
-      setIsLoading(false);
+      setUpdatingPositions(false);
     }
   };
   
@@ -1123,9 +1172,16 @@ const AdminPanel = () => {
                               <span className={`status-badge status-${resource.status}`}>
                                 {resource.status}
                               </span>
-                              <span className="position-indicator">
-                                Position: {resource.position}
-                              </span>
+                              <div className="position-control">
+                                <span>Position:</span>
+                                <input
+                                  type="number"
+                                  value={resource.position}
+                                  onChange={(e) => handlePositionChange(resource.id, e)}
+                                  className="position-input"
+                                  min="1"
+                                />
+                              </div>
                             </div>
                           </div>
                           <div className="reorder-actions">
@@ -1133,6 +1189,7 @@ const AdminPanel = () => {
                               onClick={() => handleReorderResource(resource.id, 'up')}
                               className="move-button move-up"
                               title="Move up"
+                              disabled={updatingPositions}
                             >
                               ↑
                             </button>
@@ -1140,6 +1197,7 @@ const AdminPanel = () => {
                               onClick={() => handleReorderResource(resource.id, 'down')}
                               className="move-button move-down"
                               title="Move down"
+                              disabled={updatingPositions}
                             >
                               ↓
                             </button>
@@ -1178,9 +1236,16 @@ const AdminPanel = () => {
                                     {resource.status}
                                   </span>
                                   {resource.featured && <span className="featured-badge">Featured</span>}
-                                  <span className="position-indicator">
-                                    Position: {resource.position}
-                                  </span>
+                                  <div className="position-control">
+                                    <span>Position:</span>
+                                    <input
+                                      type="number"
+                                      value={resource.position}
+                                      onChange={(e) => handlePositionChange(resource.id, e)}
+                                      className="position-input"
+                                      min="1"
+                                    />
+                                  </div>
                                 </div>
                               </div>
                               <div className="reorder-actions">
@@ -1188,6 +1253,7 @@ const AdminPanel = () => {
                                   onClick={() => handleReorderResource(resource.id, 'up')}
                                   className="move-button move-up"
                                   title="Move up"
+                                  disabled={updatingPositions}
                                 >
                                   ↑
                                 </button>
@@ -1195,6 +1261,7 @@ const AdminPanel = () => {
                                   onClick={() => handleReorderResource(resource.id, 'down')}
                                   className="move-button move-down"
                                   title="Move down"
+                                  disabled={updatingPositions}
                                 >
                                   ↓
                                 </button>
