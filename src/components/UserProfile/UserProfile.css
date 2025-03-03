@@ -538,8 +538,16 @@ height: 100%;
 overflow: visible; /* Changed from hidden to allow content to determine height */
 }
 
+.activity-card {
+  overflow: hidden;
+}
+
 .card-content {
 overflow: auto;
+}
+
+.profile-card p {
+  line-height: 1em;
 }
 
 /* Responsive Adjustments for Cards */
