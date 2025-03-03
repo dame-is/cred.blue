@@ -38,7 +38,7 @@
   .resources-sidebar {
     flex-direction: column;
     height: 93.8%;
-    overflow: hidden;
+    overflow: scroll;
     padding: 10px;
     background: var(--navbar-bg);
     border: 5px solid var(--card-border);
@@ -569,6 +569,138 @@
     height: 40px;
     animation: spin 1s linear infinite;
     margin-bottom: 15px;
+  }
+
+  /* Tab navigation */
+.nav-tabs {
+    display: flex;
+    margin: 0 auto;
+  }
+  
+  .nav-tab {
+    padding: 10px 20px;
+    background: #f5f5f5;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .nav-tab.active {
+    border-bottom: 2px solid #4a90e2;
+    font-weight: bold;
+  }
+  
+  /* Reorder container */
+  .reorder-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .reorder-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .reorder-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .reorder-mode-selector {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .mode-button {
+    padding: 8px 16px;
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .mode-button.active {
+    background: #4a90e2;
+    color: white;
+    border-color: #4a90e2;
+  }
+  
+  .category-select {
+    padding: 8px;
+    min-width: 200px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  /* Sortable resources list */
+  .sortable-resources {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .sortable-resource-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  
+  .resource-info {
+    flex: 1;
+  }
+  
+  .resource-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .resource-meta {
+    display: flex;
+    gap: 10px;
+    font-size: 0.9rem;
+  }
+  
+  .position-indicator {
+    color: #666;
+  }
+  
+  .reorder-actions {
+    display: flex;
+    gap: 5px;
+  }
+  
+  .move-button {
+    width: 32px;
+    height: 32px;
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+  
+  .move-button:hover {
+    background: #e5e5e5;
+  }
+  
+  .no-resources-message,
+  .select-category-message {
+    padding: 20px;
+    text-align: center;
+    color: #666;
   }
   
   @keyframes spin {

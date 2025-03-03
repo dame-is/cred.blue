@@ -18,6 +18,11 @@ const AdminPanel = () => {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [tagFilter, setTagFilter] = useState('all');
   const [featuredFilter, setFeaturedFilter] = useState('all');
+  
+  // View management
+  const [activeView, setActiveView] = useState('resources'); // 'resources', 'reorder'
+  const [reorderMode, setReorderMode] = useState('featured'); // 'featured', 'category'
+  const [selectedCategoryForReorder, setSelectedCategoryForReorder] = useState(null);
 
   // Login state
   const [email, setEmail] = useState('');
@@ -254,6 +259,97 @@ const AdminPanel = () => {
       ...formData,
       status
     });
+  };
+  
+  // Reorder resources (move up or down in list)
+  const handleReorderResource = async (resourceId, direction) => {
+    const resourceIndex = resources.findIndex(r => r.id === resourceId);
+    
+    if (resourceIndex === -1) return;
+    
+    let filteredResources = resources;
+    
+    // Filter resources based on reorder mode
+    if (reorderMode === 'featured') {
+      filteredResources = resources.filter(r => r.featured);
+    } else if (reorderMode === 'category' && selectedCategoryForReorder) {
+      filteredResources = resources.filter(r => 
+        r.categoryIds && r.categoryIds.includes(selectedCategoryForReorder)
+      );
+    }
+    
+    const resourceToMoveIndex = filteredResources.findIndex(r => r.id === resourceId);
+    
+    if (resourceToMoveIndex === -1) return;
+    
+    const adjacentIndex = direction === 'up' 
+      ? Math.max(0, resourceToMoveIndex - 1) 
+      : Math.min(filteredResources.length - 1, resourceToMoveIndex + 1);
+    
+    if (adjacentIndex === resourceToMoveIndex) return;
+    
+    const resourceToMove = filteredResources[resourceToMoveIndex];
+    const adjacentResource = filteredResources[adjacentIndex];
+    
+    setIsLoading(true);
+    
+    try {
+      // Swap positions
+      const tempPosition = resourceToMove.position;
+      
+      await supabase
+        .from('resources')
+        .update({ position: adjacentResource.position })
+        .eq('id', resourceToMove.id);
+        
+      await supabase
+        .from('resources')
+        .update({ position: tempPosition })
+        .eq('id', adjacentResource.id);
+      
+      // Refresh data
+      await fetchAllData();
+      
+      showAlert(`Resources reordered successfully!`);
+    } catch (error) {
+      console.error('Error reordering resources:', error);
+      showAlert(`Error: ${error.message}`, 'error');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  // Save all positions at once
+  const saveAllPositions = async (orderedResources) => {
+    setIsLoading(true);
+    
+    try {
+      // Create an array of update operations
+      const updates = orderedResources.map((resource, index) => ({
+        id: resource.id,
+        position: index + 1
+      }));
+      
+      // Execute updates in parallel
+      const promises = updates.map(update => 
+        supabase
+          .from('resources')
+          .update({ position: update.position })
+          .eq('id', update.id)
+      );
+      
+      await Promise.all(promises);
+      
+      // Refresh data
+      await fetchAllData();
+      
+      showAlert(`Resource positions updated successfully!`);
+    } catch (error) {
+      console.error('Error updating positions:', error);
+      showAlert(`Error: ${error.message}`, 'error');
+    } finally {
+      setIsLoading(false);
+    }
   };
   
   // Filter resources based on status, search query, completeness, category, tag, and featured status
@@ -598,6 +694,20 @@ const AdminPanel = () => {
       {/* Header */}
       <header className="admin-header">
         <h1>Resources Admin Panel</h1>
+        <div className="nav-tabs">
+          <button 
+            className={`nav-tab ${activeView === 'resources' ? 'active' : ''}`}
+            onClick={() => setActiveView('resources')}
+          >
+            Resources
+          </button>
+          <button 
+            className={`nav-tab ${activeView === 'reorder' ? 'active' : ''}`}
+            onClick={() => setActiveView('reorder')}
+          >
+            Reorder
+          </button>
+        </div>
         <button onClick={handleLogout} className="logout-button">Logout</button>
       </header>
 
@@ -608,17 +718,17 @@ const AdminPanel = () => {
         </div>
       )}
 
-      <div className="admin-container">
-        {/* Resources list sidebar */}
-        <div className="resources-sidebar">
-          <div className="sidebar-header">
-            <h2>Resources</h2>
-            <button onClick={handleClearForm} className="add-new-button">
-              + New Resource
-            </button>
-          </div>
-          <div className="sidebar-filters">
-            <div className="filter-group">
+      {activeView === 'resources' && (
+        <div className="admin-container">
+          {/* Resources list sidebar */}
+          <div className="resources-sidebar">
+            <div className="sidebar-header">
+              <h2>Resources</h2>
+              <button onClick={handleClearForm} className="add-new-button">
+                + New Resource
+              </button>
+            </div>
+            <div className="sidebar-filters">
               <div className="search-container">
                 <input
                   type="text"
@@ -638,322 +748,472 @@ const AdminPanel = () => {
                   </button>
                 )}
               </div>
-            </div>
-            <div className="filter-group">
-              <select 
-                value={statusFilter} 
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="status-filter"
-              >
-                <option value="all">All Statuses</option>
-                <option value="draft">Draft</option>
-                <option value="review">Review</option>
-                <option value="published">Published</option>
-              </select>
-              <select 
-                value={featuredFilter} 
-                onChange={(e) => setFeaturedFilter(e.target.value)}
-                className="featured-filter"
-              >
-                <option value="all">All Resources</option>
-                <option value="featured">Featured Only</option>
-                <option value="not-featured">Not Featured</option>
-              </select>
-            </div>
-            <div className="filter-group">
-              <select 
-                value={completenessFilter} 
-                onChange={(e) => setCompletenessFilter(e.target.value)}
-                className="completeness-filter"
-              >
-                <option value="all">All Completeness</option>
-                <option value="incomplete">Incomplete Only</option>
-                <option value="complete">100% Complete Only</option>
-                <option value="min-25">At least 25%</option>
-                <option value="min-50">At least 50%</option>
-                <option value="min-75">At least 75%</option>
-                <option value="max-25">Less than 25%</option>
-                <option value="max-50">Less than 50%</option>
-                <option value="max-75">Less than 75%</option>
-              </select>
-            </div>
-            <div className="filter-group">
-              <select 
-                value={categoryFilter} 
-                onChange={(e) => setCategoryFilter(e.target.value)}
-                className="category-filter"
-              >
-                <option value="all">All Categories</option>
-                {categories.map(category => (
-                  <option key={category.id} value={category.id}>
-                    {category.emoji} {category.name}
-                  </option>
-                ))}
-              </select>
-              <select 
-                value={tagFilter} 
-                onChange={(e) => setTagFilter(e.target.value)}
-                className="tag-filter"
-              >
-                <option value="all">All Tags</option>
-                {tags.map(tag => (
-                  <option key={tag.id} value={tag.id}>
-                    #{tag.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <div className="resources-summary">
-            <span className="resources-count">
-              Showing {filteredResources.length} of {resources.length} resources
-            </span>
-          </div>
-          <div className="resources-list">
-            {filteredResources.length > 0 ? (
-              filteredResources.map(resource => (
-                <div 
-                  key={resource.id} 
-                  className={`resource-item ${selectedResource && selectedResource.id === resource.id ? 'selected' : ''} status-${resource.status}`}
-                  onClick={() => handleSelectResource(resource)}
+              <div className="filter-group">
+                <select 
+                  value={statusFilter} 
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                  className="status-filter"
                 >
-                  <div className="resource-completeness-indicator">
-                    <div 
-                      className="completeness-bar"
-                      style={{ width: `${resource.completeness}%` }}
-                      title={`${resource.completeness}% complete`}
-                    ></div>
-                  </div>
-                  <div className="resource-item-content">
-                    <div className="resource-item-name">{resource.name}</div>
-                    <div className="resource-item-meta">
-                      <span className={`status-badge status-${resource.status}`}>
-                        {resource.status}
-                      </span>
-                      {resource.featured && <span className="featured-badge">Featured</span>}
-                      <span className="completeness-badge" title="Completeness">
-                        {resource.completeness}%
-                      </span>
+                  <option value="all">All Statuses</option>
+                  <option value="draft">Draft</option>
+                  <option value="review">Review</option>
+                  <option value="published">Published</option>
+                </select>
+                <select 
+                  value={featuredFilter} 
+                  onChange={(e) => setFeaturedFilter(e.target.value)}
+                  className="featured-filter"
+                >
+                  <option value="all">All Resources</option>
+                  <option value="featured">Featured Only</option>
+                  <option value="not-featured">Not Featured</option>
+                </select>
+              </div>
+              <div className="filter-group">
+                <select 
+                  value={completenessFilter} 
+                  onChange={(e) => setCompletenessFilter(e.target.value)}
+                  className="completeness-filter"
+                >
+                  <option value="all">All Completeness</option>
+                  <option value="incomplete">Incomplete Only</option>
+                  <option value="complete">100% Complete Only</option>
+                  <option value="min-25">At least 25%</option>
+                  <option value="min-50">At least 50%</option>
+                  <option value="min-75">At least 75%</option>
+                  <option value="max-25">Less than 25%</option>
+                  <option value="max-50">Less than 50%</option>
+                  <option value="max-75">Less than 75%</option>
+                </select>
+              </div>
+              <div className="filter-group">
+                <select 
+                  value={categoryFilter} 
+                  onChange={(e) => setCategoryFilter(e.target.value)}
+                  className="category-filter"
+                >
+                  <option value="all">All Categories</option>
+                  {categories.map(category => (
+                    <option key={category.id} value={category.id}>
+                      {category.emoji} {category.name}
+                    </option>
+                  ))}
+                </select>
+                <select 
+                  value={tagFilter} 
+                  onChange={(e) => setTagFilter(e.target.value)}
+                  className="tag-filter"
+                >
+                  <option value="all">All Tags</option>
+                  {tags.map(tag => (
+                    <option key={tag.id} value={tag.id}>
+                      #{tag.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className="resources-summary">
+              <span className="resources-count">
+                Showing {filteredResources.length} of {resources.length} resources
+              </span>
+            </div>
+            <div className="resources-list">
+              {filteredResources.length > 0 ? (
+                filteredResources.map(resource => (
+                  <div 
+                    key={resource.id} 
+                    className={`resource-item ${selectedResource && selectedResource.id === resource.id ? 'selected' : ''} status-${resource.status}`}
+                    onClick={() => handleSelectResource(resource)}
+                  >
+                    <div className="resource-completeness-indicator">
+                      <div 
+                        className="completeness-bar"
+                        style={{ width: `${resource.completeness}%` }}
+                        title={`${resource.completeness}% complete`}
+                      ></div>
+                    </div>
+                    <div className="resource-item-content">
+                      <div className="resource-item-name">{resource.name}</div>
+                      <div className="resource-item-meta">
+                        <span className={`status-badge status-${resource.status}`}>
+                          {resource.status}
+                        </span>
+                        {resource.featured && <span className="featured-badge">Featured</span>}
+                        <span className="completeness-badge" title="Completeness">
+                          {resource.completeness}%
+                        </span>
+                      </div>
+                    </div>
+                    <div className="resource-item-actions">
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteResource(resource.id, resource.name);
+                        }}
+                        className="delete-button"
+                        title="Delete resource"
+                      >
+                        🗑️
+                      </button>
                     </div>
                   </div>
-                  <div className="resource-item-actions">
-                    <button 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeleteResource(resource.id, resource.name);
-                      }}
-                      className="delete-button"
-                      title="Delete resource"
+                ))
+              ) : (
+                <div className="no-resources-message">
+                  <p>No resources match your filters.</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Resource edit form */}
+          <div className="resource-editor">
+            <div className="editor-header">
+              <h2>{selectedResource ? 'Edit Resource' : 'Add New Resource'}</h2>
+              <div className="floating-actions">
+                <div className="status-selector">
+                  <span>Status:</span>
+                  <div className="status-buttons">
+                    <button
+                      type="button"
+                      className={`status-button ${formData.status === 'draft' ? 'active' : ''}`}
+                      onClick={() => handleStatusChange('draft')}
                     >
-                      🗑️
+                      Draft
+                    </button>
+                    <button
+                      type="button"
+                      className={`status-button ${formData.status === 'review' ? 'active' : ''}`}
+                      onClick={() => handleStatusChange('review')}
+                    >
+                      Review
+                    </button>
+                    <button
+                      type="button"
+                      className={`status-button ${formData.status === 'published' ? 'active' : ''}`}
+                      onClick={() => handleStatusChange('published')}
+                    >
+                      Published
                     </button>
                   </div>
                 </div>
-              ))
+                <button 
+                  type="button" 
+                  onClick={handleSaveResource} 
+                  className="floating-save-button"
+                >
+                  {selectedResource ? 'Update Resource' : 'Create Resource'}
+                </button>
+              </div>
+            </div>
+            <form onSubmit={handleSaveResource}>
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="name">Name *</label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    required
+                    placeholder="Resource name"
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="domain">Domain</label>
+                  <input
+                    type="text"
+                    id="domain"
+                    name="domain"
+                    value={formData.domain}
+                    onChange={handleInputChange}
+                    placeholder="e.g., design, development, marketing"
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="url">URL *</label>
+                <input
+                  type="url"
+                  id="url"
+                  name="url"
+                  value={formData.url}
+                  onChange={handleInputChange}
+                  required
+                  placeholder="https://example.com"
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="description">Description *</label>
+                <textarea
+                  id="description"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleInputChange}
+                  rows="4"
+                  required
+                  placeholder="Brief description of the resource..."
+                ></textarea>
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="position">Position</label>
+                  <input
+                    type="number"
+                    id="position"
+                    name="position"
+                    value={formData.position}
+                    onChange={handleInputChange}
+                    min="0"
+                  />
+                </div>
+                <div className="form-group checkbox-group">
+                  <input
+                    type="checkbox"
+                    id="featured"
+                    name="featured"
+                    checked={formData.featured}
+                    onChange={handleInputChange}
+                  />
+                  <label htmlFor="featured">Featured Resource</label>
+                </div>
+              </div>
+
+              <div className="form-row">
+                {/* Categories selection */}
+                <div className="form-group categories-section">
+                  <div className="section-header">
+                    <label>Categories</label>
+                    <button 
+                      type="button" 
+                      onClick={handleCreateCategory}
+                      className="add-item-button"
+                    >
+                      + Add Category
+                    </button>
+                  </div>
+                  <div className="checkbox-list">
+                    {categories.length > 0 ? (
+                      categories.map(category => (
+                        <div key={category.id} className="checkbox-item">
+                          <input
+                            type="checkbox"
+                            id={`category-${category.id}`}
+                            checked={formData.selectedCategories.includes(category.id)}
+                            onChange={() => handleCategoryChange(category.id)}
+                          />
+                          <label htmlFor={`category-${category.id}`}>
+                            {category.emoji} {category.name}
+                          </label>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="no-items-message">No categories available. Create one!</p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Tags selection */}
+                <div className="form-group tags-section">
+                  <div className="section-header">
+                    <label>Tags</label>
+                    <button 
+                      type="button" 
+                      onClick={handleCreateTag}
+                      className="add-item-button"
+                    >
+                      + Add Tag
+                    </button>
+                  </div>
+                  <div className="checkbox-list">
+                    {tags.length > 0 ? (
+                      tags.map(tag => (
+                        <div key={tag.id} className="checkbox-item">
+                          <input
+                            type="checkbox"
+                            id={`tag-${tag.id}`}
+                            checked={formData.selectedTags.includes(tag.id)}
+                            onChange={() => handleTagChange(tag.id)}
+                          />
+                          <label htmlFor={`tag-${tag.id}`}>
+                            #{tag.name}
+                          </label>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="no-items-message">No tags available. Create one!</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="form-actions">
+                <button type="button" onClick={handleClearForm} className="cancel-button">
+                  Cancel
+                </button>
+                <button type="submit" className="save-button">
+                  {selectedResource ? 'Update Resource' : 'Create Resource'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {activeView === 'reorder' && (
+        <div className="reorder-container">
+          <div className="reorder-header">
+            <h2>Reorder Resources</h2>
+            <div className="reorder-controls">
+              <div className="reorder-mode-selector">
+                <button 
+                  className={`mode-button ${reorderMode === 'featured' ? 'active' : ''}`}
+                  onClick={() => {
+                    setReorderMode('featured');
+                    setSelectedCategoryForReorder(null);
+                  }}
+                >
+                  Featured Resources
+                </button>
+                <button 
+                  className={`mode-button ${reorderMode === 'category' ? 'active' : ''}`}
+                  onClick={() => setReorderMode('category')}
+                >
+                  By Category
+                </button>
+              </div>
+              
+              {reorderMode === 'category' && (
+                <div className="category-selector">
+                  <select
+                    value={selectedCategoryForReorder || ''}
+                    onChange={(e) => setSelectedCategoryForReorder(parseInt(e.target.value))}
+                    className="category-select"
+                  >
+                    <option value="">Select Category...</option>
+                    {categories.map(category => (
+                      <option key={category.id} value={category.id}>
+                        {category.emoji} {category.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+            </div>
+          </div>
+          
+          <div className="reorder-content">
+            {reorderMode === 'featured' ? (
+              <div className="reorder-list">
+                <h3>Featured Resources</h3>
+                {resources.filter(r => r.featured).length === 0 ? (
+                  <p className="no-resources-message">No featured resources found.</p>
+                ) : (
+                  <div className="sortable-resources">
+                    {resources
+                      .filter(r => r.featured)
+                      .sort((a, b) => a.position - b.position)
+                      .map(resource => (
+                        <div key={resource.id} className="sortable-resource-item">
+                          <div className="resource-info">
+                            <div className="resource-name">{resource.name}</div>
+                            <div className="resource-meta">
+                              <span className={`status-badge status-${resource.status}`}>
+                                {resource.status}
+                              </span>
+                              <span className="position-indicator">
+                                Position: {resource.position}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="reorder-actions">
+                            <button 
+                              onClick={() => handleReorderResource(resource.id, 'up')}
+                              className="move-button move-up"
+                              title="Move up"
+                            >
+                              ↑
+                            </button>
+                            <button 
+                              onClick={() => handleReorderResource(resource.id, 'down')}
+                              className="move-button move-down"
+                              title="Move down"
+                            >
+                              ↓
+                            </button>
+                          </div>
+                        </div>
+                      ))
+                    }
+                  </div>
+                )}
+              </div>
             ) : (
-              <div className="no-resources-message">
-                <p>No resources match your filters.</p>
+              <div className="reorder-list">
+                {!selectedCategoryForReorder ? (
+                  <p className="select-category-message">Please select a category from the dropdown above.</p>
+                ) : (
+                  <>
+                    <h3>
+                      {categories.find(c => c.id === selectedCategoryForReorder)?.emoji} {' '}
+                      {categories.find(c => c.id === selectedCategoryForReorder)?.name} Resources
+                    </h3>
+                    {resources.filter(r => 
+                      r.categoryIds && r.categoryIds.includes(selectedCategoryForReorder)
+                    ).length === 0 ? (
+                      <p className="no-resources-message">No resources found in this category.</p>
+                    ) : (
+                      <div className="sortable-resources">
+                        {resources
+                          .filter(r => r.categoryIds && r.categoryIds.includes(selectedCategoryForReorder))
+                          .sort((a, b) => a.position - b.position)
+                          .map(resource => (
+                            <div key={resource.id} className="sortable-resource-item">
+                              <div className="resource-info">
+                                <div className="resource-name">{resource.name}</div>
+                                <div className="resource-meta">
+                                  <span className={`status-badge status-${resource.status}`}>
+                                    {resource.status}
+                                  </span>
+                                  {resource.featured && <span className="featured-badge">Featured</span>}
+                                  <span className="position-indicator">
+                                    Position: {resource.position}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="reorder-actions">
+                                <button 
+                                  onClick={() => handleReorderResource(resource.id, 'up')}
+                                  className="move-button move-up"
+                                  title="Move up"
+                                >
+                                  ↑
+                                </button>
+                                <button 
+                                  onClick={() => handleReorderResource(resource.id, 'down')}
+                                  className="move-button move-down"
+                                  title="Move down"
+                                >
+                                  ↓
+                                </button>
+                              </div>
+                            </div>
+                          ))
+                        }
+                      </div>
+                    )}
+                  </>
+                )}
               </div>
             )}
           </div>
         </div>
-
-        {/* Resource edit form */}
-        <div className="resource-editor">
-          <div className="editor-header">
-            <h2>{selectedResource ? 'Edit Resource' : 'Add New Resource'}</h2>
-            <div className="floating-actions">
-              <div className="status-selector">
-                <span>Status:</span>
-                <div className="status-buttons">
-                  <button
-                    type="button"
-                    className={`status-button ${formData.status === 'draft' ? 'active' : ''}`}
-                    onClick={() => handleStatusChange('draft')}
-                  >
-                    Draft
-                  </button>
-                  <button
-                    type="button"
-                    className={`status-button ${formData.status === 'review' ? 'active' : ''}`}
-                    onClick={() => handleStatusChange('review')}
-                  >
-                    Review
-                  </button>
-                  <button
-                    type="button"
-                    className={`status-button ${formData.status === 'published' ? 'active' : ''}`}
-                    onClick={() => handleStatusChange('published')}
-                  >
-                    Published
-                  </button>
-                </div>
-              </div>
-              <button 
-                type="button" 
-                onClick={handleSaveResource} 
-                className="floating-save-button"
-              >
-                {selectedResource ? 'Update Resource' : 'Create Resource'}
-              </button>
-            </div>
-          </div>
-          <form onSubmit={handleSaveResource}>
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="name">Name *</label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  required
-                  placeholder="Resource name"
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="domain">Domain</label>
-                <input
-                  type="text"
-                  id="domain"
-                  name="domain"
-                  value={formData.domain}
-                  onChange={handleInputChange}
-                  placeholder="e.g., design, development, marketing"
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="url">URL *</label>
-              <input
-                type="url"
-                id="url"
-                name="url"
-                value={formData.url}
-                onChange={handleInputChange}
-                required
-                placeholder="https://example.com"
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="description">Description *</label>
-              <textarea
-                id="description"
-                name="description"
-                value={formData.description}
-                onChange={handleInputChange}
-                rows="4"
-                required
-                placeholder="Brief description of the resource..."
-              ></textarea>
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="position">Position</label>
-                <input
-                  type="number"
-                  id="position"
-                  name="position"
-                  value={formData.position}
-                  onChange={handleInputChange}
-                  min="0"
-                />
-              </div>
-              <div className="form-group checkbox-group">
-                <input
-                  type="checkbox"
-                  id="featured"
-                  name="featured"
-                  checked={formData.featured}
-                  onChange={handleInputChange}
-                />
-                <label htmlFor="featured">Featured Resource</label>
-              </div>
-            </div>
-
-            <div className="form-row">
-              {/* Categories selection */}
-              <div className="form-group categories-section">
-                <div className="section-header">
-                  <label>Categories</label>
-                  <button 
-                    type="button" 
-                    onClick={handleCreateCategory}
-                    className="add-item-button"
-                  >
-                    + Add Category
-                  </button>
-                </div>
-                <div className="checkbox-list">
-                  {categories.length > 0 ? (
-                    categories.map(category => (
-                      <div key={category.id} className="checkbox-item">
-                        <input
-                          type="checkbox"
-                          id={`category-${category.id}`}
-                          checked={formData.selectedCategories.includes(category.id)}
-                          onChange={() => handleCategoryChange(category.id)}
-                        />
-                        <label htmlFor={`category-${category.id}`}>
-                          {category.emoji} {category.name}
-                        </label>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="no-items-message">No categories available. Create one!</p>
-                  )}
-                </div>
-              </div>
-
-              {/* Tags selection */}
-              <div className="form-group tags-section">
-                <div className="section-header">
-                  <label>Tags</label>
-                  <button 
-                    type="button" 
-                    onClick={handleCreateTag}
-                    className="add-item-button"
-                  >
-                    + Add Tag
-                  </button>
-                </div>
-                <div className="checkbox-list">
-                  {tags.length > 0 ? (
-                    tags.map(tag => (
-                      <div key={tag.id} className="checkbox-item">
-                        <input
-                          type="checkbox"
-                          id={`tag-${tag.id}`}
-                          checked={formData.selectedTags.includes(tag.id)}
-                          onChange={() => handleTagChange(tag.id)}
-                        />
-                        <label htmlFor={`tag-${tag.id}`}>
-                          #{tag.name}
-                        </label>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="no-items-message">No tags available. Create one!</p>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <div className="form-actions">
-              <button type="button" onClick={handleClearForm} className="cancel-button">
-                Cancel
-              </button>
-              <button type="submit" className="save-button">
-                {selectedResource ? 'Update Resource' : 'Create Resource'}
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
+      )}
     </div>
   );
 };
