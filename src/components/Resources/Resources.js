@@ -14,7 +14,7 @@ const Resources = () => {
   const [isLoading, setIsLoading] = useState(true);
   // Add a new state to store category emojis from database
   const [categoryEmojis, setCategoryEmojis] = useState({
-    'All': '🔍' // Default emoji for 'All'
+    'All': '🗃️' // Default emoji for 'All'
   });
   // New state for random resources
   const [randomResources, setRandomResources] = useState([]);
@@ -84,9 +84,9 @@ const Resources = () => {
         }
   
         // Build category emojis mapping
-        const emojisMap = { 'All': '🔍' }; // Default for 'All'
+        const emojisMap = { 'All': '🗃️' }; // Default for 'All'
         allCategories.forEach(category => {
-          emojisMap[category.name] = category.emoji || '🔹'; // Fallback emoji if none in DB
+          emojisMap[category.name] = category.emoji || '❓'; // Fallback emoji if none in DB
         });
         setCategoryEmojis(emojisMap);
   
@@ -111,7 +111,7 @@ const Resources = () => {
           categoriesByResource[item.resource_id].push({
             id: item.category.id,
             name: item.category.name,
-            emoji: item.category.emoji || '🔹' // Fallback emoji if none in DB
+            emoji: item.category.emoji || '❓' // Fallback emoji if none in DB
           });
         });
   
@@ -400,7 +400,6 @@ const filteredResources = useMemo(() => {
           
           <div className="search-filters-container">
             <div className="search-container">
-              <span className="search-icon">🔎</span>
               <input 
                 type="text" 
                 placeholder="Search resources..." 
@@ -507,7 +506,7 @@ const filteredResources = useMemo(() => {
           {/* Random Resources Section */}
           {showRandomResources && randomResources.length > 0 && (
             <div id="random-resources-section" className="random-resources-section">
-              <h2>Try These {randomResources.length} Resources</h2>
+              <h2>Check out these {randomResources.length} resources</h2>
               <div className="resources-grid">
                 {randomResources.map((resource, index) => (
                   <ResourceCard 
@@ -547,7 +546,7 @@ const filteredResources = useMemo(() => {
               {Object.keys(resourcesByCategory).sort().map(category => (
                 <div key={category} className="category-section">
                   <h3 className="category-header">
-                    {categoryEmojis[category] || '🔹'} {category} ({resourcesByCategory[category].length})
+                    {categoryEmojis[category] || '❓'} {category} ({resourcesByCategory[category].length})
                   </h3>
                   <div className="resources-grid">
                     {resourcesByCategory[category].map((resource, index) => (
@@ -565,7 +564,7 @@ const filteredResources = useMemo(() => {
           ) : (
             // When a specific category is selected
             <div className="all-resources-section">
-              <h2>{categoryEmojis[activeCategory] || '🔹'} {activeCategory} Resources ({filteredResources.length})</h2>
+              <h2>{categoryEmojis[activeCategory] || '❓'} {activeCategory} Resources ({filteredResources.length})</h2>
               {filteredResources.length > 0 ? (
                 <div className="resources-grid">
                   {randomizedFilteredResources.map((resource, index) => (
