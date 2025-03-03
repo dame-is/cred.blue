@@ -541,19 +541,7 @@ background-color: white;
 overflow: visible; /* Changed from hidden to allow content to determine height */
 }
 
-.card-header {
-padding: 12px 16px;
-background-color: #f8f9fa;
-border-bottom: 1px solid #eaeaea;
-cursor: move;
-display: flex;
-justify-content: space-between;
-align-items: center;
-}
-
 .card-content {
-padding: 16px;
-flex: 1;
 overflow: auto;
 }
 
