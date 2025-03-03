@@ -156,18 +156,18 @@ const Resources = () => {
     fetchResources();
   }, []);
 
-  // Check if a resource is new (added in the last 14 days)
 // Check if a resource is new (added in the last 14 days)
+// but exclude resources created on February 27, 2025
 const isNewResource = (date) => {
   if (!date) return false;
   
   const resourceDate = new Date(date);
   
   // Check if the resource was created on February 27, 2025
-  const feb27Date = new Date('2025-02-27');
-  const isFeb27 = resourceDate.getFullYear() === feb27Date.getFullYear() &&
-                  resourceDate.getMonth() === feb27Date.getMonth() &&
-                  resourceDate.getDate() === feb27Date.getDate();
+  // We need to use UTC methods to avoid timezone issues with database timestamps
+  const isFeb27 = resourceDate.getUTCFullYear() === 2025 && 
+                 resourceDate.getUTCMonth() === 1 && // February is month 1 (0-indexed)
+                 resourceDate.getUTCDate() === 27;
   
   // If it was created on Feb 27, 2025, don't mark it as new
   if (isFeb27) {
