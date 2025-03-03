@@ -17,6 +17,7 @@ const AdminPanel = () => {
   const [completenessFilter, setCompletenessFilter] = useState('all');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [tagFilter, setTagFilter] = useState('all');
+  const [featuredFilter, setFeaturedFilter] = useState('all');
 
   // Login state
   const [email, setEmail] = useState('');
@@ -185,6 +186,7 @@ const AdminPanel = () => {
     setCompletenessFilter('all');
     setCategoryFilter('all');
     setTagFilter('all');
+    setFeaturedFilter('all');
     setSearchQuery('');
   };
 
@@ -254,7 +256,7 @@ const AdminPanel = () => {
     });
   };
   
-  // Filter resources based on status, search query, completeness, category, and tag
+  // Filter resources based on status, search query, completeness, category, tag, and featured status
   const filteredResources = resources.filter(resource => {
     // Status filter
     if (statusFilter !== 'all' && resource.status !== statusFilter) return false;
@@ -273,6 +275,10 @@ const AdminPanel = () => {
     
     // Tag filter
     if (tagFilter !== 'all' && (!resource.tagIds || !resource.tagIds.includes(parseInt(tagFilter)))) return false;
+    
+    // Featured filter
+    if (featuredFilter === 'featured' && !resource.featured) return false;
+    if (featuredFilter === 'not-featured' && resource.featured) return false;
     
     return true;
   });
@@ -622,7 +628,7 @@ const AdminPanel = () => {
                   className="search-input"
                 />
                 {(searchQuery || statusFilter !== 'all' || completenessFilter !== 'all' || 
-                  categoryFilter !== 'all' || tagFilter !== 'all') && (
+                  categoryFilter !== 'all' || tagFilter !== 'all' || featuredFilter !== 'all') && (
                   <button 
                     onClick={resetFilters}
                     className="reset-filters-button"
@@ -645,11 +651,22 @@ const AdminPanel = () => {
                 <option value="published">Published</option>
               </select>
               <select 
+                value={featuredFilter} 
+                onChange={(e) => setFeaturedFilter(e.target.value)}
+                className="featured-filter"
+              >
+                <option value="all">All Resources</option>
+                <option value="featured">Featured Only</option>
+                <option value="not-featured">Not Featured</option>
+              </select>
+            </div>
+            <div className="filter-group">
+              <select 
                 value={completenessFilter} 
                 onChange={(e) => setCompletenessFilter(e.target.value)}
                 className="completeness-filter"
               >
-                <option value="all">All Resources</option>
+                <option value="all">All Completeness</option>
                 <option value="incomplete">Incomplete Only</option>
                 <option value="complete">100% Complete Only</option>
                 <option value="min-25">At least 25%</option>

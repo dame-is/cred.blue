@@ -661,6 +661,14 @@
     font-size: 16px;
     color: #666;
   }
+
+  .featured-filter {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 5px;
+  }
   
   .reset-filters-button:hover {
     color: #ff3333;
