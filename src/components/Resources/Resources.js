@@ -47,16 +47,18 @@ const Resources = () => {
     async function fetchResources() {
       setIsLoading(true);
       try {
-        // First fetch all resources
+        // Fetch only published resources
         const { data: resourcesData, error: resourcesError } = await supabase
           .from('resources')
           .select('*')
+          .eq('status', 'published')  // Only select resources with 'published' status
           .order('position');
-
+  
         if (resourcesError) {
           throw resourcesError;
         }
-
+  
+        // Rest of your existing fetching code continues as before...
         // Then fetch the categories for each resource using the junction table
         const { data: resourceCategories, error: categoriesError } = await supabase
           .from('resource_categories')
@@ -64,27 +66,27 @@ const Resources = () => {
             resource_id,
             category:categories(id, name, emoji)
           `);
-
+  
         if (categoriesError) {
           throw categoriesError;
         }
-
+  
         // Fetch all categories to build the emoji mapping
         const { data: allCategories, error: allCategoriesError } = await supabase
           .from('categories')
           .select('name, emoji');
-
+  
         if (allCategoriesError) {
           throw allCategoriesError;
         }
-
+  
         // Build category emojis mapping
         const emojisMap = { 'All': '🔍' }; // Default for 'All'
         allCategories.forEach(category => {
           emojisMap[category.name] = category.emoji || '🔹'; // Fallback emoji if none in DB
         });
         setCategoryEmojis(emojisMap);
-
+  
         // Then fetch the tags for each resource
         const { data: resourceTags, error: tagsError } = await supabase
           .from('resource_tags')
@@ -92,11 +94,11 @@ const Resources = () => {
             resource_id,
             tag:tags(id, name)
           `);
-
+  
         if (tagsError) {
           throw tagsError;
         }
-
+  
         // Group categories by resource_id
         const categoriesByResource = {};
         resourceCategories.forEach(item => {
@@ -109,7 +111,7 @@ const Resources = () => {
             emoji: item.category.emoji || '🔹' // Fallback emoji if none in DB
           });
         });
-
+  
         // Group tags by resource_id
         const tagsByResource = {};
         resourceTags.forEach(item => {
@@ -121,7 +123,7 @@ const Resources = () => {
             name: item.tag.name
           });
         });
-
+  
         // Transform data to match the expected format
         const formattedResources = resourcesData.map(resource => {
           // Get categories for this resource
@@ -141,7 +143,7 @@ const Resources = () => {
             url: addUTMParameters(resource.url)
           };
         });
-
+  
         setResources(formattedResources);
       } catch (error) {
         console.error('Error fetching resources:', error);
@@ -150,7 +152,7 @@ const Resources = () => {
         setIsLoading(false);
       }
     }
-
+  
     fetchResources();
   }, []);
 
@@ -316,7 +318,8 @@ const filteredResources = useMemo(() => {
           <div className="header-main">
             <h1>Bluesky & AT Protocol Resources</h1>
             <div className="header-tagline">
-              <p>A curated collection of tools and services for the Bluesky ecosystem</p>
+              <p className="header-tagline-p">A curated collection of tools and services for the Bluesky ecosystem</p>
+              <p className="header-tagline-detail">To submit a resource, DM @cred.blue</p>
             </div>
           </div>
           
