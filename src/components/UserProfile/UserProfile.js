@@ -220,11 +220,12 @@ const UserProfile = () => {
     setTimeout(updateCardHeights, 100);
   };
 
-  // Improved card height calculation
+  // Improved card height calculation with extra buffer to avoid scrollbars
   const updateCardHeights = useMemo(() => {
     return () => {
       const rowHeight = 50; // Same as your rowHeight prop
       const margin = 20; // Same as your margin prop
+      const bufferFactor = 1.15; // Add 15% extra space to avoid scrollbars
       const newHeights = {};
       const currentWidth = window.innerWidth;
       
@@ -246,28 +247,37 @@ const UserProfile = () => {
       Object.keys(cardRefs.current).forEach(key => {
         const element = cardRefs.current[key];
         if (element) {
-          // Get the content element (assuming each card has a .card-content)
-          const contentElement = element.querySelector('.card-content') || element;
+          // Get both the card and its content element
+          const cardElement = element.firstChild;
+          const contentElement = cardElement.querySelector('.card-content');
+          const headerElement = cardElement.querySelector('.card-header');
           
-          // Clone the element to measure its natural height without constraints
-          const clone = contentElement.cloneNode(true);
-          clone.style.position = 'absolute';
-          clone.style.visibility = 'hidden';
-          clone.style.width = `${availableWidth}px`;
-          clone.style.height = 'auto';
-          document.body.appendChild(clone);
-          
-          // Measure natural height
-          const contentHeight = clone.scrollHeight;
-          
-          // Remove the clone
-          document.body.removeChild(clone);
-          
-          // Calculate grid height based on content
-          const gridHeight = Math.max(Math.ceil(contentHeight / rowHeight), 6);
-          
-          // Store the new height
-          newHeights[key] = gridHeight;
+          if (contentElement && headerElement) {
+            // Clone the content element to measure its natural height without constraints
+            const clone = contentElement.cloneNode(true);
+            clone.style.position = 'absolute';
+            clone.style.visibility = 'hidden';
+            clone.style.width = `${availableWidth - 32}px`; // Account for padding
+            clone.style.height = 'auto';
+            clone.style.overflow = 'visible'; // Ensure we get the full height
+            document.body.appendChild(clone);
+            
+            // Measure natural height
+            const contentHeight = clone.scrollHeight;
+            
+            // Remove the clone
+            document.body.removeChild(clone);
+            
+            // Add header height and padding to content height
+            const headerHeight = headerElement.offsetHeight;
+            const totalCardHeight = (contentHeight * bufferFactor) + headerHeight;
+            
+            // Convert to grid units with extra space to ensure no scrollbars
+            const gridHeight = Math.max(Math.ceil(totalCardHeight / rowHeight), 6);
+            
+            // Store the new height
+            newHeights[key] = gridHeight;
+          }
         }
       });
       
@@ -291,6 +301,35 @@ const UserProfile = () => {
       
       // Update state with new heights
       setCardHeights(newHeights);
+      
+      // Remove any scrollbars by checking if content overflow exists
+      // This runs after state updates and DOM re-renders
+      setTimeout(() => {
+        Object.keys(cardRefs.current).forEach(key => {
+          const element = cardRefs.current[key];
+          if (element) {
+            const contentElement = element.querySelector('.card-content');
+            if (contentElement && contentElement.scrollHeight > contentElement.clientHeight) {
+              // Content still overflows, adjust the height further
+              const currentLayout = updatedLayouts[currentBreakpoint].find(item => item.i === key);
+              if (currentLayout) {
+                const additionalRows = Math.ceil((contentElement.scrollHeight - contentElement.clientHeight) / rowHeight) + 1;
+                const newGridHeight = currentLayout.h + additionalRows;
+                
+                // Update just this specific card height
+                const newLayout = { ...currentLayout, h: newGridHeight };
+                updatedLayouts[currentBreakpoint] = updatedLayouts[currentBreakpoint].map(item => 
+                  item.i === key ? newLayout : item
+                );
+                
+                // Apply updates
+                setCurrentLayouts(updatedLayouts);
+                localStorage.setItem('userProfileLayouts', JSON.stringify(updatedLayouts));
+              }
+            }
+          }
+        });
+      }, 300);
     };
   }, [currentLayouts]);
 
@@ -371,19 +410,35 @@ const UserProfile = () => {
     fetchAccountData();
   }, [username, navigate, updateCardHeights]);
 
-  // Add effect to initialize the layout on first render
+  // Add effect to initialize the layout on first render with multiple updates
+  // to ensure proper sizing as components load
   useEffect(() => {
-    // Small delay to ensure DOM is ready
+    // Initial update after components mount
     setTimeout(updateCardHeights, 300);
+    
+    // Secondary update after any async content has likely loaded
+    setTimeout(updateCardHeights, 1000);
+    
+    // Final update to catch any late-loading content
+    setTimeout(updateCardHeights, 2000);
     
     // Add a resize observer to each card to handle content changes
     const resizeObserver = new ResizeObserver(_.debounce(() => {
       updateCardHeights();
+      // Additional update after a short delay to catch any cascading changes
+      setTimeout(updateCardHeights, 500);
     }, 300));
     
+    // Observe both the cards and their content
     Object.values(cardRefs.current).forEach(ref => {
       if (ref) {
         resizeObserver.observe(ref);
+        
+        // Also observe the content element for more granular changes
+        const contentElement = ref.querySelector('.card-content');
+        if (contentElement) {
+          resizeObserver.observe(contentElement);
+        }
       }
     });
     

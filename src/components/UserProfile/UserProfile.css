@@ -516,7 +516,7 @@ flex-direction: column;
 /* Make card content expand to fill available space */
 .card-content {
 flex: 1;
-overflow: auto;
+overflow: visible; /* Changed from auto to prevent scrollbars */
 }
 
 /* Style for resize handle */
@@ -538,7 +538,7 @@ height: 100%;
 box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 border-radius: 8px;
 background-color: white;
-overflow: hidden;
+overflow: visible; /* Changed from hidden to allow content to determine height */
 }
 
 .card-header {
