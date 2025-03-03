@@ -12,22 +12,10 @@ const Resources = () => {
   const [showNewOnly, setShowNewOnly] = useState(false);
   const [showScoreImpactOnly, setShowScoreImpactOnly] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
-  // Category emojis mapping
-  const categoryEmojis = {
-    'All': '🔍',
-    'Analytics': '📊',
-    'Services': '🛠️',
-    'Data': '💾',
-    'Network': '🔄',
-    'Clients': '📱',
-    'Moderation': '🛡️',
-    'Feeds': '📰',
-    'Visualizations': '🎨',
-    'Development': '👨‍💻',
-    'Guides': '📚',
-    'Misc': '🔮'
-  };
+  // Add a new state to store category emojis from database
+  const [categoryEmojis, setCategoryEmojis] = useState({
+    'All': '🔍' // Default emoji for 'All'
+  });
 
   // Load saved user preferences from localStorage
   useEffect(() => {
@@ -81,6 +69,22 @@ const Resources = () => {
           throw categoriesError;
         }
 
+        // Fetch all categories to build the emoji mapping
+        const { data: allCategories, error: allCategoriesError } = await supabase
+          .from('categories')
+          .select('name, emoji');
+
+        if (allCategoriesError) {
+          throw allCategoriesError;
+        }
+
+        // Build category emojis mapping
+        const emojisMap = { 'All': '🔍' }; // Default for 'All'
+        allCategories.forEach(category => {
+          emojisMap[category.name] = category.emoji || '🔹'; // Fallback emoji if none in DB
+        });
+        setCategoryEmojis(emojisMap);
+
         // Then fetch the tags for each resource
         const { data: resourceTags, error: tagsError } = await supabase
           .from('resource_tags')
@@ -102,7 +106,7 @@ const Resources = () => {
           categoriesByResource[item.resource_id].push({
             id: item.category.id,
             name: item.category.name,
-            emoji: item.category.emoji
+            emoji: item.category.emoji || '🔹' // Fallback emoji if none in DB
           });
         });
 
