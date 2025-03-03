@@ -46,6 +46,9 @@ const App = () => {
               <Route path="/zen" element={<ZenPage />} />
               <Route path="/methodology" element={<ScoringMethodology />} />
               
+              {/* Admin Route */}
+              <Route path="/admin" element={<AdminRoute />} />
+              
               {/* Handle both DIDs and regular usernames */}
               <Route path="/:username" element={<UserProfile />} />
               
