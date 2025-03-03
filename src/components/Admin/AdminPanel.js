@@ -836,9 +836,6 @@ const AdminPanel = () => {
                     <div className="resource-item-content">
                       <div className="resource-item-name">{resource.name}</div>
                       <div className="resource-item-meta">
-                        <span className={`status-badge status-${resource.status}`}>
-                          {resource.status}
-                        </span>
                         {resource.featured && <span className="featured-badge">Featured</span>}
                         <span className="completeness-badge" title="Completeness">
                           {resource.completeness}%
