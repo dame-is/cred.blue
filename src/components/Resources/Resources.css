@@ -398,13 +398,8 @@
   .filter-controls-container {
     flex-direction: column;
   }
-  
-  .quick-actions {
-    width: 100%;
-  }
 
   & .feeling-lucky-button {
-    max-width: 100px;
     font-size: 0.9em;
   }
 }
@@ -492,6 +487,10 @@
 
   .search-filters-container {
     gap: 0px;
+  }
+
+  .search-filters-container {
+    gap: 0rem;
   }
   
   .resources-header h1 {
