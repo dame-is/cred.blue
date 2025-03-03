@@ -157,13 +157,28 @@ const Resources = () => {
   }, []);
 
   // Check if a resource is new (added in the last 14 days)
-  const isNewResource = (date) => {
-    if (!date) return false;
-    const resourceDate = new Date(date);
-    const now = new Date();
-    const daysDiff = Math.floor((now - resourceDate) / (1000 * 60 * 60 * 24));
-    return daysDiff < 14;
-  };
+// Check if a resource is new (added in the last 14 days)
+const isNewResource = (date) => {
+  if (!date) return false;
+  
+  const resourceDate = new Date(date);
+  
+  // Check if the resource was created on February 27, 2025
+  const feb27Date = new Date('2025-02-27');
+  const isFeb27 = resourceDate.getFullYear() === feb27Date.getFullYear() &&
+                  resourceDate.getMonth() === feb27Date.getMonth() &&
+                  resourceDate.getDate() === feb27Date.getDate();
+  
+  // If it was created on Feb 27, 2025, don't mark it as new
+  if (isFeb27) {
+    return false;
+  }
+  
+  // Otherwise, apply the normal 14-day rule
+  const now = new Date();
+  const daysDiff = Math.floor((now - resourceDate) / (1000 * 60 * 60 * 24));
+  return daysDiff < 14;
+};
 
   // Check if a resource impacts score
   const impactsScore = (resource) => {
