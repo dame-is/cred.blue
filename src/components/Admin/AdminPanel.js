@@ -14,7 +14,7 @@ const AdminPanel = () => {
   const [authError, setAuthError] = useState(null);
   const [statusFilter, setStatusFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [completenessFilter, setCompletenessFilter] = useState(0);
+  const [completenessFilter, setCompletenessFilter] = useState('all');
 
   // Login state
   const [email, setEmail] = useState('');
@@ -252,7 +252,10 @@ const AdminPanel = () => {
     if (searchQuery && !resource.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
     
     // Completeness filter
-    if (completenessFilter > 0 && resource.completeness < completenessFilter) return false;
+    if (completenessFilter === 'incomplete' && resource.completeness === 100) return false;
+    if (completenessFilter === 'complete' && resource.completeness < 100) return false;
+    if (completenessFilter.startsWith('min-') && resource.completeness < parseInt(completenessFilter.substring(4))) return false;
+    if (completenessFilter.startsWith('max-') && resource.completeness > parseInt(completenessFilter.substring(4))) return false;
     
     return true;
   });
@@ -614,14 +617,18 @@ const AdminPanel = () => {
               </select>
               <select 
                 value={completenessFilter} 
-                onChange={(e) => setCompletenessFilter(Number(e.target.value))}
+                onChange={(e) => setCompletenessFilter(e.target.value)}
                 className="completeness-filter"
               >
-                <option value="0">All Completeness</option>
-                <option value="25">At least 25%</option>
-                <option value="50">At least 50%</option>
-                <option value="75">At least 75%</option>
-                <option value="100">100% Complete</option>
+                <option value="all">All Resources</option>
+                <option value="incomplete">Incomplete Only</option>
+                <option value="complete">100% Complete Only</option>
+                <option value="min-25">At least 25%</option>
+                <option value="min-50">At least 50%</option>
+                <option value="min-75">At least 75%</option>
+                <option value="max-25">Less than 25%</option>
+                <option value="max-50">Less than 50%</option>
+                <option value="max-75">Less than 75%</option>
               </select>
             </div>
           </div>
@@ -647,6 +654,9 @@ const AdminPanel = () => {
                         {resource.status}
                       </span>
                       {resource.featured && <span className="featured-badge">Featured</span>}
+                      <span className="completeness-badge" title="Completeness">
+                        {resource.completeness}%
+                      </span>
                     </div>
                   </div>
                   <div className="resource-item-actions">

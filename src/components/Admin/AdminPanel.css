@@ -632,6 +632,15 @@
     margin-bottom: 15px;
     font-size: 14px;
   }
+
+  .completeness-badge {
+    background-color: #f0f0f0;
+    color: #333;
+    font-size: 0.8rem;
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+    margin-left: 5px;
+  }
   
   /* Accessibility */
   .sr-only {
