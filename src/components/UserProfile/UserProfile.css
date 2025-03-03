@@ -665,10 +665,6 @@ overflow: auto;
   font-size: 1.5em;
 }
 
-.react-grid-layout {
-  margin: 10px;
-}
-
 .react-grid-item {
   margin-bottom: 15px;
 }
