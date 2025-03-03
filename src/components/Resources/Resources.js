@@ -210,7 +210,7 @@ const isNewResource = (date) => {
     // Filter out any resources that might not have essential data
     const validResources = resources.filter(r => r.name && r.description);
     
-    if (validResources.length <= 4) {
+    if (validResources.length <= 6) {
       setRandomResources(validResources);
       return;
     }
@@ -225,7 +225,7 @@ const isNewResource = (date) => {
     }
     
     // Take the first 4 items
-    setRandomResources(shuffled.slice(0, 4));
+    setRandomResources(shuffled.slice(0, 6));
     setShowRandomResources(true);
     
     // Auto-scroll to the random resources section
@@ -506,7 +506,8 @@ const filteredResources = useMemo(() => {
           {/* Random Resources Section */}
           {showRandomResources && randomResources.length > 0 && (
             <div id="random-resources-section" className="random-resources-section">
-              <h2>Check out these {randomResources.length} resources</h2>
+              <h2>Feeling Lucky Results</h2>
+              <p className="featured-description">Here are {randomResources.length} resources picked just for you!</p>
               <div className="resources-grid">
                 {randomResources.map((resource, index) => (
                   <ResourceCard 

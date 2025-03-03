@@ -304,70 +304,40 @@ const AdminPanel = () => {
   };
   
   // Reorder resources (move up or down in list)
-const handleReorderResource = async (resourceId, direction) => {
-    const resourceIndex = resources.findIndex(r => r.id === resourceId);
-    if (resourceIndex === -1) return;
-    
-    let filteredResources = [...resources]; // Create a copy to work with
-    
-    // Filter resources based on reorder mode
-    if (reorderMode === 'featured') {
-      filteredResources = filteredResources.filter(r => r.featured);
-    } else if (reorderMode === 'category' && selectedCategoryForReorder) {
-      filteredResources = filteredResources.filter(r => 
-        r.categoryIds && r.categoryIds.includes(selectedCategoryForReorder)
-      );
-    }
-    
-    // Sort by position to ensure correct order
-    filteredResources.sort((a, b) => a.position - b.position);
-    
-    const resourceToMoveIndex = filteredResources.findIndex(r => r.id === resourceId);
-    if (resourceToMoveIndex === -1) return;
-    
-    const adjacentIndex = direction === 'up' 
-      ? Math.max(0, resourceToMoveIndex - 1) 
-      : Math.min(filteredResources.length - 1, resourceToMoveIndex + 1);
-    
-    if (adjacentIndex === resourceToMoveIndex) return;
-    
-    const resourceToMove = filteredResources[resourceToMoveIndex];
-    const adjacentResource = filteredResources[adjacentIndex];
-    
+  const handleReorderResource = async (resourceId, direction) => {
     if (updatingPositions) return;
+    
+    // Find the resource to update
+    const resource = resources.find(r => r.id === resourceId);
+    if (!resource) return;
+    
+    // Calculate new position - decrement for up, increment for down
+    const newPosition = direction === 'up' 
+      ? resource.position - 1 
+      : resource.position + 1;
+    
     setUpdatingPositions(true);
     
     try {
-      // Swap positions in database
+      // Update position in database
       await supabase
         .from('resources')
-        .update({ position: adjacentResource.position })
-        .eq('id', resourceToMove.id);
-        
-      await supabase
-        .from('resources')
-        .update({ position: resourceToMove.position })
-        .eq('id', adjacentResource.id);
+        .update({ position: newPosition })
+        .eq('id', resourceId);
       
-      // Update local state without fetching all data again
+      // Update local state
       setResources(prevResources => {
-        const updatedResources = [...prevResources];
-        
-        // Find the actual resources in the full list
-        const resourceToMoveFullIndex = updatedResources.findIndex(r => r.id === resourceToMove.id);
-        const adjacentResourceFullIndex = updatedResources.findIndex(r => r.id === adjacentResource.id);
-        
-        // Swap their positions
-        const tempPosition = updatedResources[resourceToMoveFullIndex].position;
-        updatedResources[resourceToMoveFullIndex].position = updatedResources[adjacentResourceFullIndex].position;
-        updatedResources[adjacentResourceFullIndex].position = tempPosition;
-        
-        return updatedResources;
+        return prevResources.map(r => {
+          if (r.id === resourceId) {
+            return { ...r, position: newPosition };
+          }
+          return r;
+        });
       });
       
-      showAlert(`Resources reordered successfully!`);
+      showAlert(`Resource moved ${direction}!`);
     } catch (error) {
-      console.error('Error reordering resources:', error);
+      console.error(`Error moving resource ${direction}:`, error);
       showAlert(`Error: ${error.message}`, 'error');
     } finally {
       setUpdatingPositions(false);
