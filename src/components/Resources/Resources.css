@@ -168,6 +168,7 @@
 .random-resources-section {
   background-color: rgba(var(--button-bg-rgb), 0.05);
   border-radius: 10px;
+  padding: 20px;
   margin-top: 20px;
   margin-bottom: 30px;
   border: 2px solid rgba(var(--button-bg-rgb), 0.1);
@@ -594,12 +595,16 @@
   display: flex;
   gap: 1rem;
   justify-content: center;
-  align-items: stretch;
+  align-items: center; /* Changed from stretch to center */
+  height: 48px; /* Set a fixed height for the container */
 }
 
 /* Improved search input */
 .search-container {
   position: relative;
+  flex-grow: 1;
+  max-width: 500px;
+  height: 100%; /* Make it fill the container height */
 }
 
 .search-icon {
@@ -609,18 +614,20 @@
   transform: translateY(-50%);
   font-size: 1rem;
   opacity: 0.6;
+  z-index: 1;
 }
 
 .search-input {
   width: 100%;
-  padding: 12px 12px 12px 40px;
+  padding: 0 12px 0 40px; /* Adjusted padding */
   font-size: 1rem;
   border: 2px solid var(--card-border);
   border-radius: 8px;
   background-color: var(--navbar-bg);
   color: var(--text);
   transition: all 0.3s ease;
-  height: 100%;
+  height: 100%; /* Make it fill the container height */
+  box-sizing: border-box; /* Include padding and border in the element's total height */
 }
 
 .search-input:focus {
@@ -633,7 +640,7 @@
 .quick-actions {
   display: flex;
   gap: 0.5rem;
-  align-items: stretch;
+  height: 100%; /* Make it fill the container height */
 }
 
 /* Share button */
@@ -644,19 +651,21 @@
   gap: 6px;
   background-color: var(--button-bg);
   color: var(--button-text);
-  padding: 10px 20px;
+  padding: 0 20px; /* Adjusted padding */
   border: none;
   border-radius: 8px;
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
+  height: 100%; /* Make it fill the container height */
 }
 
 /* Smaller share button in filter row */
 .share-button.compact {
-  padding: 8px 14px;
+  padding: 0 14px; /* Adjusted padding */
   font-size: 0.85rem;
+  height: 36px; /* Fixed height for the compact version */
 }
 
 .share-button:hover,
@@ -681,14 +690,15 @@
   justify-content: center;
   background-color: var(--card-border);
   color: var(--text);
-  padding: 10px 20px;
+  padding: 0 20px; /* Adjusted padding */
   border: none;
   border-radius: 8px;
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  height: 100%;
+  height: 100%; /* Make it fill the container height */
+  white-space: nowrap; /* Prevent text wrapping */
 }
 
 /* ======= Filter Controls Container ======= */
