@@ -16,6 +16,9 @@ const Resources = () => {
   const [categoryEmojis, setCategoryEmojis] = useState({
     'All': '🔍' // Default emoji for 'All'
   });
+  // New state for random resources
+  const [randomResources, setRandomResources] = useState([]);
+  const [showRandomResources, setShowRandomResources] = useState(false);
 
   // Load saved user preferences from localStorage
   useEffect(() => {
@@ -202,6 +205,38 @@ const isNewResource = (date) => {
     );
   };
 
+  // Get 4 random resources from the full resource list
+  const getRandomResources = () => {
+    // Filter out any resources that might not have essential data
+    const validResources = resources.filter(r => r.name && r.description);
+    
+    if (validResources.length <= 4) {
+      setRandomResources(validResources);
+      return;
+    }
+    
+    // Create a copy of the array to avoid mutating the original
+    const shuffled = [...validResources];
+    
+    // Fisher-Yates shuffle algorithm
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    
+    // Take the first 4 items
+    setRandomResources(shuffled.slice(0, 4));
+    setShowRandomResources(true);
+    
+    // Auto-scroll to the random resources section
+    setTimeout(() => {
+      const element = document.getElementById('random-resources-section');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  };
+
   // Get all categories from resources
   const categories = useMemo(() => {
     if (resources.length === 0) return ['All'];
@@ -269,7 +304,7 @@ const filteredResources = useMemo(() => {
     return resources.filter(resource => resource.featured);
   }, [resources]);
   
-  // Group resources by category when "All" is selected
+  // Group resources by category when "All" is selected and randomize order within each category
   const resourcesByCategory = useMemo(() => {
     if (activeCategory !== 'All') return {};
     
@@ -308,11 +343,36 @@ const filteredResources = useMemo(() => {
     Object.keys(grouped).forEach(category => {
       if (grouped[category].length === 0) {
         delete grouped[category];
+      } else {
+        // Randomize order of resources within each category
+        // Use Fisher-Yates shuffle algorithm
+        const array = grouped[category];
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
       }
     });
     
     return grouped;
   }, [filteredResources, activeCategory, categories]);
+
+  // Randomize the filtered resources order (for specific category views)
+  const randomizedFilteredResources = useMemo(() => {
+    // Only randomize when not in "All" category view
+    if (activeCategory === 'All') return filteredResources;
+    
+    // Create a new array to avoid mutating the original
+    const shuffled = [...filteredResources];
+    
+    // Fisher-Yates shuffle algorithm
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    
+    return shuffled;
+  }, [filteredResources, activeCategory]);
   
   // Should show featured section only when All category is selected and search query is empty
   const shouldShowFeatured = activeCategory === 'All' && 
@@ -353,12 +413,12 @@ const filteredResources = useMemo(() => {
             
             <div className="quick-actions">
               <button
-                className="share-button"
+                className="feeling-lucky-button"
                 type="button"
-                onClick={shareOnBluesky}
-                aria-label="Share this page on Bluesky"
+                onClick={getRandomResources}
+                aria-label="Show random resources"
               >
-                <span>Share</span>
+                Feeling Lucky
               </button>
             </div>
           </div>
@@ -417,6 +477,18 @@ const filteredResources = useMemo(() => {
                     </label>
                   </div>
                 </div>
+                
+                {/* Share button (moved to filter row) */}
+                <div className="filter-share-button">
+                  <button
+                    className="share-button compact"
+                    type="button"
+                    onClick={shareOnBluesky}
+                    aria-label="Share this page on Bluesky"
+                  >
+                    Share
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -432,6 +504,23 @@ const filteredResources = useMemo(() => {
           <ResourceLoader />
         ) : (
         <>
+          {/* Random Resources Section */}
+          {showRandomResources && randomResources.length > 0 && (
+            <div id="random-resources-section" className="random-resources-section">
+              <h2>Try These {randomResources.length} Resources</h2>
+              <div className="resources-grid">
+                {randomResources.map((resource, index) => (
+                  <ResourceCard 
+                    key={`random-${index}`} 
+                    resource={resource} 
+                    isNew={isNewResource(resource.created_at)}
+                    impactsScore={impactsScore(resource)}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+          
           {/* Featured Section - Hidden when quality filter is active or search query is not empty */}
           {shouldShowFeatured && featuredResources.length > 0 && (
             <div className="featured-section">
@@ -479,7 +568,7 @@ const filteredResources = useMemo(() => {
               <h2>{categoryEmojis[activeCategory] || '🔹'} {activeCategory} Resources ({filteredResources.length})</h2>
               {filteredResources.length > 0 ? (
                 <div className="resources-grid">
-                  {filteredResources.map((resource, index) => (
+                  {randomizedFilteredResources.map((resource, index) => (
                     <ResourceCard 
                       key={index} 
                       resource={resource} 

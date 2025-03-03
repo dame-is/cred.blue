@@ -4,203 +4,6 @@
   margin: 20px auto 20px;
   max-width: 1200px;
   padding: 20px;
-}
-
-.resources-page .alt-card {
-  text-align: left;
-  background: var(--navbar-bg);
-  border-radius: 12px;
-  border: 5px solid var(--card-border);
-  padding: 1.7rem;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
-/* ======= Redesigned Header Section ======= */
-.resources-header {
-  display: flex;
-  flex-direction: column;
-  gap: 2em;
-  margin-bottom: 2rem;
-  margin-top: 1em;
-}
-
-/* Header main section with title and tagline */
-.header-main {
-  text-align: center;
-}
-
-.resources-header h1 {
-  font-size: 2.2rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  color: var(--button-bg);
-  letter-spacing: -0.01em;
-}
-
-.header-tagline p {
-  font-size: 1.1rem;
-  color: var(--text);
-  opacity: 0.85;
-  max-width: 600px;
-  margin: 0 auto;
-  line-height: 1.4;
-}
-
-/* Feature cards */
-
-.feature-cards {
-  display: flex;
-  justify-content: space-between;
-  gap: 1.5rem;
-  flex-wrap: wrap;
-}
-
-.feature-card {
-  display: flex;
-  align-items: center;
-  background-color: var(--card-border);
-  padding: 0.7rem 1.2rem;
-  border-radius: 8px;
-  transition: transform 0.2s, background-color 0.2s;
-}
-
-.feature-card:hover {
-  transform: translateY(-2px);
-  background-color: rgba(var(--button-bg-rgb), 0.1);
-}
-
-.feature-icon {
-  font-size: 1.2rem;
-  margin-right: 0.5rem;
-}
-
-.feature-text {
-  font-size: 0.95rem;
-  font-weight: 500;
-}
-
-/* Search and quick actions container */
-.search-filters-container {
-  align-items: center;
-  display: inline-flex;
-  gap: 1rem;
-  justify-content: center;
-}
-
-/* Improved search input */
-.search-container {
-  max-width: 400px;
-  position: relative;
-}
-
-.search-icon {
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1rem;
-  opacity: 0.6;
-}
-
-.search-input {
-  width: 100%;
-  padding: 12px 12px 12px 40px;
-  font-size: 1rem;
-  border: 2px solid var(--card-border);
-  border-radius: 8px;
-  background-color: var(--navbar-bg);
-  color: var(--text);
-  transition: all 0.3s ease;
-}
-
-.search-input:focus {
-  border-color: var(--button-bg);
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(var(--button-bg-rgb), 0.2);
-}
-
-/* Quick actions */
-.quick-actions {
-  display: flex;
-  gap: 0.5rem;
-}
-
-/* Share button */
-.share-button {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background-color: var(--button-bg);
-  color: var(--button-text);
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.share-button:hover {
-  opacity: 0.9;
-  transform: translateY(-2px);
-}
-
-.share-button:active {
-  transform: translateY(0);
-}
-
-.share-icon {
-  font-size: 1.1rem;
-}
-
-/* ======= Filter Controls Container ======= */
-.filter-controls-container {
-  align-items: unset;
-  display: flex;
-  gap: 20px;
-  justify-content: space-between;
-  margin-bottom: 0px;
-  flex-direction: column;
-  align-content: center;
-}
-
-.filter-section {
-  width: 100%;
-}
-
-/* Filters row - for horizontal alignment */
-.filters-row {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-/* Filter dropdown */
-.filter-dropdown {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* Enhanced disclaimer styling */
-.resources-disclaimer {
-  align-items: flex-start;
-  border-radius: 8px;
-  display: flex;
-  gap: 10px;
-  padding: 14px 18px;
-  background-color: var(--background);
-  border: 2px solid var(--card-border);
-  flex-basis: 40%;
-}
-
-.disclaimer-icon {
-  font-size: 1.2rem;
-  margin-top: 2px;
-}
 
 .resources-disclaimer p {
   margin: 0;
@@ -273,56 +76,6 @@
   box-shadow: 0 0 0 3px rgba(var(--button-bg-rgb), 0.1);
 }
 
-/* Star filter styling */
-.star-filter-container {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  background-color: var(--navbar-bg);
-  border: 2px solid var(--card-border);
-  border-radius: 6px;
-  padding: 6px 10px;
-}
-
-.star-filter-container .quality-star {
-  cursor: pointer;
-  font-size: 1.4rem;
-  transition: transform 0.1s, color 0.2s;
-  line-height: 1;
-}
-
-.star-filter-container .quality-star:hover {
-  transform: scale(1.15);
-}
-
-.star-filter-container .quality-star.filled {
-  color: #ffd700;
-}
-
-.star-filter-container .quality-star.empty {
-  color: var(--card-border);
-}
-
-.quality-filter-clear {
-  margin-left: 5px;
-  cursor: pointer;
-  background-color: rgba(var(--text-rgb), 0.1);
-  color: var(--text);
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8rem;
-  font-weight: bold;
-  transition: all 0.2s ease;
-}
-
-.quality-filter-clear:hover {
-  background-color: rgba(var(--text-rgb), 0.2);
-}
-
 /* Toggle filters container - Modified for horizontal layout */
 .toggle-filters {
   display: flex;
@@ -393,7 +146,8 @@
 
 /* ======= Content Sections ======= */
 .featured-section,
-.all-resources-section {
+.all-resources-section,
+.random-resources-section {
   margin-bottom: 40px;
 }
 
@@ -402,11 +156,26 @@
 }
 
 .featured-section h2,
-.all-resources-section h2 {
+.all-resources-section h2,
+.random-resources-section h2 {
   font-size: 1.3rem;
   margin-bottom: 16px;
   border-bottom: 2px solid var(--card-border);
   padding-bottom: 8px;
+}
+
+/* Random resources section styling */
+.random-resources-section {
+  background-color: rgba(var(--button-bg-rgb), 0.05);
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 20px;
+  margin-bottom: 30px;
+  border: 2px solid rgba(var(--button-bg-rgb), 0.1);
+}
+
+.random-resources-section h2 {
+  border-bottom-color: rgba(var(--button-bg-rgb), 0.2);
 }
 
 /* Category section styling */
@@ -431,10 +200,6 @@
   gap: 20px;
 }
 
-.quick-actions .share-button {
-  padding: 14px 20px;
-}
-
 /* ======= Resource Cards ======= */
 .resource-card {
   border: 2px solid var(--card-border);
@@ -453,7 +218,6 @@
   transform: translateY(-4px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
-
 
 .resource-content {
   padding: 16px;
@@ -581,37 +345,10 @@
 .resource-tag {
   font-size: 0.75rem;
   background-color: rgba(var(--button-bg-rgb), 0.1);
-  padding-top: 5px;
+  padding: 3px 6px;
   border-radius: 4px;
   color: var(--text);
   opacity: 0.8;
-}
-
-/* Enhanced quality stars */
-.resource-quality {
-  display: flex;
-}
-
-.quality-star {
-  font-size: 1.4em;
-  font-weight: 700;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-}
-
-.quality-star.filled {
-  color: #ffd700;
-}
-
-.quality-star.empty {
-  color: var(--card-border);
-}
-
-.star-filter-container .quality-star.filled {
-  margin-bottom: 3.5px;
-}
-
-.star-filter-container .quality-star.empty {
-  margin-bottom: 3.5px;
 }
 
 .no-results {
@@ -662,6 +399,23 @@
   .filter-controls-container {
     flex-direction: column;
   }
+  
+  .search-filters-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .search-container {
+    max-width: none;
+  }
+  
+  .quick-actions {
+    width: 100%;
+  }
+  
+  .feeling-lucky-button {
+    width: 100%;
+  }
 }
 
 @media (max-width: 768px) {
@@ -679,15 +433,6 @@
     align-items: center;
   }
   
-  .search-filters-container {
-    align-items: stretch;
-    flex-direction: row;
-  }
-  
-  .search-container {
-    max-width: none;
-  }
-  
   .filters-row {
     flex-direction: column;
     align-items: flex-start;
@@ -700,18 +445,22 @@
     gap: 1rem;
   }
   
-  .category-filter-dropdown,
-  .quality-filter,
-  .new-filter,
-  .score-filter {
+  .filter-dropdown {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .toggle-filters {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .filter-share-button {
     width: 100%;
   }
   
-  .category-filter-dropdown,
-  .quality-filter {
-    flex-direction: row;
-    align-items: center;
-    gap: 0.5rem;
+  .filter-share-button .share-button {
+    width: 100%;
   }
   
   .resources-header h1 {
@@ -762,18 +511,239 @@
     gap: 10px;
   }
 
-  .search-filters-container {
-    align-items: stretch;
-    flex-direction: row;
-  }
-
-  .filter-dropdown {
-    display: flex;
-    flex-direction: column;
-  }
-
   .filters-row {
     align-items: center;
   }
+}
+}
 
+.resources-page .alt-card {
+  text-align: left;
+  background: var(--navbar-bg);
+  border-radius: 12px;
+  border: 5px solid var(--card-border);
+  padding: 1.7rem;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* ======= Redesigned Header Section ======= */
+.resources-header {
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+  margin-bottom: 2rem;
+  margin-top: 1em;
+}
+
+/* Header main section with title and tagline */
+.header-main {
+  text-align: center;
+}
+
+.resources-header h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--button-bg);
+  letter-spacing: -0.01em;
+}
+
+.header-tagline p {
+  font-size: 1.1rem;
+  color: var(--text);
+  opacity: 0.85;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.4;
+}
+
+/* Feature cards */
+
+.feature-cards {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.feature-card {
+  display: flex;
+  align-items: center;
+  background-color: var(--card-border);
+  padding: 0.7rem 1.2rem;
+  border-radius: 8px;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.feature-card:hover {
+  transform: translateY(-2px);
+  background-color: rgba(var(--button-bg-rgb), 0.1);
+}
+
+.feature-icon {
+  font-size: 1.2rem;
+  margin-right: 0.5rem;
+}
+
+.feature-text {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+/* Search and quick actions container */
+.search-filters-container {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: stretch;
+}
+
+/* Improved search input */
+.search-container {
+  position: relative;
+  flex-grow: 1;
+  max-width: 500px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  opacity: 0.6;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 12px 12px 40px;
+  font-size: 1rem;
+  border: 2px solid var(--card-border);
+  border-radius: 8px;
+  background-color: var(--navbar-bg);
+  color: var(--text);
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+.search-input:focus {
+  border-color: var(--button-bg);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(var(--button-bg-rgb), 0.2);
+}
+
+/* Quick actions */
+.quick-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
+/* Share button */
+.share-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Smaller share button in filter row */
+.share-button.compact {
+  padding: 8px 14px;
+  font-size: 0.85rem;
+}
+
+.share-button:hover,
+.feeling-lucky-button:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.share-button:active,
+.feeling-lucky-button:active {
+  transform: translateY(0);
+}
+
+.share-icon {
+  font-size: 1.1rem;
+}
+
+/* Feeling Lucky button */
+.feeling-lucky-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--card-border);
+  color: var(--text);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  height: 100%;
+}
+
+/* ======= Filter Controls Container ======= */
+.filter-controls-container {
+  align-items: unset;
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  margin-bottom: 0px;
+  flex-direction: column;
+  align-content: center;
+}
+
+.filter-section {
+  width: 100%;
+}
+
+/* Filters row - for horizontal alignment */
+.filters-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Filter dropdown */
+.filter-dropdown {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Filter share button container */
+.filter-share-button {
+  display: flex;
+  align-items: center;
+}
+
+/* Enhanced disclaimer styling */
+.resources-disclaimer {
+  align-items: flex-start;
+  border-radius: 8px;
+  display: flex;
+  gap: 10px;
+  padding: 14px 18px;
+  background-color: var(--background);
+  border: 2px solid var(--card-border);
+  flex-basis: 40%;
+}
+
+.disclaimer-icon {
+  font-size: 1.2rem;
+  margin-top: 2px;
 }
