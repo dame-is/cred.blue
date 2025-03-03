@@ -58,26 +58,23 @@ const createLayouts = () => ({
   ],
   xs: [
     { i: "ScoreBreakdownCard", x: 0, y: 8, w: 1, h: 6, static: false },
-    { i: "NarrativeCard", x: 1, y: 0, w: 1, h: 6, static: false },
+    { i: "NarrativeCard", x: 0, y: 0, w: 1, h: 6, static: false },
     { i: "ProfileCard", x: 0, y: 14, w: 1, h: 6, static: false },
-    { i: "PostTypeCard", x: 1, y: 22, w: 1, h: 6, static: false },
+    { i: "PostTypeCard", x: 0, y: 22, w: 1, h: 6, static: false },
     { i: "AltTextCard", x: 0, y: 26, w: 1, h: 6, static: false },
-    { i: "ActivityCard", x: 1, y: 30, w: 1, h: 6, static: false }
+    { i: "ActivityCard", x: 0, y: 30, w: 1, h: 6, static: false }
   ],
   xxs: [
     { i: "ScoreBreakdownCard", x: 0, y: 8, w: 1, h: 6, static: false },
-    { i: "NarrativeCard", x: 1, y: 0, w: 1, h: 8, static: false },
+    { i: "NarrativeCard", x: 0, y: 0, w: 1, h: 8, static: false },
     { i: "ProfileCard", x: 0, y: 14, w: 1, h: 7, static: false },
-    { i: "PostTypeCard", x: 1, y: 22, w: 1, h: 6, static: false },
+    { i: "PostTypeCard", x: 0, y: 22, w: 1, h: 6, static: false },
     { i: "AltTextCard", x: 0, y: 26, w: 1, h: 6, static: false },
-    { i: "ActivityCard", x: 1, y: 30, w: 1, h: 6, static: false }
+    { i: "ActivityCard", x: 0, y: 30, w: 1, h: 6, static: false }
   ]
 });
 
-const layouts = createLayouts();
-
 // Memoized save function with debouncing
-// Update createDebouncedSave function in UserProfile.js
 const createDebouncedSave = () => {
   let timeout;
   return async (userData) => {
@@ -201,25 +198,116 @@ const UserProfile = () => {
   const [showContent, setShowContent] = useState(false);
   const cardRefs = useRef({});
   const [cardHeights, setCardHeights] = useState({});
+  
+  // Add state for saving and restoring layouts
+  const [currentLayouts, setCurrentLayouts] = useState(() => {
+    // Try to load saved layouts from localStorage
+    const savedLayouts = localStorage.getItem('userProfileLayouts');
+    return savedLayouts ? JSON.parse(savedLayouts) : createLayouts();
+  });
 
-  // Memoize layout-related calculations
+  // Function to handle layout changes
+  const handleLayoutChange = (layout, allLayouts) => {
+    if (allLayouts) {
+      // Save to state
+      setCurrentLayouts(allLayouts);
+      
+      // Save to localStorage
+      localStorage.setItem('userProfileLayouts', JSON.stringify(allLayouts));
+    }
+    
+    // Update card heights after layout changes
+    setTimeout(updateCardHeights, 100);
+  };
+
+  // Improved card height calculation
   const updateCardHeights = useMemo(() => {
     return () => {
-      const rowHeight = 50;
+      const rowHeight = 50; // Same as your rowHeight prop
+      const margin = 20; // Same as your margin prop
       const newHeights = {};
+      const currentWidth = window.innerWidth;
+      
+      // Determine current breakpoint
+      let currentBreakpoint = 'lg';
+      for (const [bp, width] of Object.entries(breakpoints)) {
+        if (currentWidth <= width) {
+          currentBreakpoint = bp;
+        }
+      }
+      
+      // Get the number of columns for the current breakpoint
+      const numCols = cols[currentBreakpoint];
+      
+      // Adjust calculations based on available width
+      const containerWidth = document.querySelector('.user-profile')?.clientWidth || window.innerWidth;
+      const availableWidth = (containerWidth - (margin * (numCols + 1))) / numCols;
       
       Object.keys(cardRefs.current).forEach(key => {
         const element = cardRefs.current[key];
         if (element) {
-          const contentHeight = element.scrollHeight;
-          const gridHeight = Math.ceil(contentHeight / rowHeight);
-          newHeights[key] = Math.max(gridHeight, 6);
+          // Get the content element (assuming each card has a .card-content)
+          const contentElement = element.querySelector('.card-content') || element;
+          
+          // Clone the element to measure its natural height without constraints
+          const clone = contentElement.cloneNode(true);
+          clone.style.position = 'absolute';
+          clone.style.visibility = 'hidden';
+          clone.style.width = `${availableWidth}px`;
+          clone.style.height = 'auto';
+          document.body.appendChild(clone);
+          
+          // Measure natural height
+          const contentHeight = clone.scrollHeight;
+          
+          // Remove the clone
+          document.body.removeChild(clone);
+          
+          // Calculate grid height based on content
+          const gridHeight = Math.max(Math.ceil(contentHeight / rowHeight), 6);
+          
+          // Store the new height
+          newHeights[key] = gridHeight;
         }
       });
       
+      // Update layout with new heights
+      const updatedLayouts = {};
+      
+      for (const [bp, layout] of Object.entries(currentLayouts)) {
+        updatedLayouts[bp] = layout.map(item => {
+          if (newHeights[item.i]) {
+            return { ...item, h: newHeights[item.i] };
+          }
+          return item;
+        });
+      }
+      
+      // Only update if there are actual changes
+      if (!_.isEqual(updatedLayouts, currentLayouts)) {
+        setCurrentLayouts(updatedLayouts);
+        localStorage.setItem('userProfileLayouts', JSON.stringify(updatedLayouts));
+      }
+      
+      // Update state with new heights
       setCardHeights(newHeights);
     };
-  }, []);
+  }, [currentLayouts]);
+
+  // Add a function to handle window resize events more effectively
+  const handleWindowResize = useMemo(() => {
+    return _.debounce(() => {
+      // Update card heights and force layout refresh
+      updateCardHeights();
+      
+      // Force a layout recalculation
+      const gridLayoutElement = document.querySelector('.react-grid-layout');
+      if (gridLayoutElement) {
+        // This forces a reflow
+        const temp = gridLayoutElement.offsetHeight;
+      }
+    }, 200);
+  }, [updateCardHeights]);
 
   // Optimized data fetching with DID support
   useEffect(() => {
@@ -283,18 +371,35 @@ const UserProfile = () => {
     fetchAccountData();
   }, [username, navigate, updateCardHeights]);
 
-  // Memoized resize handler
+  // Add effect to initialize the layout on first render
   useEffect(() => {
-    const handleResize = _.debounce(() => {
+    // Small delay to ensure DOM is ready
+    setTimeout(updateCardHeights, 300);
+    
+    // Add a resize observer to each card to handle content changes
+    const resizeObserver = new ResizeObserver(_.debounce(() => {
       updateCardHeights();
-    }, 250);
-
-    window.addEventListener('resize', handleResize);
+    }, 300));
+    
+    Object.values(cardRefs.current).forEach(ref => {
+      if (ref) {
+        resizeObserver.observe(ref);
+      }
+    });
+    
     return () => {
-      window.removeEventListener('resize', handleResize);
-      handleResize.cancel();
+      resizeObserver.disconnect();
     };
   }, [updateCardHeights]);
+
+  // Memoized resize handler
+  useEffect(() => {
+    window.addEventListener('resize', handleWindowResize);
+    return () => {
+      window.removeEventListener('resize', handleWindowResize);
+      handleWindowResize.cancel();
+    };
+  }, [handleWindowResize]);
 
   if (loading) {
     return (
@@ -396,16 +501,28 @@ const UserProfile = () => {
 
         <ResponsiveGridLayout
           className="layout"
-          layouts={layouts}
+          layouts={currentLayouts}
           breakpoints={breakpoints}
           cols={cols}
           rowHeight={50}
           margin={[20, 20]}
-          isDraggable={false}
-          isResizable={false}
+          isDraggable={true}
+          isResizable={true}
           useCSSTransforms={true}
-          onLayoutChange={() => updateCardHeights()}
+          onLayoutChange={handleLayoutChange}
           draggableHandle=".card-header"
+          resizeHandles={['se']}
+          compactType="vertical"
+          preventCollision={false}
+          autoSize={true}
+          onBreakpointChange={(newBreakpoint) => {
+            // Recalculate heights when breakpoint changes
+            setTimeout(updateCardHeights, 100);
+          }}
+          onWidthChange={(width, margin, cols) => {
+            // Recalculate heights when width changes
+            setTimeout(updateCardHeights, 100);
+          }}
         >
           <div key="ScoreBreakdownCard" className="grid-item" ref={el => cardRefs.current.ScoreBreakdownCard = el}>
             <Card title="Score Breakdown">
