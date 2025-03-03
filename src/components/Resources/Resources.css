@@ -669,6 +669,7 @@
 .feeling-lucky-button:hover {
   opacity: 0.9;
   transform: translateY(-2px);
+  color: white;
 }
 
 .share-button:active,
