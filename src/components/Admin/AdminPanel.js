@@ -15,6 +15,8 @@ const AdminPanel = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [completenessFilter, setCompletenessFilter] = useState('all');
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [tagFilter, setTagFilter] = useState('all');
 
   // Login state
   const [email, setEmail] = useState('');
@@ -176,6 +178,15 @@ const AdminPanel = () => {
       document.removeEventListener('keydown', handleKeyNavigation);
     };
   }, [handleKeyNavigation]);
+  
+  // Reset filters
+  const resetFilters = () => {
+    setStatusFilter('all');
+    setCompletenessFilter('all');
+    setCategoryFilter('all');
+    setTagFilter('all');
+    setSearchQuery('');
+  };
 
   // Calculate resource completeness percentage
   const calculateCompleteness = (resource) => {
@@ -243,7 +254,7 @@ const AdminPanel = () => {
     });
   };
   
-  // Filter resources based on status, search query, and completeness
+  // Filter resources based on status, search query, completeness, category, and tag
   const filteredResources = resources.filter(resource => {
     // Status filter
     if (statusFilter !== 'all' && resource.status !== statusFilter) return false;
@@ -256,6 +267,12 @@ const AdminPanel = () => {
     if (completenessFilter === 'complete' && resource.completeness < 100) return false;
     if (completenessFilter.startsWith('min-') && resource.completeness < parseInt(completenessFilter.substring(4))) return false;
     if (completenessFilter.startsWith('max-') && resource.completeness > parseInt(completenessFilter.substring(4))) return false;
+    
+    // Category filter
+    if (categoryFilter !== 'all' && (!resource.categoryIds || !resource.categoryIds.includes(parseInt(categoryFilter)))) return false;
+    
+    // Tag filter
+    if (tagFilter !== 'all' && (!resource.tagIds || !resource.tagIds.includes(parseInt(tagFilter)))) return false;
     
     return true;
   });
@@ -596,13 +613,25 @@ const AdminPanel = () => {
           </div>
           <div className="sidebar-filters">
             <div className="filter-group">
-              <input
-                type="text"
-                placeholder="Search resources..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="search-input"
-              />
+              <div className="search-container">
+                <input
+                  type="text"
+                  placeholder="Search resources..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="search-input"
+                />
+                {(searchQuery || statusFilter !== 'all' || completenessFilter !== 'all' || 
+                  categoryFilter !== 'all' || tagFilter !== 'all') && (
+                  <button 
+                    onClick={resetFilters}
+                    className="reset-filters-button"
+                    title="Reset all filters"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
             </div>
             <div className="filter-group">
               <select 
@@ -631,6 +660,37 @@ const AdminPanel = () => {
                 <option value="max-75">Less than 75%</option>
               </select>
             </div>
+            <div className="filter-group">
+              <select 
+                value={categoryFilter} 
+                onChange={(e) => setCategoryFilter(e.target.value)}
+                className="category-filter"
+              >
+                <option value="all">All Categories</option>
+                {categories.map(category => (
+                  <option key={category.id} value={category.id}>
+                    {category.emoji} {category.name}
+                  </option>
+                ))}
+              </select>
+              <select 
+                value={tagFilter} 
+                onChange={(e) => setTagFilter(e.target.value)}
+                className="tag-filter"
+              >
+                <option value="all">All Tags</option>
+                {tags.map(tag => (
+                  <option key={tag.id} value={tag.id}>
+                    #{tag.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className="resources-summary">
+            <span className="resources-count">
+              Showing {filteredResources.length} of {resources.length} resources
+            </span>
           </div>
           <div className="resources-list">
             {filteredResources.length > 0 ? (
